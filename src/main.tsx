@@ -7,6 +7,7 @@ import { WorkoutHome } from "./pages/workout/WorkoutHome";
 import { WeeklyPlan } from "./pages/workout/WeeklyPlan";
 import { ExerciseLibrary } from "./pages/workout/ExerciseLibrary";
 import { ExerciseDetail } from "./pages/workout/ExerciseDetail";
+import { SessionDetail } from "./pages/workout/SessionDetail";
 import { BodyHome } from "./pages/body/BodyHome";
 import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: "treino/plano", element: <WeeklyPlan /> },
       { path: "treino/biblioteca", element: <ExerciseLibrary /> },
       { path: "treino/exercicio/:id", element: <ExerciseDetail /> },
+      { path: "treino/sessao/:templateId", element: <SessionDetail /> },
       { path: "corpo", element: <BodyHome /> },
       { path: "corpo/medidas", element: <Measurements /> },
       { path: "corpo/fotos", element: <Photos /> },
