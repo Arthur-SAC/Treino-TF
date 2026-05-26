@@ -16,6 +16,7 @@ import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
 import { Beauty } from "./pages/Beauty";
 import { Path } from "./pages/Path";
+import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import "./index.css";
 
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: "corpo/onboarding", element: <Onboarding /> },
       { path: "beleza", element: <Beauty /> },
       { path: "trilha", element: <Path /> },
+      { path: "configuracoes", element: <Settings /> },
     ],
   },
 ]);

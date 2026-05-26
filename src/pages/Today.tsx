@@ -1,4 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
+import { Link } from "react-router-dom";
 import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { useSetting } from "../hooks/useSetting";
@@ -49,9 +50,12 @@ export function Today() {
 
   return (
     <div className="p-4 pb-24 space-y-3">
-      <div>
-        <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
-        <h1 className="font-serif text-2xl text-nude">Bom dia</h1>
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
+          <h1 className="font-serif text-2xl text-nude">Bom dia</h1>
+        </div>
+        <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
       </div>
 
       {todayTemplate ? (
