@@ -32,6 +32,24 @@ export function Today() {
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
 
+  const morningRoutines = useLiveQuery(
+    () => db.skincareRoutines.where("time").equals("morning").toArray(),
+    [],
+  );
+  const eveningRoutines = useLiveQuery(
+    () => db.skincareRoutines.where("time").equals("evening").toArray(),
+    [],
+  );
+  const todaySkincareLogs = useLiveQuery(
+    () => db.skincareLogs.where("date").equals(todayISO).toArray(),
+    [todayISO],
+  );
+
+  const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
+    morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
+  const eveningDone = todaySkincareLogs && eveningRoutines && eveningRoutines.length > 0 &&
+    eveningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
+
   const daysSinceMeasurement = measurementsRecent?.[0]
     ? Math.floor((today.getTime() - new Date(measurementsRecent[0].date).getTime()) / 86400000)
     : null;
@@ -100,8 +118,26 @@ export function Today() {
         />
       )}
 
-      <TodayCard title="Skincare" subtitle="Rotina chega na próxima atualização" />
-      <TodayCard title="Movimento" subtitle="Dança e mobilidade na próxima atualização" />
+      <TodayCard
+        title="Skincare manhã"
+        subtitle={
+          morningRoutines && morningRoutines.length > 0
+            ? `${morningRoutines.length} rotina${morningRoutines.length > 1 ? "s" : ""} · ${morningDone ? "concluído ✓" : "pendente"}`
+            : "sem rotina configurada"
+        }
+        to="/beleza/pele-cabelo/skincare"
+        variant={!morningDone && morningRoutines && morningRoutines.length > 0 ? "highlight" : "default"}
+      />
+      <TodayCard
+        title="Skincare noite"
+        subtitle={
+          eveningRoutines && eveningRoutines.length > 0
+            ? `${eveningRoutines.length} rotina${eveningRoutines.length > 1 ? "s" : ""} · ${eveningDone ? "concluído ✓" : "pendente"}`
+            : "sem rotina configurada"
+        }
+        to="/beleza/pele-cabelo/skincare"
+        variant={!eveningDone && eveningRoutines && eveningRoutines.length > 0 ? "highlight" : "default"}
+      />
     </div>
   );
 }
