@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import { Today } from "./pages/Today";
 import { WorkoutHome } from "./pages/workout/WorkoutHome";
+import { WeeklyPlan } from "./pages/workout/WeeklyPlan";
 import { BodyHome } from "./pages/body/BodyHome";
 import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
@@ -11,6 +12,7 @@ import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
 import { Beauty } from "./pages/Beauty";
 import { Path } from "./pages/Path";
+import { seedDatabase } from "./lib/seed";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -20,6 +22,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Today /> },
       { path: "treino", element: <WorkoutHome /> },
+      { path: "treino/plano", element: <WeeklyPlan /> },
       { path: "corpo", element: <BodyHome /> },
       { path: "corpo/medidas", element: <Measurements /> },
       { path: "corpo/fotos", element: <Photos /> },
@@ -31,8 +34,10 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+seedDatabase().then(() => {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  );
+});
