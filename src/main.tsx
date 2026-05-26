@@ -14,7 +14,8 @@ import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
 import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
-import { Beauty } from "./pages/Beauty";
+import { BeautyHome } from "./pages/beauty/BeautyHome";
+import { StylePlaceholder } from "./pages/beauty/StylePlaceholder";
 import { Path } from "./pages/Path";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
@@ -38,7 +39,9 @@ const router = createBrowserRouter([
       { path: "corpo/fotos", element: <Photos /> },
       { path: "corpo/comparacao", element: <Comparison /> },
       { path: "corpo/onboarding", element: <Onboarding /> },
-      { path: "beleza", element: <Beauty /> },
+      { path: "beleza", element: <BeautyHome /> },
+      { path: "beleza/pele-cabelo", element: <BeautyHome /> },
+      { path: "beleza/estilo", element: <StylePlaceholder /> },
       { path: "trilha", element: <Path /> },
       { path: "configuracoes", element: <Settings /> },
     ],
