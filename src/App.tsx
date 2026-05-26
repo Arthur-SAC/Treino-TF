@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { BottomNav } from "./components/BottomNav";
 import { OnboardingGate } from "./components/OnboardingGate";
+import { startScheduler, stopScheduler } from "./lib/notification-scheduler";
 
 function App() {
+  useEffect(() => {
+    startScheduler();
+    return () => stopScheduler();
+  }, []);
+
   return (
     <OnboardingGate>
       <div className="min-h-screen flex flex-col">
