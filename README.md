@@ -14,7 +14,7 @@ npm run preview      # preview do build em localhost:4173
 
 ## Stack
 
-React 18 + TypeScript + Vite + Tailwind CSS + Dexie.js + React Router 6 + vite-plugin-pwa + Vitest.
+React 18 + TypeScript + Vite + Tailwind CSS + Dexie.js + React Router 7 + vite-plugin-pwa + Vitest.
 
 ## Estrutura
 

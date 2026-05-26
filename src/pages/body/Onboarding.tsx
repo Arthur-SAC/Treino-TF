@@ -22,6 +22,7 @@ export function Onboarding() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [busy, setBusy] = useState(false);
   const [photosImported, setPhotosImported] = useState({ self: 0, goal: 0 });
+  const [importTag, setImportTag] = useState<ProgressPhoto["tag"]>("front");
 
   async function handleSaveMeasurement(m: Omit<Measurement, "id">) {
     await db.measurements.add(m as Measurement);
@@ -39,7 +40,7 @@ export function Onboarding() {
         await db.photos.add({
           date: new Date().toISOString().slice(0, 10),
           blob,
-          tag: "front",
+          tag: importTag,
           category,
         } as ProgressPhoto);
         added++;
@@ -78,6 +79,21 @@ export function Onboarding() {
           <p className="text-muted text-sm mb-3">
             Selecione as fotos da pasta <code className="text-nude">eu/</code> no seu computador (ou da galeria, se você já transferiu pro celular).
           </p>
+          <p className="text-muted text-xs mb-1">Qual vista são essas fotos?</p>
+          <div className="flex gap-2 mb-3">
+            {(["front", "side", "back", "custom"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setImportTag(t)}
+                className={`flex-1 py-2 rounded-md text-xs ${
+                  importTag === t ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
+                }`}
+              >
+                {t === "front" ? "Frente" : t === "side" ? "Lado" : t === "back" ? "Costas" : "Outra"}
+              </button>
+            ))}
+          </div>
           <label className="block w-full bg-wine text-nude-warm text-center rounded-md py-3 font-medium cursor-pointer hover:bg-wine-light transition">
             {busy ? "Processando..." : photosImported.self ? `${photosImported.self} foto(s) importada(s) — escolher mais?` : "Escolher fotos atuais"}
             <input
@@ -106,6 +122,21 @@ export function Onboarding() {
           <p className="text-muted text-sm mb-3">
             As referências de corpo-alvo que você salvou na pasta <code className="text-nude">objetivo/</code>.
           </p>
+          <p className="text-muted text-xs mb-1">Qual vista são essas fotos?</p>
+          <div className="flex gap-2 mb-3">
+            {(["front", "side", "back", "custom"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setImportTag(t)}
+                className={`flex-1 py-2 rounded-md text-xs ${
+                  importTag === t ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
+                }`}
+              >
+                {t === "front" ? "Frente" : t === "side" ? "Lado" : t === "back" ? "Costas" : "Outra"}
+              </button>
+            ))}
+          </div>
           <label className="block w-full bg-wine text-nude-warm text-center rounded-md py-3 font-medium cursor-pointer hover:bg-wine-light transition">
             {busy ? "Processando..." : photosImported.goal ? `${photosImported.goal} foto(s) importada(s) — escolher mais?` : "Escolher fotos objetivo"}
             <input

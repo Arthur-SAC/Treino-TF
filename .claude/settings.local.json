@@ -20,7 +20,19 @@
       "PowerShell(npm run *)",
       "Bash(node -e \"const pkg=require\\('./package.json'\\); const lock=require\\('./package-lock.json'\\); const rootDeps=Object.keys\\(lock.packages['']?.devDependencies||{}\\).concat\\(Object.keys\\(lock.packages['']?.dependencies||{}\\)\\); console.log\\('package.json deps:', Object.keys\\({...pkg.dependencies,...pkg.devDependencies}\\).sort\\(\\)\\); console.log\\('---'\\); console.log\\('lockfile root deps:', rootDeps.sort\\(\\)\\); console.log\\('---'\\); console.log\\('total package entries:', Object.keys\\(lock.packages\\).length\\);\")",
       "PowerShell($pkg = Get-Content 'C:\\\\Users\\\\ASCalderon\\\\Desktop\\\\Trein-Final\\\\package.json' -Raw | ConvertFrom-Json; $lock = Get-Content 'C:\\\\Users\\\\ASCalderon\\\\Desktop\\\\Trein-Final\\\\package-lock.json' -Raw | ConvertFrom-Json; Write-Output 'package.json devDeps:'; $pkg.devDependencies.PSObject.Properties.Name | Sort-Object; Write-Output '---'; Write-Output 'lockfile root devDeps:'; $lock.packages.''.devDependencies.PSObject.Properties.Name | Sort-Object; Write-Output '---'; Write-Output \\('Total lockfile package entries: ' + $lock.packages.PSObject.Properties.Name.Count\\))",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git rm *)",
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(findstr /C:\"vitest\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173/)",
+      "Bash(curl *)",
+      "Bash(ls public *)",
+      "Bash(ls scripts *)",
+      "Read(//tmp/**)",
+      "Bash(taskkill //IM node.exe //F)",
+      "Bash(rm -f public/favicon.svg)",
+      "Bash(rm -f \"WhatsApp Image 2026-05-19 at 06.22.19.jpeg\")"
     ]
   }
 }
