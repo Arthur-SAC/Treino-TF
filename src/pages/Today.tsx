@@ -1,9 +1,103 @@
-import { EmptyState } from "../components/EmptyState";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/db";
+import { TodayCard } from "../components/TodayCard";
+import { useSetting } from "../hooks/useSetting";
+import { formatDateBR } from "../lib/format";
 
 export function Today() {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const todayISO = today.toISOString().slice(0, 10);
+
+  const todayTemplate = useLiveQuery(
+    async () => db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).first(),
+    [dayOfWeek],
+  );
+  const sessionsToday = useLiveQuery(
+    async () => db.workoutSessions.where("date").equals(todayISO).count(),
+    [todayISO],
+  );
+  const measurementsRecent = useLiveQuery(
+    async () => db.measurements.orderBy("date").reverse().limit(1).toArray(),
+    [],
+  );
+  const photosRecent = useLiveQuery(
+    async () => {
+      const arr = await db.photos.where("category").equals("self").sortBy("date");
+      return arr.slice(-1);
+    },
+    [],
+  );
+  const goalMl = useSetting("hydrationGoalMl");
+  const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
+
+  const daysSinceMeasurement = measurementsRecent?.[0]
+    ? Math.floor((today.getTime() - new Date(measurementsRecent[0].date).getTime()) / 86400000)
+    : null;
+  const daysSincePhoto = photosRecent?.[0]
+    ? Math.floor((today.getTime() - new Date(photosRecent[0].date).getTime()) / 86400000)
+    : null;
+
+  async function addWater(ml: number) {
+    const log = await db.dailyLog.get(todayISO);
+    if (log) {
+      await db.dailyLog.update(todayISO, { waterMl: log.waterMl + ml });
+    } else {
+      await db.dailyLog.put({ date: todayISO, waterMl: ml, activeBreakCount: 0 });
+    }
+  }
+
   return (
-    <div className="p-4 pb-24">
-      <EmptyState title="Hoje" description="Dashboard chega na próxima parte. Por enquanto, vai em Corpo pra registrar suas medidas e fotos." />
+    <div className="p-4 pb-24 space-y-3">
+      <div>
+        <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
+        <h1 className="font-serif text-2xl text-nude">Bom dia</h1>
+      </div>
+
+      {todayTemplate ? (
+        <TodayCard
+          title={todayTemplate.name}
+          subtitle={`Treino · ${todayTemplate.durationMin} min · ${sessionsToday ?? 0 > 0 ? "concluído ✓" : "ainda não feito"}`}
+          to={`/treino/sessao/${todayTemplate.id}`}
+          variant={sessionsToday ?? 0 > 0 ? "default" : "highlight"}
+        />
+      ) : (
+        <TodayCard title="Descanso" subtitle="Hoje não tem treino programado" />
+      )}
+
+      <TodayCard
+        title="Hidratação"
+        subtitle={`${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`}
+        rightSlot={
+          <button
+            type="button"
+            onClick={() => void addWater(200)}
+            className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md"
+          >
+            +200ml
+          </button>
+        }
+      />
+
+      {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
+        <TodayCard
+          title="Hora de medir"
+          subtitle={`Última medida há ${daysSinceMeasurement} dias`}
+          to="/corpo/medidas"
+          variant="highlight"
+        />
+      )}
+      {daysSincePhoto !== null && daysSincePhoto > 14 && (
+        <TodayCard
+          title="Hora de tirar fotos"
+          subtitle={`Última foto há ${daysSincePhoto} dias`}
+          to="/corpo/fotos"
+          variant="highlight"
+        />
+      )}
+
+      <TodayCard title="Skincare" subtitle="Rotina chega na próxima atualização" />
+      <TodayCard title="Movimento" subtitle="Dança e mobilidade na próxima atualização" />
     </div>
   );
 }
