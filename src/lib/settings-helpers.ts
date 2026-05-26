@@ -14,6 +14,8 @@ export interface Settings {
   quietHours: { from: string; to: string };
   focusModeUntil: number | null; // timestamp ms
   notificationsEnabled: boolean;
+  lastActiveBreakAt: number;
+  lastHydrationAt: number;
 }
 
 const DEFAULTS: Settings = {
@@ -30,6 +32,8 @@ const DEFAULTS: Settings = {
   quietHours: { from: "22:00", to: "08:00" },
   focusModeUntil: null,
   notificationsEnabled: true,
+  lastActiveBreakAt: 0,
+  lastHydrationAt: 0,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

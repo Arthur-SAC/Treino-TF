@@ -61,9 +61,9 @@ export function Today() {
       {todayTemplate ? (
         <TodayCard
           title={todayTemplate.name}
-          subtitle={`Treino · ${todayTemplate.durationMin} min · ${sessionsToday ?? 0 > 0 ? "concluído ✓" : "ainda não feito"}`}
+          subtitle={`Treino · ${todayTemplate.durationMin} min · ${(sessionsToday ?? 0) > 0 ? "concluído ✓" : "ainda não feito"}`}
           to={`/treino/sessao/${todayTemplate.id}`}
-          variant={sessionsToday ?? 0 > 0 ? "default" : "highlight"}
+          variant={(sessionsToday ?? 0) > 0 ? "default" : "highlight"}
         />
       ) : (
         <TodayCard title="Descanso" subtitle="Hoje não tem treino programado" />

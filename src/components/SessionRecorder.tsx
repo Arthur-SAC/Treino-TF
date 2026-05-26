@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
-import { suggestNextLoad, type SessionFeedback } from "../lib/progression";
+import { suggestNextLoad } from "../lib/progression";
 
 interface Props {
   exercise: Exercise;
@@ -14,7 +14,6 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, onSave }: Pr
   const [sets, setSets] = useState<Array<{ reps: string; weight: string }>>(
     () => Array.from({ length: setsTarget }, () => ({ reps: "", weight: "" })),
   );
-  const [feedback, setFeedback] = useState<SessionFeedback>("medium");
   const [suggested, setSuggested] = useState<number | null>(null);
 
   useEffect(() => {
@@ -101,21 +100,6 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, onSave }: Pr
               className="flex-1 bg-bg-deep border border-bg-border rounded-md px-2 py-1.5 text-nude-warm text-sm"
             />
           </div>
-        ))}
-      </div>
-
-      <div className="flex gap-2 mb-2">
-        {(["easy", "medium", "hard"] as const).map((f) => (
-          <button
-            key={f}
-            type="button"
-            onClick={() => setFeedback(f)}
-            className={`flex-1 py-1.5 rounded-md text-xs ${
-              feedback === f ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
-            }`}
-          >
-            {f === "easy" ? "Fácil" : f === "medium" ? "Médio" : "Difícil"}
-          </button>
         ))}
       </div>
 

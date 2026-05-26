@@ -67,10 +67,13 @@ export function Settings() {
         dailyLog: await db.dailyLog.toArray(),
       };
       const encrypted = await encryptBackup(payload, password);
+      const blob = new Blob([encrypted], { type: "application/octet-stream" });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = `data:application/octet-stream;base64,${btoa(encrypted)}`;
+      link.href = url;
       link.download = `trein-final-${new Date().toISOString().slice(0, 10)}.trein-backup`;
       link.click();
+      URL.revokeObjectURL(url);
       setInfo("Backup baixado.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha no backup.");
@@ -88,8 +91,7 @@ export function Settings() {
       return;
     }
     try {
-      const text = await file.text();
-      const encrypted = atob(text);
+      const encrypted = await file.text();
       type ImportPayload = {
         measurements: unknown[];
         photos: Array<{ blob: string; date: string; tag: string; category: string }>;
