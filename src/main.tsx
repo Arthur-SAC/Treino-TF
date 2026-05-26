@@ -5,6 +5,7 @@ import App from "./App";
 import { Today } from "./pages/Today";
 import { WorkoutHome } from "./pages/workout/WorkoutHome";
 import { BodyHome } from "./pages/body/BodyHome";
+import { Measurements } from "./pages/body/Measurements";
 import { Beauty } from "./pages/Beauty";
 import { Path } from "./pages/Path";
 import "./index.css";
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { index: true, element: <Today /> },
       { path: "treino", element: <WorkoutHome /> },
       { path: "corpo", element: <BodyHome /> },
+      { path: "corpo/medidas", element: <Measurements /> },
       { path: "beleza", element: <Beauty /> },
       { path: "trilha", element: <Path /> },
     ],
