@@ -22,8 +22,8 @@ Veja o [plano de implementação](docs/superpowers/plans/2026-05-26-onda-1-parte
 
 ## Status
 
-- **Onda 1 Parte 1 (atual):** fundação, libs, aba Corpo (medidas, fotos, comparação, onboarding) — implementado
-- **Onda 1 Parte 2 (próximo):** aba Treino, aba Hoje, notificações, configurações
+- **Onda 1 Parte 1:** ✅ Concluída — fundação, libs, aba Corpo (medidas, fotos, comparação, onboarding)
+- **Onda 1 Parte 2:** ✅ Concluída — aba Treino (plano semanal, 34 exercícios, registro de sessão, progressão), aba Hoje (dashboard), notificações (pausas, hidratação), configurações (backup, quiet hours, modo foco)
 - **Onda 2:** aba Beleza (skincare, hair, estilo), aba Trilha (alimentação)
 - **Onda 3:** dança/movimento profundo
 - **Onda 4:** trilha completa + polimento
