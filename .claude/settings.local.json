@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(C:\\\\Users\\\\ASCalderon\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(Test-Path *)",
+      "Bash(npm --version)",
+      "Read(//c/Program Files/nodejs//**)",
+      "Read(//c/nvm4w/**)",
+      "Bash(git init *)",
+      "Bash(git branch *)",
+      "Bash(cp eslint.config.js index.html package.json tsconfig.app.json tsconfig.json tsconfig.node.json vite.config.ts \"../Trein-Final/\")",
+      "Bash(cp -r src public \"../Trein-Final/\")",
+      "Bash(cp README.md \"../Trein-Final/\")",
+      "Bash(git add *)",
+      "Bash(git -c user.name=\"Trein Dev\" -c user.email=\"arthur.cald3ron@gmail.com\" commit -m \"chore: scaffold Vite + React + TypeScript\")",
+      "Bash(npm install *)",
+      "PowerShell(npm install *)",
+      "PowerShell(npm ls *)",
+      "PowerShell(npm run *)",
+      "Bash(node -e \"const pkg=require\\('./package.json'\\); const lock=require\\('./package-lock.json'\\); const rootDeps=Object.keys\\(lock.packages['']?.devDependencies||{}\\).concat\\(Object.keys\\(lock.packages['']?.dependencies||{}\\)\\); console.log\\('package.json deps:', Object.keys\\({...pkg.dependencies,...pkg.devDependencies}\\).sort\\(\\)\\); console.log\\('---'\\); console.log\\('lockfile root deps:', rootDeps.sort\\(\\)\\); console.log\\('---'\\); console.log\\('total package entries:', Object.keys\\(lock.packages\\).length\\);\")",
+      "PowerShell($pkg = Get-Content 'C:\\\\Users\\\\ASCalderon\\\\Desktop\\\\Trein-Final\\\\package.json' -Raw | ConvertFrom-Json; $lock = Get-Content 'C:\\\\Users\\\\ASCalderon\\\\Desktop\\\\Trein-Final\\\\package-lock.json' -Raw | ConvertFrom-Json; Write-Output 'package.json devDeps:'; $pkg.devDependencies.PSObject.Properties.Name | Sort-Object; Write-Output '---'; Write-Output 'lockfile root devDeps:'; $lock.packages.''.devDependencies.PSObject.Properties.Name | Sort-Object; Write-Output '---'; Write-Output \\('Total lockfile package entries: ' + $lock.packages.PSObject.Properties.Name.Count\\))",
+      "Bash(git commit *)"
+    ]
+  }
+}
