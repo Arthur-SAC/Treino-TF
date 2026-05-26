@@ -17,6 +17,7 @@ import { Onboarding } from "./pages/body/Onboarding";
 import { BeautyHome } from "./pages/beauty/BeautyHome";
 import { StylePlaceholder } from "./pages/beauty/StylePlaceholder";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
+import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
 import { Path } from "./pages/Path";
 import { Settings } from "./pages/Settings";
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: "beleza", element: <BeautyHome /> },
       { path: "beleza/pele-cabelo", element: <BeautyHome /> },
       { path: "beleza/pele-cabelo/skincare", element: <SkincareHome /> },
+      { path: "beleza/pele-cabelo/skincare/nova", element: <SkincareNew /> },
       { path: "beleza/pele-cabelo/skincare/:id", element: <SkincareDetail /> },
       { path: "beleza/estilo", element: <StylePlaceholder /> },
       { path: "trilha", element: <Path /> },
