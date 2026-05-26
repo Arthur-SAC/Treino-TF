@@ -16,6 +16,8 @@ const DEFAULTS: Settings = {
   quietHours: { from: "22:00", to: "08:00" },
   focusModeUntil: null,
   notificationsEnabled: true,
+  lastActiveBreakAt: 0,
+  lastHydrationAt: 0,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {
