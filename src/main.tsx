@@ -19,6 +19,7 @@ import { StylePlaceholder } from "./pages/beauty/StylePlaceholder";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
+import { HaircareHome } from "./pages/beauty/HaircareHome";
 import { Path } from "./pages/Path";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: "beleza/pele-cabelo/skincare", element: <SkincareHome /> },
       { path: "beleza/pele-cabelo/skincare/nova", element: <SkincareNew /> },
       { path: "beleza/pele-cabelo/skincare/:id", element: <SkincareDetail /> },
+      { path: "beleza/pele-cabelo/haircare", element: <HaircareHome /> },
       { path: "beleza/estilo", element: <StylePlaceholder /> },
       { path: "trilha", element: <Path /> },
       { path: "configuracoes", element: <Settings /> },
