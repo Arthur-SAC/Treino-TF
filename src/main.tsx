@@ -16,6 +16,7 @@ import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
 import { BeautyHome } from "./pages/beauty/BeautyHome";
 import { StylePlaceholder } from "./pages/beauty/StylePlaceholder";
+import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { Path } from "./pages/Path";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "corpo/onboarding", element: <Onboarding /> },
       { path: "beleza", element: <BeautyHome /> },
       { path: "beleza/pele-cabelo", element: <BeautyHome /> },
+      { path: "beleza/pele-cabelo/skincare", element: <SkincareHome /> },
       { path: "beleza/estilo", element: <StylePlaceholder /> },
       { path: "trilha", element: <Path /> },
       { path: "configuracoes", element: <Settings /> },
