@@ -1,10 +1,13 @@
+import { Outlet } from "react-router-dom";
+import { BottomNav } from "./components/BottomNav";
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="card max-w-sm w-[90%] text-center">
-        <h1 className="text-2xl font-serif text-nude mb-2">Trein-Final</h1>
-        <p className="text-muted text-sm">Tema amazona funcionando.</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1 overflow-y-auto">
+        <Outlet />
+      </main>
+      <BottomNav />
     </div>
   );
 }
