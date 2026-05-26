@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# Trein-Final
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App pessoal de transição (PWA mobile-first, 100% local).
 
-Currently, two official plugins are available:
+## Quick start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev          # localhost:5173
+npm run test         # Vitest
+npm run build        # gera dist/
+npm run preview      # preview do build em localhost:4173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React 18 + TypeScript + Vite + Tailwind CSS + Dexie.js + React Router 6 + vite-plugin-pwa + Vitest.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Estrutura
+
+Veja o [plano de implementação](docs/superpowers/plans/2026-05-26-onda-1-parte-1-fundacao-corpo.md) e o [spec](docs/superpowers/specs/2026-05-26-app-transicao-design.md).
+
+## Status
+
+- **Onda 1 Parte 1 (atual):** fundação, libs, aba Corpo (medidas, fotos, comparação, onboarding) — implementado
+- **Onda 1 Parte 2 (próximo):** aba Treino, aba Hoje, notificações, configurações
+- **Onda 2:** aba Beleza (skincare, hair, estilo), aba Trilha (alimentação)
+- **Onda 3:** dança/movimento profundo
+- **Onda 4:** trilha completa + polimento
