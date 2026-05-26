@@ -1,0 +1,78 @@
+import type { WorkoutTemplate } from "../lib/db";
+
+export const WORKOUT_PLAN: WorkoutTemplate[] = [
+  {
+    id: "seg-gluteo-mobilidade",
+    name: "Glúteo + Mobilidade de quadril",
+    dayOfWeek: 1,
+    durationMin: 50,
+    exercises: [
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
+      { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "10 cada lado", restSec: 30 },
+      { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "hip-thrust-barra", sets: 4, repsTarget: "10-12", restSec: 90 },
+      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 60 },
+      { exerciseId: "mobilidade-quadril-90-90", sets: 1, repsTarget: "5min", restSec: 0 },
+    ],
+  },
+  {
+    id: "ter-cintura-costas",
+    name: "Cintura funcional + Costas",
+    dayOfWeek: 2,
+    durationMin: 45,
+    exercises: [
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
+      { exerciseId: "dead-bug", sets: 3, repsTarget: "10 cada lado", restSec: 30 },
+      { exerciseId: "bird-dog", sets: 3, repsTarget: "10 cada lado", restSec: 30 },
+      { exerciseId: "prancha", sets: 3, repsTarget: "30-45s", restSec: 45 },
+      { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "12", restSec: 60 },
+      { exerciseId: "retracao-escapular", sets: 3, repsTarget: "15", restSec: 30 },
+      { exerciseId: "alongamento-piriforme", sets: 1, repsTarget: "1min cada lado", restSec: 0 },
+    ],
+  },
+  {
+    id: "qua-mobilidade-danca",
+    name: "Mobilidade total + Dança",
+    dayOfWeek: 3,
+    durationMin: 40,
+    exercises: [
+      { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
+      { exerciseId: "borboleta", sets: 1, repsTarget: "2min", restSec: 0 },
+      { exerciseId: "happy-baby", sets: 1, repsTarget: "1min", restSec: 0 },
+      { exerciseId: "agachamento-profundo-pausa", sets: 1, repsTarget: "2min", restSec: 0 },
+      { exerciseId: "alongamento-flexor-quadril", sets: 1, repsTarget: "1min cada lado", restSec: 0 },
+      { exerciseId: "rotacao-quadril-em-pe", sets: 2, repsTarget: "20 cada sentido", restSec: 30 },
+      { exerciseId: "rebolado-basico", sets: 3, repsTarget: "1min", restSec: 30 },
+      { exerciseId: "isolamento-quadril-lateral", sets: 3, repsTarget: "30s cada lado", restSec: 30 },
+    ],
+  },
+  {
+    id: "qui-gluteo-coxa",
+    name: "Glúteo (variação) + Coxa",
+    dayOfWeek: 4,
+    durationMin: 50,
+    exercises: [
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
+      { exerciseId: "clamshell", sets: 2, repsTarget: "15 cada lado", restSec: 30 },
+      { exerciseId: "agachamento-goblet", sets: 4, repsTarget: "10-12", restSec: 75 },
+      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 75 },
+      { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada lado", restSec: 45 },
+      { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "15 cada lado", restSec: 30 },
+    ],
+  },
+  {
+    id: "sex-peitoral-postura",
+    name: "Peitoral leve + Postura",
+    dayOfWeek: 5,
+    durationMin: 45,
+    exercises: [
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
+      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "10 (carga LEVE)", restSec: 60 },
+      { exerciseId: "cross-over-cabo", sets: 3, repsTarget: "12 (carga LEVE)", restSec: 60 },
+      { exerciseId: "face-pull", sets: 4, repsTarget: "15", restSec: 45 },
+      { exerciseId: "retracao-escapular", sets: 3, repsTarget: "15", restSec: 30 },
+      { exerciseId: "prancha-lateral", sets: 2, repsTarget: "30s cada lado", restSec: 30 },
+      { exerciseId: "alongamento-flexor-quadril", sets: 1, repsTarget: "1min cada lado", restSec: 0 },
+    ],
+  },
+];
