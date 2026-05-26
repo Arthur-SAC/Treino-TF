@@ -12,6 +12,7 @@ export default defineConfig({
         name: "Trein-Final",
         short_name: "Trein-Final",
         description: "App pessoal de transição",
+        lang: "pt-BR",
         theme_color: "#1a0a0e",
         background_color: "#1a0a0e",
         display: "standalone",
