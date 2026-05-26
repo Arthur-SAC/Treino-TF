@@ -3,6 +3,7 @@ import { db } from "./db";
 export interface Settings {
   onboarded: boolean;
   seeded: boolean;
+  beautySeeded: boolean;
   morningReminderTime: string; // "HH:MM"
   eveningReminderTime: string;
   workoutReminderTime: string;
@@ -21,6 +22,7 @@ export interface Settings {
 const DEFAULTS: Settings = {
   onboarded: false,
   seeded: false,
+  beautySeeded: false,
   morningReminderTime: "08:00",
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",

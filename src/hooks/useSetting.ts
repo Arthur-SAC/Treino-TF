@@ -5,6 +5,7 @@ import type { Settings } from "../lib/settings-helpers";
 const DEFAULTS: Settings = {
   onboarded: false,
   seeded: false,
+  beautySeeded: false,
   morningReminderTime: "08:00",
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",
