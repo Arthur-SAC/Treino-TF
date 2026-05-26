@@ -49,6 +49,29 @@ async function tick() {
   } else if (lastHydration === 0 && hH >= activeBreakStart && hH < activeBreakEnd) {
     await setSetting("lastHydrationAt", t);
   }
+
+  // Skincare matinal/noturno (uma vez por dia)
+  const morningTime = await getSetting("morningReminderTime");
+  const eveningTime = await getSetting("eveningReminderTime");
+  const todayISO = now.toISOString().slice(0, 10);
+  const lastMorning = await getSetting("lastSkincareMorningAt");
+  const lastEvening = await getSetting("lastSkincareEveningAt");
+
+  const [mH, mM] = morningTime.split(":").map(Number);
+  const [eH, eM] = eveningTime.split(":").map(Number);
+  const currentMin = now.getHours() * 60 + now.getMinutes();
+  const morningMin = mH * 60 + mM;
+  const eveningMin = eH * 60 + eM;
+
+  // Se ultrapassou o horário hoje e ainda não notificou hoje
+  if (currentMin >= morningMin && lastMorning !== todayISO) {
+    notify("Skincare matinal", "Comece o dia com a sua rotina de rosto");
+    await setSetting("lastSkincareMorningAt", todayISO);
+  }
+  if (currentMin >= eveningMin && lastEvening !== todayISO) {
+    notify("Skincare noturno", "Hora da rotina noturna antes de dormir");
+    await setSetting("lastSkincareEveningAt", todayISO);
+  }
 }
 
 export function startScheduler() {

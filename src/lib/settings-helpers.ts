@@ -17,6 +17,8 @@ export interface Settings {
   notificationsEnabled: boolean;
   lastActiveBreakAt: number;
   lastHydrationAt: number;
+  lastSkincareMorningAt: string; // "yyyy-mm-dd" or ""
+  lastSkincareEveningAt: string;
 }
 
 const DEFAULTS: Settings = {
@@ -36,6 +38,8 @@ const DEFAULTS: Settings = {
   notificationsEnabled: true,
   lastActiveBreakAt: 0,
   lastHydrationAt: 0,
+  lastSkincareMorningAt: "",
+  lastSkincareEveningAt: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

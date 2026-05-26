@@ -19,6 +19,8 @@ const DEFAULTS: Settings = {
   notificationsEnabled: true,
   lastActiveBreakAt: 0,
   lastHydrationAt: 0,
+  lastSkincareMorningAt: "",
+  lastSkincareEveningAt: "",
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {
