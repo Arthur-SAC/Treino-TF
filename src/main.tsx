@@ -16,6 +16,8 @@ import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
 import { BeautyHome } from "./pages/beauty/BeautyHome";
 import { PaletteView } from "./pages/beauty/style/PaletteView";
+import { GarmentsView } from "./pages/beauty/style/GarmentsView";
+import { GarmentDetail } from "./pages/beauty/style/GarmentDetail";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
@@ -55,6 +57,8 @@ const router = createBrowserRouter([
       { path: "beleza/pele-cabelo/produtos", element: <ProductsHome /> },
       { path: "beleza/pele-cabelo/produtos/novo", element: <ProductNew /> },
       { path: "beleza/estilo", element: <PaletteView /> },
+      { path: "beleza/estilo/pecas", element: <GarmentsView /> },
+      { path: "beleza/estilo/pecas/:id", element: <GarmentDetail /> },
       { path: "trilha", element: <Path /> },
       { path: "configuracoes", element: <Settings /> },
     ],
