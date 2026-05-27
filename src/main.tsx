@@ -34,6 +34,9 @@ import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
 import { MakeupHome } from "./pages/beauty/makeup/MakeupHome";
 import { MakeupDetail } from "./pages/beauty/makeup/MakeupDetail";
+import { VoiceHome } from "./pages/beauty/voice/VoiceHome";
+import { VoiceRecordings } from "./pages/beauty/voice/VoiceRecordings";
+import { VoiceDetail } from "./pages/beauty/voice/VoiceDetail";
 import { MilestonesView } from "./pages/path/MilestonesView";
 import { MilestoneNew } from "./pages/path/MilestoneNew";
 import { MealPlanView } from "./pages/path/MealPlanView";
@@ -48,6 +51,7 @@ import { seedStyle } from "./lib/style-seed";
 import { seedPath } from "./lib/path-seed";
 import { seedMovement } from "./lib/movement-seed";
 import { seedMakeup } from "./lib/makeup-seed";
+import { seedVoice } from "./lib/voice-seed";
 import "./index.css";
 
 const router = createBrowserRouter(
@@ -89,6 +93,9 @@ const router = createBrowserRouter(
         { path: "beleza/estilo/intimo", element: <IntimateView /> },
         { path: "beleza/maquiagem", element: <MakeupHome /> },
         { path: "beleza/maquiagem/:id", element: <MakeupDetail /> },
+        { path: "beleza/voz", element: <VoiceHome /> },
+        { path: "beleza/voz/gravacoes", element: <VoiceRecordings /> },
+        { path: "beleza/voz/:id", element: <VoiceDetail /> },
         { path: "trilha", element: <MilestonesView /> },
         { path: "trilha/marcos/novo", element: <MilestoneNew /> },
         { path: "trilha/alimentacao", element: <MealPlanView /> },
@@ -103,7 +110,7 @@ const router = createBrowserRouter(
   { basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" },
 );
 
-Promise.all([seedDatabase(), seedBeauty(), seedStyle(), seedPath(), seedMovement(), seedMakeup()]).then(() => {
+Promise.all([seedDatabase(), seedBeauty(), seedStyle(), seedPath(), seedMovement(), seedMakeup(), seedVoice()]).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <RouterProvider router={router} />

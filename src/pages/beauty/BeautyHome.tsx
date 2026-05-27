@@ -24,6 +24,10 @@ export function BeautyHome() {
         <h3 className="text-nude-warm font-medium">Maquiagem</h3>
         <p className="text-muted text-sm mt-1">5 rotinas pra ocasiões diferentes + produtos brasileiros</p>
       </Link>
+      <Link to="/beleza/voz" className="card block hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Voz</h3>
+        <p className="text-muted text-sm mt-1">Treino vocal (passing + sensual) com gravação</p>
+      </Link>
     </div>
   );
 }

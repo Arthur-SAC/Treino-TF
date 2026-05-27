@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
 
 const ITEMS = [
-  { to: "/beleza/pele-cabelo", label: "Pele & cabelo" },
+  { to: "/beleza/pele-cabelo", label: "Pele" },
   { to: "/beleza/estilo", label: "Estilo" },
   { to: "/beleza/maquiagem", label: "Maquiagem" },
+  { to: "/beleza/voz", label: "Voz" },
 ];
 
 export function BeautyTabs() {

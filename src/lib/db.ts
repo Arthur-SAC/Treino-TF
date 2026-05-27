@@ -216,6 +216,35 @@ export interface PracticeLog {
   notes?: string;
 }
 
+export interface VoiceExercise {
+  id: string;
+  name: string;
+  category: "aquecimento" | "passing" | "sensual" | "articulacao";
+  level: "iniciante" | "intermediario" | "avancado";
+  durationMin: number;
+  focus: string;
+  description: string;
+  steps: Array<{ instruction: string; durationSec: number; repeat?: number }>;
+  videoUrl?: string;
+}
+
+export interface VoiceRecording {
+  id?: number;
+  date: string;
+  blob: Blob;
+  durationSec: number;
+  exerciseId?: string;
+  notes?: string;
+}
+
+export interface VoicePracticeLog {
+  id?: number;
+  date: string;
+  exerciseId: string;
+  completed: boolean;
+  durationMin?: number;
+}
+
 export class TreinFinalDB extends Dexie {
   measurements!: Table<Measurement, number>;
   photos!: Table<ProgressPhoto, number>;
@@ -238,6 +267,9 @@ export class TreinFinalDB extends Dexie {
   danceSequences!: Table<DanceSequence, string>;
   practiceLogs!: Table<PracticeLog, number>;
   makeupRoutines!: Table<MakeupRoutine, number>;
+  voiceExercises!: Table<VoiceExercise, string>;
+  voiceRecordings!: Table<VoiceRecording, number>;
+  voicePracticeLogs!: Table<VoicePracticeLog, number>;
 
   constructor() {
     super("trein-final");
@@ -270,6 +302,11 @@ export class TreinFinalDB extends Dexie {
     });
     this.version(5).stores({
       workoutTemplates: "id, dayOfWeek, cycle",
+    });
+    this.version(6).stores({
+      voiceExercises: "id, category, level",
+      voiceRecordings: "++id, date",
+      voicePracticeLogs: "++id, date, exerciseId",
     });
   }
 }
