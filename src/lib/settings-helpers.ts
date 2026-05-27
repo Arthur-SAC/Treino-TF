@@ -4,6 +4,7 @@ export interface Settings {
   onboarded: boolean;
   seeded: boolean;
   beautySeeded: boolean;
+  styleSeeded: boolean;
   morningReminderTime: string; // "HH:MM"
   eveningReminderTime: string;
   workoutReminderTime: string;
@@ -25,6 +26,7 @@ const DEFAULTS: Settings = {
   onboarded: false,
   seeded: false,
   beautySeeded: false,
+  styleSeeded: false,
   morningReminderTime: "08:00",
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",
