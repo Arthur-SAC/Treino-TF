@@ -5,15 +5,20 @@ import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { formatDateBR } from "../lib/format";
+import { CYCLES } from "../data/cycles-seed";
 
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const todayISO = today.toISOString().slice(0, 10);
 
+  const activeCycle = useSetting("activeCycle");
   const todayTemplate = useLiveQuery(
-    async () => db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).first(),
-    [dayOfWeek],
+    async () => {
+      const all = await db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).toArray();
+      return all.find((t) => (t.cycle ?? "adaptacao") === activeCycle);
+    },
+    [dayOfWeek, activeCycle],
   );
   const sessionsToday = useLiveQuery(
     async () => db.workoutSessions.where("date").equals(todayISO).count(),
@@ -31,6 +36,11 @@ export function Today() {
     [],
   );
   const goalMl = useSetting("hydrationGoalMl");
+  const cycleStart = useSetting("cycleStartSessionCount");
+  const totalSessions = useLiveQuery(() => db.workoutSessions.count(), []);
+  const sessionsInCycle = (totalSessions ?? 0) - cycleStart;
+  const currentCycleInfo = CYCLES.find((c) => c.id === activeCycle);
+  const shouldSuggestChange = !!currentCycleInfo && sessionsInCycle >= currentCycleInfo.threshold;
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
   const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
   const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
@@ -126,6 +136,15 @@ export function Today() {
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
+
+      {shouldSuggestChange && (
+        <TodayCard
+          title="Hora de avançar o treino"
+          subtitle={`Você completou ${sessionsInCycle} sessões do ciclo "${currentCycleInfo?.name}". Veja o próximo ciclo.`}
+          to="/treino/ciclos"
+          variant="highlight"
+        />
+      )}
 
       {todayTemplate ? (
         <TodayCard

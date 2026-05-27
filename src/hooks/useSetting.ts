@@ -26,6 +26,9 @@ const DEFAULTS: Settings = {
   lastSkincareMorningAt: "",
   lastSkincareEveningAt: "",
   mealPlanVersion: 1,
+  activeCycle: "adaptacao",
+  cycleStartSessionCount: 0,
+  cyclesSeeded: false,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

@@ -24,6 +24,9 @@ export interface Settings {
   lastSkincareMorningAt: string; // "yyyy-mm-dd" or ""
   lastSkincareEveningAt: string;
   mealPlanVersion: number;
+  activeCycle: "adaptacao" | "variacao" | "hipertrofia" | "refinamento";
+  cycleStartSessionCount: number;
+  cyclesSeeded: boolean;
 }
 
 const DEFAULTS: Settings = {
@@ -50,6 +53,9 @@ const DEFAULTS: Settings = {
   lastSkincareMorningAt: "",
   lastSkincareEveningAt: "",
   mealPlanVersion: 1,
+  activeCycle: "adaptacao",
+  cycleStartSessionCount: 0,
+  cyclesSeeded: false,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

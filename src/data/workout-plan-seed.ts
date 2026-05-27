@@ -6,6 +6,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     name: "Glúteo + Mobilidade de quadril",
     dayOfWeek: 1,
     durationMin: 50,
+    cycle: "adaptacao",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "10 cada lado", restSec: 30 },
@@ -20,6 +21,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     name: "Cintura funcional + Costas",
     dayOfWeek: 2,
     durationMin: 45,
+    cycle: "adaptacao",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "dead-bug", sets: 3, repsTarget: "10 cada lado", restSec: 30 },
@@ -35,6 +37,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     name: "Mobilidade total + Dança",
     dayOfWeek: 3,
     durationMin: 40,
+    cycle: "adaptacao",
     exercises: [
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
       { exerciseId: "borboleta", sets: 1, repsTarget: "2min", restSec: 0 },
@@ -51,6 +54,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     name: "Glúteo (variação) + Coxa",
     dayOfWeek: 4,
     durationMin: 50,
+    cycle: "adaptacao",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "clamshell", sets: 2, repsTarget: "15 cada lado", restSec: 30 },
@@ -65,6 +69,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     name: "Peitoral leve + Postura",
     dayOfWeek: 5,
     durationMin: 45,
+    cycle: "adaptacao",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "10 (carga LEVE)", restSec: 60 },
