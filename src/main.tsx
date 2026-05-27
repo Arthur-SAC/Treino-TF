@@ -11,6 +11,7 @@ import { SessionDetail } from "./pages/workout/SessionDetail";
 import { ProgressionHistory } from "./pages/workout/ProgressionHistory";
 import { MovementHome } from "./pages/workout/MovementHome";
 import { SequenceDetail } from "./pages/workout/SequenceDetail";
+import { PracticeHistory } from "./pages/workout/PracticeHistory";
 import { BodyHome } from "./pages/body/BodyHome";
 import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
       { path: "treino/sessao/:templateId", element: <SessionDetail /> },
       { path: "treino/progressao", element: <ProgressionHistory /> },
       { path: "treino/movimento", element: <MovementHome /> },
+      { path: "treino/movimento/historico", element: <PracticeHistory /> },
       { path: "treino/movimento/:id", element: <SequenceDetail /> },
       { path: "corpo", element: <BodyHome /> },
       { path: "corpo/medidas", element: <Measurements /> },
