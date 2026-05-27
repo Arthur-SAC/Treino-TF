@@ -28,7 +28,8 @@ import { SkincareDetail } from "./pages/beauty/SkincareDetail";
 import { HaircareHome } from "./pages/beauty/HaircareHome";
 import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
-import { Path } from "./pages/Path";
+import { MilestonesView } from "./pages/path/MilestonesView";
+import { MilestoneNew } from "./pages/path/MilestoneNew";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -68,7 +69,8 @@ const router = createBrowserRouter([
       { path: "beleza/estilo/looks/novo", element: <LookNew /> },
       { path: "beleza/estilo/wishlist", element: <WishlistView /> },
       { path: "beleza/estilo/intimo", element: <IntimateView /> },
-      { path: "trilha", element: <Path /> },
+      { path: "trilha", element: <MilestonesView /> },
+      { path: "trilha/marcos/novo", element: <MilestoneNew /> },
       { path: "configuracoes", element: <Settings /> },
     ],
   },
