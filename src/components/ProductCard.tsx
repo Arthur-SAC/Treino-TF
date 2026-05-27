@@ -5,6 +5,7 @@ const CATEGORY_LABEL: Record<Product["category"], string> = {
   skincare: "Skincare",
   haircare: "Cabelo",
   supplements: "Suplemento",
+  makeup: "Maquiagem",
 };
 
 interface Props {
