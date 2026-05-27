@@ -24,5 +24,7 @@ Veja o [plano de implementação](docs/superpowers/plans/2026-05-26-onda-1-parte
 
 - **Onda 1:** ✅ Concluída
 - **Onda 2:** ✅ Concluída (Pele&Cabelo + Estilo + Trilha)
-- **Onda 3:** ✅ Concluída — Movimento (mobilidade + dança progressiva 4 semanas)
-- **Onda 4 (futuro):** maquiagem + polimento
+- **Onda 3:** ✅ Concluída — Movimento
+- **Onda 4:** ✅ Concluída — Maquiagem + Polimento
+
+App está pronto pra uso diário. Suporta todos os pilares da transição.
