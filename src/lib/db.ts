@@ -113,9 +113,18 @@ export interface HaircareEntry {
 export interface Product {
   id?: number;
   name: string;
-  category: "skincare" | "haircare" | "supplements";
+  category: "skincare" | "haircare" | "supplements" | "makeup";
   boughtAt?: string;
   endDate?: string;
+  notes?: string;
+}
+
+export interface MakeupRoutine {
+  id?: number;
+  name: string;
+  occasion: "diario" | "trabalho" | "sensual" | "saida" | "festa";
+  durationMin: number;
+  steps: Array<{ productName: string; technique: string; areaOfFace?: string }>;
   notes?: string;
 }
 
@@ -226,6 +235,7 @@ export class TreinFinalDB extends Dexie {
   settings!: Table<Setting, string>;
   danceSequences!: Table<DanceSequence, string>;
   practiceLogs!: Table<PracticeLog, number>;
+  makeupRoutines!: Table<MakeupRoutine, number>;
 
   constructor() {
     super("trein-final");
@@ -252,6 +262,9 @@ export class TreinFinalDB extends Dexie {
     this.version(2).stores({
       danceSequences: "id, category, level",
       practiceLogs: "++id, date, sequenceId",
+    });
+    this.version(3).stores({
+      makeupRoutines: "++id, occasion",
     });
   }
 }

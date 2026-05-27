@@ -7,6 +7,7 @@ export interface Settings {
   styleSeeded: boolean;
   pathSeeded: boolean;
   movementSeeded: boolean;
+  makeupSeeded: boolean;
   morningReminderTime: string; // "HH:MM"
   eveningReminderTime: string;
   workoutReminderTime: string;
@@ -31,6 +32,7 @@ const DEFAULTS: Settings = {
   styleSeeded: false,
   pathSeeded: false,
   movementSeeded: false,
+  makeupSeeded: false,
   morningReminderTime: "08:00",
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",

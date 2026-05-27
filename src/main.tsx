@@ -44,6 +44,7 @@ import { seedBeauty } from "./lib/beauty-seed";
 import { seedStyle } from "./lib/style-seed";
 import { seedPath } from "./lib/path-seed";
 import { seedMovement } from "./lib/movement-seed";
+import { seedMakeup } from "./lib/makeup-seed";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -93,7 +94,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-Promise.all([seedDatabase(), seedBeauty(), seedStyle(), seedPath(), seedMovement()]).then(() => {
+Promise.all([seedDatabase(), seedBeauty(), seedStyle(), seedPath(), seedMovement(), seedMakeup()]).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <RouterProvider router={router} />
