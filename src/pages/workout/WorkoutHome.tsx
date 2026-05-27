@@ -16,6 +16,10 @@ export function WorkoutHome() {
         <h3 className="text-nude-warm font-medium">Progressão</h3>
         <p className="text-muted text-sm mt-1">Histórico de cargas por exercício</p>
       </Link>
+      <Link to="/treino/movimento" className="card block hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Movimento (dança + mobilidade)</h3>
+        <p className="text-muted text-sm mt-1">Sequências guiadas, dança progressiva 4 semanas</p>
+      </Link>
     </div>
   );
 }
