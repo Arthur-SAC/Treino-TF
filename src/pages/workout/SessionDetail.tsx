@@ -64,6 +64,7 @@ export function SessionDetail() {
             exercise={ex}
             setsTarget={tplEx.sets}
             repsTarget={tplEx.repsTarget}
+            restSec={tplEx.restSec}
             onSave={(entry) => setRecorded((prev) => [...prev, entry])}
           />
         );
