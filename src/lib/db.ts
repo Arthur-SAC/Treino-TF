@@ -178,6 +178,33 @@ export interface Setting {
   value: unknown;
 }
 
+export interface DanceMove {
+  name: string;
+  description: string;
+  durationSec: number;
+  repeat?: number;
+}
+
+export interface DanceSequence {
+  id: string;
+  name: string;
+  category: "mobilidade" | "danca";
+  level: "iniciante" | "intermediario" | "avancado";
+  durationMin: number;
+  focus: string;
+  videoUrl?: string;
+  moves: DanceMove[];
+}
+
+export interface PracticeLog {
+  id?: number;
+  date: string;
+  sequenceId: string;
+  completed: boolean;
+  durationMin?: number;
+  notes?: string;
+}
+
 export class TreinFinalDB extends Dexie {
   measurements!: Table<Measurement, number>;
   photos!: Table<ProgressPhoto, number>;
@@ -197,6 +224,8 @@ export class TreinFinalDB extends Dexie {
   milestones!: Table<Milestone, number>;
   dailyLog!: Table<DailyLog, string>;
   settings!: Table<Setting, string>;
+  danceSequences!: Table<DanceSequence, string>;
+  practiceLogs!: Table<PracticeLog, number>;
 
   constructor() {
     super("trein-final");
@@ -219,6 +248,10 @@ export class TreinFinalDB extends Dexie {
       milestones: "++id, datePlanned, category",
       dailyLog: "date",
       settings: "key",
+    });
+    this.version(2).stores({
+      danceSequences: "id, category, level",
+      practiceLogs: "++id, date, sequenceId",
     });
   }
 }
