@@ -25,6 +25,7 @@ const DEFAULTS: Settings = {
   lastHydrationAt: 0,
   lastSkincareMorningAt: "",
   lastSkincareEveningAt: "",
+  mealPlanVersion: 1,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

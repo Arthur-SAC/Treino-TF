@@ -47,11 +47,20 @@ export function MealPlanView() {
         {plan.defaultMeals.map((meal, i) => (
           <div key={i} className="card">
             <h3 className="text-nude-warm font-medium mb-2">{MEAL_NAMES[i] ?? `Refeição ${i + 1}`}</h3>
-            <ul className="space-y-1 text-sm">
+            <ul className="space-y-2 text-sm">
               {meal.map((food, j) => (
-                <li key={j} className="flex justify-between">
-                  <span className="text-nude-warm">{food.name}</span>
-                  <span className="text-muted text-xs">{food.kcal} kcal</span>
+                <li key={j}>
+                  <details className="group">
+                    <summary className="flex justify-between cursor-pointer list-none">
+                      <span className="text-nude-warm">
+                        {food.name} {food.preparation && <span className="text-nude text-xs">▸</span>}
+                      </span>
+                      <span className="text-muted text-xs">{food.kcal} kcal</span>
+                    </summary>
+                    {food.preparation && (
+                      <p className="text-muted text-xs mt-1.5 ml-3 leading-relaxed">{food.preparation}</p>
+                    )}
+                  </details>
                 </li>
               ))}
             </ul>

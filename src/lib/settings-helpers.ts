@@ -23,6 +23,7 @@ export interface Settings {
   lastHydrationAt: number;
   lastSkincareMorningAt: string; // "yyyy-mm-dd" or ""
   lastSkincareEveningAt: string;
+  mealPlanVersion: number;
 }
 
 const DEFAULTS: Settings = {
@@ -48,6 +49,7 @@ const DEFAULTS: Settings = {
   lastHydrationAt: 0,
   lastSkincareMorningAt: "",
   lastSkincareEveningAt: "",
+  mealPlanVersion: 1,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
