@@ -9,6 +9,7 @@ interface Props {
 }
 
 const FIELDS: Array<{ key: keyof MeasurementInput; label: string }> = [
+  { key: "weightKg", label: "Peso (kg)" },
   { key: "neckCm", label: "Pescoço" },
   { key: "shouldersCm", label: "Ombros" },
   { key: "chestCm", label: "Busto" },
@@ -93,7 +94,7 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
                 placeholder="—"
                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 pr-10 text-nude-warm"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">cm</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">{key === "weightKg" ? "kg" : "cm"}</span>
             </div>
           </div>
         ))}

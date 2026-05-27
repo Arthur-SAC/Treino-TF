@@ -3,6 +3,7 @@ import Dexie, { type Table } from "dexie";
 export interface Measurement {
   id?: number;
   date: string;
+  weightKg?: number;
   neckCm?: number;
   shouldersCm?: number;
   chestCm?: number;
@@ -72,7 +73,7 @@ export interface Meal {
   id?: number;
   date: string;
   mealType: "cafe" | "almoco" | "lanche" | "jantar";
-  foods: Array<{ name: string; qtyG: number; kcal: number; proteinG?: number; carbG?: number; fatG?: number }>;
+  foods: Array<{ name: string; qtyG: number; kcal: number; proteinG?: number; carbG?: number; fatG?: number; preparation?: string }>;
   notes?: string;
   checked: boolean;
 }
