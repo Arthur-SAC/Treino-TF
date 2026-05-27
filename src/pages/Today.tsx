@@ -31,6 +31,8 @@ export function Today() {
   );
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
+  const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
+  const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
 
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
@@ -99,6 +101,18 @@ export function Today() {
             +200ml
           </button>
         }
+      />
+
+      <TodayCard
+        title="Refeições"
+        subtitle={`${mealsDone}/4 do plano`}
+        to="/refeicoes-hoje"
+        variant={mealsDone < 4 ? "highlight" : "default"}
+      />
+      <TodayCard
+        title="Diário"
+        subtitle={dailyLog?.mood ? `humor registrado` : "como foi o dia?"}
+        to="/trilha/diario"
       />
 
       {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
