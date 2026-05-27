@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Measurement } from "../../lib/db";
 import { MeasurementForm } from "../../components/MeasurementForm";
 import { WhrChart } from "../../components/WhrChart";
+import { MeasurementChart } from "../../components/MeasurementChart";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { formatCm, formatDateBR } from "../../lib/format";
 
@@ -15,6 +17,7 @@ const CATEGORY_LABEL: Record<ReturnType<typeof classifyWhr>, string> = {
 
 export function Measurements() {
   const items = useLiveQuery(() => db.measurements.orderBy("date").reverse().toArray(), []);
+  const [selectedMetric, setSelectedMetric] = useState<keyof Measurement>("waistCm");
 
   async function handleSave(m: Omit<Measurement, "id">) {
     await db.measurements.add(m as Measurement);
@@ -25,6 +28,20 @@ export function Measurements() {
     .map((m) => ({ date: m.date, whr: calculateWhr(m.waistCm!, m.hipCm!) }))
     .reverse() // historicamente cronológico
     ?? [];
+
+  const metricOptions: Array<{ key: keyof Measurement; label: string }> = [
+    { key: "waistCm", label: "Cintura" },
+    { key: "hipCm", label: "Quadril" },
+    { key: "chestCm", label: "Busto" },
+    { key: "thighLeftCm", label: "Coxa E" },
+    { key: "thighRightCm", label: "Coxa D" },
+    { key: "shouldersCm", label: "Ombros" },
+  ];
+
+  const metricData = items
+    ?.filter((m) => typeof m[selectedMetric] === "number")
+    .map((m) => ({ date: m.date, value: m[selectedMetric] as number }))
+    .reverse() ?? [];
 
   return (
     <div className="p-4 pb-24">
@@ -42,6 +59,29 @@ export function Measurements() {
         <div className="card mb-4">
           <h2 className="text-nude-warm font-medium mb-2">Evolução cintura/quadril</h2>
           <WhrChart data={chartData} />
+        </div>
+      )}
+
+      {metricData.length > 0 && (
+        <div className="card mb-4">
+          <h2 className="text-nude-warm font-medium mb-3">Evolução de uma medida</h2>
+          <div className="overflow-x-auto -mx-4 px-4 mb-3">
+            <div className="flex gap-2 w-max">
+              {metricOptions.map((opt) => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => setSelectedMetric(opt.key)}
+                  className={`px-3 py-1.5 rounded-pill text-xs whitespace-nowrap ${
+                    selectedMetric === opt.key ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <MeasurementChart data={metricData} />
         </div>
       )}
 
