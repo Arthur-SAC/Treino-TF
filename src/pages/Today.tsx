@@ -34,6 +34,22 @@ export function Today() {
   const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
   const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
 
+  const sequences = useLiveQuery(() => db.danceSequences.toArray(), []);
+  const practiceToday = useLiveQuery(
+    () => db.practiceLogs.where("date").equals(todayISO).count(),
+    [todayISO],
+  );
+
+  const suggestedSeq = (() => {
+    if (!sequences || sequences.length === 0) return null;
+    if (dayOfWeek === 1) return sequences.find((s) => s.id === "danca-semana-1");
+    if (dayOfWeek === 3) return sequences.find((s) => s.id === "danca-semana-2");
+    if (dayOfWeek === 5) return sequences.find((s) => s.id === "danca-semana-3");
+    if (dayOfWeek === 2 || dayOfWeek === 4) return sequences.find((s) => s.id === "mobilidade-pelvica-matinal");
+    if (dayOfWeek === 6) return sequences.find((s) => s.id === "alongamento-pelvico-profundo");
+    return null; // domingo livre
+  })();
+
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
     [],
@@ -114,6 +130,15 @@ export function Today() {
         subtitle={dailyLog?.mood ? `humor registrado` : "como foi o dia?"}
         to="/trilha/diario"
       />
+
+      {suggestedSeq && (
+        <TodayCard
+          title="Movimento"
+          subtitle={`${suggestedSeq.name} · ${suggestedSeq.durationMin} min · ${(practiceToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+          to={`/treino/movimento/${suggestedSeq.id}`}
+          variant={(practiceToday ?? 0) === 0 ? "highlight" : "default"}
+        />
+      )}
 
       {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
         <TodayCard
