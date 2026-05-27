@@ -32,6 +32,7 @@ import { HaircareHome } from "./pages/beauty/HaircareHome";
 import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
 import { MakeupHome } from "./pages/beauty/makeup/MakeupHome";
+import { MakeupDetail } from "./pages/beauty/makeup/MakeupDetail";
 import { MilestonesView } from "./pages/path/MilestonesView";
 import { MilestoneNew } from "./pages/path/MilestoneNew";
 import { MealPlanView } from "./pages/path/MealPlanView";
@@ -84,6 +85,7 @@ const router = createBrowserRouter([
       { path: "beleza/estilo/wishlist", element: <WishlistView /> },
       { path: "beleza/estilo/intimo", element: <IntimateView /> },
       { path: "beleza/maquiagem", element: <MakeupHome /> },
+      { path: "beleza/maquiagem/:id", element: <MakeupDetail /> },
       { path: "trilha", element: <MilestonesView /> },
       { path: "trilha/marcos/novo", element: <MilestoneNew /> },
       { path: "trilha/alimentacao", element: <MealPlanView /> },
