@@ -23,8 +23,8 @@ Veja o [plano de implementação](docs/superpowers/plans/2026-05-26-onda-1-parte
 ## Status
 
 - **Onda 1:** ✅ Concluída — fundação, libs, Corpo, Treino, Hoje, Notif, Settings
-- **Onda 2 Parte 1:** ✅ Concluída — Beleza (Pele & cabelo: skincare + haircare + produtos)
-- **Onda 2 Parte 2 (próximo):** Beleza → Estilo (paleta + peças + looks + íntimo)
-- **Onda 2 Parte 3:** Trilha (alimentação + marcos + diário)
+- **Onda 2 Parte 1:** ✅ Concluída — Beleza Pele & cabelo
+- **Onda 2 Parte 2:** ✅ Concluída — Beleza Estilo (paleta + peças + looks + wishlist + íntimo)
+- **Onda 2 Parte 3 (próximo):** Trilha (alimentação + marcos + diário)
 - **Onda 3:** dança/movimento profundo
 - **Onda 4:** polimento + maquiagem
