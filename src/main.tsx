@@ -30,6 +30,8 @@ import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
 import { MilestonesView } from "./pages/path/MilestonesView";
 import { MilestoneNew } from "./pages/path/MilestoneNew";
+import { MealPlanView } from "./pages/path/MealPlanView";
+import { MealPlanEdit } from "./pages/path/MealPlanEdit";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -71,6 +73,8 @@ const router = createBrowserRouter([
       { path: "beleza/estilo/intimo", element: <IntimateView /> },
       { path: "trilha", element: <MilestonesView /> },
       { path: "trilha/marcos/novo", element: <MilestoneNew /> },
+      { path: "trilha/alimentacao", element: <MealPlanView /> },
+      { path: "trilha/alimentacao/editar", element: <MealPlanEdit /> },
       { path: "configuracoes", element: <Settings /> },
     ],
   },
