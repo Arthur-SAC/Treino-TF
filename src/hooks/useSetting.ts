@@ -7,6 +7,7 @@ const DEFAULTS: Settings = {
   seeded: false,
   beautySeeded: false,
   styleSeeded: false,
+  pathSeeded: false,
   morningReminderTime: "08:00",
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",
