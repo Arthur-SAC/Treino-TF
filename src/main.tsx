@@ -26,6 +26,7 @@ import { Path } from "./pages/Path";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
+import { seedStyle } from "./lib/style-seed";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -60,7 +61,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-Promise.all([seedDatabase(), seedBeauty()]).then(() => {
+Promise.all([seedDatabase(), seedBeauty(), seedStyle()]).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <RouterProvider router={router} />
