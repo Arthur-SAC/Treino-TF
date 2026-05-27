@@ -10,6 +10,7 @@ import { ExerciseDetail } from "./pages/workout/ExerciseDetail";
 import { SessionDetail } from "./pages/workout/SessionDetail";
 import { ProgressionHistory } from "./pages/workout/ProgressionHistory";
 import { MovementHome } from "./pages/workout/MovementHome";
+import { SequenceDetail } from "./pages/workout/SequenceDetail";
 import { BodyHome } from "./pages/body/BodyHome";
 import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
       { path: "treino/sessao/:templateId", element: <SessionDetail /> },
       { path: "treino/progressao", element: <ProgressionHistory /> },
       { path: "treino/movimento", element: <MovementHome /> },
+      { path: "treino/movimento/:id", element: <SequenceDetail /> },
       { path: "corpo", element: <BodyHome /> },
       { path: "corpo/medidas", element: <Measurements /> },
       { path: "corpo/fotos", element: <Photos /> },
