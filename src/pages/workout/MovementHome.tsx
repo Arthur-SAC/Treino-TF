@@ -22,6 +22,7 @@ export function MovementHome() {
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
         <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
+        <Link to="/treino/movimento/historico" className="text-muted text-sm">histórico</Link>
         <h1 className="font-serif text-2xl text-nude flex-1">Movimento</h1>
       </div>
 
