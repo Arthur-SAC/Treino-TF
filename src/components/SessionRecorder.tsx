@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
 import { suggestNextLoad } from "../lib/progression";
+import { ExerciseInfoModal } from "./ExerciseInfoModal";
+import { InfoIcon } from "./InfoIcon";
 
 interface Props {
   exercise: Exercise;
@@ -24,6 +26,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
   const [suggested, setSuggested] = useState<number | null>(null);
   const [restRemaining, setRestRemaining] = useState<number | null>(null);
   const [restRunning, setRestRunning] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -118,7 +121,17 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
     <div className="card mb-3">
       {/* Header — quebra em linha 2 se nome longo */}
       <div className="mb-3">
-        <h3 className="text-nude-warm font-medium break-words">{exercise.name}</h3>
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-nude-warm font-medium break-words flex-1 min-w-0">{exercise.name}</h3>
+          <button
+            type="button"
+            onClick={() => setShowInfo(true)}
+            className="text-muted hover:text-nude transition flex-shrink-0"
+            aria-label="Como fazer este exercício"
+          >
+            <InfoIcon />
+          </button>
+        </div>
         <p className="text-muted text-xs mt-0.5">
           {setsTarget}x {repsTarget} {restSec > 0 && `· descanso ${restSec}s`}
         </p>
@@ -227,6 +240,10 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
       >
         Salvar exercício
       </button>
+
+      {showInfo && (
+        <ExerciseInfoModal exercise={exercise} onClose={() => setShowInfo(false)} />
+      )}
     </div>
   );
 }
