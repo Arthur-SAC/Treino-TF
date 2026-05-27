@@ -17,8 +17,8 @@ export default defineConfig({
         background_color: "#1a0a0e",
         display: "standalone",
         orientation: "portrait",
-        scope: "./",
-        start_url: "./",
+        scope: "/Treino-TF/",
+        start_url: "/Treino-TF/",
         icons: [
           { src: "icons/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
           { src: "icons/icon-512.svg", sizes: "512x512", type: "image/svg+xml" },
@@ -26,7 +26,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: "index.html",
+        navigateFallback: "/Treino-TF/index.html",
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === "document",
@@ -41,7 +41,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: "./",
+  base: "/Treino-TF/",
   test: {
     globals: true,
     environment: "happy-dom",

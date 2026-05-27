@@ -12,6 +12,28 @@ npm run build        # gera dist/
 npm run preview      # preview do build em localhost:4173
 ```
 
+## Instalar no celular (PWA)
+
+App publicado em **https://arthur-sac.github.io/Treino-TF/**
+
+### Primeira vez — ativar GitHub Pages
+
+1. Vá pra: https://github.com/Arthur-SAC/Treino-TF/settings/pages
+2. Em **Source**, selecione **GitHub Actions**
+3. O deploy roda automaticamente em cada `git push origin main`. Acompanhe em https://github.com/Arthur-SAC/Treino-TF/actions
+
+### Instalar no celular
+
+1. Abra https://arthur-sac.github.io/Treino-TF/ no **Chrome do Android**
+2. Toque no menu **⋮** → **"Instalar app"** ou **"Adicionar à tela inicial"**
+3. Aparece como ícone na tela inicial — abre em fullscreen, funciona offline, notificações ativas
+
+### Adicionar à lista "não otimizar bateria"
+
+Pra notificações chegarem no horário certo:
+- Android puro: Configurações → Apps → Trein-Final → Bateria → Sem restrições
+- Xiaomi/MIUI: Configurações → Bateria → Otimização de bateria → Trein-Final → Sem restrições + Configurações → Apps gerenciados → Trein-Final → Autoinício
+
 ## Stack
 
 React 18 + TypeScript + Vite + Tailwind CSS + Dexie.js + React Router 7 + vite-plugin-pwa + Vitest.
