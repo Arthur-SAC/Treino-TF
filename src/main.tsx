@@ -21,6 +21,7 @@ import { GarmentDetail } from "./pages/beauty/style/GarmentDetail";
 import { LooksView } from "./pages/beauty/style/LooksView";
 import { LookNew } from "./pages/beauty/style/LookNew";
 import { WishlistView } from "./pages/beauty/style/WishlistView";
+import { IntimateView } from "./pages/beauty/style/IntimateView";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
       { path: "beleza/estilo/looks", element: <LooksView /> },
       { path: "beleza/estilo/looks/novo", element: <LookNew /> },
       { path: "beleza/estilo/wishlist", element: <WishlistView /> },
+      { path: "beleza/estilo/intimo", element: <IntimateView /> },
       { path: "trilha", element: <Path /> },
       { path: "configuracoes", element: <Settings /> },
     ],
