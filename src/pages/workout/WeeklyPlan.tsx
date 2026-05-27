@@ -1,11 +1,19 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
+import { useSetting } from "../../hooks/useSetting";
 
 const DAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 export function WeeklyPlan() {
-  const templates = useLiveQuery(() => db.workoutTemplates.orderBy("dayOfWeek").toArray(), []);
+  const activeCycle = useSetting("activeCycle");
+  const templates = useLiveQuery(
+    async () => {
+      const all = await db.workoutTemplates.orderBy("dayOfWeek").toArray();
+      return all.filter((t) => (t.cycle ?? "adaptacao") === activeCycle);
+    },
+    [activeCycle],
+  );
   const today = new Date().getDay();
 
   return (

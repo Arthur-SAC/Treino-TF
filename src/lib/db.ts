@@ -54,6 +54,7 @@ export interface WorkoutTemplate {
     notes?: string;
   }>;
   durationMin: number;
+  cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento";
 }
 
 export interface WorkoutSession {
@@ -266,6 +267,9 @@ export class TreinFinalDB extends Dexie {
     });
     this.version(3).stores({
       makeupRoutines: "++id, occasion",
+    });
+    this.version(5).stores({
+      workoutTemplates: "id, dayOfWeek, cycle",
     });
   }
 }
