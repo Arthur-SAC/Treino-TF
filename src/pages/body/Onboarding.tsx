@@ -164,7 +164,8 @@ export function Onboarding() {
           <h2 className="font-serif text-2xl text-nude">Pronto.</h2>
           <p className="text-muted text-sm">
             Você pode adicionar mais medidas e fotos a qualquer momento na aba <strong>Corpo</strong>.
-            Treino, beleza e trilha chegam nas próximas atualizações.
+            O app inteiro está disponível: <strong>Treino</strong> (plano semanal + biblioteca + movimento), <strong>Beleza</strong> (skincare + cabelo + estilo + maquiagem), <strong>Trilha</strong> (marcos + alimentação + diário).
+            Tudo offline, tudo seu.
           </p>
           <button
             type="button"
