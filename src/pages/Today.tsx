@@ -2,6 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
+import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { formatDateBR } from "../lib/format";
 
@@ -63,6 +64,32 @@ export function Today() {
     [todayISO],
   );
 
+  // Conta últimos 7 dias com pelo menos 1 skincare feita
+  const last7DaysSkincare = useLiveQuery(async () => {
+    const dates: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    const logs = await db.skincareLogs.where("date").anyOf(dates).and((l) => l.completed).toArray();
+    const uniqueDates = new Set(logs.map((l) => l.date));
+    return uniqueDates.size;
+  }, []);
+
+  // Conta últimas 7 sessões de treino
+  const last7DaysTraining = useLiveQuery(async () => {
+    const dates: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    const sessions = await db.workoutSessions.where("date").anyOf(dates).toArray();
+    const uniqueDates = new Set(sessions.map((s) => s.date));
+    return uniqueDates.size;
+  }, []);
+
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
   const eveningDone = todaySkincareLogs && eveningRoutines && eveningRoutines.length > 0 &&
@@ -92,6 +119,12 @@ export function Today() {
           <h1 className="font-serif text-2xl text-nude">Bom dia</h1>
         </div>
         <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
+        <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
+        <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
 
       {todayTemplate ? (
