@@ -33,6 +33,7 @@ import { MilestoneNew } from "./pages/path/MilestoneNew";
 import { MealPlanView } from "./pages/path/MealPlanView";
 import { MealPlanEdit } from "./pages/path/MealPlanEdit";
 import { ShoppingList } from "./pages/path/ShoppingList";
+import { MealsToday } from "./pages/path/MealsToday";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
       { path: "trilha/alimentacao", element: <MealPlanView /> },
       { path: "trilha/alimentacao/editar", element: <MealPlanEdit /> },
       { path: "trilha/alimentacao/lista-compras", element: <ShoppingList /> },
+      { path: "refeicoes-hoje", element: <MealsToday /> },
       { path: "configuracoes", element: <Settings /> },
     ],
   },
