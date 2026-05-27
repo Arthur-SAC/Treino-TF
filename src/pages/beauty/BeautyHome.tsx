@@ -20,6 +20,10 @@ export function BeautyHome() {
         <h3 className="text-nude-warm font-medium">Produtos</h3>
         <p className="text-muted text-sm mt-1">Catálogo + estoque</p>
       </Link>
+      <Link to="/beleza/maquiagem" className="card block hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Maquiagem</h3>
+        <p className="text-muted text-sm mt-1">5 rotinas pra ocasiões diferentes + produtos brasileiros</p>
+      </Link>
     </div>
   );
 }
