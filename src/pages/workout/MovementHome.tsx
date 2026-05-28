@@ -18,6 +18,7 @@ export function MovementHome() {
   const mobilidade = sequences?.filter((s) => s.category === "mobilidade") ?? [];
   const pelvic = sequences?.filter((s) => s.category === "pelvic") ?? [];
   const danca = sequences?.filter((s) => s.category === "danca") ?? [];
+  const sensual = sequences?.filter((s) => s.category === "sensual") ?? [];
 
   return (
     <div className="p-4 pb-24">
@@ -50,8 +51,19 @@ export function MovementHome() {
       </div>
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Dança · 4 semanas progressivas</h2>
-      <div className="space-y-2">
+      <div className="space-y-2 mb-4">
         {danca.map((s) => (
+          <SequenceCard
+            key={s.id}
+            sequence={s}
+            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
+          />
+        ))}
+      </div>
+
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Sensual · linguagem corporal + dança avançada</h2>
+      <div className="space-y-2">
+        {sensual.map((s) => (
           <SequenceCard
             key={s.id}
             sequence={s}
