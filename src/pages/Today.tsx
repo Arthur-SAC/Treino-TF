@@ -58,7 +58,8 @@ export function Today() {
     if (dayOfWeek === 5) return sequences.find((s) => s.id === "danca-semana-3");
     if (dayOfWeek === 2 || dayOfWeek === 4) return sequences.find((s) => s.id === "mobilidade-pelvica-matinal");
     if (dayOfWeek === 6) return sequences.find((s) => s.id === "alongamento-pelvico-profundo");
-    return null; // domingo livre
+    if (dayOfWeek === 0) return sequences.find((s) => s.id === "pelvic-kegel-classico"); // domingo livre → pelvic
+    return null;
   })();
 
   const morningRoutines = useLiveQuery(

@@ -9,6 +9,7 @@ const DEFAULTS: Settings = {
   styleSeeded: false,
   pathSeeded: false,
   movementSeeded: false,
+  movementVersion: 1,
   makeupSeeded: false,
   voiceSeeded: false,
   morningReminderTime: "08:00",

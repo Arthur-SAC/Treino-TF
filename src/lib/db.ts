@@ -199,7 +199,7 @@ export interface DanceMove {
 export interface DanceSequence {
   id: string;
   name: string;
-  category: "mobilidade" | "danca";
+  category: "mobilidade" | "danca" | "pelvic";
   level: "iniciante" | "intermediario" | "avancado";
   durationMin: number;
   focus: string;
