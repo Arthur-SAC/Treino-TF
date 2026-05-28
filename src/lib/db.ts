@@ -245,6 +245,16 @@ export interface VoicePracticeLog {
   durationMin?: number;
 }
 
+export interface HairRemovalSession {
+  id?: number;
+  date: string;
+  area: "rosto" | "axila" | "pernas" | "intima" | "bracos" | "costas" | "buco" | "outra";
+  method: "laser" | "luz-pulsada" | "cera" | "fio" | "navalha" | "creme" | "pinca" | "eletrolise";
+  cost?: number;
+  painLevel?: 1 | 2 | 3 | 4 | 5;
+  notes?: string;
+}
+
 export class TreinFinalDB extends Dexie {
   measurements!: Table<Measurement, number>;
   photos!: Table<ProgressPhoto, number>;
@@ -270,6 +280,7 @@ export class TreinFinalDB extends Dexie {
   voiceExercises!: Table<VoiceExercise, string>;
   voiceRecordings!: Table<VoiceRecording, number>;
   voicePracticeLogs!: Table<VoicePracticeLog, number>;
+  hairRemovalSessions!: Table<HairRemovalSession, number>;
 
   constructor() {
     super("trein-final");
@@ -307,6 +318,9 @@ export class TreinFinalDB extends Dexie {
       voiceExercises: "id, category, level",
       voiceRecordings: "++id, date",
       voicePracticeLogs: "++id, date, exerciseId",
+    });
+    this.version(7).stores({
+      hairRemovalSessions: "++id, date, area, method",
     });
   }
 }

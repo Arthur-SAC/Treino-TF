@@ -32,6 +32,7 @@ import { SkincareDetail } from "./pages/beauty/SkincareDetail";
 import { HaircareHome } from "./pages/beauty/HaircareHome";
 import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
+import { DepilacaoHome } from "./pages/beauty/DepilacaoHome";
 import { MakeupHome } from "./pages/beauty/makeup/MakeupHome";
 import { MakeupDetail } from "./pages/beauty/makeup/MakeupDetail";
 import { VoiceHome } from "./pages/beauty/voice/VoiceHome";
@@ -44,6 +45,7 @@ import { MealPlanEdit } from "./pages/path/MealPlanEdit";
 import { ShoppingList } from "./pages/path/ShoppingList";
 import { MealsToday } from "./pages/path/MealsToday";
 import { DiaryView } from "./pages/path/DiaryView";
+import { LegalResources } from "./pages/path/LegalResources";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -84,6 +86,7 @@ const router = createBrowserRouter(
         { path: "beleza/pele-cabelo/haircare", element: <HaircareHome /> },
         { path: "beleza/pele-cabelo/produtos", element: <ProductsHome /> },
         { path: "beleza/pele-cabelo/produtos/novo", element: <ProductNew /> },
+        { path: "beleza/depilacao", element: <DepilacaoHome /> },
         { path: "beleza/estilo", element: <PaletteView /> },
         { path: "beleza/estilo/pecas", element: <GarmentsView /> },
         { path: "beleza/estilo/pecas/:id", element: <GarmentDetail /> },
@@ -103,6 +106,7 @@ const router = createBrowserRouter(
         { path: "trilha/alimentacao/lista-compras", element: <ShoppingList /> },
         { path: "refeicoes-hoje", element: <MealsToday /> },
         { path: "trilha/diario", element: <DiaryView /> },
+        { path: "trilha/direitos", element: <LegalResources /> },
         { path: "configuracoes", element: <Settings /> },
       ],
     },

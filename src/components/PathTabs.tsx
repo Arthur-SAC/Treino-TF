@@ -4,6 +4,7 @@ const ITEMS = [
   { to: "/trilha", label: "Marcos", end: true },
   { to: "/trilha/alimentacao", label: "Alimentação" },
   { to: "/trilha/diario", label: "Diário" },
+  { to: "/trilha/direitos", label: "Direitos" },
 ];
 
 export function PathTabs() {
