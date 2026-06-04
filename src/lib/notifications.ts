@@ -52,6 +52,7 @@ export function shouldRemindOncePerDay(opts: {
   todayISO: string;
   done: boolean;
 }): boolean {
+  if (Number.isNaN(opts.targetMin)) return false;
   if (opts.done) return false;
   if (opts.currentMin < opts.targetMin) return false;
   if (opts.lastNotifiedDate === opts.todayISO) return false;

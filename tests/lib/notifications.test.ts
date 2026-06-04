@@ -47,4 +47,7 @@ describe("shouldRemindOncePerDay", () => {
   it("não dispara se já notificou hoje", () => {
     expect(shouldRemindOncePerDay({ ...base, lastNotifiedDate: "2026-06-04" })).toBe(false);
   });
+  it("não dispara se targetMin for NaN (horário malformado)", () => {
+    expect(shouldRemindOncePerDay({ ...base, targetMin: NaN })).toBe(false);
+  });
 });
