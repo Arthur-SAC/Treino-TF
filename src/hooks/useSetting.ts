@@ -32,6 +32,10 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   walkGoalMin: 30,
+  posturaReminderTime: "19:00",
+  walkReminderTime: "12:00",
+  lastPosturaReminderAt: "",
+  lastWalkReminderAt: "",
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

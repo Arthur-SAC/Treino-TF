@@ -30,6 +30,10 @@ export interface Settings {
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
   walkGoalMin: number;
+  posturaReminderTime: string;
+  walkReminderTime: string;
+  lastPosturaReminderAt: string;
+  lastWalkReminderAt: string;
 }
 
 const DEFAULTS: Settings = {
@@ -62,6 +66,10 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   walkGoalMin: 30,
+  posturaReminderTime: "19:00",
+  walkReminderTime: "12:00",
+  lastPosturaReminderAt: "",
+  lastWalkReminderAt: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
