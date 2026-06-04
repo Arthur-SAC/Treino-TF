@@ -1,41 +1,27 @@
 import { describe, it, expect } from "vitest";
 import { suggestNextLoad } from "../../src/lib/progression";
-import type { SessionFeedback } from "../../src/lib/progression";
 
 describe("suggestNextLoad", () => {
-  it("sobe 1kg quando fácil e completou", () => {
-    const feedback: SessionFeedback = "easy";
-    const next = suggestNextLoad({ lastLoad: 10, feedback, completedAllReps: true });
-    expect(next).toBe(11);
+  it("fácil + carga <5kg → +0,5", () => {
+    expect(suggestNextLoad({ lastLoad: 4, feedback: "easy", completedAllReps: true })).toBe(4.5);
   });
-
-  it("sobe 0.5kg quando fácil e completou com carga baixa (<5kg)", () => {
-    const next = suggestNextLoad({ lastLoad: 4, feedback: "easy", completedAllReps: true });
-    expect(next).toBe(4.5);
+  it("fácil + carga 5–20 → +2", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true })).toBe(12);
   });
-
-  it("mantém quando médio e completou", () => {
-    const next = suggestNextLoad({ lastLoad: 10, feedback: "medium", completedAllReps: true });
-    expect(next).toBe(10);
+  it("fácil + carga >=20 → +2,5", () => {
+    expect(suggestNextLoad({ lastLoad: 20, feedback: "easy", completedAllReps: true })).toBe(22.5);
   });
-
-  it("mantém quando difícil e completou", () => {
-    const next = suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: true });
-    expect(next).toBe(10);
+  it("médio + completou → +1 (mantém momentum)", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "medium", completedAllReps: true })).toBe(11);
   });
-
-  it("desce 1kg quando não completou", () => {
-    const next = suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: false });
-    expect(next).toBe(9);
+  it("difícil + completou → mantém", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: true })).toBe(10);
   });
-
-  it("nunca desce abaixo de 0", () => {
-    const next = suggestNextLoad({ lastLoad: 0.5, feedback: "hard", completedAllReps: false });
-    expect(next).toBe(0);
+  it("não completou → -1 (piso 0)", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: false })).toBe(9);
+    expect(suggestNextLoad({ lastLoad: 0.5, feedback: "hard", completedAllReps: false })).toBe(0);
   });
-
-  it("aceita feedback 'easy' mesmo sem completar e não sobe (regra de segurança)", () => {
-    const next = suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: false });
-    expect(next).toBe(9);
+  it("não completou tem prioridade sobre 'easy'", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: false })).toBe(9);
   });
 });

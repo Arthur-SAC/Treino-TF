@@ -21,7 +21,7 @@ describe("Workout session smoke", () => {
     );
     await waitFor(() => expect(screen.getByText(/Glúteo \+ Mobilidade/)).toBeInTheDocument());
 
-    // Encontra o primeiro SessionRecorder (aquecimento), digita uma série, salva
+    // Encontra o primeiro SessionRecorder (cardio leve), digita uma série, salva
     const weightInputs = await screen.findAllByPlaceholderText("kg");
     const repsInputs = await screen.findAllByPlaceholderText("reps");
 
@@ -29,7 +29,7 @@ describe("Workout session smoke", () => {
     fireEvent.change(repsInputs[0], { target: { value: "5" } });
     fireEvent.click(screen.getAllByRole("button", { name: /salvar exercício/i })[0]);
 
-    await waitFor(() => expect(screen.getByText(/Aquecimento articular geral ✓/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Cardio leve .esteira ou bike. ✓/)).toBeInTheDocument());
 
     // Finaliza a sessão
     fireEvent.click(screen.getByRole("button", { name: /finalizar treino/i }));

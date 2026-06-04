@@ -31,6 +31,7 @@ const DEFAULTS: Settings = {
   activeCycle: "adaptacao",
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
+  walkGoalMin: 30,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

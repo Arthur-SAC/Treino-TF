@@ -2,7 +2,7 @@ import { db } from "./db";
 import { MILESTONES } from "../data/milestones-seed";
 import { INITIAL_PLAN } from "../data/meal-plan-seed";
 
-const MEAL_PLAN_VERSION = 2;
+const MEAL_PLAN_VERSION = 3;
 
 export async function seedPath(): Promise<void> {
   // Seed inicial (marcos + plano) acontece uma vez

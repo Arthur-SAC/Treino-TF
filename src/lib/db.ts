@@ -79,14 +79,44 @@ export interface Meal {
   checked: boolean;
 }
 
+export type IngredientCategory =
+  | "proteina"
+  | "carboidrato"
+  | "hortifruti"
+  | "laticinio"
+  | "gordura"
+  | "mercearia";
+
+export interface Ingredient {
+  item: string;        // "Ovos", "Peito de frango", "Arroz integral"
+  qty: number;         // quantidade numérica
+  unit: string;        // "un", "g", "ml", "colher de sopa"
+  category: IngredientCategory;
+}
+
+export interface MealVariant {
+  id: string;                 // "cafe-1", "cafe-2"...
+  label: string;              // nome neutro: "Opção 1 · Ovos & pão integral"
+  foods: Meal["foods"];       // mesmo shape atual (name, qtyG, kcal, macros, preparation)
+  ingredients: Ingredient[];  // ingredientes crus pra lista de compras
+}
+
+export interface MealSlot {
+  mealType: Meal["mealType"]; // "cafe" | "almoco" | "lanche" | "jantar"
+  targetKcal: number;
+  variants: MealVariant[];    // 3 opções por período
+}
+
 export interface MealPlan {
   id?: number;
   name: string;
+  goal: "deficit" | "manutencao" | "superavit";
   kcalDaily: number;
   proteinG: number;
   carbG: number;
   fatG: number;
-  defaultMeals: Meal["foods"][];
+  slots: MealSlot[];              // fonte de verdade
+  defaultMeals: Meal["foods"][];  // derivado (variante 0 de cada slot) — retrocompat
 }
 
 export interface SkincareRoutine {
@@ -182,6 +212,7 @@ export interface DailyLog {
   notes?: string;
   activeBreakCount: number;
   waterMl: number;
+  walkMin?: number;
 }
 
 export interface Setting {

@@ -392,4 +392,21 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "Continuar dançando", description: "Depois de remover, continua o movimento — body roll, rebolado, floor work. A dança não acaba quando a peça sai. 2 min.", durationSec: 120 },
     ],
   },
+  {
+    id: "postura-silhueta-diaria",
+    name: "Postura & silhueta (diária)",
+    category: "mobilidade",
+    level: "iniciante",
+    durationMin: 7,
+    focus: "Corrigir cabeça pra frente, abrir o peito, ativar glúteo e marcar a cintura. Vitória visível em semanas, faz a silhueta parecer mais alongada já hoje.",
+    moves: [
+      { name: "Chin tuck (retração cervical)", description: "Em pé ou sentada, olhar à frente. Desliza o queixo pra trás (como fazer 'papada'), alongando a nuca. Segura 3s, solta. Corrige a cabeça projetada.", durationSec: 60, repeat: 10 },
+      { name: "Extensão torácica", description: "Mãos atrás da nuca, cotovelos abertos. Abre o peito levando os cotovelos pra trás e olhando levemente pra cima. Não força a lombar — o movimento é na parte alta das costas.", durationSec: 60, repeat: 10 },
+      { name: "Retração escapular (parede/banda)", description: "Em pé, aperta as escápulas pra trás e pra baixo, sem subir os ombros. Segura 3s. Pode usar uma faixa elástica esticada à frente.", durationSec: 60, repeat: 12 },
+      { name: "Alongamento de peitoral no batente", description: "Antebraço apoiado no batente da porta, gira o tronco pro lado oposto até sentir o peito alongar. 30s cada lado. Abre os ombros fechados pra frente.", durationSec: 60 },
+      { name: "Ativação de glúteo em pé", description: "Em pé, transfere o peso pra uma perna, aperta o glúteo dela com força 3s, solta. Alterna. Reacorda o glúteo dormente do dia sentada.", durationSec: 60, repeat: 12 },
+      { name: "Vacuum abdominal", description: "Expira todo o ar e puxa o umbigo em direção à coluna, sem prender com força. Segura 10-15s respirando raso. Trabalha o transverso, que afina a cintura por dentro.", durationSec: 90, repeat: 4 },
+      { name: "Respiração de postura final", description: "Em pé, alinha orelha-ombro-quadril. 5 respirações profundas mantendo o alinhamento, gravando a sensação de postura ereta.", durationSec: 60 },
+    ],
+  },
 ];

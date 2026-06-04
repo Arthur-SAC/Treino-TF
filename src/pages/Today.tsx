@@ -45,11 +45,13 @@ export function Today() {
   const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
   const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
 
-  const sequences = useLiveQuery(() => db.danceSequences.toArray(), []);
-  const practiceToday = useLiveQuery(
-    () => db.practiceLogs.where("date").equals(todayISO).count(),
+  const walkGoalMin = useSetting("walkGoalMin");
+  const posturaDoneToday = useLiveQuery(
+    () => db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === "postura-silhueta-diaria").count(),
     [todayISO],
   );
+
+  const sequences = useLiveQuery(() => db.danceSequences.toArray(), []);
 
   const suggestedSeq = (() => {
     if (!sequences || sequences.length === 0) return null;
@@ -61,6 +63,14 @@ export function Today() {
     if (dayOfWeek === 0) return sequences.find((s) => s.id === "pelvic-kegel-classico"); // domingo livre → pelvic
     return null;
   })();
+
+  const practiceToday = useLiveQuery(
+    async () => {
+      if (!suggestedSeq) return 0;
+      return db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === suggestedSeq.id).count();
+    },
+    [todayISO, suggestedSeq?.id],
+  );
 
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
@@ -122,6 +132,15 @@ export function Today() {
     }
   }
 
+  async function addWalk(min: number) {
+    const log = await db.dailyLog.get(todayISO);
+    if (log) {
+      await db.dailyLog.update(todayISO, { walkMin: (log.walkMin ?? 0) + min });
+    } else {
+      await db.dailyLog.put({ date: todayISO, waterMl: 0, activeBreakCount: 0, walkMin: min });
+    }
+  }
+
   return (
     <div className="p-4 pb-24 space-y-3">
       <div className="flex justify-between items-start">
@@ -173,6 +192,20 @@ export function Today() {
       />
 
       <TodayCard
+        title="Caminhada"
+        subtitle={`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`}
+        rightSlot={
+          <button
+            type="button"
+            onClick={() => void addWalk(10)}
+            className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md"
+          >
+            +10 min
+          </button>
+        }
+      />
+
+      <TodayCard
         title="Refeições"
         subtitle={`${mealsDone}/4 do plano`}
         to="/refeicoes-hoje"
@@ -192,6 +225,13 @@ export function Today() {
           variant={(practiceToday ?? 0) === 0 ? "highlight" : "default"}
         />
       )}
+
+      <TodayCard
+        title="Postura"
+        subtitle={`Rotina diária · 7 min · ${(posturaDoneToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+        to="/treino/movimento/postura-silhueta-diaria"
+        variant={(posturaDoneToday ?? 0) === 0 ? "highlight" : "default"}
+      />
 
       {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
         <TodayCard
