@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isWithinQuietHours, isWithinWorkingHours } from "../../src/lib/notifications";
+import { isWithinQuietHours, isWithinWorkingHours, shouldRemindOncePerDay } from "../../src/lib/notifications";
 
 describe("isWithinQuietHours", () => {
   it("dentro do range noturno (22h-08h)", () => {
@@ -30,5 +30,21 @@ describe("isWithinWorkingHours", () => {
     expect(isWithinWorkingHours(new Date("2026-05-30T10:00:00"), 9, 18)).toBe(false);
     // Domingo (31)
     expect(isWithinWorkingHours(new Date("2026-05-31T10:00:00"), 9, 18)).toBe(false);
+  });
+});
+
+describe("shouldRemindOncePerDay", () => {
+  const base = { currentMin: 12 * 60, targetMin: 12 * 60, lastNotifiedDate: "", todayISO: "2026-06-04", done: false };
+  it("dispara quando passou do horário, não feito e não notificou hoje", () => {
+    expect(shouldRemindOncePerDay(base)).toBe(true);
+  });
+  it("não dispara antes do horário", () => {
+    expect(shouldRemindOncePerDay({ ...base, currentMin: 11 * 60 })).toBe(false);
+  });
+  it("não dispara se já feito", () => {
+    expect(shouldRemindOncePerDay({ ...base, done: true })).toBe(false);
+  });
+  it("não dispara se já notificou hoje", () => {
+    expect(shouldRemindOncePerDay({ ...base, lastNotifiedDate: "2026-06-04" })).toBe(false);
   });
 });

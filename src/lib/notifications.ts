@@ -44,3 +44,16 @@ export function shouldNotifyNow(
   if (isWithinQuietHours(now, opts.quietHours.from, opts.quietHours.to)) return false;
   return true;
 }
+
+export function shouldRemindOncePerDay(opts: {
+  currentMin: number;
+  targetMin: number;
+  lastNotifiedDate: string;
+  todayISO: string;
+  done: boolean;
+}): boolean {
+  if (opts.done) return false;
+  if (opts.currentMin < opts.targetMin) return false;
+  if (opts.lastNotifiedDate === opts.todayISO) return false;
+  return true;
+}
