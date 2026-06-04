@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { shouldNotifyNow, isWithinWorkingHours, notify } from "./notifications";
+import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
 import { getSetting, setSetting } from "./settings-helpers";
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -71,6 +71,29 @@ async function tick() {
   if (currentMin >= eveningMin && lastEvening !== todayISO) {
     notify("Skincare noturno", "Hora da rotina noturna antes de dormir");
     await setSetting("lastSkincareEveningAt", todayISO);
+  }
+
+  // Postura (uma vez/dia, se não praticou hoje)
+  const posturaTime = await getSetting("posturaReminderTime");
+  const lastPostura = await getSetting("lastPosturaReminderAt");
+  const [pH, pM] = posturaTime.split(":").map(Number);
+  const posturaDone =
+    (await db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === "postura-silhueta-diaria").count()) > 0;
+  if (shouldRemindOncePerDay({ currentMin, targetMin: pH * 60 + pM, lastNotifiedDate: lastPostura, todayISO, done: posturaDone })) {
+    notify("Postura & silhueta", "7 min de rotina de postura — abre o peito, ativa o glúteo");
+    await setSetting("lastPosturaReminderAt", todayISO);
+  }
+
+  // Caminhada (uma vez/dia, se não bateu a meta)
+  const walkTime = await getSetting("walkReminderTime");
+  const lastWalk = await getSetting("lastWalkReminderAt");
+  const [wH, wM] = walkTime.split(":").map(Number);
+  const walkGoal = await getSetting("walkGoalMin");
+  const walkLog = await db.dailyLog.get(todayISO);
+  const walkDone = (walkLog?.walkMin ?? 0) >= walkGoal;
+  if (shouldRemindOncePerDay({ currentMin, targetMin: wH * 60 + wM, lastNotifiedDate: lastWalk, todayISO, done: walkDone })) {
+    notify("Caminhada", `Bora caminhar · meta ${walkGoal} min hoje`);
+    await setSetting("lastWalkReminderAt", todayISO);
   }
 }
 
