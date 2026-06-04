@@ -11,8 +11,12 @@ export function suggestNextLoad({ lastLoad, feedback, completedAllReps }: Progre
     return Math.max(0, lastLoad - 1);
   }
   if (feedback === "easy") {
-    const increment = lastLoad < 5 ? 0.5 : 1;
-    return lastLoad + increment;
+    if (lastLoad < 5) return lastLoad + 0.5;
+    if (lastLoad < 20) return lastLoad + 2;
+    return lastLoad + 2.5;
   }
-  return lastLoad;
+  if (feedback === "medium") {
+    return lastLoad + 1;
+  }
+  return lastLoad; // hard
 }

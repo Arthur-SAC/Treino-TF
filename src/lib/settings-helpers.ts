@@ -29,6 +29,7 @@ export interface Settings {
   activeCycle: "adaptacao" | "variacao" | "hipertrofia" | "refinamento";
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
+  walkGoalMin: number;
 }
 
 const DEFAULTS: Settings = {
@@ -60,6 +61,7 @@ const DEFAULTS: Settings = {
   activeCycle: "adaptacao",
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
+  walkGoalMin: 30,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
