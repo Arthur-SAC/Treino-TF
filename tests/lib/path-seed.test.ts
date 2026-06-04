@@ -16,10 +16,12 @@ describe("seedPath", () => {
     expect((await db.milestones.toArray()).length).toBe(a);
   });
 
-  it("plano alimentar tem macros", async () => {
+  it("plano alimentar é de déficit com slots", async () => {
     await seedPath();
     const plan = (await db.mealPlans.toArray())[0];
-    expect(plan.kcalDaily).toBeGreaterThan(1500);
-    expect(plan.proteinG).toBeGreaterThan(80);
+    expect(plan.kcalDaily).toBe(2200);
+    expect(plan.proteinG).toBeGreaterThanOrEqual(175);
+    expect(plan.slots).toHaveLength(4);
+    expect(plan.slots[0].variants.length).toBe(3);
   });
 });

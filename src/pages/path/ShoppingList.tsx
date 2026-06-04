@@ -1,21 +1,27 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
-import { db } from "../../lib/db";
+import { db, type IngredientCategory } from "../../lib/db";
+import { buildShoppingList } from "../../lib/shopping-list";
+
+const CATEGORY_LABEL: Record<IngredientCategory, string> = {
+  proteina: "Proteínas",
+  carboidrato: "Carboidratos",
+  hortifruti: "Hortifruti",
+  laticinio: "Laticínios",
+  gordura: "Gorduras",
+  mercearia: "Mercearia",
+};
+
+const CATEGORY_ORDER: IngredientCategory[] = [
+  "proteina", "carboidrato", "hortifruti", "laticinio", "gordura", "mercearia",
+];
 
 export function ShoppingList() {
   const plan = useLiveQuery(async () => (await db.mealPlans.toArray())[0], []);
 
   if (!plan) return <div className="p-4 text-muted text-sm">Carregando…</div>;
 
-  // Agrupa todos alimentos das refeições padrão (multiplica por 7 dias)
-  const itemMap = new Map<string, number>();
-  for (const meal of plan.defaultMeals) {
-    for (const food of meal) {
-      const current = itemMap.get(food.name) ?? 0;
-      itemMap.set(food.name, current + food.qtyG * 7); // 7 dias
-    }
-  }
-  const items = Array.from(itemMap.entries()).sort();
+  const items = buildShoppingList(plan);
 
   return (
     <div className="p-4 pb-24">
@@ -25,18 +31,27 @@ export function ShoppingList() {
       </div>
 
       <p className="text-muted text-sm mb-4">
-        Quantidades pra 7 dias do plano padrão. Pode arredondar pra cima na hora de comprar.
+        Cobre uma rodada de todas as opções (~3 dias de variedade). Multiplique conforme a semana.
       </p>
 
-      <div className="card">
-        <ul className="space-y-2 text-sm">
-          {items.map(([name, qtyG]) => (
-            <li key={name} className="flex justify-between">
-              <span className="text-nude-warm">{name}</span>
-              <span className="text-muted text-xs">{(qtyG / 1000).toFixed(2)} kg</span>
-            </li>
-          ))}
-        </ul>
+      <div className="space-y-3">
+        {CATEGORY_ORDER.map((cat) => {
+          const catItems = items.filter((i) => i.category === cat);
+          if (catItems.length === 0) return null;
+          return (
+            <div key={cat} className="card">
+              <h2 className="text-nude-warm font-medium mb-2">{CATEGORY_LABEL[cat]}</h2>
+              <ul className="space-y-2 text-sm">
+                {catItems.map((i) => (
+                  <li key={`${i.item}-${i.unit}`} className="flex justify-between">
+                    <span className="text-nude-warm">{i.item}</span>
+                    <span className="text-muted text-xs">{i.qty} {i.unit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
