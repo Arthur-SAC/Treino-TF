@@ -46,4 +46,19 @@ export async function seedDatabase(): Promise<void> {
       await db.settings.put({ key: "cyclesSeeded", value: true });
     });
   }
+
+  // Re-seed de exercícios: as telas leem do IndexedDB, não do arquivo. Logo,
+  // mudanças no conteúdo dos exercícios (nome, equipamento, descrição) só chegam
+  // em contas existentes via este bloco. Bumpar EXERCISE_SEED_VERSION força um
+  // put() de todos os exercícios — idempotente, não duplica (mesmo id sobrescreve).
+  const EXERCISE_SEED_VERSION = 2;
+  const exVersion = await db.settings.get("exerciseSeedVersion");
+  if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
+    await db.transaction("rw", db.exercises, db.settings, async () => {
+      for (const ex of EXERCISES) {
+        await db.exercises.put(ex);
+      }
+      await db.settings.put({ key: "exerciseSeedVersion", value: EXERCISE_SEED_VERSION });
+    });
+  }
 }
