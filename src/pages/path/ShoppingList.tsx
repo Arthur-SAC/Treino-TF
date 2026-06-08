@@ -1,7 +1,8 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
-import { db, type IngredientCategory } from "../../lib/db";
+import type { IngredientCategory } from "../../lib/db";
 import { buildShoppingList } from "../../lib/shopping-list";
+import { getActiveMealPlan } from "../../lib/meal-plan";
 
 const CATEGORY_LABEL: Record<IngredientCategory, string> = {
   proteina: "Proteínas",
@@ -17,7 +18,7 @@ const CATEGORY_ORDER: IngredientCategory[] = [
 ];
 
 export function ShoppingList() {
-  const plan = useLiveQuery(async () => (await db.mealPlans.toArray())[0], []);
+  const plan = useLiveQuery(() => getActiveMealPlan(), []);
 
   if (!plan) return <div className="p-4 text-muted text-sm">Carregando…</div>;
 

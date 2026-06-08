@@ -1,4 +1,4 @@
-import type { MealPlan, MealSlot } from "../lib/db";
+import type { MealPlan, MealSlot, MealVariant, Ingredient } from "../lib/db";
 import { deriveDefaultMeals } from "../lib/meal-plan";
 
 // 2200 kcal pra déficit moderado — 96kg, 27 anos, 1,73m
@@ -671,3 +671,100 @@ export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PLANOS POR FASE — mesma base de receitas + acréscimos práticos (porções
+// inteiras, sem quantidade quebrada). O app escolhe o plano pelo ciclo ativo:
+// adaptação/variação → déficit · refinamento/manutenção → manutenção ·
+// hipertrofia → superávit leve (fase de crescer o glúteo).
+// ═══════════════════════════════════════════════════════════════════════════
+
+type Boost = { foods: MealVariant["foods"]; ingredients: Ingredient[] };
+
+/** Acrescenta foods + ingredients a TODAS as variantes dos slots indicados e
+ *  ajusta o targetKcal. Assim, qualquer opção escolhida já vem com o acréscimo. */
+function boostSlots(slots: MealSlot[], boostByMeal: Partial<Record<MealSlot["mealType"], Boost>>): MealSlot[] {
+  return slots.map((slot) => {
+    const boost = boostByMeal[slot.mealType];
+    if (!boost) return slot;
+    const addKcal = boost.foods.reduce((s, f) => s + f.kcal, 0);
+    return {
+      ...slot,
+      targetKcal: slot.targetKcal + addKcal,
+      variants: slot.variants.map((v) => ({
+        ...v,
+        foods: [...v.foods, ...boost.foods],
+        ingredients: [...v.ingredients, ...boost.ingredients],
+      })),
+    };
+  });
+}
+
+// Manutenção: +~250 kcal (refinamento e fase final)
+const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
+  almoco: {
+    foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Mais ~1 colher e meia de arroz no almoço — a fase pede um pouco mais de energia." }],
+    ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
+  },
+  lanche: {
+    foods: [{ name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." }],
+    ingredients: [{ item: "Banana", qty: 1, unit: "un", category: "hortifruti" }],
+  },
+  jantar: {
+    foods: [{ name: "Carboidrato extra da fase (+60g arroz/batata)", qtyG: 60, kcal: 85, proteinG: 2, carbG: 18, fatG: 0, preparation: "Aumenta a porção de carbo do jantar." }],
+    ingredients: [{ item: "Arroz branco", qty: 30, unit: "g", category: "carboidrato" }],
+  },
+};
+
+// Superávit leve: +~500 kcal (hipertrofia — fase de crescer o glúteo)
+const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
+  cafe: {
+    foods: [{ name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." }],
+    ingredients: [{ item: "Whey protein", qty: 30, unit: "g", category: "laticinio" }],
+  },
+  lanche: {
+    foods: [
+      { name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." },
+      { name: "Pasta de amendoim (1 cs)", qtyG: 15, kcal: 90, proteinG: 4, carbG: 3, fatG: 8, preparation: "Integral, sem açúcar. Na banana ou no pão." },
+    ],
+    ingredients: [
+      { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+      { item: "Pasta de amendoim", qty: 15, unit: "g", category: "gordura" },
+    ],
+  },
+  almoco: {
+    foods: [{ name: "Arroz extra da fase (+75g cozido)", qtyG: 75, kcal: 98, proteinG: 2, carbG: 21, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
+    ingredients: [{ item: "Arroz integral", qty: 38, unit: "g", category: "carboidrato" }],
+  },
+  jantar: {
+    foods: [{ name: "Batata doce extra da fase (+70g)", qtyG: 70, kcal: 100, proteinG: 2, carbG: 23, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
+    ingredients: [{ item: "Batata doce", qty: 70, unit: "g", category: "carboidrato" }],
+  },
+};
+
+const MAINTENANCE_SLOTS = boostSlots(SLOTS, MAINTENANCE_BOOST);
+const SURPLUS_SLOTS = boostSlots(SLOTS, SURPLUS_BOOST);
+
+export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
+  name: "Plano · manutenção (2450 kcal)",
+  goal: "manutencao",
+  kcalDaily: 2450,
+  proteinG: 185,
+  carbG: 266,
+  fatG: 70,
+  slots: MAINTENANCE_SLOTS,
+  defaultMeals: deriveDefaultMeals(MAINTENANCE_SLOTS),
+};
+
+export const SURPLUS_PLAN: Omit<MealPlan, "id"> = {
+  name: "Plano · superávit leve (2700 kcal)",
+  goal: "superavit",
+  kcalDaily: 2700,
+  proteinG: 213,
+  carbG: 284,
+  fatG: 79,
+  slots: SURPLUS_SLOTS,
+  defaultMeals: deriveDefaultMeals(SURPLUS_SLOTS),
+};
+
+export const ALL_MEAL_PLANS: Omit<MealPlan, "id">[] = [INITIAL_PLAN, MAINTENANCE_PLAN, SURPLUS_PLAN];

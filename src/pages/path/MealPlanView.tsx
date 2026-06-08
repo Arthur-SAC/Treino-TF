@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
-import { db } from "../../lib/db";
 import type { MealVariant } from "../../lib/db";
+import { getActiveMealPlan } from "../../lib/meal-plan";
 import { PathTabs } from "../../components/PathTabs";
 import { buildShoppingList } from "../../lib/shopping-list";
 import { renderDietMarkdown, renderDietHtml } from "../../lib/diet-export";
 
 const PERIOD_LABEL: Record<"cafe" | "almoco" | "lanche" | "jantar", string> = {
   cafe: "Café", almoco: "Almoço", lanche: "Lanche", jantar: "Jantar",
+};
+
+const GOAL_LABEL: Record<"deficit" | "manutencao" | "superavit", string> = {
+  deficit: "Déficit · secar a barriga (fase adaptação/variação)",
+  manutencao: "Manutenção (fase refinamento/manutenção)",
+  superavit: "Superávit leve · crescer o glúteo (fase hipertrofia)",
 };
 
 function VariantDetails({ v }: { v: MealVariant }) {
@@ -41,7 +47,7 @@ function VariantDetails({ v }: { v: MealVariant }) {
 }
 
 export function MealPlanView() {
-  const plan = useLiveQuery(async () => (await db.mealPlans.toArray())[0], []);
+  const plan = useLiveQuery(() => getActiveMealPlan(), []);
 
   if (!plan) {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
@@ -63,7 +69,7 @@ export function MealPlanView() {
     const text = renderDietMarkdown(plan, buildShoppingList(plan));
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title: "Plano alimentar — emagrecimento", text });
+        await navigator.share({ title: plan.name, text });
         return;
       }
     } catch {
@@ -92,7 +98,8 @@ export function MealPlanView() {
       <PathTabs />
 
       <div className="card mb-3">
-        <h2 className="text-nude-warm font-medium mb-2">{plan.name}</h2>
+        <h2 className="text-nude-warm font-medium mb-1">{plan.name}</h2>
+        <p className="text-nude text-xs mb-2">🍑 {GOAL_LABEL[plan.goal]} · troca sozinho conforme o ciclo de treino ativo</p>
         <div className="grid grid-cols-4 gap-2">
           <div><p className="text-muted text-xs">kcal</p><p className="text-nude-warm text-lg">{plan.kcalDaily}</p></div>
           <div><p className="text-muted text-xs">proteína</p><p className="text-nude-warm text-lg">{plan.proteinG}g</p></div>

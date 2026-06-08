@@ -1,12 +1,27 @@
 import { db } from "./db";
 import { MILESTONES, BODY_GOAL_MILESTONES } from "../data/milestones-seed";
-import { INITIAL_PLAN } from "../data/meal-plan-seed";
+import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
-const MEAL_PLAN_VERSION = 3;
+const MEAL_PLAN_VERSION = 4;
 const MILESTONE_SEED_VERSION = 2;
 
+/** Upsert dos planos por `goal` (déficit/manutenção/superávit): atualiza o que
+ *  já existe e adiciona os que faltam, sem duplicar. Idempotente. O déficit é
+ *  inserido primeiro, então fica em [0] (retrocompat com quem lê mealPlans[0]). */
+async function upsertMealPlans(): Promise<void> {
+  const existing = await db.mealPlans.toArray();
+  for (const p of ALL_MEAL_PLANS) {
+    const match = existing.find((x) => x.goal === p.goal);
+    if (match?.id !== undefined) {
+      await db.mealPlans.update(match.id, p);
+    } else {
+      await db.mealPlans.add(p as never);
+    }
+  }
+}
+
 export async function seedPath(): Promise<void> {
-  // Seed inicial (marcos + plano) acontece uma vez
+  // Seed inicial (marcos + planos) acontece uma vez
   const seeded = await db.settings.get("pathSeeded");
   if (seeded?.value !== true) {
     await db.transaction("rw", [db.milestones, db.mealPlans, db.settings], async () => {
@@ -14,15 +29,16 @@ export async function seedPath(): Promise<void> {
         await db.milestones.add(m as never);
       }
       if ((await db.mealPlans.count()) === 0) {
-        await db.mealPlans.add(INITIAL_PLAN as never);
+        await db.mealPlans.add(INITIAL_PLAN as never); // garante déficit em [0]
       }
+      await upsertMealPlans();
       await db.settings.put({ key: "pathSeeded", value: true });
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });
+      await db.settings.put({ key: "mealPlanVersion", value: MEAL_PLAN_VERSION });
     });
   }
 
-  // Migração de marcos: contas existentes (que já tinham pathSeeded) recebem os
-  // marcos do objetivo físico aqui. Guardado por versão pra não duplicar.
+  // Migração de marcos: contas existentes recebem os marcos do objetivo físico.
   const msVersion = await db.settings.get("milestoneSeedVersion");
   if (((msVersion?.value as number) ?? 1) < MILESTONE_SEED_VERSION) {
     await db.transaction("rw", [db.milestones, db.settings], async () => {
@@ -33,17 +49,13 @@ export async function seedPath(): Promise<void> {
     });
   }
 
-  // Migração do plano alimentar — atualiza pra última versão sem duplicar
+  // Migração dos planos alimentares — atualiza o déficit e adiciona os planos
+  // de manutenção e superávit (planos por fase). Upsert por meta, sem duplicar.
   const versionSetting = await db.settings.get("mealPlanVersion");
   const currentVersion = (versionSetting?.value as number) ?? 1;
   if (currentVersion < MEAL_PLAN_VERSION) {
     await db.transaction("rw", [db.mealPlans, db.settings], async () => {
-      const existing = (await db.mealPlans.toArray())[0];
-      if (existing && existing.id !== undefined) {
-        await db.mealPlans.update(existing.id, INITIAL_PLAN);
-      } else {
-        await db.mealPlans.add(INITIAL_PLAN as never);
-      }
+      await upsertMealPlans();
       await db.settings.put({ key: "mealPlanVersion", value: MEAL_PLAN_VERSION });
     });
   }

@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
+import { getActiveMealPlan } from "../../lib/meal-plan";
 
 const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
   cafe: "Café da manhã",
@@ -16,7 +17,7 @@ function todayISO(): string {
 
 export function MealsToday() {
   const today = todayISO();
-  const plan = useLiveQuery(async () => (await db.mealPlans.toArray())[0], []);
+  const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
 
   async function toggleMeal(type: Meal["mealType"], mealIndex: number) {

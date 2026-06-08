@@ -366,3 +366,13 @@ export const CYCLES = [
 ] as const;
 
 export type CycleId = typeof CYCLES[number]["id"];
+
+// Qual meta nutricional cada fase usa. O app seleciona o plano alimentar
+// correspondente ao ciclo de treino ativo.
+export const CYCLE_TO_GOAL: Record<CycleId, "deficit" | "manutencao" | "superavit"> = {
+  adaptacao: "deficit",   // secar a barriga
+  variacao: "deficit",    // ainda secando
+  hipertrofia: "superavit", // fase de crescer o glúteo
+  refinamento: "manutencao",
+  manutencao: "manutencao",
+};

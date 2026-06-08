@@ -2,10 +2,11 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../lib/db";
+import { getActiveMealPlan } from "../../lib/meal-plan";
 
 export function MealPlanEdit() {
   const navigate = useNavigate();
-  const plan = useLiveQuery(async () => (await db.mealPlans.toArray())[0], []);
+  const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const [kcal, setKcal] = useState("");
   const [protein, setProtein] = useState("");
   const [carb, setCarb] = useState("");
