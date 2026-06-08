@@ -19,7 +19,7 @@ describe("Workout session smoke", () => {
         </Routes>
       </MemoryRouter>,
     );
-    await waitFor(() => expect(screen.getByText(/Glúteo \+ Mobilidade/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Glúteo A/)).toBeInTheDocument());
 
     // Encontra o primeiro SessionRecorder (cardio leve), digita uma série, salva
     const weightInputs = await screen.findAllByPlaceholderText("kg");

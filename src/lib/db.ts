@@ -54,7 +54,7 @@ export interface WorkoutTemplate {
     notes?: string;
   }>;
   durationMin: number;
-  cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento";
+  cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
 }
 
 export interface WorkoutSession {

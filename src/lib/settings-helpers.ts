@@ -26,7 +26,7 @@ export interface Settings {
   lastSkincareMorningAt: string; // "yyyy-mm-dd" or ""
   lastSkincareEveningAt: string;
   mealPlanVersion: number;
-  activeCycle: "adaptacao" | "variacao" | "hipertrofia" | "refinamento";
+  activeCycle: "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
   walkGoalMin: number;

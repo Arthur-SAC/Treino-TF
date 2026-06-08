@@ -17,3 +17,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .superpowers/
+
+# Fotos pessoais e capturas de tela — PRIVACIDADE, nunca versionar
+eu/
+objetivo/
+*.jpg
+*.jpeg

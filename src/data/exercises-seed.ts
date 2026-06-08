@@ -570,4 +570,35 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Carga pesada", "Descer os braços demais (estressa o ombro)", "Dobrar os cotovelos e virar supino"],
     exposureLevel: 2,
   },
+  // === ADIÇÕES PRO PLANO GLÚTEO-PRIORITÁRIO ===
+  {
+    id: "adutora-maquina",
+    name: "Adutora na máquina",
+    category: "gluteo",
+    equipment: ["maquina-adutor"],
+    difficulty: "iniciante",
+    description: "Sentada na máquina adutora, joelhos abertos contra os apoios. Fecha as pernas controlando contra a resistência, aperta a parte interna da coxa. Preenche a coxa interna e dá forma cheia às pernas. 12-15 reps.",
+    commonMistakes: [
+      "Fechar as pernas com impulso em vez de controlar",
+      "Curvar a lombar (mantém as costas no encosto)",
+      "Amplitude curta (abre bem antes de fechar)",
+    ],
+    exposureLevel: 1,
+  },
+  {
+    id: "agachamento-sumo",
+    name: "Agachamento sumô com halter",
+    category: "gluteo",
+    equipment: ["halter"],
+    difficulty: "iniciante",
+    description: "Pés bem afastados e pontas viradas pra fora (~45°), segura um halter na vertical entre as pernas. Agacha mantendo o tronco ereto e os joelhos na direção dos pés. Trabalha glúteo + parte interna da coxa, ótimo pra silhueta curvilínea. 10-12 reps.",
+    commonMistakes: [
+      "Joelhos caindo pra dentro",
+      "Inclinar o tronco pra frente",
+      "Pés pouco afastados (perde o foco no glúteo/adutor)",
+    ],
+    easierVariation: "Agachamento sumô sem peso",
+    harderVariation: "Com pausa de 2s no fundo",
+    exposureLevel: 2,
+  },
 ];
