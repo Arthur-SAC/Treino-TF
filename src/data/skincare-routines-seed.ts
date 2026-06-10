@@ -55,6 +55,28 @@ export const ROUTINES: Omit<SkincareRoutine, "id">[] = [
     ],
   },
   {
+    name: "Manchas de sol · rosto e corpo (noturno)",
+    time: "evening",
+    target: "general",
+    steps: [
+      { productName: "Limpeza suave da área (sabonete neutro)", technique: "Limpa sem esfregar com força, seca", waitMin: 0 },
+      { productName: "Ativo clareador noturno (vitamina C, niacinamida ou ácido tranexâmico)", technique: "Fina camada nas manchas. Teste de mancha antes. NÃO usa se a pele está irritada.", waitMin: 5 },
+      { productName: "Hidratante", technique: "Sela o tratamento", waitMin: 0 },
+      { productName: "LEMBRETE: protetor solar pela manhã", technique: "Sem FPS de dia a mancha volta — o FPS é parte do tratamento", waitMin: 0 },
+    ],
+  },
+  {
+    name: "Região perianal · clareamento (noturno)",
+    time: "evening",
+    target: "intimate",
+    steps: [
+      { productName: "Higiene suave e secar MUITO bem", technique: "Pele seca, sem atrito forte", waitMin: 0 },
+      { productName: "Clareador suave (niacinamida + alfa-arbutina) — teste de mancha antes", technique: "Camada fina só na pele EXTERNA. NUNCA na mucosa. Pare se arder/irritar.", waitMin: 5 },
+      { productName: "Hidratante leve", technique: "Mantém a barreira da pele", waitMin: 0 },
+      { productName: "LEMBRETE: dermatologista pra essa área", technique: "Área delicada — acompanhamento profissional antes de ativos mais fortes", waitMin: 0 },
+    ],
+  },
+  {
     name: "Geral · após o banho",
     time: "morning",
     target: "general",

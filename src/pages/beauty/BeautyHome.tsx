@@ -24,6 +24,10 @@ export function BeautyHome() {
         <h3 className="text-nude-warm font-medium">Produtos</h3>
         <p className="text-muted text-sm mt-1">Catálogo + estoque</p>
       </Link>
+      <Link to="/beleza/pele-cabelo/clareamento" className="card block hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Clareamento</h3>
+        <p className="text-muted text-sm mt-1">Manchas de sol, axila, virilha, perianal — ativos seguros, prazo, FPS</p>
+      </Link>
       <Link to="/beleza/depilacao" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Depilação</h3>
         <p className="text-muted text-sm mt-1">Registro de sessões (laser, cera, etc.) + custos + evolução</p>

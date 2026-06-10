@@ -20,6 +20,19 @@ describe("seedBeauty", () => {
     expect((await db.skincareRoutines.toArray()).length).toBe(firstR);
   });
 
+  it("migra rotinas novas pra contas existentes sem duplicar", async () => {
+    // simula conta antiga: já semeada, numa versão de rotina anterior, sem as novas
+    await db.settings.put({ key: "beautySeeded", value: true });
+    await db.settings.put({ key: "routineSeedVersion", value: 1 });
+    await seedBeauty();
+    const names = (await db.skincareRoutines.toArray()).map((r) => r.name);
+    expect(names.some((n) => n.includes("Manchas de sol"))).toBe(true);
+    expect(names.some((n) => n.toLowerCase().includes("perianal"))).toBe(true);
+    const count = (await db.skincareRoutines.toArray()).length;
+    await seedBeauty();
+    expect((await db.skincareRoutines.toArray()).length).toBe(count);
+  });
+
   it("todo produto tem nome e categoria", async () => {
     await seedBeauty();
     for (const p of await db.products.toArray()) {
