@@ -137,7 +137,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
         </p>
       </div>
 
-      {suggested !== null && (
+      {suggested !== null ? (
         <button
           type="button"
           onClick={applySuggestion}
@@ -145,6 +145,16 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
         >
           Sugestão: {suggested} kg (aplicar em todas)
         </button>
+      ) : exercise.startLoadKg ? (
+        <button
+          type="button"
+          onClick={() => setSets((prev) => prev.map((s) => ({ ...s, weight: String(exercise.startLoadKg) })))}
+          className="text-xs text-nude underline mb-3 block"
+        >
+          Sugestão inicial: {exercise.startLoadKg} kg (aplicar em todas)
+        </button>
+      ) : (
+        <p className="text-xs text-muted mb-3">Peso corporal</p>
       )}
 
       {/* Sets — grid pra controlar largura exata, sem flex-1 sobrando */}

@@ -60,6 +60,15 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
             </ul>
           </section>
 
+          {exercise.proTips && exercise.proTips.length > 0 && (
+            <section>
+              <h3 className="text-nude-warm font-medium mb-1">Dicas pra maximizar</h3>
+              <ul className="space-y-1 text-sm list-disc pl-5">
+                {exercise.proTips.map((t) => <li key={t}>{t}</li>)}
+              </ul>
+            </section>
+          )}
+
           {exercise.equipment.length > 0 && (
             <section>
               <h3 className="text-nude-warm font-medium mb-1">Equipamento</h3>

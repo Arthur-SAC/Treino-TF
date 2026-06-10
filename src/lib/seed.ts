@@ -51,7 +51,7 @@ export async function seedDatabase(): Promise<void> {
   // mudanças no conteúdo dos exercícios (nome, equipamento, descrição) só chegam
   // em contas existentes via este bloco. Bumpar EXERCISE_SEED_VERSION força um
   // put() de todos os exercícios — idempotente, não duplica (mesmo id sobrescreve).
-  const EXERCISE_SEED_VERSION = 3;
+  const EXERCISE_SEED_VERSION = 4;
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
@@ -66,7 +66,7 @@ export async function seedDatabase(): Promise<void> {
   // glúteo-prioritário, novo ciclo de manutenção), bumpar TEMPLATE_SEED_VERSION
   // re-grava todos os templates. put() sobrescreve os de mesmo id e adiciona os
   // novos (manutenção). Idempotente.
-  const TEMPLATE_SEED_VERSION = 2;
+  const TEMPLATE_SEED_VERSION = 3;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {

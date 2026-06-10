@@ -36,6 +36,15 @@ export function ExerciseDetail() {
         </ul>
       </div>
 
+      {ex.proTips && ex.proTips.length > 0 && (
+        <div className="card mb-3">
+          <h2 className="text-nude-warm font-medium mb-2">Dicas pra maximizar</h2>
+          <ul className="space-y-1 text-sm list-disc pl-5">
+            {ex.proTips.map((t) => <li key={t}>{t}</li>)}
+          </ul>
+        </div>
+      )}
+
       {ex.equipment.length > 0 && (
         <div className="card mb-3">
           <h2 className="text-nude-warm font-medium mb-2">Equipamento</h2>
