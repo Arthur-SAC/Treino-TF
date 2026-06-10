@@ -6,6 +6,7 @@ const ITEMS = [
   { to: "/beleza/estilo/looks", label: "Looks" },
   { to: "/beleza/estilo/wishlist", label: "Wishlist" },
   { to: "/beleza/estilo/intimo", label: "Íntimo" },
+  { to: "/beleza/estilo/discreto", label: "Discreto" },
 ];
 
 export function StyleTabs() {
