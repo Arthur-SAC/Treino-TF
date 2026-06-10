@@ -14,8 +14,11 @@ academia (2026-06-10). A academia tem **mais equipamento do que estava registrad
 em especial **polia** (alta e baixa, via multiestação + acessórios soltos), **espaldar**,
 **bola suíça** e **step**. Esta onda adiciona ~12 exercícios e revisa os 5 treinos da
 fase atual (ciclo `adaptacao`) para usar esse equipamento, refina o trabalho de busto
-(pré-TH) e introduz flexibilidade no espaldar. É um update de **dados** (seeds), sem
-novas telas: as telas de treino já renderizam exercícios e templates lidos do IndexedDB.
+(pré-TH) e introduz flexibilidade no espaldar. Inclui também dois ajustes pedidos pela
+usuária: **peso sugerido inicial** (a sugestão de carga passa a aparecer já no primeiro
+uso, antes de haver histórico) e **dicas pra maximizar resultado** por exercício. É
+majoritariamente um update de **dados** (seeds) + pequenas seções em telas existentes;
+nenhuma tela nova, nenhuma migração de schema.
 
 ## 2. Contexto e motivação
 
@@ -29,12 +32,12 @@ busto 106,5) busca silhueta ampulheta com glúteo grande e busto cheio, sem TRH 
 
 ### Achados da revisão de equipamento (fotos 2026-06-10)
 
-- **Polia: tem, na prática.** A multiestação tem polia alta (puxada) e **polia baixa**
+- **Polia: confirmada.** A multiestação tem polia alta (puxada) e **polia baixa**
   (remada). Há acessórios soltos (barra de puxada + puxador com mosquetão/corrente). O
-  "gancho baixo quase no chão" que a usuária mencionou = polia baixa.
-  - **A confirmar fisicamente:** ao puxar o gancho baixo, a pilha de anilhas sobe? Se
-    sim, é polia funcional. Se for ponto fixo da cadeira extensora, não. O design mantém
-    versões com caneleira como fallback pra todo exercício de polia de glúteo.
+  "gancho baixo quase no chão" que a usuária mencionou = polia baixa. **A usuária
+  confirmou fisicamente (2026-06-10): ao puxar, a pilha de anilhas sobe** — é polia
+  funcional. As versões com caneleira ficam como variação (útil em casa / máquina ocupada),
+  não como fallback obrigatório.
 - Equipamento novo confirmado: **espaldar** (barras de parede), **bola suíça**, **step/
   plataforma**, **bike reclinada**, **barra W (EZ)**, banco scott. Já registrado antes:
   leg press 45°, abdutora/adutora (Olympikus M3), halteres, caneleiras, barra, banco.
@@ -114,20 +117,59 @@ Mantém a duração de cada dia (~1h). Trocas (swap), preservando o número de b
   `coice-gluteo-polia`; adiciona `pull-through-polia`; troca `elevacao-pelvica-banco` →
   `ponte-gluteo-bola` (variação na bola). Mantém abdução + prancha lateral.
 
+## 6b. Carga sugerida inicial (feedback da usuária)
+
+A engine de auto-progressão (`suggestNextLoad`) já funciona e a UI já mostra
+"Sugestão: X kg (aplicar em todas)" — **mas só depois do primeiro registro** daquele
+exercício (sem histórico, `suggested` fica `null` e nada aparece). Não há bug: a sessão
+salva `date` como `"YYYY-MM-DD"` e a query `.below(hoje+"z")` inclui o histórico
+corretamente. O que falta é um **peso de partida**.
+
+- Novo campo opcional **`startLoadKg?: number`** em `Exercise`, conservador, só pra
+  exercícios com carga externa (halteres, barra, máquinas, polia).
+- `SessionRecorder`: quando não há histórico (`suggested === null`) e existe
+  `startLoadKg`, mostra "Sugestão inicial: {startLoadKg} kg (aplicar em todas)",
+  reutilizando o botão `applySuggestion`. Após o 1º registro, a auto-progressão assume.
+- Exercícios de peso corporal (mobilidade, dança, prancha, espaldar, etc.) não recebem
+  `startLoadKg`; o recorder mostra um rótulo "Peso corporal" no lugar da sugestão.
+
+## 6c. Dicas pra maximizar resultado (feedback da usuária)
+
+Além de ensinar a execução e os erros, cada exercício ganha dicas práticas de resultado.
+
+- Novo campo opcional **`proTips?: string[]`** em `Exercise`.
+- Exibido como seção **"Dicas pra maximizar"** em `ExerciseInfoModal` e `ExerciseDetail`
+  (mesmo padrão visual de "Como fazer" / "Erros comuns"; só renderiza se houver tips).
+- Conteúdo escrito pra **todos os ~40 exercícios** (existentes + os 12 novos), 2-4 dicas
+  cada, alinhadas ao objetivo (glúteo, cintura fina, busto feminilizado, postura).
+
+Ambos os campos são **opcionais** no tipo `Exercise` — **sem migração de schema Dexie**
+(não alteram store nem índice). Chegam a contas existentes via re-seed (bump de versão).
+
 ## 7. Implementação técnica
 
-1. **`src/data/exercises-seed.ts`** — adicionar os 12 exercícios novos ao array `EXERCISES`.
-2. **`src/data/workout-plan-seed.ts`** — aplicar as trocas da seção 6 nos 5 templates.
-3. **`src/lib/seed.ts`** — bumpar `EXERCISE_SEED_VERSION` (3 → 4) e `TEMPLATE_SEED_VERSION`
+1. **`src/lib/db.ts`** — adicionar campos opcionais `startLoadKg?: number` e
+   `proTips?: string[]` à interface `Exercise`. (Sem mudança de `this.version(...)` —
+   campos opcionais não exigem migração.)
+2. **`src/data/exercises-seed.ts`** — adicionar os 12 exercícios novos ao array
+   `EXERCISES`; preencher `proTips` em todos os ~40 e `startLoadKg` nos exercícios com carga.
+3. **`src/data/workout-plan-seed.ts`** — aplicar as trocas da seção 6 nos 5 templates.
+4. **`src/components/SessionRecorder.tsx`** — quando `suggested === null`, usar
+   `exercise.startLoadKg` como sugestão inicial; rótulo "Peso corporal" se não houver.
+5. **`src/components/ExerciseInfoModal.tsx`** e **`src/pages/workout/ExerciseDetail.tsx`** —
+   nova seção "Dicas pra maximizar" (renderiza só se `proTips?.length`).
+6. **`src/lib/seed.ts`** — bumpar `EXERCISE_SEED_VERSION` (3 → 4) e `TEMPLATE_SEED_VERSION`
    (2 → 3). O re-seed por `put()` é idempotente (mesmo id sobrescreve), então atualiza
    contas existentes **sem apagar histórico** de `workout_sessions`.
-4. Nenhuma migração de schema Dexie (sem store/índice novo). Nenhuma tela nova.
+7. Nenhuma migração de schema Dexie. Nenhuma tela nova (só novas seções em telas existentes).
 
 ## 8. Testes
 
 | Tipo | Cobertura |
 |---|---|
 | Lógica/seed (Vitest) | Estender `tests/lib/seed.test.ts`: todos os `exerciseId` referenciados nos templates existem em `EXERCISES`; os 12 ids novos estão presentes; ids únicos; cada exercício novo tem os campos obrigatórios preenchidos. |
+| Conteúdo (Vitest) | Todo exercício tem `proTips` não-vazio; todo exercício com carga (equipment inclui halteres/barra/máquina/polia) tem `startLoadKg > 0`; exercícios de peso corporal não têm `startLoadKg`. |
+| Progressão (Vitest) | `suggestNextLoad` já coberto; manter verde. |
 | Regressão | Re-seed é idempotente: rodar `seedDatabase()` 2x não duplica e não derruba sessões existentes (mock/local). |
 
 ## 9. Fora de escopo (desta onda)
@@ -141,6 +183,8 @@ Mantém a duração de cada dia (~1h). Trocas (swap), preservando o número de b
 
 - Os 12 exercícios aparecem na biblioteca com técnica, erros comuns e nível de exposição.
 - Os 5 treinos da semana refletem as trocas da seção 6.
+- Todo exercício mostra a seção "Dicas pra maximizar"; exercícios com carga mostram um
+  **peso sugerido inicial** já no primeiro uso (antes de qualquer histórico).
 - Conta existente recebe o conteúdo novo após o bump de versão, com histórico de cargas
   preservado.
 - `npm test` passa.
