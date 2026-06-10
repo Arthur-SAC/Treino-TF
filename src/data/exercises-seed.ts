@@ -17,6 +17,12 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Hip thrust sem peso, só com peso do corpo",
     harderVariation: "Hip thrust unilateral (uma perna)",
     exposureLevel: 4,
+    startLoadKg: 20,
+    proTips: [
+      "Pausa de 1-2s apertando o glúteo lá no topo vale mais que adicionar peso",
+      "Empurra pelos calcanhares, queixo pra baixo e costela fechada — protege a lombar e isola o glúteo",
+      "É o maior construtor de bumbum que existe: priorize ele e seja paciente com a carga",
+    ],
   },
   {
     id: "ponte-gluteo-band",
@@ -33,6 +39,11 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Ponte com amplitude menor",
     harderVariation: "Ponte unilateral (uma perna) ou com caneleira apoiada nas coxas",
     exposureLevel: 1,
+    proTips: [
+      "Aperta o glúteo no topo 1-2s — é a contração que constrói, não o número de reps",
+      "Empurra pelos calcanhares; se sentir na frente da coxa, traz os pés pra perto",
+      "Mantém a costela fechada pra não roubar com a lombar",
+    ],
   },
   {
     id: "agachamento-livre",
@@ -49,6 +60,12 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Agachamento com peso do corpo (air squat)",
     harderVariation: "Agachamento búlgaro (uma perna no banco atrás)",
     exposureLevel: 4,
+    startLoadKg: 15,
+    proTips: [
+      "Senta o quadril pra trás como se fosse alcançar uma cadeira atrás de você",
+      "Joelhos seguem a direção dos pés — não deixa cair pra dentro",
+      "Profundidade controlada (coxa paralela) ativa muito mais glúteo que meio agachamento",
+    ],
   },
   {
     id: "agachamento-goblet",
@@ -64,6 +81,12 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Agachamento livre sem peso",
     harderVariation: "Agachamento goblet com pausa de 2s no fundo",
     exposureLevel: 2,
+    startLoadKg: 6,
+    proTips: [
+      "Cotovelos por dentro dos joelhos no fundo ajudam a abrir o quadril",
+      "Ótimo pra aprender o padrão antes de pôr barra nas costas",
+      "Desce devagar, sobe apertando o glúteo",
+    ],
   },
   {
     id: "abdutor-maquina",
@@ -77,6 +100,12 @@ export const EXERCISES: Exercise[] = [
       "Movimento muito rápido sem controle",
     ],
     exposureLevel: 1,
+    startLoadKg: 15,
+    proTips: [
+      "Inclina o tronco levemente à frente pra pegar mais glúteo médio",
+      "Segura 1s na abertura máxima — é onde arredonda a lateral",
+      "Volta controlada, sem deixar o peso bater",
+    ],
   },
   {
     id: "abdutor-band-em-pe",
@@ -91,6 +120,12 @@ export const EXERCISES: Exercise[] = [
       "Jogar a perna com impulso em vez de controlar",
     ],
     exposureLevel: 1,
+    startLoadKg: 1,
+    proTips: [
+      "Movimento limpo e pequeno > jogar a perna alto com o tronco torto",
+      "Ponta do pé pra frente pra mirar o glúteo médio certo",
+      "Apoia a mão na parede só pra equilíbrio, não pra empurrar",
+    ],
   },
   {
     id: "elevacao-pelvica-banco",
@@ -106,6 +141,11 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Elevação pélvica bipodal no chão",
     harderVariation: "Com peso na pelve",
     exposureLevel: 3,
+    proTips: [
+      "Tira o foco da lombar pensando em 'puxar o púbis pro umbigo' no topo",
+      "Unipodal expõe e corrige diferença entre os lados — capricha no lado mais fraco",
+      "Calcanhar firme no chão, ponta do pé pode levantar de leve",
+    ],
   },
   {
     id: "stiff",
@@ -122,6 +162,12 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Stiff só com peso do corpo",
     harderVariation: "Stiff unilateral",
     exposureLevel: 3,
+    startLoadKg: 8,
+    proTips: [
+      "É dobradiça de quadril: empurra o bumbum pra trás, não agacha",
+      "Desce até sentir o posterior puxar, não até a barra tocar o chão",
+      "Barra/halteres rente ao corpo o tempo todo protege a lombar",
+    ],
   },
   // === CINTURA & ABDOMINAIS FUNCIONAIS ===
   {
@@ -139,6 +185,11 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Prancha com joelhos no chão",
     harderVariation: "Prancha com elevação alternada de braço/perna",
     exposureLevel: 2,
+    proTips: [
+      "Aperta glúteo e abdômen ao mesmo tempo — prancha é tensão, não tempo",
+      "Qualidade > minutos: 30s perfeitos batem 2min com quadril caído",
+      "Respira normal; tremer com a forma certa é sinal de que tá funcionando",
+    ],
   },
   {
     id: "dead-bug",
@@ -152,6 +203,11 @@ export const EXERCISES: Exercise[] = [
       "Movimento muito rápido",
     ],
     exposureLevel: 1,
+    proTips: [
+      "A lombar fica COLADA no chão o tempo todo — esse é o exercício inteiro",
+      "Vai bem devagar; rápido perde o controle do core profundo",
+      "Expira ao estender braço e perna pra ativar o transverso",
+    ],
   },
   {
     id: "bird-dog",
@@ -165,6 +221,11 @@ export const EXERCISES: Exercise[] = [
       "Lombar arqueando",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Imagina uma taça de água na lombar que não pode derramar (quadril nivelado)",
+      "Estica longe, não alto — alcance horizontal, não vertical",
+      "Pausa 2s no fim de cada repetição pra valer mais",
+    ],
   },
   {
     id: "prancha-lateral",
@@ -180,6 +241,11 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Prancha lateral com joelho no chão",
     harderVariation: "Prancha lateral com elevação de perna",
     exposureLevel: 3,
+    proTips: [
+      "Sobe o quadril bem alto e segura — não deixa afundar",
+      "Empilha os ombros e o quadril numa linha só",
+      "Trabalha a cintura sem engrossar, diferente de exercício de oblíquo com carga",
+    ],
   },
   // === COSTAS (cadeia posterior, postura) ===
   {
@@ -195,6 +261,12 @@ export const EXERCISES: Exercise[] = [
       "Lombar curva",
     ],
     exposureLevel: 3,
+    startLoadKg: 6,
+    proTips: [
+      "Puxa com os cotovelos, não com as mãos — pensa em guardar o cotovelo no bolso de trás",
+      "Aperta as escápulas no topo: é o que melhora a postura e levanta o busto",
+      "Sem balanço: o tronco fica parado, quem move é só o braço",
+    ],
   },
   {
     id: "remada-baixa-maquina",
@@ -208,6 +280,12 @@ export const EXERCISES: Exercise[] = [
       "Não controlar a volta",
     ],
     exposureLevel: 1,
+    startLoadKg: 15,
+    proTips: [
+      "Aperta as escápulas no fim e segura 1s — postura é repetição consciente",
+      "Não joga o tronco pra trás pra ajudar; mantém ereto",
+      "Volta controlada sentindo as costas alongarem",
+    ],
   },
   {
     id: "puxada-frente-maquina",
@@ -221,6 +299,12 @@ export const EXERCISES: Exercise[] = [
       "Balanço corporal",
     ],
     exposureLevel: 1,
+    startLoadKg: 15,
+    proTips: [
+      "Puxa pra frente do peito, nunca pra nuca (protege o ombro)",
+      "Só pra postura aqui — carga moderada, sem virar costas em V masculino",
+      "Desce os ombros antes de puxar (afasta a orelha do ombro)",
+    ],
   },
   // === POSTURA & RETRAÇÃO ESCAPULAR ===
   {
@@ -236,6 +320,11 @@ export const EXERCISES: Exercise[] = [
     ],
     harderVariation: "Com halteres bem leves (0,5-1kg) nas mãos",
     exposureLevel: 1,
+    proTips: [
+      "Movimento pequeno e preciso: levanta os braços só alguns centímetros",
+      "Não encolhe o ombro (trapézio) — o trabalho é juntar as escápulas",
+      "Faz devagar; aqui é ativação postural, não força",
+    ],
   },
   {
     id: "face-pull",
@@ -250,6 +339,12 @@ export const EXERCISES: Exercise[] = [
       "Não apertar as escápulas no topo",
     ],
     exposureLevel: 2,
+    startLoadKg: 2,
+    proTips: [
+      "Postura ereta + ombros pra trás faz o busto parecer mais cheio — esse é o segredo",
+      "Leve e com muitas reps; o objetivo é saúde de ombro e abertura",
+      "Aperta as escápulas e mostra o peito no fim do movimento",
+    ],
   },
   // === PEITORAL SUPERIOR LEVE (busto) ===
   {
@@ -265,6 +360,12 @@ export const EXERCISES: Exercise[] = [
       "Descer pouco",
     ],
     exposureLevel: 2,
+    startLoadKg: 4,
+    proTips: [
+      "Leve e controlado: a meta é a 'prateleira' do busto, não peitão masculino",
+      "Inclinado joga o estímulo pra parte de cima do peito, que levanta o visual do busto",
+      "Desce devagar sentindo o alongamento; sobe sem estufar os ombros",
+    ],
   },
   {
     id: "cross-over-cabo",
@@ -279,6 +380,12 @@ export const EXERCISES: Exercise[] = [
       "Descer demais e forçar o ombro",
     ],
     exposureLevel: 2,
+    startLoadKg: 3,
+    proTips: [
+      "Imagina abraçar um barril e apertar o centro do peito no fim",
+      "Cotovelos com ângulo fixo e leve — não dobra e estica (isso vira supino)",
+      "Carga leve, muitas reps: redondo e macio, nunca quadrado",
+    ],
   },
   // === MOBILIDADE & ALONGAMENTO ===
   {
@@ -293,6 +400,11 @@ export const EXERCISES: Exercise[] = [
       "Não respirar",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Vai até onde puxa, nunca até onde dói — mobilidade é paciência",
+      "Mantém as costas longas (não curva) ao inclinar sobre a perna da frente",
+      "Faz todo dia um pouco: o quadril de quem senta muito agradece",
+    ],
   },
   {
     id: "alongamento-flexor-quadril",
@@ -306,6 +418,11 @@ export const EXERCISES: Exercise[] = [
       "Não soltar quadril",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Encaixa o quadril (púbis pra frente) ANTES de avançar — aí sim alonga o lugar certo",
+      "Aperta o glúteo da perna de trás pra intensificar com segurança",
+      "Flexor solto = glúteo trabalha melhor e a postura melhora",
+    ],
   },
   {
     id: "alongamento-piriforme",
@@ -319,6 +436,11 @@ export const EXERCISES: Exercise[] = [
       "Não respirar fundo",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Puxa devagar e respira fundo — o piriforme é teimoso, relaxa com o tempo",
+      "Mantém os dois quadris no chão, sem torcer",
+      "Ótimo pra aliviar a tensão de ficar muito tempo sentada",
+    ],
   },
   {
     id: "cat-cow",
@@ -332,6 +454,11 @@ export const EXERCISES: Exercise[] = [
       "Não respirar coordenado",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Sincroniza com a respiração: inspira na vaca, expira no gato",
+      "Mobiliza vértebra por vértebra, devagar, não em bloco",
+      "Aquecimento perfeito pra coluna antes de qualquer treino",
+    ],
   },
   {
     id: "ativacao-gluteo-band-walks",
@@ -345,6 +472,12 @@ export const EXERCISES: Exercise[] = [
       "Rodar o quadril pro lado",
     ],
     exposureLevel: 1,
+    startLoadKg: 1,
+    proTips: [
+      "Faz ANTES dos exercícios pesados — glúteo 'ligado' rende muito mais no resto",
+      "Sente o glúteo queimar de leve; é sinal de que ativou certo",
+      "Lombar neutra, sobe pela força do glúteo e não pelo embalo",
+    ],
   },
   // === DANÇA & MOVIMENTO (versão básica Onda 1) ===
   {
@@ -359,6 +492,11 @@ export const EXERCISES: Exercise[] = [
       "Tensionar ombros",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Solta a região: quanto mais relaxado o quadril, mais bonito o rebolado depois",
+      "Círculos amplos e lentos primeiro, depois acelera",
+      "Tronco e ombros parados — só o quadril desenha o círculo",
+    ],
   },
   {
     id: "rebolado-basico",
@@ -372,6 +510,11 @@ export const EXERCISES: Exercise[] = [
       "Tensionar muito",
     ],
     exposureLevel: 2,
+    proTips: [
+      "Aprende lento e isolado; a velocidade e a graça vêm depois com a prática",
+      "Joelhos levemente moles deixam o quadril solto e sensual",
+      "Pratica no espelho pra ganhar consciência do movimento",
+    ],
   },
   {
     id: "isolamento-quadril-lateral",
@@ -385,6 +528,11 @@ export const EXERCISES: Exercise[] = [
       "Inclinar tronco",
     ],
     exposureLevel: 2,
+    proTips: [
+      "Movimentos pequenos trabalham a cintura sem engrossar o oblíquo",
+      "Mantém os ombros nivelados enquanto só o quadril vai de um lado a outro",
+      "Base do rebolado lateral — domina isso e o resto flui",
+    ],
   },
   // === AQUECIMENTO ===
   {
@@ -399,6 +547,11 @@ export const EXERCISES: Exercise[] = [
       "Pular aquecimento direto pro treino pesado",
     ],
     exposureLevel: 1,
+    proTips: [
+      "5 minutos aqui evitam semanas parada por lesão — nunca pula",
+      "Movimentos suaves e progressivos, do menor pro maior",
+      "Já aproveita pra checar como o corpo tá no dia",
+    ],
   },
   {
     id: "cardio-leve-esteira",
@@ -412,6 +565,11 @@ export const EXERCISES: Exercise[] = [
       "Pular essa fase",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Ritmo em que você ainda conversa — é aquecimento, não treino de fôlego",
+      "A bike reclinada é uma ótima opção se quiser poupar os joelhos",
+      "Eleva a temperatura e prepara as articulações pro que vem",
+    ],
   },
   // === MOBILIDADE PÉLVICA (vida íntima — base de flexibilidade) ===
   {
@@ -426,6 +584,11 @@ export const EXERCISES: Exercise[] = [
       "Curvar lombar",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Deixa o peso dos cotovelos abrir os joelhos devagar, sem empurrão brusco",
+      "Costas longas e peito aberto intensificam sem machucar",
+      "Abre a virilha pra mobilidade na vida e na intimidade",
+    ],
   },
   {
     id: "agachamento-profundo-pausa",
@@ -440,6 +603,11 @@ export const EXERCISES: Exercise[] = [
     ],
     easierVariation: "Apoiar em algo (parede, móvel) durante a pausa",
     exposureLevel: 1,
+    proTips: [
+      "Apoia em algo se precisar — o importante é relaxar lá no fundo",
+      "Empurra os joelhos pra fora com os cotovelos pra abrir mais o quadril",
+      "Destrava quadril, tornozelo e lombar de uma vez só",
+    ],
   },
   {
     id: "happy-baby",
@@ -453,6 +621,11 @@ export const EXERCISES: Exercise[] = [
       "Pés muito longe do corpo",
     ],
     exposureLevel: 1,
+    proTips: [
+      "Puxa os pés pra baixo e abre os joelhos perto das axilas, soltando a lombar",
+      "Balança de leve de um lado pro outro pra massagear a coluna",
+      "Relaxa a respiração — é alongamento de soltar, não de forçar",
+    ],
   },
   // === ADUÇÃO / ABDUÇÃO PRA QUADRIL ===
   {
@@ -468,6 +641,11 @@ export const EXERCISES: Exercise[] = [
     ],
     harderVariation: "Com caneleira no tornozelo",
     exposureLevel: 1,
+    proTips: [
+      "Sobe a perna pro lado e um tiquinho pra trás pra pegar o glúteo, não a coxa",
+      "Não deixa o quadril rolar pra trás — fica de lado de verdade",
+      "Desce controlando; metade do trabalho está na volta",
+    ],
   },
   {
     id: "clamshell",
@@ -483,6 +661,11 @@ export const EXERCISES: Exercise[] = [
     ],
     harderVariation: "Com caneleira apoiada na coxa de cima",
     exposureLevel: 1,
+    proTips: [
+      "Abre só o joelho de cima sem rolar o tronco pra trás",
+      "Sente a lateral do bumbum, não a frente da coxa",
+      "Pés juntos e colados o tempo todo isolam o glúteo médio",
+    ],
   },
   // === VARIAÇÕES PRA CICLOS AVANÇADOS ===
   {
@@ -495,6 +678,12 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Usar lombar pra ajudar", "Não controlar descida", "Quadril rotaciona"],
     easierVariation: "Hip thrust bipodal (clássico)",
     exposureLevel: 4,
+    startLoadKg: 6,
+    proTips: [
+      "Corrige diferença entre os lados — comece pelo lado mais fraco",
+      "Quadril nivelado: não deixa um lado afundar",
+      "Pausa no topo apertando só com a perna que trabalha",
+    ],
   },
   {
     id: "agachamento-bulgaro",
@@ -506,6 +695,12 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Inclinar tronco demais pra frente", "Joelho da frente passando muito da ponta do pé"],
     easierVariation: "Avanço estático sem peso",
     exposureLevel: 4,
+    startLoadKg: 6,
+    proTips: [
+      "Inclina o tronco um pouco à frente pra jogar o foco no glúteo da perna da frente",
+      "Pé da frente longe o suficiente pra o joelho não passar muito da ponta",
+      "Desce vertical em direção ao chão; sobe empurrando pelo calcanhar da frente",
+    ],
   },
   {
     id: "stiff-unilateral",
@@ -517,6 +712,12 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Curvar lombar", "Perder equilíbrio (foco num ponto no chão)", "Não controlar"],
     easierVariation: "Stiff bipodal com halteres",
     exposureLevel: 3,
+    startLoadKg: 5,
+    proTips: [
+      "Fixa o olhar num ponto no chão pra não perder o equilíbrio",
+      "Quadril 'quadrado' (não abre pro lado) — desafio é a estabilidade",
+      "Sente o glúteo e o posterior da perna apoiada esticarem e puxarem de volta",
+    ],
   },
   {
     id: "kickback-cabo",
@@ -527,6 +728,12 @@ export const EXERCISES: Exercise[] = [
     description: "Caneleira no tornozelo, em pé com leve inclinação do tronco à frente, mãos apoiadas na parede ou no banco. Leva a perna pra trás esticada (extensão de quadril), apertando o glúteo no topo. Controla a volta. 12-15 cada perna.",
     commonMistakes: ["Arquear a lombar pra subir mais", "Movimento muito rápido sem controle", "Girar o quadril pra fora"],
     exposureLevel: 2,
+    startLoadKg: 1,
+    proTips: [
+      "Estica a perna pra trás apertando o glúteo, sem arquear a lombar",
+      "Versão na polia dá tensão constante — vale migrar quando puder",
+      "Controla a volta; não deixa a perna cair solta",
+    ],
   },
   {
     id: "abdutor-cabo-em-pe",
@@ -537,6 +744,12 @@ export const EXERCISES: Exercise[] = [
     description: "Caneleira no tornozelo, em 4 apoios no colchonete. Mantendo o joelho dobrado, abre a perna lateralmente (como cachorro no poste) até a altura do quadril, sem rodar o tronco. Glúteo médio. 12-15 cada perna.",
     commonMistakes: ["Rodar o tronco pra compensar", "Arquear a lombar", "Subir a perna com impulso"],
     exposureLevel: 2,
+    startLoadKg: 1,
+    proTips: [
+      "Joelho dobrado a 90°, abre como cachorro no poste até a altura do quadril",
+      "Não roda o tronco pra compensar — só o quadril abre",
+      "Glúteo médio é o que dá a lateral redonda do bumbum",
+    ],
   },
   {
     id: "smith-squat",
@@ -548,6 +761,12 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Pés muito baixos (vira quadríceps)", "Amplitude curta (descer pouco)", "Levantar o quadril do encosto na descida", "Travar o joelho no topo"],
     easierVariation: "Carga leve focando na amplitude e na conexão com o glúteo",
     exposureLevel: 2,
+    startLoadKg: 20,
+    proTips: [
+      "Pés ALTOS e afastados na plataforma jogam o foco pro glúteo, não pro quadríceps",
+      "Desce até ~90° e empurra pelos calcanhares, sem travar o joelho no topo",
+      "Não levanta o quadril do encosto na descida (protege a lombar)",
+    ],
   },
   {
     id: "abdominal-prancha-instavel",
@@ -559,6 +778,11 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: ["Quadril rotacionando", "Apoio frouxo no antebraço"],
     easierVariation: "Prancha estática",
     exposureLevel: 2,
+    proTips: [
+      "Quadril estável (não roda) ao levantar o braço — esse é o desafio",
+      "Pés um pouco mais afastados dão mais base no começo",
+      "Devagar: 2-3s com o braço no ar valem mais que pressa",
+    ],
   },
   {
     id: "cross-over-baixo",
@@ -569,6 +793,12 @@ export const EXERCISES: Exercise[] = [
     description: "Deitada no banco reto, halteres LEVES acima do peito, cotovelos levemente flexionados. Abre os braços num arco até a altura do peito e fecha apertando o centro do peitoral. CARGA LEVE pra tônus. 12-15 reps.",
     commonMistakes: ["Carga pesada", "Descer os braços demais (estressa o ombro)", "Dobrar os cotovelos e virar supino"],
     exposureLevel: 2,
+    startLoadKg: 3,
+    proTips: [
+      "Aperta o centro do peito no topo e segura 1s pra desenhar a linha do colo",
+      "Cotovelos levemente flexionados e fixos — não vira supino",
+      "Leve sempre: tônus e forma, não volume",
+    ],
   },
   // === ADIÇÕES PRO PLANO GLÚTEO-PRIORITÁRIO ===
   {
@@ -584,6 +814,12 @@ export const EXERCISES: Exercise[] = [
       "Amplitude curta (abre bem antes de fechar)",
     ],
     exposureLevel: 1,
+    startLoadKg: 15,
+    proTips: [
+      "Fecha controlando e aperta a parte interna da coxa no fim",
+      "Abre bem antes de fechar pra usar toda a amplitude",
+      "Preenche a coxa interna e deixa as pernas com cara mais cheia e curvilínea",
+    ],
   },
   {
     id: "agachamento-sumo",
@@ -600,5 +836,222 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Agachamento sumô sem peso",
     harderVariation: "Com pausa de 2s no fundo",
     exposureLevel: 2,
+    startLoadKg: 8,
+    proTips: [
+      "Pés bem abertos e pontas pra fora trabalham glúteo + coxa interna juntos",
+      "Joelhos na direção dos pés, tronco ereto descendo entre as pernas",
+      "Ótimo pra silhueta curvilínea — aperta o glúteo na subida",
+    ],
+  },
+  // === ONDA EQUIPAMENTO: POLIA ===
+  {
+    id: "coice-gluteo-polia",
+    name: "Coice de glúteo na polia baixa",
+    category: "gluteo",
+    equipment: ["polia", "caneleira"],
+    difficulty: "iniciante",
+    description: "Tornozeleira clipada no mosquetão da polia baixa. Em pé de frente pra máquina, leve inclinação do tronco, mãos apoiadas. Leva a perna pra trás esticada (extensão de quadril) apertando o glúteo no topo. Controla a volta sem deixar a anilha bater. 12-15 cada perna.",
+    commonMistakes: ["Arquear a lombar pra subir mais", "Girar o quadril pra fora", "Deixar a pilha bater (perde tensão)"],
+    easierVariation: "Coice em pé com caneleira (sem polia)",
+    harderVariation: "Pausa de 1s no topo + cadência lenta na volta",
+    exposureLevel: 3,
+    startLoadKg: 5,
+    proTips: [
+      "Tensão constante da polia > caneleira: vá devagar na volta pra sentir o glúteo segurando",
+      "Imagina empurrar uma parede atrás de você com o calcanhar",
+      "Tronco firme — quem se move é só o quadril, não a lombar",
+    ],
+  },
+  {
+    id: "pull-through-polia",
+    name: "Pull-through na polia",
+    category: "gluteo",
+    equipment: ["polia"],
+    difficulty: "intermediario",
+    description: "De costas pra polia baixa, corda/puxador entre as pernas. Pés afastados, joelhos levemente flexionados. Empurra o quadril pra trás (dobradiça de quadril) descendo o tronco com coluna neutra, depois volta apertando o glúteo à frente. 12-15 reps.",
+    commonMistakes: ["Agachar em vez de empurrar o quadril pra trás", "Curvar a lombar", "Usar os braços pra puxar (são só ganchos)"],
+    easierVariation: "Stiff com halteres",
+    harderVariation: "Pausa de 1-2s no alongamento",
+    exposureLevel: 3,
+    startLoadKg: 10,
+    proTips: [
+      "É dobradiça de quadril, não agachamento: o movimento é pra TRÁS, não pra baixo",
+      "Os braços só seguram a corda — a força vem do glúteo e do posterior",
+      "Termina apertando o glúteo e fechando a costela, sem estourar a lombar",
+    ],
+  },
+  {
+    id: "abducao-quadril-polia",
+    name: "Abdução de quadril na polia",
+    category: "gluteo",
+    equipment: ["polia", "caneleira"],
+    difficulty: "iniciante",
+    description: "Tornozeleira na polia baixa, de lado pra máquina (a perna de fora trabalha). Mão apoiada pra equilíbrio. Abre a perna lateralmente contra o cabo o máximo sem inclinar o tronco. Controla a volta. Glúteo médio. 12-15 cada perna.",
+    commonMistakes: ["Inclinar o tronco pro lado oposto", "Levar a perna pra frente em vez de pro lado", "Impulso em vez de controle"],
+    easierVariation: "Abdução em pé com caneleira",
+    harderVariation: "Pausa de 1s no topo da abertura",
+    exposureLevel: 2,
+    startLoadKg: 5,
+    proTips: [
+      "Glúteo médio é o que arredonda a lateral do quadril — capricha aqui",
+      "Movimento pequeno e limpo vale mais que jogar a perna alto",
+      "Mantém a ponta do pé apontando pra frente (não pra cima)",
+    ],
+  },
+  // === ONDA EQUIPAMENTO: BUSTO / POSTURA ===
+  {
+    id: "crucifixo-polia",
+    name: "Crucifixo na polia (de baixo pra cima)",
+    category: "peitoral",
+    equipment: ["polia"],
+    difficulty: "iniciante",
+    description: "Puxadores nas polias baixas (ou uma de cada vez). Em pé, leve inclinação à frente, braços levemente flexionados. Junta as mãos num arco subindo até a altura do peito, apertando o centro do peito (linha do colo). CARGA LEVE, 12-15 reps.",
+    commonMistakes: ["Carga pesada (queremos tônus, não volume quadrado)", "Dobrar os cotovelos e virar press", "Subir os ombros pra orelha"],
+    easierVariation: "Crucifixo inclinado com halteres leves",
+    harderVariation: "Pausa de 1s apertando o centro",
+    exposureLevel: 2,
+    startLoadKg: 3,
+    proTips: [
+      "Foco na LINHA do colo: imagina abraçar um barril e apertar no meio",
+      "Leve e lento — peito feminino redondo, nunca peitoral de placa",
+      "De baixo pra cima recruta a parte de cima do peito, que dá a 'prateleira'",
+    ],
+  },
+  {
+    id: "face-pull-polia",
+    name: "Face pull na polia",
+    category: "postura",
+    equipment: ["polia"],
+    difficulty: "iniciante",
+    description: "Corda na polia alta. Puxa em direção ao rosto/testa abrindo os cotovelos pra fora e pra cima, apertando as escápulas e girando os ombros pra trás. Postura — abre os ombros e levanta o busto. 15-20 reps, carga leve.",
+    commonMistakes: ["Subir o trapézio (ombro na orelha)", "Carga pesada e balanço", "Não girar os ombros pra trás no fim"],
+    easierVariation: "Crucifixo invertido com halteres leves",
+    harderVariation: "Pausa de 2s na contração",
+    exposureLevel: 1,
+    startLoadKg: 5,
+    proTips: [
+      "Postura ereta + ombros pra trás faz o busto parecer mais cheio — esse é o segredo",
+      "Puxa pra TESTA, não pro peito, e gira os punhos pra trás no fim",
+      "Reps altas e leve: é saúde de ombro e postura, não força bruta",
+    ],
+  },
+  {
+    id: "voador-maquina",
+    name: "Voador / pec deck na multiestação",
+    category: "peitoral",
+    equipment: ["maquina-voador"],
+    difficulty: "iniciante",
+    description: "Sentada na multiestação, antebraços/mãos nos apoios. Fecha os braços à frente apertando o centro do peito, controla a abertura. Desenha a linha interna do peito. CARGA LEVE, 12-15 reps.",
+    commonMistakes: ["Carga pesada demais", "Estufar/curvar para ganhar amplitude com o tronco", "Soltar rápido na volta"],
+    easierVariation: "Crucifixo na polia leve",
+    harderVariation: "Pausa de 1-2s no fechamento",
+    exposureLevel: 1,
+    startLoadKg: 10,
+    proTips: [
+      "Aperta e segura 1s no centro — a contração é onde mora a linha do colo",
+      "Leve sempre: o objetivo é redondo e macio, não quadrado",
+      "Costas coladas no encosto, ombros baixos",
+    ],
+  },
+  // === ONDA EQUIPAMENTO: FLEXIBILIDADE NO ESPALDAR ===
+  {
+    id: "along-isquios-espaldar",
+    name: "Alongamento de isquiotibiais no espaldar",
+    category: "mobilidade",
+    equipment: ["espaldar"],
+    difficulty: "iniciante",
+    description: "Apoia um calcanhar numa barra do espaldar na altura confortável (quadril, depois mais alto com o tempo). Perna esticada, tronco à frente com coluna neutra até sentir alongar atrás da coxa. 30-60s cada perna, respirando.",
+    commonMistakes: ["Curvar a lombar pra 'chegar mais longe'", "Prender a respiração", "Forçar a ponto de dor (deve puxar, não doer)"],
+    harderVariation: "Subir o pé pra uma barra mais alta",
+    exposureLevel: 2,
+    proTips: [
+      "Vai pela dobradiça do quadril (peito pra frente), não arredondando as costas",
+      "Ganho de flexibilidade vem da constância: todo dia um pouco > forçar 1x",
+      "Expira soltando o ar a cada vez que avança mais um pouco",
+    ],
+  },
+  {
+    id: "abertura-quadril-espaldar",
+    name: "Abertura de quadril apoiada (straddle) no espaldar",
+    category: "mobilidade",
+    equipment: ["espaldar"],
+    difficulty: "iniciante",
+    description: "De frente pro espaldar, mãos segurando as barras, pernas bem afastadas e pontas dos pés pra fora. Desce o quadril controlando com os braços, abrindo a virilha. Sobe e desce no limite confortável. 8-10 descidas + 30s de pausa no fundo.",
+    commonMistakes: ["Joelhos caindo pra dentro (mantém na linha dos pés)", "Forçar antes de aquecer", "Descer rápido sem controle dos braços"],
+    harderVariation: "Pausa mais longa no fundo, mãos numa barra mais baixa",
+    exposureLevel: 2,
+    proTips: [
+      "Os braços no espaldar te dão segurança pra relaxar a virilha — confia neles",
+      "Mobilidade de quadril ajuda na vida e na intimidade: capricha sem pressa",
+      "Aquece com a bike reclinada antes — quadril aquecido abre muito mais",
+    ],
+  },
+  {
+    id: "agachamento-assistido-espaldar",
+    name: "Agachamento profundo assistido no espaldar",
+    category: "mobilidade",
+    equipment: ["espaldar"],
+    difficulty: "iniciante",
+    description: "Segura uma barra do espaldar na altura do peito, pés na largura dos ombros. Desce até o agachamento mais profundo possível usando as mãos pra controlar, mantendo calcanhares no chão. Pausa 30s-1min abrindo quadril e tornozelo. Sobe.",
+    commonMistakes: ["Calcanhar levantando", "Jogar o peso todo nos braços (é apoio, não tração total)", "Curvar a lombar no fundo"],
+    harderVariation: "Soltar levemente as mãos no fundo, só pra equilíbrio",
+    exposureLevel: 1,
+    proTips: [
+      "Esse é o melhor 'destravador' de quadril pra quem passa o dia sentada",
+      "No fundo, empurra os joelhos pra fora com os cotovelos pra abrir mais",
+      "Respira fundo no fundo do agachamento — relaxa em vez de tensionar",
+    ],
+  },
+  {
+    id: "espacate-progressao",
+    name: "Progressão de espacate apoiada",
+    category: "mobilidade",
+    equipment: ["espaldar", "colchonete"],
+    difficulty: "intermediario",
+    description: "Progressão gradual da abertura frontal (espacate). Com o espaldar ao lado pra apoio das mãos, deslize uma perna à frente e outra atrás até o limite confortável, controlando o peso nos braços. Segura 30s, troca o lado. Avança 1cm por semana, sem pressa.",
+    commonMistakes: ["Querer chegar ao chão rápido (lesão)", "Quadril torto (mantém de frente)", "Pular o aquecimento"],
+    easierVariation: "Avanço/afundo apoiado, sem buscar amplitude máxima",
+    exposureLevel: 3,
+    proTips: [
+      "Espacate é maratona, não sprint: 1cm por semana e você chega sem se machucar",
+      "Sempre MUITO aquecida antes — nunca tente frio",
+      "Mantém o quadril 'quadrado' (apontando pra frente) pra abrir o lugar certo",
+    ],
+  },
+  // === ONDA EQUIPAMENTO: BOLA E STEP ===
+  {
+    id: "ponte-gluteo-bola",
+    name: "Ponte de glúteo na bola suíça",
+    category: "gluteo",
+    equipment: ["bola-suica"],
+    difficulty: "intermediario",
+    description: "Ombros/parte alta das costas apoiados na bola, pés no chão na largura do quadril, joelhos a 90°. Sobe o quadril até alinhar tronco-joelho apertando o glúteo, controla a descida. A instabilidade da bola recruta mais glúteo + core. 12-15 reps.",
+    commonMistakes: ["Arquear a lombar em vez de subir pelo glúteo", "Pés muito longe/perto", "Deixar a bola escorregar (controle)"],
+    easierVariation: "Ponte de glúteo no chão",
+    harderVariation: "Ponte na bola com uma perna só, ou com halter na pelve",
+    exposureLevel: 3,
+    proTips: [
+      "A bola te obriga a estabilizar — sente o core e o glúteo trabalhando juntos",
+      "Aperta o glúteo no topo 1-2s, não sobe só por subir",
+      "Empurra pelos calcanhares pra tirar a coxa da frente do movimento",
+    ],
+  },
+  {
+    id: "step-up-gluteo",
+    name: "Step-up pra glúteo no step",
+    category: "gluteo",
+    equipment: ["step", "halteres"],
+    difficulty: "intermediario",
+    description: "Halteres nas mãos, um pé inteiro no step (quanto mais alto, mais glúteo). Sobe empurrando pelo CALCANHAR da perna de cima, sem dar impulso com a perna de baixo. Controla a descida. 10-12 cada perna.",
+    commonMistakes: ["Impulsionar com a perna de trás", "Apoiar a ponta do pé (vira quadríceps)", "Step baixo demais (perde o foco no glúteo)"],
+    easierVariation: "Step mais baixo ou sem halteres",
+    harderVariation: "Step mais alto + pausa no topo sem encostar o outro pé",
+    exposureLevel: 3,
+    startLoadKg: 4,
+    proTips: [
+      "Empurra pelo calcanhar e pensa em 'subir com o glúteo', não com o joelho",
+      "Step mais alto = mais glúteo (desde que mantenha o calcanhar apoiado)",
+      "Não dá pulinho com a perna de baixo — ela só toca de leve pra equilíbrio",
+    ],
   },
 ];

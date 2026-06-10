@@ -40,6 +40,8 @@ export interface Exercise {
   easierVariation?: string;
   harderVariation?: string;
   exposureLevel: 1 | 2 | 3 | 4 | 5;
+  startLoadKg?: number; // peso sugerido inicial (só exercícios com carga externa)
+  proTips?: string[]; // dicas pra maximizar resultado
 }
 
 export interface WorkoutTemplate {
