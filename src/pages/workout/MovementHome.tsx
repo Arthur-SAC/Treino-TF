@@ -16,8 +16,10 @@ export function MovementHome() {
   }
 
   const mobilidade = sequences?.filter((s) => s.category === "mobilidade") ?? [];
+  const flexibilidade = sequences?.filter((s) => s.category === "flexibilidade") ?? [];
   const pelvic = sequences?.filter((s) => s.category === "pelvic") ?? [];
   const danca = sequences?.filter((s) => s.category === "danca") ?? [];
+  const twerk = sequences?.filter((s) => s.category === "twerk") ?? [];
   const sensual = sequences?.filter((s) => s.category === "sensual") ?? [];
 
   return (
@@ -31,6 +33,17 @@ export function MovementHome() {
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Mobilidade</h2>
       <div className="space-y-2 mb-4">
         {mobilidade.map((s) => (
+          <SequenceCard
+            key={s.id}
+            sequence={s}
+            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
+          />
+        ))}
+      </div>
+
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Flexibilidade · 4 semanas progressivas</h2>
+      <div className="space-y-2 mb-4">
+        {flexibilidade.map((s) => (
           <SequenceCard
             key={s.id}
             sequence={s}
@@ -53,6 +66,17 @@ export function MovementHome() {
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Dança · 4 semanas progressivas</h2>
       <div className="space-y-2 mb-4">
         {danca.map((s) => (
+          <SequenceCard
+            key={s.id}
+            sequence={s}
+            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
+          />
+        ))}
+      </div>
+
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Twerk · rebolado safado (3 semanas)</h2>
+      <div className="space-y-2 mb-4">
+        {twerk.map((s) => (
           <SequenceCard
             key={s.id}
             sequence={s}

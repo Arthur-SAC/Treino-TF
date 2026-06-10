@@ -232,7 +232,7 @@ export interface DanceMove {
 export interface DanceSequence {
   id: string;
   name: string;
-  category: "mobilidade" | "danca" | "pelvic" | "sensual";
+  category: "mobilidade" | "danca" | "pelvic" | "sensual" | "flexibilidade" | "twerk";
   level: "iniciante" | "intermediario" | "avancado";
   durationMin: number;
   focus: string;

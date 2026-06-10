@@ -23,4 +23,11 @@ describe("seedMovement", () => {
       expect(s.durationMin).toBeGreaterThan(0);
     }
   });
+
+  it("tem as trilhas de flexibilidade (4) e twerk (3)", async () => {
+    await seedMovement();
+    const seqs = await db.danceSequences.toArray();
+    expect(seqs.filter((s) => s.category === "flexibilidade").length).toBe(4);
+    expect(seqs.filter((s) => s.category === "twerk").length).toBe(3);
+  });
 });
