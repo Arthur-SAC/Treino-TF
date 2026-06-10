@@ -30,6 +30,7 @@ import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
 import { HaircareHome } from "./pages/beauty/HaircareHome";
+import { NailsHome } from "./pages/beauty/NailsHome";
 import { ProductsHome } from "./pages/beauty/ProductsHome";
 import { ProductNew } from "./pages/beauty/ProductNew";
 import { DepilacaoHome } from "./pages/beauty/DepilacaoHome";
@@ -84,6 +85,7 @@ const router = createBrowserRouter(
         { path: "beleza/pele-cabelo/skincare/nova", element: <SkincareNew /> },
         { path: "beleza/pele-cabelo/skincare/:id", element: <SkincareDetail /> },
         { path: "beleza/pele-cabelo/haircare", element: <HaircareHome /> },
+        { path: "beleza/pele-cabelo/unhas", element: <NailsHome /> },
         { path: "beleza/pele-cabelo/produtos", element: <ProductsHome /> },
         { path: "beleza/pele-cabelo/produtos/novo", element: <ProductNew /> },
         { path: "beleza/depilacao", element: <DepilacaoHome /> },

@@ -14,7 +14,11 @@ export function BeautyHome() {
       </Link>
       <Link to="/beleza/pele-cabelo/haircare" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Cabelo</h3>
-        <p className="text-muted text-sm mt-1">Cronograma capilar pro pixie cacheado</p>
+        <p className="text-muted text-sm mt-1">Jornada de crescimento dos cachos</p>
+      </Link>
+      <Link to="/beleza/pele-cabelo/unhas" className="card block hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Unhas</h3>
+        <p className="text-muted text-sm mt-1">Curtas e cuidadas: saúde, cutícula, esmalte discreto x ousado</p>
       </Link>
       <Link to="/beleza/pele-cabelo/produtos" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Produtos</h3>
