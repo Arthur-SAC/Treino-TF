@@ -33,9 +33,9 @@ export const MILESTONES: Omit<Milestone, "id">[] = [
   },
   {
     datePlanned: isoFromMonthsFromNow(6),
-    title: "Marco visual: pixie cacheado formato definido",
+    title: "💇‍♀️ Cabelo na fase de transição — manter forma e saúde crescendo",
     category: "fisico",
-    notes: "Com cronograma capilar consistente (hidratação semanal + nutrição quinzenal + reconstrução mensal), o cabelo deve estar mais saudável e definido.",
+    notes: "Com cronograma consistente + retenção (cetim, baixa manipulação, aparar só pontas), o cabelo deve estar visivelmente mais comprido e saudável. Fase do meio-termo: dar forma com camadas longas sem encurtar, disfarçar formatos esquisitos com acessórios. Rumo a um pouco abaixo dos ombros.",
   },
   {
     datePlanned: isoFromMonthsFromNow(9),

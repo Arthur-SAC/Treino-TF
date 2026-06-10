@@ -3,7 +3,7 @@ import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES } from "../data/miles
 import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
 const MEAL_PLAN_VERSION = 4;
-const MILESTONE_SEED_VERSION = 3;
+const MILESTONE_SEED_VERSION = 4;
 
 /** Upsert dos planos por `goal` (déficit/manutenção/superávit): atualiza o que
  *  já existe e adiciona os que faltam, sem duplicar. Idempotente. O déficit é
@@ -49,6 +49,19 @@ export async function seedPath(): Promise<void> {
       }
       if (msVersion < 3) {
         for (const m of BUST_MILESTONES) await db.milestones.add(m as never);
+      }
+      if (msVersion < 4) {
+        // Atualiza o marco antigo de "pixie" pro de crescimento (ou adiciona se faltar).
+        const novo = MILESTONES.find((m) => m.title.includes("transição"));
+        if (novo) {
+          const fisicos = await db.milestones.where("category").equals("fisico").toArray();
+          const pixie = fisicos.find((m) => m.title.includes("pixie"));
+          if (pixie?.id !== undefined) {
+            await db.milestones.update(pixie.id, { title: novo.title, notes: novo.notes });
+          } else {
+            await db.milestones.add(novo as never);
+          }
+        }
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });
     });

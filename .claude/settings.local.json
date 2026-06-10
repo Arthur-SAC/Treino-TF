@@ -32,7 +32,20 @@
       "Read(//tmp/**)",
       "Bash(taskkill //IM node.exe //F)",
       "Bash(rm -f public/favicon.svg)",
-      "Bash(rm -f \"WhatsApp Image 2026-05-19 at 06.22.19.jpeg\")"
+      "Bash(rm -f \"WhatsApp Image 2026-05-19 at 06.22.19.jpeg\")",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter \"git rm -r --cached --ignore-unmatch eu objetivo\" --tag-name-filter cat -- --all)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(echo \"arvore limpa? exit=$? \\(0=sim\\)\")",
+      "Bash(xargs -r -n1 git update-ref -d)",
+      "Bash(grep -iE \"eu/|objetivo/|\\\\.jpe?g$\")",
+      "Bash(xargs echo \"arquivos em eu/+objetivo/:\")",
+      "Bash(echo \"---EXIT: $?---\")",
+      "Bash(npm test *)",
+      "PowerShell(npm test *)",
+      "PowerShell($cmds = \"node\",\"npm\",\"npx\",\"pnpm\",\"yarn\"; foreach \\($c in $cmds\\) { $p = Get-Command $c -ErrorAction SilentlyContinue; if \\($p\\) { \"$c -> $\\($p.Source\\)\" } else { \"$c -> \\(não encontrado\\)\" } })",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(npm *)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:APPDATA\\\\npm;$env:Path\"; node scripts/_addtips.mjs)"
     ]
   }
 }
