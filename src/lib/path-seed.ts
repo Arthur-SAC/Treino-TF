@@ -39,7 +39,8 @@ export async function seedPath(): Promise<void> {
   }
 
   // Migração de marcos por etapas (evita duplicar quem já passou por uma versão):
-  // v2 adiciona os marcos do objetivo físico; v3 adiciona o marco de busto.
+  // v2 adiciona os marcos do objetivo físico; v3 adiciona o marco de busto;
+  // v4 atualiza o marco antigo de "pixie" pro de "transição" (crescimento do cabelo).
   const msVersionSetting = await db.settings.get("milestoneSeedVersion");
   const msVersion = (msVersionSetting?.value as number) ?? 1;
   if (msVersion < MILESTONE_SEED_VERSION) {

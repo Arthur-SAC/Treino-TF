@@ -1,13 +1,8 @@
-export interface HairGuideSection {
-  id: string;
-  title: string;
-  intro?: string;
-  tips: string[];
-}
+import type { GuideSection } from "../components/GuideAccordion";
 
 // Guia da jornada de crescimento do cabelo (cacheado natural, sem química/calor).
 // Conteúdo estático — boas práticas gerais, não substitui terapeuta capilar.
-export const HAIR_GUIDE: HairGuideSection[] = [
+export const HAIR_GUIDE: GuideSection[] = [
   {
     id: "crescimento",
     title: "Crescimento & cronograma",

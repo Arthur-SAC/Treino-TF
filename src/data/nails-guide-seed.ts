@@ -1,13 +1,8 @@
-export interface NailGuideSection {
-  id: string;
-  title: string;
-  intro?: string;
-  tips: string[];
-}
+import type { GuideSection } from "../components/GuideAccordion";
 
 // Guia de cuidado de unhas — curtas, saudáveis e femininas pelo cuidado, não pelo
 // comprimento. Conteúdo estático; boas práticas gerais, não substitui manicure/dermato.
-export const NAILS_GUIDE: NailGuideSection[] = [
+export const NAILS_GUIDE: GuideSection[] = [
   {
     id: "saude",
     title: "Saúde e fortalecimento",

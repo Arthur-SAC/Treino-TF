@@ -1,13 +1,8 @@
-export interface DiscreetSection {
-  id: string;
-  title: string;
-  intro?: string;
-  tips: string[];
-}
+import type { GuideSection } from "../components/GuideAccordion";
 
 // Trilho "começar discreto" — experimentar feminilidade em ambiente hostil, subindo do
 // imperceptível ao ousado em espaço seguro. Conteúdo estático.
-export const ESTILO_DISCRETO: DiscreetSection[] = [
+export const ESTILO_DISCRETO: GuideSection[] = [
   {
     id: "escada",
     title: "Escada de níveis",

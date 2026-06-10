@@ -1,14 +1,9 @@
-export interface ClareamentoSection {
-  id: string;
-  title: string;
-  intro?: string;
-  tips: string[];
-}
+import type { GuideSection } from "../components/GuideAccordion";
 
 // Guia de clareamento de pele (manchas de sol, axila, virilha, perianal). Conteúdo
 // estático — boas práticas gerais, NÃO substitui dermatologista, sobretudo na área anal
 // e pra ativos potentes.
-export const CLAREAMENTO_GUIDE: ClareamentoSection[] = [
+export const CLAREAMENTO_GUIDE: GuideSection[] = [
   {
     id: "como-funciona",
     title: "Como o clareamento funciona",

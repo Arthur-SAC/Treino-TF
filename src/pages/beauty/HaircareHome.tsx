@@ -5,6 +5,7 @@ import { db, type HaircareEntry } from "../../lib/db";
 import { BeautyTabs } from "../../components/BeautyTabs";
 import { formatDateBR } from "../../lib/format";
 import { HAIR_GUIDE } from "../../data/hair-guide-seed";
+import { GuideAccordion } from "../../components/GuideAccordion";
 
 const TYPE_LABEL: Record<HaircareEntry["type"], string> = {
   hidratacao: "Hidratação",
@@ -52,20 +53,7 @@ export function HaircareHome() {
         cronograma + retenção de comprimento é o que entrega.
       </p>
 
-      <div className="space-y-2 mb-4">
-        {HAIR_GUIDE.map((section) => (
-          <details key={section.id} className="card !py-3">
-            <summary className="text-nude-warm font-medium cursor-pointer list-none flex justify-between items-center">
-              <span>{section.title}</span>
-              <span className="text-muted text-xs">ver</span>
-            </summary>
-            {section.intro && <p className="text-muted text-sm mt-2">{section.intro}</p>}
-            <ul className="space-y-1 text-sm list-disc pl-5 mt-2">
-              {section.tips.map((t) => <li key={t}>{t}</li>)}
-            </ul>
-          </details>
-        ))}
-      </div>
+      <GuideAccordion sections={HAIR_GUIDE} className="mb-4" />
 
       <div className="card mb-4">
         <h2 className="text-nude-warm font-medium mb-2">Cronograma capilar — crescimento saudável</h2>

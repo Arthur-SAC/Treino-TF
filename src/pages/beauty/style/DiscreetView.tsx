@@ -3,6 +3,7 @@ import { BeautyTabs } from "../../../components/BeautyTabs";
 import { StyleTabs } from "../../../components/StyleTabs";
 import { DisclaimerCard } from "../../../components/DisclaimerCard";
 import { ESTILO_DISCRETO } from "../../../data/estilo-discreto-seed";
+import { GuideAccordion } from "../../../components/GuideAccordion";
 
 export function DiscreetView() {
   return (
@@ -16,20 +17,7 @@ export function DiscreetView() {
 
       <DisclaimerCard text="Vá no seu ritmo — sua segurança vem primeiro. Deixe o ousado pros espaços seguros (casa, com a amada, ambientes queer). Não é corrida: dá pra ficar em cada nível o tempo que quiser." />
 
-      <div className="space-y-2 mt-3">
-        {ESTILO_DISCRETO.map((section) => (
-          <details key={section.id} className="card !py-3">
-            <summary className="text-nude-warm font-medium cursor-pointer list-none flex justify-between items-center">
-              <span>{section.title}</span>
-              <span className="text-muted text-xs">ver</span>
-            </summary>
-            {section.intro && <p className="text-muted text-sm mt-2">{section.intro}</p>}
-            <ul className="space-y-1 text-sm list-disc pl-5 mt-2">
-              {section.tips.map((t) => <li key={t}>{t}</li>)}
-            </ul>
-          </details>
-        ))}
-      </div>
+      <GuideAccordion sections={ESTILO_DISCRETO} className="mt-3" />
     </div>
   );
 }
