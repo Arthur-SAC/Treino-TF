@@ -1,9 +1,9 @@
 import { db } from "./db";
-import { MILESTONES, BODY_GOAL_MILESTONES } from "../data/milestones-seed";
+import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES } from "../data/milestones-seed";
 import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
 const MEAL_PLAN_VERSION = 4;
-const MILESTONE_SEED_VERSION = 2;
+const MILESTONE_SEED_VERSION = 3;
 
 /** Upsert dos planos por `goal` (déficit/manutenção/superávit): atualiza o que
  *  já existe e adiciona os que faltam, sem duplicar. Idempotente. O déficit é
@@ -25,7 +25,7 @@ export async function seedPath(): Promise<void> {
   const seeded = await db.settings.get("pathSeeded");
   if (seeded?.value !== true) {
     await db.transaction("rw", [db.milestones, db.mealPlans, db.settings], async () => {
-      for (const m of [...MILESTONES, ...BODY_GOAL_MILESTONES]) {
+      for (const m of [...MILESTONES, ...BODY_GOAL_MILESTONES, ...BUST_MILESTONES]) {
         await db.milestones.add(m as never);
       }
       if ((await db.mealPlans.count()) === 0) {
@@ -38,12 +38,17 @@ export async function seedPath(): Promise<void> {
     });
   }
 
-  // Migração de marcos: contas existentes recebem os marcos do objetivo físico.
-  const msVersion = await db.settings.get("milestoneSeedVersion");
-  if (((msVersion?.value as number) ?? 1) < MILESTONE_SEED_VERSION) {
+  // Migração de marcos por etapas (evita duplicar quem já passou por uma versão):
+  // v2 adiciona os marcos do objetivo físico; v3 adiciona o marco de busto.
+  const msVersionSetting = await db.settings.get("milestoneSeedVersion");
+  const msVersion = (msVersionSetting?.value as number) ?? 1;
+  if (msVersion < MILESTONE_SEED_VERSION) {
     await db.transaction("rw", [db.milestones, db.settings], async () => {
-      for (const m of BODY_GOAL_MILESTONES) {
-        await db.milestones.add(m as never);
+      if (msVersion < 2) {
+        for (const m of BODY_GOAL_MILESTONES) await db.milestones.add(m as never);
+      }
+      if (msVersion < 3) {
+        for (const m of BUST_MILESTONES) await db.milestones.add(m as never);
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });
     });

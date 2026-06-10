@@ -97,3 +97,14 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
     notes: "Com a base muscular pronta, o estrogênio (após resolver a fertilidade) faz a redistribuição de gordura pro quadril/bunda e a textura macia — o 'durinha mas gostosa de apertar'. É a fase que entrega a forma final por cima do músculo já construído.",
   },
 ];
+
+// Marco honesto sobre o busto sem TH: expectativa realista + quando faz sentido
+// começar a usar bralette. (Migração: versão 3 dos marcos.)
+export const BUST_MILESTONES: Omit<Milestone, "id">[] = [
+  {
+    datePlanned: isoFromMonthsFromNow(4),
+    title: "🤍 Busto sem TH — avaliar começar a usar bralette",
+    category: "fisico",
+    notes: "Sem TH não cresce glândula mamária. O que dá: fullness de GORDURA no peito + prateleira do peitoral (supino inclinado + voador/crucifixo na polia) + postura (face pull, retração escapular). Teto realista: peito macio com linha de colo discreta, bem mais levantado que hoje, sobretudo vestida. Pode chegar num ponto de marcar o suficiente pra um bralette leve ficar confortável e evitar marcar o mamilo. E dá pra usar bralette com bojo fino DESDE JÁ por estilo/euforia — cria a sugestão de busto sob roupa justa, e combina com 'começar discreto'. Salto de tamanho e formato de verdade vem com a TH. Sinal pra mostrar ao médico (sem pânico): caroço firme e dolorido sob o mamilo (ginecomastia glandular, comum e tratável).",
+  },
+];
