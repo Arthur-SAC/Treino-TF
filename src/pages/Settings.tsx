@@ -16,6 +16,9 @@ export function Settings() {
   const hydrInterval = useSetting("hydrationIntervalMin");
   const hydrGoal = useSetting("hydrationGoalMl");
   const focus = useSetting("focusModeUntil");
+  const heightCm = useSetting("heightCm");
+  const targetWhr = useSetting("targetWhr");
+  const targetShr = useSetting("targetShoulderHipRatio");
 
   const [busy, setBusy] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
@@ -208,6 +211,31 @@ export function Settings() {
             <button onClick={() => void pauseFocus(480)} className="bg-bg-deep border border-bg-border rounded-md py-2 text-sm">8 h</button>
           </div>
         )}
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-nude-warm font-medium">Silhueta</h2>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Altura (cm)</label>
+          <input type="number" min={120} max={220} value={heightCm || ""} placeholder="ex.: 165"
+                 onChange={(e) => void setSetting("heightCm", Number(e.target.value))}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+          <p className="text-muted text-xs mt-1">Usada pra estimar a gordura corporal (método Navy).</p>
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Meta WHR (cintura/quadril)</label>
+          <input type="number" step={0.01} min={0.5} max={1.1} value={targetWhr}
+                 onChange={(e) => void setSetting("targetWhr", Number(e.target.value))}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+          <p className="text-muted text-xs mt-1">0,72 = ampulheta forte · 0,80 = moderada.</p>
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Meta ombro/quadril</label>
+          <input type="number" step={0.01} min={0.7} max={1.3} value={targetShr}
+                 onChange={(e) => void setSetting("targetShoulderHipRatio", Number(e.target.value))}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+          <p className="text-muted text-xs mt-1">1,00 = ombro no máximo igual ao quadril.</p>
+        </div>
       </div>
 
       <div className="card space-y-2">
