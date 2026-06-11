@@ -70,6 +70,21 @@ export function Today() {
     [todayISO, suggestedSeq?.id],
   );
 
+  const APRESENTACAO_IDS = [
+    "corporal-postura-sentar",
+    "corporal-caminhada",
+    "corporal-gestual-maos",
+    "corporal-olhar-expressao",
+  ];
+  const apresentacaoSeq = sequences?.find((s) => s.id === APRESENTACAO_IDS[dayOfWeek % 4]) ?? null;
+  const apresentacaoToday = useLiveQuery(
+    async () => {
+      if (!apresentacaoSeq) return 0;
+      return db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === apresentacaoSeq.id).count();
+    },
+    [todayISO, apresentacaoSeq?.id],
+  );
+
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
     [],
@@ -250,6 +265,15 @@ export function Today() {
         to="/treino/movimento/postura-silhueta-diaria"
         variant={(posturaDoneToday ?? 0) === 0 ? "highlight" : "default"}
       />
+
+      {apresentacaoSeq && (
+        <TodayCard
+          title="Apresentação"
+          subtitle={`${apresentacaoSeq.name} · ${apresentacaoSeq.durationMin} min · ${(apresentacaoToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+          to={`/treino/movimento/${apresentacaoSeq.id}`}
+          variant={(apresentacaoToday ?? 0) === 0 ? "highlight" : "default"}
+        />
+      )}
 
       {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
         <TodayCard
