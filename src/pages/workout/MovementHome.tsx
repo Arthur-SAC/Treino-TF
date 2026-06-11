@@ -16,6 +16,7 @@ export function MovementHome() {
   }
 
   const mobilidade = sequences?.filter((s) => s.category === "mobilidade") ?? [];
+  const apresentacao = sequences?.filter((s) => s.category === "apresentacao") ?? [];
   const flexibilidade = sequences?.filter((s) => s.category === "flexibilidade") ?? [];
   const pelvic = sequences?.filter((s) => s.category === "pelvic") ?? [];
   const danca = sequences?.filter((s) => s.category === "danca") ?? [];
@@ -33,6 +34,17 @@ export function MovementHome() {
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Mobilidade</h2>
       <div className="space-y-2 mb-4">
         {mobilidade.map((s) => (
+          <SequenceCard
+            key={s.id}
+            sequence={s}
+            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
+          />
+        ))}
+      </div>
+
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Apresentação · gestual e postura feminina no dia a dia</h2>
+      <div className="space-y-2 mb-4">
+        {apresentacao.map((s) => (
           <SequenceCard
             key={s.id}
             sequence={s}
