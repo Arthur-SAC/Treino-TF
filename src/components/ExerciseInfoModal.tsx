@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import type { Exercise } from "../lib/db";
+import { db, type Exercise } from "../lib/db";
+import { VideoSection } from "./VideoSection";
 
 interface Props {
   exercise: Exercise;
@@ -90,16 +91,10 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
             </section>
           )}
 
-          {exercise.videoUrl && (
-            <a
-              href={exercise.videoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="block text-center text-nude text-sm underline pt-2"
-            >
-              Ver vídeo de referência →
-            </a>
-          )}
+          <VideoSection
+            url={exercise.videoUrl}
+            onSave={(url) => { void db.exercises.update(exercise.id, { videoUrl: url || undefined }); }}
+          />
         </div>
       </div>
     </div>

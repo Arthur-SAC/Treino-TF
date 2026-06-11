@@ -13,7 +13,7 @@ import type { WorkoutTemplate } from "../lib/db";
 const VARIATION: WorkoutTemplate[] = [
   {
     id: "v-seg-gluteo-unilateral",
-    name: "🍑 Glúteo A · Força (variação)",
+    name: "◆Glúteo A · Força (variação)",
     dayOfWeek: 1,
     durationMin: 60,
     cycle: "variacao",
@@ -46,7 +46,7 @@ const VARIATION: WorkoutTemplate[] = [
   },
   {
     id: "v-qua-mobilidade-danca",
-    name: "Mobilidade + Dança + 🍑 Glúteo médio (var)",
+    name: "Mobilidade + Dança + ◆Glúteo médio (var)",
     dayOfWeek: 3,
     durationMin: 54,
     cycle: "variacao",
@@ -65,7 +65,7 @@ const VARIATION: WorkoutTemplate[] = [
   },
   {
     id: "v-qui-gluteo-stiff",
-    name: "🍑 Glúteo B · Posterior (variação)",
+    name: "◆Glúteo B · Posterior (variação)",
     dayOfWeek: 4,
     durationMin: 58,
     cycle: "variacao",
@@ -81,7 +81,7 @@ const VARIATION: WorkoutTemplate[] = [
   },
   {
     id: "v-sex-peitoral-postura",
-    name: "🍑 Glúteo C · Volume (variação)",
+    name: "◆Glúteo C · Volume (variação)",
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "variacao",
@@ -101,7 +101,7 @@ const VARIATION: WorkoutTemplate[] = [
 const HYPERTROPHY: WorkoutTemplate[] = [
   {
     id: "h-seg-gluteo-volume",
-    name: "🍑 Glúteo A · Volume alto",
+    name: "◆Glúteo A · Volume alto",
     dayOfWeek: 1,
     durationMin: 70,
     cycle: "hipertrofia",
@@ -133,7 +133,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
   },
   {
     id: "h-qua-mobilidade-danca",
-    name: "Mobilidade + Dança + 🍑 Glúteo médio (volume)",
+    name: "Mobilidade + Dança + ◆Glúteo médio (volume)",
     dayOfWeek: 3,
     durationMin: 54,
     cycle: "hipertrofia",
@@ -151,7 +151,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
   },
   {
     id: "h-qui-gluteo-posterior",
-    name: "🍑 Glúteo B · Posterior + Coxa (volume)",
+    name: "◆Glúteo B · Posterior + Coxa (volume)",
     dayOfWeek: 4,
     durationMin: 68,
     cycle: "hipertrofia",
@@ -167,7 +167,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
   },
   {
     id: "h-sex-peitoral-postura",
-    name: "🍑 Glúteo C · Volume + Coxa",
+    name: "◆Glúteo C · Volume + Coxa",
     dayOfWeek: 5,
     durationMin: 58,
     cycle: "hipertrofia",
@@ -188,7 +188,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
 const REFINEMENT: WorkoutTemplate[] = [
   {
     id: "r-seg-gluteo-densidade",
-    name: "🍑 Glúteo densidade (alta rep)",
+    name: "◆Glúteo densidade (alta rep)",
     dayOfWeek: 1,
     durationMin: 58,
     cycle: "refinamento",
@@ -221,7 +221,7 @@ const REFINEMENT: WorkoutTemplate[] = [
   },
   {
     id: "r-qua-mobilidade-danca",
-    name: "Mobilidade + Dança + 🍑 Glúteo médio (livre)",
+    name: "Mobilidade + Dança + ◆Glúteo médio (livre)",
     dayOfWeek: 3,
     durationMin: 56,
     cycle: "refinamento",
@@ -239,7 +239,7 @@ const REFINEMENT: WorkoutTemplate[] = [
   },
   {
     id: "r-qui-gluteo-simetria",
-    name: "🍑 Glúteo simetria (unilateral)",
+    name: "◆Glúteo simetria (unilateral)",
     dayOfWeek: 4,
     durationMin: 57,
     cycle: "refinamento",
@@ -255,7 +255,7 @@ const REFINEMENT: WorkoutTemplate[] = [
   },
   {
     id: "r-sex-peitoral-refinamento",
-    name: "🍑 Glúteo densidade + Core",
+    name: "◆Glúteo densidade + Core",
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "refinamento",
@@ -277,7 +277,7 @@ const REFINEMENT: WorkoutTemplate[] = [
 const MAINTENANCE: WorkoutTemplate[] = [
   {
     id: "m-seg-gluteo",
-    name: "🍑 Glúteo · Manutenção (força leve)",
+    name: "◆Glúteo · Manutenção (força leve)",
     dayOfWeek: 1,
     durationMin: 48,
     cycle: "manutencao",
@@ -308,7 +308,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
   },
   {
     id: "m-qua-mobilidade",
-    name: "Mobilidade + Dança + 🍑 Glúteo médio (manutenção)",
+    name: "Mobilidade + Dança + ◆Glúteo médio (manutenção)",
     dayOfWeek: 3,
     durationMin: 48,
     cycle: "manutencao",
@@ -325,7 +325,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
   },
   {
     id: "m-qui-gluteo",
-    name: "🍑 Glúteo · Manutenção (unilateral)",
+    name: "◆Glúteo · Manutenção (unilateral)",
     dayOfWeek: 4,
     durationMin: 48,
     cycle: "manutencao",
@@ -339,7 +339,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
   },
   {
     id: "m-sex-gluteo",
-    name: "🍑 Glúteo · Manutenção (bombeamento)",
+    name: "◆Glúteo · Manutenção (bombeamento)",
     dayOfWeek: 5,
     durationMin: 45,
     cycle: "manutencao",

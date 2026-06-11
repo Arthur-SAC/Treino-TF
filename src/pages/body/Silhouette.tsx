@@ -104,7 +104,7 @@ export function Silhouette() {
               {whrG.hipDeltaCm} cm de quadril.
             </p>
           ) : (
-            <p className="text-nude text-sm">No alvo. 🎯</p>
+            <p className="text-nude text-sm">No alvo. ✓</p>
           )}
         </div>
       )}
@@ -121,7 +121,7 @@ export function Silhouette() {
               Pra silhueta mais feminina: +{shrG.hipDeltaCm} cm de quadril (não treine ombro pesado).
             </p>
           ) : (
-            <p className="text-nude text-sm">Ombro não passa do quadril. 🎯</p>
+            <p className="text-nude text-sm">Ombro não passa do quadril. ✓</p>
           )}
         </div>
       )}

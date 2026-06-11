@@ -9,7 +9,7 @@ import type { WorkoutTemplate } from "../lib/db";
 export const WORKOUT_PLAN: WorkoutTemplate[] = [
   {
     id: "seg-gluteo-mobilidade",
-    name: "🍑 Glúteo A · Força",
+    name: "◆Glúteo A · Força",
     dayOfWeek: 1,
     durationMin: 62,
     cycle: "adaptacao",
@@ -43,7 +43,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
   },
   {
     id: "qua-mobilidade-danca",
-    name: "Mobilidade + Dança + 🍑 Glúteo médio",
+    name: "Mobilidade + Dança + ◆Glúteo médio",
     dayOfWeek: 3,
     durationMin: 55,
     cycle: "adaptacao",
@@ -65,7 +65,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
   },
   {
     id: "qui-gluteo-coxa",
-    name: "🍑 Glúteo B · Unilateral + Coxa",
+    name: "◆Glúteo B · Unilateral + Coxa",
     dayOfWeek: 4,
     durationMin: 60,
     cycle: "adaptacao",
@@ -82,7 +82,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
   },
   {
     id: "sex-peitoral-postura",
-    name: "🍑 Glúteo C · Volume + Core",
+    name: "◆Glúteo C · Volume + Core",
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "adaptacao",

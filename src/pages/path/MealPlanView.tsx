@@ -99,7 +99,7 @@ export function MealPlanView() {
 
       <div className="card mb-3">
         <h2 className="text-nude-warm font-medium mb-1">{plan.name}</h2>
-        <p className="text-nude text-xs mb-2">🍑 {GOAL_LABEL[plan.goal]} · troca sozinho conforme o ciclo de treino ativo</p>
+        <p className="text-nude text-xs mb-2">◆ {GOAL_LABEL[plan.goal]} · troca sozinho conforme o ciclo de treino ativo</p>
         <div className="grid grid-cols-4 gap-2">
           <div><p className="text-muted text-xs">kcal</p><p className="text-nude-warm text-lg">{plan.kcalDaily}</p></div>
           <div><p className="text-muted text-xs">proteína</p><p className="text-nude-warm text-lg">{plan.proteinG}g</p></div>

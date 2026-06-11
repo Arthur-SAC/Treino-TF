@@ -71,7 +71,7 @@ export async function seedDatabase(): Promise<void> {
   // glúteo-prioritário, novo ciclo de manutenção), bumpar TEMPLATE_SEED_VERSION
   // re-grava todos os templates. put() sobrescreve os de mesmo id e adiciona os
   // novos (manutenção). Idempotente.
-  const TEMPLATE_SEED_VERSION = 4;
+  const TEMPLATE_SEED_VERSION = 5;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {

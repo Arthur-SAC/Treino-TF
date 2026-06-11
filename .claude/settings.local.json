@@ -45,7 +45,14 @@
       "PowerShell($cmds = \"node\",\"npm\",\"npx\",\"pnpm\",\"yarn\"; foreach \\($c in $cmds\\) { $p = Get-Command $c -ErrorAction SilentlyContinue; if \\($p\\) { \"$c -> $\\($p.Source\\)\" } else { \"$c -> \\(não encontrado\\)\" } })",
       "PowerShell(Get-ChildItem *)",
       "PowerShell(npm *)",
-      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:APPDATA\\\\npm;$env:Path\"; node scripts/_addtips.mjs)"
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:APPDATA\\\\npm;$env:Path\"; node scripts/_addtips.mjs)",
+      "Skill(code-review)",
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "PowerShell(npx tsc --noEmit 2>&1 | Select-Object -First 40)",
+      "PowerShell(npx vitest run tests/lib/seed.test.ts 2>&1 | Select-Object -Last 40)",
+      "WebSearch",
+      "PowerShell(Test-Path \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\"; & \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" --version)"
     ]
   }
 }
