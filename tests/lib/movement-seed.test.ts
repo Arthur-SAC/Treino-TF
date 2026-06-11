@@ -29,5 +29,9 @@ describe("seedMovement", () => {
     const seqs = await db.danceSequences.toArray();
     expect(seqs.filter((s) => s.category === "flexibilidade").length).toBe(4);
     expect(seqs.filter((s) => s.category === "twerk").length).toBe(3);
+    expect(seqs.filter((s) => s.category === "apresentacao").length).toBe(4);
+    for (const s of seqs.filter((x) => x.category === "apresentacao")) {
+      expect(s.moves.length).toBeGreaterThan(0);
+    }
   });
 });

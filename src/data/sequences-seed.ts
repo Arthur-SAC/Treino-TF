@@ -271,8 +271,8 @@ export const SEQUENCES: DanceSequence[] = [
   // === LINGUAGEM CORPORAL SENSUAL ===
   {
     id: "corporal-postura-sentar",
-    name: "Postura e como sentar (feminino sensual)",
-    category: "sensual",
+    name: "Postura e como sentar",
+    category: "apresentacao",
     level: "iniciante",
     durationMin: 6,
     focus: "Postura feminina não é natural — é aprendida. Coluna ereta, ombros pra trás (abre o peito), pescoço alongado. Como sentar com graça muda totalmente a percepção.",
@@ -286,8 +286,8 @@ export const SEQUENCES: DanceSequence[] = [
   },
   {
     id: "corporal-caminhada",
-    name: "Caminhada sensual",
-    category: "sensual",
+    name: "Caminhada feminina",
+    category: "apresentacao",
     level: "intermediario",
     durationMin: 6,
     focus: "Mulheres caminham com um pé quase na frente do outro (linha única), o que faz o quadril balançar naturalmente. Homens caminham com pés paralelos afastados. Mudar isso transforma sua presença.",
@@ -302,7 +302,7 @@ export const SEQUENCES: DanceSequence[] = [
   {
     id: "corporal-gestual-maos",
     name: "Gestual de mãos e cabelo",
-    category: "sensual",
+    category: "apresentacao",
     level: "iniciante",
     durationMin: 5,
     focus: "Mãos femininas são expressivas e delicadas — dedos soltos, movimentos suaves. Tocar o cabelo/pescoço é gesto sedutor universal. Pratica até virar natural.",
@@ -316,8 +316,8 @@ export const SEQUENCES: DanceSequence[] = [
   },
   {
     id: "corporal-olhar-expressao",
-    name: "Olhar e expressão sedutora",
-    category: "sensual",
+    name: "Olhar e expressão",
+    category: "apresentacao",
     level: "intermediario",
     durationMin: 5,
     focus: "Contato visual + microexpressões comunicam mais que palavras. Pratica no espelho até soltar a vergonha. Olhar feminino sedutor: suave, demorado, com leve sorriso.",
