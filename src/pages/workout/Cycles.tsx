@@ -4,12 +4,14 @@ import { db } from "../../lib/db";
 import { useSetting } from "../../hooks/useSetting";
 import { setSetting } from "../../lib/settings-helpers";
 import { CYCLES, type CycleId } from "../../data/cycles-seed";
+import { useCycleAdvice } from "../../hooks/useCycleAdvice";
 
 export function Cycles() {
   const activeCycle = useSetting("activeCycle");
   const cycleStart = useSetting("cycleStartSessionCount");
   const totalSessions = useLiveQuery(() => db.workoutSessions.count(), []);
   const sessionsInCycle = (totalSessions ?? 0) - cycleStart;
+  const advice = useCycleAdvice();
 
   async function activate(cycleId: CycleId) {
     if (cycleId === activeCycle) return;
@@ -25,11 +27,26 @@ export function Cycles() {
         <h1 className="font-serif text-2xl text-nude flex-1">Ciclos de treino</h1>
       </div>
 
+      {advice?.recommend && (
+        <div className="card mb-4 !bg-wine/30 !border-nude">
+          <h2 className="text-nude font-medium mb-1">Recomendação</h2>
+          <p className="text-sm text-nude-warm mb-3">{advice.reason}</p>
+          <button
+            type="button"
+            onClick={() => void activate(advice.toCycle)}
+            className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm"
+          >
+            Avançar pro ciclo "{CYCLES.find((c) => c.id === advice.toCycle)?.name}" agora
+          </button>
+        </div>
+      )}
+
       <div className="card mb-4 !bg-wine/20 !border-wine-light">
         <h2 className="text-nude font-medium mb-1">Como funciona</h2>
         <p className="text-sm text-nude-warm">
-          Cada ciclo tem foco diferente. Conforme você acumula sessões, o app sugere o próximo automaticamente.
-          Você também pode trocar manualmente a qualquer momento.
+          Cada ciclo tem um foco. O app recomenda avançar quando seus dados mostram que a fase
+          cumpriu o papel (cintura no alvo, quadril crescido) — não só por número de sessões.
+          Você sempre confirma, e pode trocar manualmente a qualquer momento.
         </p>
       </div>
 
