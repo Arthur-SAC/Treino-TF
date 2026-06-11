@@ -3,6 +3,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../../lib/db";
 import { formatDateBR } from "../../../lib/format";
+import { useSetting } from "../../../hooks/useSetting";
+import { classifyPitch } from "../../../lib/pitch";
 
 function RecordingPlayer({ blob }: { blob: Blob }) {
   const [url, setUrl] = useState<string>("");
@@ -25,6 +27,8 @@ export function VoiceRecordings() {
   );
   const exercises = useLiveQuery(() => db.voiceExercises.toArray(), []);
   const exMap = new Map(exercises?.map((e) => [e.id, e]) ?? []);
+  const targetLow = useSetting("voicePitchTargetLowHz");
+  const targetHigh = useSetting("voicePitchTargetHighHz");
 
   async function remove(id?: number) {
     if (id === undefined) return;
@@ -52,7 +56,10 @@ export function VoiceRecordings() {
               <span className="text-nude-warm text-sm">{exMap.get(r.exerciseId ?? "")?.name ?? "Sem exercício"}</span>
               <span className="text-muted text-xs">{formatDateBR(new Date(r.date))}</span>
             </div>
-            <p className="text-muted text-xs">{r.durationSec}s</p>
+            <p className="text-muted text-xs">
+              {r.durationSec}s
+              {r.avgPitchHz !== undefined && ` · ~${r.avgPitchHz} Hz · ${classifyPitch(r.avgPitchHz, targetLow, targetHigh)}`}
+            </p>
             <RecordingPlayer blob={r.blob} />
             <button onClick={() => void remove(r.id)} type="button" className="text-muted text-xs hover:text-red-300 mt-1">
               apagar
