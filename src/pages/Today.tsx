@@ -5,7 +5,10 @@ import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { formatDateBR } from "../lib/format";
-import { CYCLES } from "../data/cycles-seed";
+import { CYCLE_TO_GOAL } from "../data/cycles-seed";
+import { useCycleAdvice } from "../hooks/useCycleAdvice";
+import { computeFocus } from "../lib/today-priority";
+import { waistGuard } from "../lib/silhouette";
 
 export function Today() {
   const today = new Date();
@@ -36,11 +39,6 @@ export function Today() {
     [],
   );
   const goalMl = useSetting("hydrationGoalMl");
-  const cycleStart = useSetting("cycleStartSessionCount");
-  const totalSessions = useLiveQuery(() => db.workoutSessions.count(), []);
-  const sessionsInCycle = (totalSessions ?? 0) - cycleStart;
-  const currentCycleInfo = CYCLES.find((c) => c.id === activeCycle);
-  const shouldSuggestChange = !!currentCycleInfo && sessionsInCycle >= currentCycleInfo.threshold;
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
   const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
   const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
@@ -123,6 +121,26 @@ export function Today() {
     ? Math.floor((today.getTime() - new Date(photosRecent[0].date).getTime()) / 86400000)
     : null;
 
+  const advice = useCycleAdvice();
+  const measurementsAsc = useLiveQuery(() => db.measurements.orderBy("date").toArray(), []);
+  const latestM = measurementsAsc?.at(-1);
+  const prevM = measurementsAsc?.at(-2);
+  const guardTriggered = !!(latestM?.waistCm && prevM?.waistCm) &&
+    waistGuard({
+      cycleGoal: CYCLE_TO_GOAL[activeCycle],
+      waistStartCm: prevM!.waistCm!,
+      waistNowCm: latestM!.waistCm!,
+    }).triggered;
+  const focus = computeFocus({
+    cycleAdvice: advice ? { recommend: advice.recommend, reason: advice.reason } : null,
+    waistGuardTriggered: guardTriggered,
+    workoutToday: todayTemplate
+      ? { done: (sessionsToday ?? 0) > 0, name: todayTemplate.name, to: `/treino/sessao/${todayTemplate.id}` }
+      : null,
+    daysSinceMeasurement,
+    daysSincePhoto,
+  });
+
   async function addWater(ml: number) {
     const log = await db.dailyLog.get(todayISO);
     if (log) {
@@ -151,20 +169,20 @@ export function Today() {
         <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
       </div>
 
+      {focus && (
+        <TodayCard
+          title={`✦ ${focus.title}`}
+          subtitle={focus.subtitle}
+          to={focus.to}
+          variant="highlight"
+        />
+      )}
+
       <div className="grid grid-cols-3 gap-2 mb-3">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
-
-      {shouldSuggestChange && (
-        <TodayCard
-          title="Hora de avançar o treino"
-          subtitle={`Você completou ${sessionsInCycle} sessões do ciclo "${currentCycleInfo?.name}". Veja o próximo ciclo.`}
-          to="/treino/ciclos"
-          variant="highlight"
-        />
-      )}
 
       {todayTemplate ? (
         <TodayCard
