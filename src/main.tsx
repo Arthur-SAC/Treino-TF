@@ -44,6 +44,7 @@ import { VoiceRecordings } from "./pages/beauty/voice/VoiceRecordings";
 import { VoiceDetail } from "./pages/beauty/voice/VoiceDetail";
 import { MilestonesView } from "./pages/path/MilestonesView";
 import { MilestoneNew } from "./pages/path/MilestoneNew";
+import { EvolucaoView } from "./pages/path/EvolucaoView";
 import { MealPlanView } from "./pages/path/MealPlanView";
 import { MealPlanEdit } from "./pages/path/MealPlanEdit";
 import { ShoppingList } from "./pages/path/ShoppingList";
@@ -108,6 +109,7 @@ const router = createBrowserRouter(
         { path: "beleza/voz/gravacoes", element: <VoiceRecordings /> },
         { path: "beleza/voz/:id", element: <VoiceDetail /> },
         { path: "trilha", element: <MilestonesView /> },
+        { path: "trilha/evolucao", element: <EvolucaoView /> },
         { path: "trilha/marcos/novo", element: <MilestoneNew /> },
         { path: "trilha/alimentacao", element: <MealPlanView /> },
         { path: "trilha/alimentacao/editar", element: <MealPlanEdit /> },

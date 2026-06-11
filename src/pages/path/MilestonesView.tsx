@@ -30,6 +30,11 @@ export function MilestonesView() {
       </div>
       <PathTabs />
 
+      <Link to="/trilha/evolucao" className="card block mb-4 hover:border-nude/40 transition">
+        <h3 className="text-nude-warm font-medium">Evolução</h3>
+        <p className="text-muted text-sm mt-1">Voz, movimento, skincare, treino, WHR e marcos num lugar só</p>
+      </Link>
+
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Próximos</h2>
       <div className="space-y-2 mb-4">
         {upcoming.map((m) => (
