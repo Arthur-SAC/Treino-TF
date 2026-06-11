@@ -3,6 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db, type PracticeLog } from "../../lib/db";
 import { MoveStep } from "../../components/MoveStep";
+import { VideoSection } from "../../components/VideoSection";
 
 function todayISO(): string {
   const d = new Date();
@@ -52,16 +53,10 @@ export function SequenceDetail() {
       <h1 className="font-serif text-2xl text-nude mb-1">{sequence.name}</h1>
       <p className="text-muted text-sm mb-4">{sequence.focus}</p>
 
-      {sequence.videoUrl && (
-        <a
-          href={sequence.videoUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="card block text-center text-nude mb-4"
-        >
-          Ver vídeo de referência →
-        </a>
-      )}
+      <VideoSection
+        url={sequence.videoUrl}
+        onSave={(url) => { void db.danceSequences.update(sequence.id, { videoUrl: url || undefined }); }}
+      />
 
       <div className="mb-4">
         <div className="flex justify-between items-baseline mb-1">
