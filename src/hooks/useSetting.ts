@@ -39,6 +39,8 @@ const DEFAULTS: Settings = {
   heightCm: 0,
   targetWhr: 0.72,
   targetShoulderHipRatio: 1.0,
+  voicePitchTargetLowHz: 165,
+  voicePitchTargetHighHz: 220,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

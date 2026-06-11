@@ -29,6 +29,13 @@ describe("settings de silhueta", () => {
   });
 });
 
+describe("settings de voz (pitch)", () => {
+  it("defaults 165/220", async () => {
+    expect(await getSetting("voicePitchTargetLowHz")).toBe(165);
+    expect(await getSetting("voicePitchTargetHighHz")).toBe(220);
+  });
+});
+
 // Type-only test: Settings keys are constrained
 // @ts-expect-error invalid key
 () => setSetting("invalidKey", "x");

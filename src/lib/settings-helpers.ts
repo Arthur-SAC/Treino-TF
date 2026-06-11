@@ -37,6 +37,8 @@ export interface Settings {
   heightCm: number; // altura em cm; 0 = não informada
   targetWhr: number; // meta cintura/quadril
   targetShoulderHipRatio: number; // meta ombro/quadril
+  voicePitchTargetLowHz: number;
+  voicePitchTargetHighHz: number;
 }
 
 const DEFAULTS: Settings = {
@@ -76,6 +78,8 @@ const DEFAULTS: Settings = {
   heightCm: 0,
   targetWhr: 0.72,
   targetShoulderHipRatio: 1.0,
+  voicePitchTargetLowHz: 165,
+  voicePitchTargetHighHz: 220,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
