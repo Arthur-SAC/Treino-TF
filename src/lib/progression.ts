@@ -4,9 +4,20 @@ export interface ProgressionInput {
   lastLoad: number;
   feedback: SessionFeedback;
   completedAllReps: boolean;
+  category?: string;
 }
 
-export function suggestNextLoad({ lastLoad, feedback, completedAllReps }: ProgressionInput): number {
+const HOLD_LIGHT_CATEGORIES = new Set(["peitoral", "postura", "costas"]);
+
+export function isHoldLight(category: string): boolean {
+  return HOLD_LIGHT_CATEGORIES.has(category);
+}
+
+export function suggestNextLoad({ lastLoad, feedback, completedAllReps, category }: ProgressionInput): number {
+  if (category && isHoldLight(category)) {
+    // manter leve: nunca sobe; só recua se não completou as reps
+    return completedAllReps ? lastLoad : Math.max(0, lastLoad - 1);
+  }
   if (!completedAllReps) {
     return Math.max(0, lastLoad - 1);
   }
