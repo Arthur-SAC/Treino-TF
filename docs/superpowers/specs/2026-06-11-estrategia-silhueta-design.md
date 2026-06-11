@@ -71,8 +71,10 @@ A lacuna é que **o app mede e mostra, mas não orienta**:
 ### 4.2 Libs (lógica pura, testável)
 - **`src/lib/body-composition.ts`** (novo):
   - `estimateBodyFatNavy({ heightCm, neckCm, waistCm, hipCm }): number | null` — fórmula
-    Navy feminina: `163.205·log10(waist+hip−neck) − 97.684·log10(height) − 78.387`. Retorna
-    `null` se faltar alguma medida ou inputs inválidos (ex.: `waist+hip−neck <= 0`).
+    Navy feminina (métrica Hodgdon-Beckett):
+    `495 / (1.29579 − 0.35004·log10(waist+hip−neck) + 0.22100·log10(height)) − 450`,
+    arredondada a 1 casa. Retorna `null` se faltar alguma medida ou inputs inválidos
+    (ex.: `waist+hip−neck <= 0`, `height <= 0`).
   - `classifyBodyFat(pct): string` — faixas informativas (ex.: essencial/atleta/fitness/
     média/alta) com rótulos pt-BR. Sem juízo de valor pesado; texto de apoio, não meta dura.
 - **`src/lib/silhouette.ts`** (novo):
@@ -83,9 +85,9 @@ A lacuna é que **o app mede e mostra, mas não orienta**:
     para baixar a razão, a rota saudável é **subir quadril** (não treinar/encolher ombro).
   - `leverGuidance(cycleGoal: "deficit"|"manutencao"|"superavit"): { focus; why }` —
     déficit → **baixar cintura**; superávit → **subir quadril**; manutenção → **manter/medir**.
-  - `waistGuard({ cycleGoal, waistStartCm, waistNowCm, whrStart, whrNow }): { triggered; deltaCm }`
-    — `triggered` quando `cycleGoal === "superavit"` e a cintura/WHR pioraram além de um limiar
-    pequeno (ex.: `+1,5 cm` ou WHR cruzando o alvo).
+  - `waistGuard({ cycleGoal, waistStartCm, waistNowCm }): { triggered; deltaCm }` —
+    `triggered` quando `cycleGoal === "superavit"` e a cintura subiu `>= 1,5 cm` desde a
+    **medição anterior** (sem depender de rastrear a data de início do ciclo — isso é #2).
 - **`src/lib/progression.ts`** (estender): `suggestNextHoldTime(lastSec, feedback): number` —
   progressão por tempo de isometria para o vacuum (ex.: `easy` → +5s até teto ~60s; `hard` →
   mantém). Função pura nova; não altera `suggestNextLoad`.
@@ -114,10 +116,11 @@ A lacuna é que **o app mede e mostra, mas não orienta**:
 
 ## 5. Fórmulas e defaults
 
-- **Navy feminino (cm):** `%BF = 163.205·log10(waist+hip−neck) − 97.684·log10(height) − 78.387`.
+- **Navy feminino (cm, Hodgdon-Beckett):**
+  `%BF = 495 / (1.29579 − 0.35004·log10(waist+hip−neck) + 0.22100·log10(height)) − 450`.
 - **WHR alvo:** `0,72` (ampulheta forte).
 - **Ombro/quadril alvo:** `1,00` (aspiracional `0,95`) — ombro no máximo igual ao quadril.
-- **Limiar da trava de cintura:** `+1,5 cm` de cintura ou WHR cruzando o alvo durante superávit.
+- **Limiar da trava de cintura:** `+1,5 cm` de cintura desde a medição anterior, durante superávit.
 
 ## 6. Testes
 
