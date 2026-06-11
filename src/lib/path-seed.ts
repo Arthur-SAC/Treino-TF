@@ -1,9 +1,9 @@
 import { db } from "./db";
-import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES } from "../data/milestones-seed";
+import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES, VOICE_MILESTONES } from "../data/milestones-seed";
 import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
 const MEAL_PLAN_VERSION = 4;
-const MILESTONE_SEED_VERSION = 4;
+const MILESTONE_SEED_VERSION = 5;
 
 /** Upsert dos planos por `goal` (déficit/manutenção/superávit): atualiza o que
  *  já existe e adiciona os que faltam, sem duplicar. Idempotente. O déficit é
@@ -25,7 +25,7 @@ export async function seedPath(): Promise<void> {
   const seeded = await db.settings.get("pathSeeded");
   if (seeded?.value !== true) {
     await db.transaction("rw", [db.milestones, db.mealPlans, db.settings], async () => {
-      for (const m of [...MILESTONES, ...BODY_GOAL_MILESTONES, ...BUST_MILESTONES]) {
+      for (const m of [...MILESTONES, ...BODY_GOAL_MILESTONES, ...BUST_MILESTONES, ...VOICE_MILESTONES]) {
         await db.milestones.add(m as never);
       }
       if ((await db.mealPlans.count()) === 0) {
@@ -63,6 +63,9 @@ export async function seedPath(): Promise<void> {
             await db.milestones.add(novo as never);
           }
         }
+      }
+      if (msVersion < 5) {
+        for (const m of VOICE_MILESTONES) await db.milestones.add(m as never);
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });
     });

@@ -204,7 +204,7 @@ export interface Milestone {
   datePlanned: string;
   dateCompleted?: string;
   title: string;
-  category: "medico" | "fisico" | "social" | "fertilidade";
+  category: "medico" | "fisico" | "social" | "fertilidade" | "voz";
   notes?: string;
 }
 

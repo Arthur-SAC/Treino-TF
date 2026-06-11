@@ -6,6 +6,7 @@ const CATEGORY_LABEL: Record<Milestone["category"], string> = {
   fisico: "Físico",
   social: "Social",
   fertilidade: "Fertilidade",
+  voz: "Voz",
 };
 
 interface Props {

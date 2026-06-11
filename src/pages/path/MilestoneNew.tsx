@@ -65,6 +65,7 @@ export function MilestoneNew() {
               <option value="fisico">Físico</option>
               <option value="social">Social</option>
               <option value="fertilidade">Fertilidade</option>
+              <option value="voz">Voz</option>
             </select>
           </div>
         </div>

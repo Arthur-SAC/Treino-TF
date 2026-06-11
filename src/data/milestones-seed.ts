@@ -108,3 +108,36 @@ export const BUST_MILESTONES: Omit<Milestone, "id">[] = [
     notes: "Sem TH não cresce glândula mamária. O que dá: fullness de GORDURA no peito + prateleira do peitoral (supino inclinado + voador/crucifixo na polia) + postura (face pull, retração escapular). Teto realista: peito macio com linha de colo discreta, bem mais levantado que hoje, sobretudo vestida. Pode chegar num ponto de marcar o suficiente pra um bralette leve ficar confortável e evitar marcar o mamilo. E dá pra usar bralette com bojo fino DESDE JÁ por estilo/euforia — cria a sugestão de busto sob roupa justa, e combina com 'começar discreto'. Salto de tamanho e formato de verdade vem com a TH. Sinal pra mostrar ao médico (sem pânico): caroço firme e dolorido sob o mamilo (ginecomastia glandular, comum e tratável).",
   },
 ];
+
+export const VOICE_MILESTONES: Omit<Milestone, "id">[] = [
+  {
+    datePlanned: isoFromMonthsFromNow(0),
+    title: "Gravação base da voz (ponto de partida)",
+    category: "voz",
+    notes: "Grave 30-60s hoje pra ter referência e ouvir a evolução daqui meses.",
+  },
+  {
+    datePlanned: isoFromMonthsFromNow(1),
+    title: "1 mês de prática de voz quase diária",
+    category: "voz",
+    notes: "Consistência vale mais que intensidade: ~15 min/dia.",
+  },
+  {
+    datePlanned: isoFromMonthsFromNow(2),
+    title: "Atingir a faixa-alvo de pitch com naturalidade",
+    category: "voz",
+    notes: "Ressonância pra frente + pitch na faixa, sem forçar a garganta.",
+  },
+  {
+    datePlanned: isoFromMonthsFromNow(3),
+    title: "Pedir algo com voz feminina (café, atendimento)",
+    category: "voz",
+    notes: "Primeira interação curta em público — passo de coragem.",
+  },
+  {
+    datePlanned: isoFromMonthsFromNow(6),
+    title: "Conversa ao telefone mantendo a voz",
+    category: "voz",
+    notes: "Telefone tira as pistas visuais — é o teste de passing por voz.",
+  },
+];
