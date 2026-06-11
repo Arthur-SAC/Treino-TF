@@ -41,6 +41,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "remada-curvada", sets: 3, repsTarget: "10", restSec: 60 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "40s cada", restSec: 45 },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
   {
@@ -178,6 +179,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "coice-gluteo-polia", sets: 4, repsTarget: "15 cada", restSec: 30, notes: "Tensão constante na polia" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
 ];
@@ -214,6 +216,7 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "15 (leve)", restSec: 45 },
       { exerciseId: "dead-bug", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "prancha", sets: 3, repsTarget: "60s", restSec: 30 },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
   {
@@ -300,6 +303,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "12", restSec: 60 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
       { exerciseId: "prancha", sets: 3, repsTarget: "45s", restSec: 30 },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
   {

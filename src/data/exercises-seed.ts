@@ -247,6 +247,28 @@ export const EXERCISES: Exercise[] = [
       "Trabalha a cintura sem engrossar, diferente de exercício de oblíquo com carga",
     ],
   },
+  {
+    id: "vacuum-abdominal",
+    name: "Vacuum abdominal",
+    category: "cintura",
+    equipment: ["nenhum"],
+    difficulty: "iniciante",
+    description:
+      "Em pé, sentada ou de quatro: expira todo o ar e puxa o umbigo pra dentro/pra cima, como se colasse na coluna. Segura o tempo alvo respirando curto pela costela. Trabalha o transverso — o músculo que afina a cintura por dentro, como um cinto interno.",
+    commonMistakes: [
+      "Prender a respiração em vez de respirar curto pela costela",
+      "Estufar a barriga em vez de puxar pra dentro",
+      "Contrair o oblíquo/abdômen externo (não é pra aparecer gomos)",
+    ],
+    easierVariation: "De quatro (4 apoios), onde a gravidade ajuda a puxar a barriga pra dentro",
+    harderVariation: "Em pé, segurando 30-60s com respiração contínua",
+    exposureLevel: 1,
+    proTips: [
+      "Sem TRH, controlar o transverso + déficit é a principal ferramenta de cintura fina — faça quase todo dia",
+      "Não é exercício de gomos: é puxar pra DENTRO, afinando, não engrossando",
+      "Progrida pelo tempo de isometria (30 → 45 → 60s), não por carga",
+    ],
+  },
   // === COSTAS (cadeia posterior, postura) ===
   {
     id: "remada-curvada",

@@ -38,6 +38,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
       { exerciseId: "dead-bug", sets: 3, repsTarget: "10 cada", restSec: 30 },
       { exerciseId: "prancha", sets: 3, repsTarget: "30-45s", restSec: 45, notes: "Core sem engrossar a cintura" },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura por dentro, sem engrossar" },
     ],
   },
   {
@@ -94,6 +95,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "ponte-gluteo-bola", sets: 3, repsTarget: "15", restSec: 45, notes: "Instabilidade recruta mais glúteo + core" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Cinto interno — prioridade sem TRH" },
     ],
   },
 ];

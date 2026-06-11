@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { seedDatabase } from "../../src/lib/seed";
 import { db } from "../../src/lib/db";
+import { EXERCISES } from "../../src/data/exercises-seed";
 
 describe("seedDatabase", () => {
   it("popula exercícios e templates na primeira chamada", async () => {
@@ -80,5 +81,22 @@ describe("seedDatabase", () => {
       "ponte-gluteo-bola", "step-up-gluteo",
     ];
     for (const id of novos) expect(ids.has(id), `falta ${id}`).toBe(true);
+  });
+});
+
+describe("vacuum/transverso na silhueta", () => {
+  it("tem exercício vacuum-abdominal de cintura", () => {
+    const v = EXERCISES.find((e) => e.id === "vacuum-abdominal");
+    expect(v).toBeDefined();
+    expect(v!.category).toBe("cintura");
+    expect(v!.description.length).toBeGreaterThan(0);
+    expect(v!.proTips && v!.proTips.length).toBeGreaterThan(0);
+  });
+
+  it("não introduz oblíquo com carga (categoria cintura segue isométrica)", () => {
+    const cintura = EXERCISES.filter((e) => e.category === "cintura");
+    for (const e of cintura) {
+      expect(e.equipment).not.toContain("anilhas");
+    }
   });
 });
