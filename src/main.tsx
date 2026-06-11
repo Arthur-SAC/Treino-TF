@@ -18,6 +18,7 @@ import { Measurements } from "./pages/body/Measurements";
 import { Photos } from "./pages/body/Photos";
 import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
+import { Silhouette } from "./pages/body/Silhouette";
 import { BeautyHome } from "./pages/beauty/BeautyHome";
 import { PaletteView } from "./pages/beauty/style/PaletteView";
 import { GarmentsView } from "./pages/beauty/style/GarmentsView";
@@ -77,6 +78,7 @@ const router = createBrowserRouter(
         { path: "treino/movimento/historico", element: <PracticeHistory /> },
         { path: "treino/movimento/:id", element: <SequenceDetail /> },
         { path: "corpo", element: <BodyHome /> },
+        { path: "corpo/silhueta", element: <Silhouette /> },
         { path: "corpo/medidas", element: <Measurements /> },
         { path: "corpo/fotos", element: <Photos /> },
         { path: "corpo/comparacao", element: <Comparison /> },
