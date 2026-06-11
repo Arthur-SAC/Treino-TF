@@ -20,7 +20,8 @@ export async function seedMovement(): Promise<void> {
   if (currentVersion < MOVEMENT_VERSION) {
     await db.transaction("rw", [db.danceSequences, db.settings], async () => {
       for (const s of SEQUENCES) {
-        await db.danceSequences.put(s); // put = upsert, não duplica
+        const existing = await db.danceSequences.get(s.id);
+        await db.danceSequences.put({ ...s, videoUrl: existing?.videoUrl ?? s.videoUrl }); // preserva o link do usuário
       }
       await db.settings.put({ key: "movementVersion", value: MOVEMENT_VERSION });
     });

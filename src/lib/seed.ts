@@ -56,7 +56,12 @@ export async function seedDatabase(): Promise<void> {
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
       for (const ex of EXERCISES) {
-        await db.exercises.put(ex);
+        const existing = await db.exercises.get(ex.id);
+        await db.exercises.put({
+          ...ex,
+          videoUrl: existing?.videoUrl ?? ex.videoUrl,
+          gifPath: existing?.gifPath ?? ex.gifPath,
+        });
       }
       await db.settings.put({ key: "exerciseSeedVersion", value: EXERCISE_SEED_VERSION });
     });
