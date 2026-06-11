@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { suggestNextLoad } from "../../src/lib/progression";
+import { suggestNextLoad, suggestNextHoldTime } from "../../src/lib/progression";
 
 describe("suggestNextLoad", () => {
   it("fácil + carga <5kg → +0,5", () => {
@@ -23,5 +23,20 @@ describe("suggestNextLoad", () => {
   });
   it("não completou tem prioridade sobre 'easy'", () => {
     expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: false })).toBe(9);
+  });
+});
+
+describe("suggestNextHoldTime", () => {
+  it("sobe 5s no easy", () => {
+    expect(suggestNextHoldTime(30, "easy")).toBe(35);
+  });
+  it("respeita o teto de 60s", () => {
+    expect(suggestNextHoldTime(58, "easy")).toBe(60);
+  });
+  it("sobe 2s no medium", () => {
+    expect(suggestNextHoldTime(40, "medium")).toBe(42);
+  });
+  it("mantém no hard", () => {
+    expect(suggestNextHoldTime(40, "hard")).toBe(40);
   });
 });

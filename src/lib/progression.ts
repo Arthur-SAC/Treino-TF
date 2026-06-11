@@ -20,3 +20,12 @@ export function suggestNextLoad({ lastLoad, feedback, completedAllReps }: Progre
   }
   return lastLoad; // hard
 }
+
+const MAX_HOLD_SEC = 60;
+
+/** Progressão por tempo de isometria (ex.: vacuum/transverso). */
+export function suggestNextHoldTime(lastSec: number, feedback: SessionFeedback): number {
+  if (feedback === "easy") return Math.min(MAX_HOLD_SEC, lastSec + 5);
+  if (feedback === "medium") return Math.min(MAX_HOLD_SEC, lastSec + 2);
+  return lastSec; // hard → mantém
+}
