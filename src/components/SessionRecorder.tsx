@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
-import { suggestNextLoad } from "../lib/progression";
+import { suggestNextLoad, isHoldLight } from "../lib/progression";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 
@@ -45,7 +45,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
             const prevWeight = lastSet.weight;
             const completedAllReps = found.sets.every((s) => s.reps > 0);
             const prevFeedback = session.difficultySelf ?? "medium";
-            setSuggested(suggestNextLoad({ lastLoad: prevWeight, feedback: prevFeedback, completedAllReps }));
+            setSuggested(suggestNextLoad({ lastLoad: prevWeight, feedback: prevFeedback, completedAllReps, category: exercise.category }));
             break;
           }
         }
@@ -137,6 +137,9 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
         </p>
       </div>
 
+      {isHoldLight(exercise.category) && (
+        <p className="text-xs text-muted mb-2">Manter leve — não subir a carga (silhueta).</p>
+      )}
       {suggested !== null ? (
         <button
           type="button"
