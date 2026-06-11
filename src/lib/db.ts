@@ -268,6 +268,7 @@ export interface VoiceRecording {
   durationSec: number;
   exerciseId?: string;
   notes?: string;
+  avgPitchHz?: number;
 }
 
 export interface VoicePracticeLog {
