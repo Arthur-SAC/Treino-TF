@@ -19,6 +19,8 @@ export function Settings() {
   const heightCm = useSetting("heightCm");
   const targetWhr = useSetting("targetWhr");
   const targetShr = useSetting("targetShoulderHipRatio");
+  const pitchLow = useSetting("voicePitchTargetLowHz");
+  const pitchHigh = useSetting("voicePitchTargetHighHz");
 
   const [busy, setBusy] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
@@ -68,6 +70,15 @@ export function Settings() {
         skincareLogs: await db.skincareLogs.toArray(),
         haircare: await db.haircare.toArray(),
         dailyLog: await db.dailyLog.toArray(),
+        voiceRecordings: await Promise.all(
+          (await db.voiceRecordings.toArray()).map(async (r) => ({
+            ...r,
+            blob: await blobToBase64(r.blob),
+          })),
+        ),
+        voicePracticeLogs: await db.voicePracticeLogs.toArray(),
+        practiceLogs: await db.practiceLogs.toArray(),
+        milestones: await db.milestones.toArray(),
       };
       const encrypted = await encryptBackup(payload, password);
       const blob = new Blob([encrypted], { type: "application/octet-stream" });
@@ -103,9 +114,13 @@ export function Settings() {
         skincareLogs: unknown[];
         haircare: unknown[];
         dailyLog: unknown[];
+        voiceRecordings?: Array<{ blob: string; date: string; durationSec: number; exerciseId?: string; avgPitchHz?: number }>;
+        voicePracticeLogs?: unknown[];
+        practiceLogs?: unknown[];
+        milestones?: unknown[];
       };
       const payload = await decryptBackup<ImportPayload>(encrypted, password);
-      await db.transaction("rw", [db.measurements, db.photos, db.workoutSessions, db.meals, db.skincareLogs, db.haircare, db.dailyLog], async () => {
+      await db.transaction("rw", [db.measurements, db.photos, db.workoutSessions, db.meals, db.skincareLogs, db.haircare, db.dailyLog, db.voiceRecordings, db.voicePracticeLogs, db.practiceLogs, db.milestones], async () => {
         await db.measurements.bulkAdd(payload.measurements as never);
         await db.photos.bulkAdd(
           await Promise.all(
@@ -120,6 +135,17 @@ export function Settings() {
         await db.skincareLogs.bulkAdd(payload.skincareLogs as never);
         await db.haircare.bulkAdd(payload.haircare as never);
         await db.dailyLog.bulkAdd(payload.dailyLog as never);
+        await db.voiceRecordings.bulkAdd(
+          await Promise.all(
+            (payload.voiceRecordings ?? []).map(async (r) => ({
+              ...r,
+              blob: await base64ToBlob(r.blob),
+            })),
+          ) as never,
+        );
+        await db.voicePracticeLogs.bulkAdd((payload.voicePracticeLogs ?? []) as never);
+        await db.practiceLogs.bulkAdd((payload.practiceLogs ?? []) as never);
+        await db.milestones.bulkAdd((payload.milestones ?? []) as never);
       });
       setInfo("Backup importado.");
     } catch (e) {
@@ -236,6 +262,25 @@ export function Settings() {
                  className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
           <p className="text-muted text-xs mt-1">1,00 = ombro no máximo igual ao quadril.</p>
         </div>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-nude-warm font-medium">Voz</h2>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-muted text-xs uppercase tracking-wider mb-1">Pitch alvo mín (Hz)</label>
+            <input type="number" min={100} max={300} value={pitchLow}
+                   onChange={(e) => void setSetting("voicePitchTargetLowHz", Number(e.target.value))}
+                   className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+          </div>
+          <div>
+            <label className="block text-muted text-xs uppercase tracking-wider mb-1">Pitch alvo máx (Hz)</label>
+            <input type="number" min={100} max={350} value={pitchHigh}
+                   onChange={(e) => void setSetting("voicePitchTargetHighHz", Number(e.target.value))}
+                   className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+          </div>
+        </div>
+        <p className="text-muted text-xs">Faixa feminina típica: 165-220 Hz. Use o medidor ao vivo nos exercícios de voz.</p>
       </div>
 
       <div className="card space-y-2">
