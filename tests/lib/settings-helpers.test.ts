@@ -17,6 +17,18 @@ describe("settings helpers", () => {
   });
 });
 
+describe("settings de silhueta", () => {
+  it("tem defaults de altura e metas", async () => {
+    expect(await getSetting("heightCm")).toBe(0);
+    expect(await getSetting("targetWhr")).toBe(0.72);
+    expect(await getSetting("targetShoulderHipRatio")).toBe(1.0);
+  });
+  it("persiste altura", async () => {
+    await setSetting("heightCm", 165);
+    expect(await getSetting("heightCm")).toBe(165);
+  });
+});
+
 // Type-only test: Settings keys are constrained
 // @ts-expect-error invalid key
 () => setSetting("invalidKey", "x");

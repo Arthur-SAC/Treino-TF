@@ -36,6 +36,9 @@ const DEFAULTS: Settings = {
   walkReminderTime: "12:00",
   lastPosturaReminderAt: "",
   lastWalkReminderAt: "",
+  heightCm: 0,
+  targetWhr: 0.72,
+  targetShoulderHipRatio: 1.0,
 };
 
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {

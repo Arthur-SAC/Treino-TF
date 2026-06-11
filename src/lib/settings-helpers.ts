@@ -34,6 +34,9 @@ export interface Settings {
   walkReminderTime: string;
   lastPosturaReminderAt: string;
   lastWalkReminderAt: string;
+  heightCm: number; // altura em cm; 0 = não informada
+  targetWhr: number; // meta cintura/quadril
+  targetShoulderHipRatio: number; // meta ombro/quadril
 }
 
 const DEFAULTS: Settings = {
@@ -70,6 +73,9 @@ const DEFAULTS: Settings = {
   walkReminderTime: "12:00",
   lastPosturaReminderAt: "",
   lastWalkReminderAt: "",
+  heightCm: 0,
+  targetWhr: 0.72,
+  targetShoulderHipRatio: 1.0,
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
