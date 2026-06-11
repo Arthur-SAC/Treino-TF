@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db, type VoicePracticeLog, type VoiceRecording } from "../../../lib/db";
+import { useSetting } from "../../../hooks/useSetting";
+import { analyzeRecordingPitch } from "../../../lib/pitch-audio";
+import { PitchMeter } from "../../../components/PitchMeter";
 
 function todayISO(): string {
   const d = new Date();
@@ -17,6 +20,8 @@ function formatSec(s: number): string {
 export function VoiceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const targetLow = useSetting("voicePitchTargetLowHz");
+  const targetHigh = useSetting("voicePitchTargetHighHz");
   const exercise = useLiveQuery(
     async () => (id ? await db.voiceExercises.get(id) : undefined),
     [id],
@@ -84,11 +89,13 @@ export function VoiceDetail() {
         const duration = Math.round((Date.now() - recStartRef.current) / 1000);
         const blob = new Blob(chunksRef.current, { type: mr.mimeType || "audio/webm" });
         if (!exercise) return;
+        const avgPitchHz = await analyzeRecordingPitch(blob);
         await db.voiceRecordings.add({
           date: todayISO(),
           blob,
           durationSec: duration,
           exerciseId: exercise.id,
+          avgPitchHz: avgPitchHz ?? undefined,
         } as VoiceRecording);
         stream.getTracks().forEach((t) => t.stop());
       };
@@ -190,6 +197,14 @@ export function VoiceDetail() {
         >
           próximo →
         </button>
+      </div>
+
+      <div className="card mb-3">
+        <h2 className="text-nude-warm font-medium mb-2">Pitch ao vivo</h2>
+        <p className="text-muted text-xs mb-3">
+          Meta: {targetLow}-{targetHigh} Hz. Ligue o microfone e veja sua frequência em tempo real.
+        </p>
+        <PitchMeter targetLowHz={targetLow} targetHighHz={targetHigh} />
       </div>
 
       <div className="card mb-3">
