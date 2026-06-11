@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useParams } from "react-router-dom";
 import { db } from "../../lib/db";
+import { VideoSection } from "../../components/VideoSection";
 
 export function ExerciseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,11 @@ export function ExerciseDetail() {
       <p className="text-muted text-xs mb-4">
         {ex.category} · {ex.difficulty} · exposição {ex.exposureLevel}/5
       </p>
+
+      <VideoSection
+        url={ex.videoUrl}
+        onSave={(url) => { void db.exercises.update(ex.id, { videoUrl: url || undefined }); }}
+      />
 
       <div className="card mb-3">
         <h2 className="text-nude-warm font-medium mb-2">Como fazer</h2>
@@ -64,12 +70,6 @@ export function ExerciseDetail() {
           <h2 className="text-nude-warm font-medium mb-2">Se ficar fácil demais</h2>
           <p className="text-sm">{ex.harderVariation}</p>
         </div>
-      )}
-
-      {ex.videoUrl && (
-        <a href={ex.videoUrl} target="_blank" rel="noreferrer" className="card block text-center text-nude">
-          Ver vídeo →
-        </a>
       )}
     </div>
   );
