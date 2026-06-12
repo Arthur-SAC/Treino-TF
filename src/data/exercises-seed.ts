@@ -1077,3 +1077,68 @@ export const EXERCISES: Exercise[] = [
     ],
   },
 ];
+
+// Vídeos de demonstração — auto-curados via busca no YouTube (pt-BR preferencial).
+// Aplicados aos exercícios no carregamento. A usuária pode trocar qualquer um pelo
+// botão "editar" no card de vídeo (o re-seed preserva o link dela).
+export const EXERCISE_VIDEOS: Record<string, string> = {
+  "hip-thrust-barra": "https://www.youtube.com/watch?v=3mnHo-F-U4Q",
+  "ponte-gluteo-band": "https://www.youtube.com/watch?v=kvmT_ZlgVI0",
+  "agachamento-livre": "https://www.youtube.com/watch?v=rM6SDUdl9fs",
+  "agachamento-goblet": "https://www.youtube.com/watch?v=ge1vdJRP0UA",
+  "abdutor-maquina": "https://www.youtube.com/watch?v=50qHGus1TZk",
+  "abdutor-band-em-pe": "https://www.youtube.com/watch?v=WR2YHsqQ8qQ",
+  "elevacao-pelvica-banco": "https://www.youtube.com/watch?v=FJB0-upLrf4",
+  "stiff": "https://www.youtube.com/watch?v=jSomWOwLiGE",
+  "abdutor-deitada": "https://www.youtube.com/watch?v=IVRY84eMDMk",
+  "clamshell": "https://www.youtube.com/watch?v=VeNqIm7HCIQ",
+  "hip-thrust-unilateral": "https://www.youtube.com/watch?v=ZA9k935wkZU",
+  "agachamento-bulgaro": "https://www.youtube.com/watch?v=WyMsCylTcKM",
+  "stiff-unilateral": "https://www.youtube.com/watch?v=j0vyAV3lbHw",
+  "kickback-cabo": "https://www.youtube.com/watch?v=chiHVtoWN1Y",
+  "abdutor-cabo-em-pe": "https://www.youtube.com/watch?v=1bI_SitAHdA",
+  "smith-squat": "https://www.youtube.com/watch?v=dWTiU23iVgg",
+  "adutora-maquina": "https://www.youtube.com/watch?v=B-2lEIr2sfs",
+  "agachamento-sumo": "https://www.youtube.com/watch?v=ED9NUglcBrs",
+  "coice-gluteo-polia": "https://www.youtube.com/watch?v=S2_Rsx-Ud2w",
+  "pull-through-polia": "https://www.youtube.com/watch?v=OmhY5_tVzt0",
+  "abducao-quadril-polia": "https://www.youtube.com/watch?v=8dpez6IeZ3E",
+  "ponte-gluteo-bola": "https://www.youtube.com/watch?v=bpjGPzdU3Tg",
+  "step-up-gluteo": "https://www.youtube.com/watch?v=9LBlAgBjDKM",
+  "prancha": "https://www.youtube.com/watch?v=h9suRukNljg",
+  "dead-bug": "https://www.youtube.com/watch?v=uQfzuKBMJeE",
+  "bird-dog": "https://www.youtube.com/watch?v=GcIxfCvnLW8",
+  "prancha-lateral": "https://www.youtube.com/watch?v=A-kHqQFxdc0",
+  "vacuum-abdominal": "https://www.youtube.com/watch?v=62SEC_zAqbU",
+  "abdominal-prancha-instavel": "https://www.youtube.com/watch?v=wkp4db9RkGc",
+  "remada-curvada": "https://www.youtube.com/watch?v=cCpzwQnWTdU",
+  "remada-baixa-maquina": "https://www.youtube.com/watch?v=mUgFn3aMAP4",
+  "puxada-frente-maquina": "https://www.youtube.com/watch?v=mPmfwbc_svw",
+  "retracao-escapular": "https://www.youtube.com/watch?v=sOJndB-OznA",
+  "face-pull": "https://www.youtube.com/watch?v=-riiVfD9Qw4",
+  "face-pull-polia": "https://www.youtube.com/watch?v=kYMTJAx_dTM",
+  "supino-inclinado-halteres": "https://www.youtube.com/watch?v=RGeSgQmO1EU",
+  "cross-over-cabo": "https://www.youtube.com/watch?v=pfyYN8QwM54",
+  "cross-over-baixo": "https://www.youtube.com/watch?v=onlhEKDWJX0",
+  "crucifixo-polia": "https://www.youtube.com/watch?v=QUcXXwxa6hE",
+  "voador-maquina": "https://www.youtube.com/watch?v=FwtqdGlRgig",
+  "mobilidade-quadril-90-90": "https://www.youtube.com/watch?v=7a4FWeI6LVQ",
+  "alongamento-flexor-quadril": "https://www.youtube.com/watch?v=H3m5gVnqO3o",
+  "alongamento-piriforme": "https://www.youtube.com/watch?v=bd2GZyFpEys",
+  "cat-cow": "https://www.youtube.com/watch?v=oLkxfkQYNJw",
+  "ativacao-gluteo-band-walks": "https://www.youtube.com/watch?v=2IrKpM07IT0",
+  "borboleta": "https://www.youtube.com/watch?v=V5u7-lKrtvs",
+  "agachamento-profundo-pausa": "https://www.youtube.com/watch?v=lYhmUM6vnNI",
+  "happy-baby": "https://www.youtube.com/watch?v=wrQZVL4KNU8",
+  "along-isquios-espaldar": "https://www.youtube.com/watch?v=LFuJCjSs57k",
+  "abertura-quadril-espaldar": "https://www.youtube.com/watch?v=mAJQBYPxH8M",
+  "espacate-progressao": "https://www.youtube.com/watch?v=beZD2hb7uWU",
+  "rotacao-quadril-em-pe": "https://www.youtube.com/watch?v=s-HV5tVA5n4",
+  "rebolado-basico": "https://www.youtube.com/watch?v=T70CTZrwpAY",
+  "isolamento-quadril-lateral": "https://www.youtube.com/watch?v=M3FftxvHN_k",
+};
+
+for (const e of EXERCISES) {
+  const url = EXERCISE_VIDEOS[e.id];
+  if (url) e.videoUrl = url;
+}

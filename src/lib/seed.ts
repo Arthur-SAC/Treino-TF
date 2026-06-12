@@ -51,7 +51,7 @@ export async function seedDatabase(): Promise<void> {
   // mudanças no conteúdo dos exercícios (nome, equipamento, descrição) só chegam
   // em contas existentes via este bloco. Bumpar EXERCISE_SEED_VERSION força um
   // put() de todos os exercícios — idempotente, não duplica (mesmo id sobrescreve).
-  const EXERCISE_SEED_VERSION = 4;
+  const EXERCISE_SEED_VERSION = 5;
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
