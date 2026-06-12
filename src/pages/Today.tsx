@@ -227,6 +227,7 @@ export function Today() {
       <TodayCard
         title="Caminhada"
         subtitle={`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`}
+        note="Esteira inclinada 8–12% · ~5 km/h · zona 2 (ofegante, mas ainda conversando)"
         rightSlot={
           <button
             type="button"

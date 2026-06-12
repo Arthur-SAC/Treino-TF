@@ -4,12 +4,13 @@ import type { ReactNode } from "react";
 interface Props {
   title: string;
   subtitle?: string;
+  note?: string;
   to?: string;
   variant?: "default" | "highlight";
   rightSlot?: ReactNode;
 }
 
-export function TodayCard({ title, subtitle, to, variant = "default", rightSlot }: Props) {
+export function TodayCard({ title, subtitle, note, to, variant = "default", rightSlot }: Props) {
   const base = "card block transition";
   const variantCls = variant === "highlight" ? "bg-wine/40 border-wine-light" : "hover:border-nude/40";
   const inner = (
@@ -19,6 +20,7 @@ export function TodayCard({ title, subtitle, to, variant = "default", rightSlot 
         {rightSlot}
       </div>
       {subtitle && <p className="text-muted text-sm mt-1">{subtitle}</p>}
+      {note && <p className="text-muted text-xs mt-1 opacity-80">{note}</p>}
     </>
   );
   if (to) {
