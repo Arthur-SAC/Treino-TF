@@ -44,10 +44,15 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
           </button>
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="p-4 pb-8 space-y-3">
           <p className="text-muted text-xs uppercase tracking-wider">
             {exercise.category} · {exercise.difficulty} · exposição {exercise.exposureLevel}/5
           </p>
+
+          <VideoSection
+            url={exercise.videoUrl}
+            onSave={(url) => { void db.exercises.update(exercise.id, { videoUrl: url || undefined }); }}
+          />
 
           <section>
             <h3 className="text-nude-warm font-medium mb-1">Como fazer</h3>
@@ -90,11 +95,6 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
               <p className="text-sm">{exercise.harderVariation}</p>
             </section>
           )}
-
-          <VideoSection
-            url={exercise.videoUrl}
-            onSave={(url) => { void db.exercises.update(exercise.id, { videoUrl: url || undefined }); }}
-          />
         </div>
       </div>
     </div>
