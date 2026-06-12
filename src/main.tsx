@@ -31,6 +31,7 @@ import { DiscreetView } from "./pages/beauty/style/DiscreetView";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
 import { SkincareDetail } from "./pages/beauty/SkincareDetail";
+import { SkincarePlay } from "./pages/beauty/SkincarePlay";
 import { HaircareHome } from "./pages/beauty/HaircareHome";
 import { NailsHome } from "./pages/beauty/NailsHome";
 import { ClareamentoHome } from "./pages/beauty/ClareamentoHome";
@@ -89,6 +90,7 @@ const router = createBrowserRouter(
         { path: "beleza/pele-cabelo/skincare", element: <SkincareHome /> },
         { path: "beleza/pele-cabelo/skincare/nova", element: <SkincareNew /> },
         { path: "beleza/pele-cabelo/skincare/:id", element: <SkincareDetail /> },
+        { path: "beleza/pele-cabelo/skincare/:id/tocar", element: <SkincarePlay /> },
         { path: "beleza/pele-cabelo/haircare", element: <HaircareHome /> },
         { path: "beleza/pele-cabelo/unhas", element: <NailsHome /> },
         { path: "beleza/pele-cabelo/clareamento", element: <ClareamentoHome /> },

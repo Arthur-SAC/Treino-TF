@@ -32,6 +32,13 @@ export function SkincareDetail() {
         {routine.time === "morning" ? "Manhã" : "Noite"} · {routine.target}
       </p>
 
+      <Link
+        to={`/beleza/pele-cabelo/skincare/${routine.id}/tocar`}
+        className="block w-full bg-wine text-nude-warm text-center rounded-md py-2.5 text-sm font-medium mb-4"
+      >
+        ▶ Iniciar rotina guiada
+      </Link>
+
       <ol className="space-y-2">
         {routine.steps.map((step, i) => (
           <li key={i} className="card">
