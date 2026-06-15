@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
 import { SessionRecorder } from "../../components/SessionRecorder";
+import { GuideAccordion } from "../../components/GuideAccordion";
 
 export function SessionDetail() {
   const { templateId } = useParams<{ templateId: string }>();
@@ -45,6 +46,27 @@ export function SessionDetail() {
         <Link to="/treino/plano" className="text-muted text-sm">&larr; Plano</Link>
         <h1 className="font-serif text-2xl text-nude flex-1">{template.name}</h1>
       </div>
+
+      {template.purpose && (
+        <p className="text-sm text-nude/90 mb-3">✦ {template.purpose}</p>
+      )}
+
+      <GuideAccordion
+        className="mb-4"
+        sections={[
+          {
+            id: "antes-de-comecar",
+            title: "Antes de começar",
+            intro: "Dois minutos que evitam lesão e fazem o treino render mais.",
+            tips: [
+              "Aqueça: 5-7 min de esteira leve + mobilidade articular (os dois primeiros itens do treino já fazem isso).",
+              "Regra de ouro da dor: queimação e fadiga no músculo = normal, pode seguir. Dor aguda, em articulação ou uma fisgada = PARE na hora.",
+              "Forma antes de carga: só sobe o peso quando o movimento sai redondo.",
+              "Respira: solta o ar no esforço, puxa na volta.",
+            ],
+          },
+        ]}
+      />
 
       {template.exercises.map((tplEx, i) => {
         const ex = exMap.get(tplEx.exerciseId);
