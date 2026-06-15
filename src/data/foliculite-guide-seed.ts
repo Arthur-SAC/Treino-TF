@@ -28,6 +28,7 @@ export const FOLICULITE_GUIDE: GuideSection[] = [
       "Não estique a pele ao máximo nem aperte a lâmina — passa leve",
       "Enxágue a lâmina a cada passada e, no fim, finalize com água fria",
       "Pós-barba sem álcool: hidratante leve ou niacinamida/aloe pra acalmar",
+      "Não raspe/depile com lâmina 12–24h após ácido potente (glicólico ou retinol) — a pele fica sensível e a barreira comprometida; separe os momentos (ex.: raspar de manhã, ácido à noite)",
     ],
   },
   {
@@ -62,6 +63,7 @@ export const FOLICULITE_GUIDE: GuideSection[] = [
     tips: [
       "Menos pelo → sem encravado → sem nova mancha → sem sombra: resolve os três de uma vez",
       "São ~8-10 sessões espaçadas; rosto, axila e íntima em clínica especializada",
+      "Intervalo padrão: ~4–6 semanas entre sessões — não acelere. A pele precisa se recuperar e o pelo precisa estar na fase de crescimento certa pra o laser agir",
       "Entre sessões, siga raspando com a técnica certa (não arranque com cera/pinça no meio do protocolo de laser)",
       "Registre as sessões aqui na Depilação pra acompanhar custo e evolução",
       "É a maior alavanca de pele-feminização sem TRH — vale priorizar com o dermato",
