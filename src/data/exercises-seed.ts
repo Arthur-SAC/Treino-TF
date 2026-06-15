@@ -187,6 +187,7 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Stiff com halteres (amplitude menor)",
     harderVariation: "Aumentar levemente a carga mantendo a forma perfeita",
     exposureLevel: 2,
+    startLoadKg: 8,
     successCue: "Fez certo se sentir o alongamento atrás da coxa na descida e o glúteo puxando na subida — nunca dor na lombar.",
     proTips: [
       "Substitui o pull-through da polia: mesma dobradiça de quadril, sem precisar da polia",
