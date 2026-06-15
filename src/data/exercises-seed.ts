@@ -18,6 +18,7 @@ export const EXERCISES: Exercise[] = [
     harderVariation: "Hip thrust unilateral (uma perna)",
     exposureLevel: 4,
     startLoadKg: 20,
+    successCue: "Fez certo se sentir o glúteo apertando no topo — não a lombar nem só a coxa.",
     proTips: [
       "Pausa de 1-2s apertando o glúteo lá no topo vale mais que adicionar peso",
       "Empurra pelos calcanhares, queixo pra baixo e costela fechada — protege a lombar e isola o glúteo",
@@ -101,6 +102,7 @@ export const EXERCISES: Exercise[] = [
     ],
     exposureLevel: 1,
     startLoadKg: 15,
+    successCue: "Fez certo se sentir a lateral do bumbum (glúteo médio) abrir — sem jogar o tronco.",
     proTips: [
       "Inclina o tronco levemente à frente pra pegar mais glúteo médio",
       "Segura 1s na abertura máxima — é onde arredonda a lateral",
@@ -163,6 +165,7 @@ export const EXERCISES: Exercise[] = [
     harderVariation: "Stiff unilateral",
     exposureLevel: 3,
     startLoadKg: 8,
+    successCue: "Fez certo se sentir o alongamento atrás da coxa e o glúteo puxando na subida — coluna sempre reta.",
     proTips: [
       "É dobradiça de quadril: empurra o bumbum pra trás, não agacha",
       "Desce até sentir o posterior puxar, não até a barra tocar o chão",
@@ -739,6 +742,7 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Avanço estático sem peso",
     exposureLevel: 4,
     startLoadKg: 6,
+    successCue: "Fez certo se o glúteo da perna da frente queimar — peso no calcanhar.",
     proTips: [
       "Inclina o tronco um pouco à frente pra jogar o foco no glúteo da perna da frente",
       "Pé da frente longe o suficiente pra o joelho não passar muito da ponta",
@@ -824,6 +828,7 @@ export const EXERCISES: Exercise[] = [
     easierVariation: "Carga leve focando na amplitude e na conexão com o glúteo",
     exposureLevel: 2,
     startLoadKg: 20,
+    successCue: "Fez certo se sentir o glúteo e a parte de trás da coxa empurrando — não o joelho.",
     proTips: [
       "Pés ALTOS e afastados na plataforma jogam o foco pro glúteo, não pro quadríceps",
       "Desce até ~90° e empurra pelos calcanhares, sem travar o joelho no topo",

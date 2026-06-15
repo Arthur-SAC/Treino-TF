@@ -51,6 +51,13 @@ export function ExerciseDetail() {
         </div>
       )}
 
+      {ex.successCue && (
+        <div className="card mb-3 border-nude/40">
+          <h2 className="text-nude-warm font-medium mb-2">Como saber que fez certo</h2>
+          <p className="text-sm">{ex.successCue}</p>
+        </div>
+      )}
+
       {ex.equipment.length > 0 && (
         <div className="card mb-3">
           <h2 className="text-nude-warm font-medium mb-2">Equipamento</h2>

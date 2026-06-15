@@ -140,6 +140,9 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
       {isHoldLight(exercise.category) && (
         <p className="text-xs text-muted mb-2">Manter leve — não subir a carga (silhueta).</p>
       )}
+      {exercise.successCue && (
+        <p className="text-xs text-nude/80 mb-2">✦ {exercise.successCue}</p>
+      )}
       {suggested !== null ? (
         <button
           type="button"
