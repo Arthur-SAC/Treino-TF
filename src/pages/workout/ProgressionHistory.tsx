@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { ProgressionChart } from "../../components/ProgressionChart";
 import { formatDateBR } from "../../lib/format";
+import { GuideAccordion } from "../../components/GuideAccordion";
 
 export function ProgressionHistory() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -31,6 +32,23 @@ export function ProgressionHistory() {
         <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
         <h1 className="font-serif text-2xl text-nude flex-1">Progressão</h1>
       </div>
+
+      <GuideAccordion
+        className="mb-3"
+        sections={[
+          {
+            id: "quando-subir",
+            title: "Quando aumentar a carga",
+            intro: "A bunda cresce quando o estímulo aumenta com o tempo — mas no ritmo certo.",
+            tips: [
+              "Completou todas as séries e reps com forma boa e ainda sobrou fôlego? Sobe o menor incremento (1-2 kg ou o próximo furo) no próximo treino.",
+              "Não fechou as reps ou a forma piorou? Mantém a carga até dominar.",
+              "Doeu articulação ou lombar? Baixa a carga e revê a técnica.",
+              "Não precisa subir todo treino — semana sim, semana não já é progresso ótimo.",
+            ],
+          },
+        ]}
+      />
 
       <div className="card mb-3">
         <label className="block text-muted text-xs uppercase tracking-wider mb-1">Exercício</label>
