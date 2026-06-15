@@ -13,6 +13,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 62,
     cycle: "adaptacao",
+    purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum — a fundação que a TRH vai arredondar depois.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -29,6 +30,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 2,
     durationMin: 50,
     cycle: "adaptacao",
+    purpose: "Hoje afina a cintura e cuida da postura e do busto, com carga leve pra deixar o tronco elegante sem engrossar.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -47,6 +49,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 3,
     durationMin: 55,
     cycle: "adaptacao",
+    purpose: "Hoje solta o quadril e trabalha o glúteo médio — o que arredonda a lateral do bumbum e dá o gingado.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
@@ -69,6 +72,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 4,
     durationMin: 60,
     cycle: "adaptacao",
+    purpose: "Hoje é glúteo e coxa um lado de cada vez: corrige assimetria e deixa as pernas mais cheias e femininas.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -86,6 +90,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "adaptacao",
+    purpose: "Hoje é bombeamento de glúteo (muita repetição) + core que segura a cintura fina.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },

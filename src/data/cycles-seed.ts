@@ -17,6 +17,7 @@ const VARIATION: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 60,
     cycle: "variacao",
+    purpose: "Glúteo pesado com exercícios novos — mesmo objetivo de volume, estímulo diferente pra não estagnar.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -33,6 +34,7 @@ const VARIATION: WorkoutTemplate[] = [
     dayOfWeek: 2,
     durationMin: 52,
     cycle: "variacao",
+    purpose: "Cintura e postura com variação leve — tronco feminino sem engrossar.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -50,6 +52,7 @@ const VARIATION: WorkoutTemplate[] = [
     dayOfWeek: 3,
     durationMin: 54,
     cycle: "variacao",
+    purpose: "Quadril solto + glúteo médio — gingado e lateral arredondada.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "borboleta", sets: 1, repsTarget: "2min", restSec: 0 },
@@ -69,6 +72,7 @@ const VARIATION: WorkoutTemplate[] = [
     dayOfWeek: 4,
     durationMin: 58,
     cycle: "variacao",
+    purpose: "Foco no posterior e no glúteo pela dobradiça de quadril — bumbum e parte de trás da coxa.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -85,6 +89,7 @@ const VARIATION: WorkoutTemplate[] = [
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "variacao",
+    purpose: "Volume de glúteo em alta repetição — bomba de sangue que enche o músculo.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -105,6 +110,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 70,
     cycle: "hipertrofia",
+    purpose: "Fase de ouro do glúteo: empurra a carga, é agora que ele cresce de verdade.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -121,6 +127,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     dayOfWeek: 2,
     durationMin: 57,
     cycle: "hipertrofia",
+    purpose: "Superior e cintura em volume — postura forte que valoriza o busto.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -137,6 +144,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     dayOfWeek: 3,
     durationMin: 54,
     cycle: "hipertrofia",
+    purpose: "Mobilidade + glúteo médio no volume — mantém o quadril solto enquanto cresce.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
@@ -155,6 +163,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     dayOfWeek: 4,
     durationMin: 68,
     cycle: "hipertrofia",
+    purpose: "Glúteo e posterior pesados — coxa cheia e bumbum projetado.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -171,6 +180,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     dayOfWeek: 5,
     durationMin: 58,
     cycle: "hipertrofia",
+    purpose: "Mais volume de glúteo e coxa — aproveita a fase de crescimento ao máximo.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -192,6 +202,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 58,
     cycle: "refinamento",
+    purpose: "Densidade do glúteo: muita repetição pra deixar o músculo durinho e desenhado.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -208,6 +219,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     dayOfWeek: 2,
     durationMin: 48,
     cycle: "refinamento",
+    purpose: "Cintura e postura — refina a silhueta e levanta o busto.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -225,6 +237,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     dayOfWeek: 3,
     durationMin: 56,
     cycle: "refinamento",
+    purpose: "Mobilidade livre + glúteo médio — fluidez e lateral redonda.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
@@ -243,6 +256,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     dayOfWeek: 4,
     durationMin: 57,
     cycle: "refinamento",
+    purpose: "Glúteo um lado de cada vez — corrige diferença entre os lados pra ficar simétrico.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -259,6 +273,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     dayOfWeek: 5,
     durationMin: 52,
     cycle: "refinamento",
+    purpose: "Densidade de glúteo + core — acabamento da forma.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -281,6 +296,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 48,
     cycle: "manutencao",
+    purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — base pronta pra TRH arredondar.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -296,6 +312,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 2,
     durationMin: 45,
     cycle: "manutencao",
+    purpose: "Mantém postura e cintura — silhueta firme com pouco volume.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -312,6 +329,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 3,
     durationMin: 48,
     cycle: "manutencao",
+    purpose: "Mobilidade + glúteo médio leve — mantém o quadril solto e a lateral.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
@@ -329,6 +347,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 4,
     durationMin: 48,
     cycle: "manutencao",
+    purpose: "Manutenção do glúteo unilateral — preserva simetria e coxa.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -343,6 +362,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 5,
     durationMin: 45,
     cycle: "manutencao",
+    purpose: "Bombeamento leve de glúteo — mantém o músculo ativo e cheio.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
