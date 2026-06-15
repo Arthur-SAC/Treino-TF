@@ -10,7 +10,7 @@ export const ROUTINES: Omit<SkincareRoutine, "id">[] = [
       { productName: "Tônico hidratante Bioderma Sensibio", technique: "Algodão ou mãos, espalha por todo rosto", waitMin: 1 },
       { productName: "Vitamina C 10% Adcos", technique: "4-5 gotas, rosto e pescoço, aguarda absorver", waitMin: 2 },
       { productName: "Hidratante Cetaphil PRO", technique: "Bolinha do tamanho de ervilha, espalha", waitMin: 1 },
-      { productName: "Protetor solar La Roche Anthelios FPS 60", technique: "2 dedos de produto (rosto + pescoço). Reaplica a cada 3h se sair de casa", waitMin: 0 },
+      { productName: "Protetor solar La Roche Anthelios FPS 60", technique: "2 dedos de produto (rosto + pescoço). Todo dia, mesmo sem sol ou sem sair de casa — é inegociável. Reaplica a cada ~3h se estiver exposta.", waitMin: 0 },
     ],
   },
   {
@@ -32,6 +32,7 @@ export const ROUTINES: Omit<SkincareRoutine, "id">[] = [
       { productName: "Sabonete neutro no banho (não usa desodorante na hora desse tratamento)", technique: "Limpa bem", waitMin: 0 },
       { productName: "Clareador axila/íntima Adcos (niacinamida + alfa-arbutin)", technique: "Camada fina nas duas axilas. Não sai por cima. Não usa desodorante de noite.", waitMin: 10 },
       { productName: "Hidratante leve (opcional)", technique: "Se ficar ressecado", waitMin: 0 },
+      { productName: "LEMBRETE: desodorante de dia é normal", technique: "De dia, desodorante normal pode — só não aplique por cima do clareador ainda úmido. Espere ~2–3h após o clareador secar antes de usar desodorante.", waitMin: 0 },
     ],
   },
   {
