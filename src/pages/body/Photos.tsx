@@ -4,6 +4,37 @@ import { db, type ProgressPhoto } from "../../lib/db";
 import { PhotoUpload } from "../../components/PhotoUpload";
 import { BlobImage } from "../../components/BlobImage";
 import { formatDateBR } from "../../lib/format";
+import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
+
+const GUIDE_FOTOS: GuideSection[] = [
+  {
+    id: "fotos-comparaveis",
+    title: "Como tirar fotos comparáveis",
+    intro:
+      "O que torna uma foto de progresso útil não é a qualidade — é a padronização. Quando tudo está igual entre uma foto e outra, a comparação se torna real.",
+    tips: [
+      "Mesma luz e fundo neutro: prefira luz natural difusa ou iluminação constante, sem sombras duras. Use sempre o mesmo cômodo e fundo.",
+      "Mesma roupa: roupa íntima, biquíni ou qualquer peça que mostre a silhueta de forma consistente.",
+      "Mesmas poses: frente, lado direito e costas são as três vistas essenciais.",
+      "Postura padrão: pés paralelos na largura dos quadris, braços levemente afastados do corpo, olhar ao frente.",
+      "Câmera na altura do quadril: isso captura o corpo inteiro proporcionalmente, sem distorção de perspectiva.",
+      "Espelho limpo, se for selfie: manchas e dedadas atrapalham a leitura da silhueta.",
+      "Mesmo horário do dia: de preferência pela manhã, em jejum — pelo mesmo motivo que as medidas.",
+    ],
+  },
+  {
+    id: "fotos-objetivo",
+    title: "Fotos-objetivo: como escolher referências realistas",
+    intro:
+      "Ter referências visuais é poderoso, mas a escolha importa. Aqui está como usar essa ferramenta de forma saudável.",
+    tips: [
+      "Prefira referências com altura e estrutura óssea parecidas com a sua — quadril, ombro e comprimento de torso são definidos pelo esqueleto e não mudam com treino.",
+      "Tenha em mente que muitas referências de corpo feminino foram construídas com TRH (hormônios) e/ou procedimentos cirúrgicos — isso redistribui gordura e altera musculatura de formas que treino sozinho não replica.",
+      "Use as referências como norte de direção (silhueta mais afunilada, glúteo mais projetado), não como cópia exata — o seu resultado será único.",
+      "Para entender melhor o que é alcançável com treino e sem TRH, veja a tela «Até onde dá pra chegar» no módulo de Treino.",
+    ],
+  },
+];
 
 export function Photos() {
   const photos = useLiveQuery(async () => {
@@ -27,6 +58,8 @@ export function Photos() {
         <Link to="/corpo" className="text-muted text-sm">&larr; Corpo</Link>
         <h1 className="font-serif text-2xl text-nude flex-1">Fotos</h1>
       </div>
+
+      <GuideAccordion sections={GUIDE_FOTOS} className="mb-4" />
 
       <div className="card mb-4">
         <h2 className="text-nude-warm font-medium mb-3">Nova foto</h2>

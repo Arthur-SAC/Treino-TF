@@ -7,6 +7,25 @@ import { WhrChart } from "../../components/WhrChart";
 import { MeasurementChart } from "../../components/MeasurementChart";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { formatCm, formatDateBR } from "../../lib/format";
+import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
+
+const GUIDE_MEDICAO: GuideSection[] = [
+  {
+    id: "como-medir",
+    title: "Como medir certo",
+    intro:
+      "Medir sempre do mesmo jeito é o que torna os dados comparáveis ao longo do tempo. Use uma fita métrica flexível e não elástica.",
+    tips: [
+      "Cintura: localize a linha natural — a parte mais estreita do tronco, geralmente acima do osso do quadril e abaixo das costelas. Fique em pé, expire normalmente e passe a fita justa, sem apertar nem folgar.",
+      "Quadril: meça na parte mais larga do bumbum, com os pés unidos. A fita deve ficar paralela ao chão.",
+      "Ombros: da ponta de um ombro à ponta do outro, passando pela parte mais larga das costas. Fique ereta, braços relaxados ao lado do corpo.",
+      "Pescoço: logo abaixo do pomo de adão, no ponto mais estreito. Fita paralela ao chão, sem comprimir.",
+      "Coxa: na parte mais grossa da coxa, geralmente no terço superior, logo abaixo da dobra glútea. Perna levemente afastada para a fita não comprimir.",
+      "Braço: no bíceps relaxado, no ponto mais largo entre o ombro e o cotovelo.",
+      "Frequência ideal: meça a cada 2 a 4 semanas, sempre no mesmo horário — de preferência pela manhã, em jejum, antes de treinar ou tomar muito líquido. Isso elimina variações naturais de retenção hídrica ao longo do dia.",
+    ],
+  },
+];
 
 const CATEGORY_LABEL: Record<ReturnType<typeof classifyWhr>, string> = {
   "ampulheta-forte": "Ampulheta forte",
@@ -50,6 +69,8 @@ export function Measurements() {
         <h1 className="font-serif text-2xl text-nude flex-1">Medidas</h1>
       </div>
 
+      <GuideAccordion sections={GUIDE_MEDICAO} className="mb-4" />
+
       <div className="card mb-4">
         <h2 className="text-nude-warm font-medium mb-3">Nova medida</h2>
         <MeasurementForm onSubmit={handleSave} />
@@ -59,6 +80,11 @@ export function Measurements() {
         <div className="card mb-4">
           <h2 className="text-nude-warm font-medium mb-2">Evolução cintura/quadril</h2>
           <WhrChart data={chartData} />
+          <p className="text-muted text-xs mt-2">
+            Linha caindo rumo ao alvo = silhueta mais ampulheta (cintura afinando e/ou quadril
+            crescendo). Variação de poucos centésimos entre medidas é normal — água, intestino,
+            sono, hora do dia. Olhe a tendência de várias semanas, não o ponto isolado.
+          </p>
         </div>
       )}
 
@@ -82,6 +108,11 @@ export function Measurements() {
             </div>
           </div>
           <MeasurementChart data={metricData} />
+          <p className="text-muted text-xs mt-2">
+            Leia pela direção, não pelo valor de um dia: quadril/coxa/glúteo subindo é ganho;
+            cintura/pescoço/barriga descendo é afinamento. Pequenos sobe-e-desce entre medidas são
+            retenção hídrica, não mudança real de corpo.
+          </p>
         </div>
       )}
 
