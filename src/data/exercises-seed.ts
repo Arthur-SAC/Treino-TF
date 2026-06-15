@@ -764,7 +764,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: "kickback",
-    name: "Coice de glúteo em 4 apoios com caneleira",
+    name: "Coice de glúteo pesado (4 apoios, caneleira)",
     category: "gluteo",
     equipment: ["caneleira"],
     difficulty: "iniciante",
