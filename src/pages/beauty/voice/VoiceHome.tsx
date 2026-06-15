@@ -2,7 +2,37 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type VoiceExercise } from "../../../lib/db";
 import { BeautyTabs } from "../../../components/BeautyTabs";
+import { GuideAccordion, type GuideSection } from "../../../components/GuideAccordion";
 import { formatDateBR } from "../../../lib/format";
+
+const VOICE_GUIDE: GuideSection[] = [
+  {
+    id: "voz-sem-trh",
+    title: "Voz sem TRH: o que esperar (contexto honesto)",
+    intro: "Sem TRH, a voz não muda por hormônio — e tudo bem. Aqui vai a verdade sem rodeios:",
+    tips: [
+      "A testosterona não afina nem engrossa retroativamente o que importa pra feminilização vocal. O que moldou sua voz no passado já foi — e o treino não luta contra isso.",
+      "A feminilização da voz vem 100% do treino: pitch (tom de fala), ressonância (onde a voz vibra — rosto, não peito) e entonação (variação melódica). Essas três coisas são aprendidas, não hormonais.",
+      "Expectativa realista: ~2–3 meses de prática diária de 15 min pra mudança consistente e audível. Não é magia, é músculo vocal — igual academia.",
+      "Você não precisa de TRH pra ter uma voz feminina convincente. Há mulheres trans que praticam sem TRH e convencem; há quem esteja em TRH anos sem praticar e não convence. A constância é o fator.",
+      "Grave-se a cada 2–4 semanas e ouça. O progresso existe — só é imperceptível no dia a dia porque você se acostuma. A gravação prova.",
+    ],
+  },
+  {
+    id: "voz-cronograma-semanal",
+    title: "Cronograma semanal sugerido (~15 min/dia)",
+    intro: "Estrutura simples: aquecimento todo dia (é obrigatório antes de qualquer coisa), e as categorias se revezam. Adapte ao que você tem tempo.",
+    tips: [
+      "Todo dia (sempre): Aquecimento 5–8 min — Respiração diafragmática + Aquecimento de lábios/língua + Glissando (sirene). Não pule isso.",
+      "Segunda, Quarta, Sexta (passing + pitch): Pitch alvo → Ressonância forward → Leitura mantendo pitch. Foco em feminilizar a fala do cotidiano.",
+      "Terça, Quinta (articulação + frases reais): Articulação clara (Pa-ta-ka, trava-línguas) → Conversa praticada (frases do dia a dia). Consolida o que está aprendendo.",
+      "Sábado (sensual, se quiser): Sussurro sedutor → Modulação emocional → Suspiros e sons íntimos. Categoria opcional mas divertida.",
+      "Domingo: descanso vocal — não forçar. Pode ouvir a si mesma em gravações antigas como revisão.",
+      "Se tiver só 10 min num dia: Aquecimento (5 min) + Pitch alvo ou Ressonância (5 min). É suficiente pra manter continuidade.",
+    ],
+  },
+];
+
 
 const CATEGORY_LABEL: Record<VoiceExercise["category"], string> = {
   aquecimento: "Aquecimento",
@@ -45,10 +75,12 @@ export function VoiceHome() {
       <div className="card mb-4 !bg-wine/20 !border-wine-light">
         <h2 className="text-nude font-medium mb-1">Como funciona</h2>
         <p className="text-sm text-nude-warm">
-          Sem TRH, sua voz só muda com prática. 15 min/dia já transforma em 2-3 meses. Sempre começa com aquecimento (3-5 min) antes de passing/sensual.
-          Grave-se a cada 2-4 semanas pra ouvir progresso.
+          Sem TRH, sua voz só muda com prática. 15 min/dia já transforma em 2–3 meses. Sempre começa com aquecimento (3–5 min) antes de passing/sensual.
+          Grave-se a cada 2–4 semanas pra ouvir progresso.
         </p>
       </div>
+
+      <GuideAccordion sections={VOICE_GUIDE} className="mb-4" />
 
       {(["aquecimento", "passing", "sensual", "articulacao"] as const).map((cat) => {
         const list = byCategory[cat] ?? [];
