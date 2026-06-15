@@ -34,4 +34,24 @@ describe("seedMovement", () => {
       expect(s.moves.length).toBeGreaterThan(0);
     }
   });
+
+  it("tem a seção de intimidade (3) com moves não-vazios", async () => {
+    await seedMovement();
+    const seqs = await db.danceSequences.toArray();
+    const intimidade = seqs.filter((s) => s.category === "intimidade");
+    expect(intimidade.length).toBe(3);
+    for (const s of intimidade) {
+      expect(s.moves.length).toBeGreaterThan(0);
+      expect(s.durationMin).toBeGreaterThan(0);
+    }
+  });
+
+  it("tem o andar com gingado dentro de sensual", async () => {
+    await seedMovement();
+    const seqs = await db.danceSequences.toArray();
+    const gingado = seqs.find((s) => s.id === "sensual-andar-gingado");
+    expect(gingado).toBeDefined();
+    expect(gingado!.category).toBe("sensual");
+    expect(gingado!.moves.length).toBeGreaterThan(0);
+  });
 });

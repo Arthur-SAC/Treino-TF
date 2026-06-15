@@ -234,7 +234,7 @@ export interface DanceMove {
 export interface DanceSequence {
   id: string;
   name: string;
-  category: "mobilidade" | "danca" | "pelvic" | "sensual" | "flexibilidade" | "twerk" | "apresentacao";
+  category: "mobilidade" | "danca" | "pelvic" | "sensual" | "flexibilidade" | "twerk" | "apresentacao" | "intimidade";
   level: "iniciante" | "intermediario" | "avancado";
   durationMin: number;
   focus: string;
