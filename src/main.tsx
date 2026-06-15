@@ -11,6 +11,7 @@ import { ExerciseDetail } from "./pages/workout/ExerciseDetail";
 import { SessionDetail } from "./pages/workout/SessionDetail";
 import { ProgressionHistory } from "./pages/workout/ProgressionHistory";
 import { MovementHome } from "./pages/workout/MovementHome";
+import { Horizontes } from "./pages/workout/Horizontes";
 import { SequenceDetail } from "./pages/workout/SequenceDetail";
 import { PracticeHistory } from "./pages/workout/PracticeHistory";
 import { BodyHome } from "./pages/body/BodyHome";
@@ -76,6 +77,7 @@ const router = createBrowserRouter(
         { path: "treino/exercicio/:id", element: <ExerciseDetail /> },
         { path: "treino/sessao/:templateId", element: <SessionDetail /> },
         { path: "treino/progressao", element: <ProgressionHistory /> },
+        { path: "treino/horizontes", element: <Horizontes /> },
         { path: "treino/movimento", element: <MovementHome /> },
         { path: "treino/movimento/historico", element: <PracticeHistory /> },
         { path: "treino/movimento/:id", element: <SequenceDetail /> },
