@@ -38,6 +38,7 @@ export const CLAREAMENTO_GUIDE: GuideSection[] = [
       "Virilha: clareador só na pele externa, NUNCA na mucosa; algodão e menos atrito",
       "Perianal/ânus: pele muito delicada — só ativos suaves (niacinamida/alfa-arbutina), com teste de mancha, e NADA de ácido forte/hidroquinona por conta própria",
       "A região anal pede acompanhamento dermatológico — não improvise ativos potentes ali",
+      "Axila e virilha: o clareador funciona muito melhor junto com depilação menos agressiva — lâmina irrita, inflama e encrava, o que escurece a pele de novo. Laser é a solução de raiz: ataca o pelo, elimina o encravado e previne a mancha futura de uma vez (veja o módulo Depilação)",
     ],
   },
   {
