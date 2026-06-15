@@ -73,27 +73,28 @@ async function tick() {
     await setSetting("lastSkincareEveningAt", todayISO);
   }
 
-  // Postura (uma vez/dia, se não praticou hoje)
-  const posturaTime = await getSetting("posturaReminderTime");
-  const lastPostura = await getSetting("lastPosturaReminderAt");
-  const [pH, pM] = posturaTime.split(":").map(Number);
-  const posturaDone =
-    (await db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === "postura-silhueta-diaria").count()) > 0;
-  if (shouldRemindOncePerDay({ currentMin, targetMin: pH * 60 + pM, lastNotifiedDate: lastPostura, todayISO, done: posturaDone })) {
-    notify("Postura & silhueta", "7 min de rotina de postura — abre o peito, ativa o glúteo");
-    await setSetting("lastPosturaReminderAt", todayISO);
-  }
-
-  // Caminhada (uma vez/dia, se não bateu a meta)
-  const walkTime = await getSetting("walkReminderTime");
-  const lastWalk = await getSetting("lastWalkReminderAt");
-  const [wH, wM] = walkTime.split(":").map(Number);
-  const walkGoal = await getSetting("walkGoalMin");
-  const walkLog = await db.dailyLog.get(todayISO);
-  const walkDone = (walkLog?.walkMin ?? 0) >= walkGoal;
-  if (shouldRemindOncePerDay({ currentMin, targetMin: wH * 60 + wM, lastNotifiedDate: lastWalk, todayISO, done: walkDone })) {
-    notify("Caminhada", `Bora caminhar · meta ${walkGoal} min hoje`);
-    await setSetting("lastWalkReminderAt", todayISO);
+  // Presença (uma vez/dia, à noite, se não praticou nada de presença hoje)
+  const presencaTime = await getSetting("presencaReminderTime");
+  const lastPresenca = await getSetting("lastPresencaReminderAt");
+  const [prH, prM] = presencaTime.split(":").map(Number);
+  const PRESENCE_SEQUENCE_IDS = [
+    "postura-silhueta-diaria",
+    "corporal-caminhada",
+    "sensual-andar-gingado",
+    "soltura-tronco-quadril",
+    "intimidade-flex-passiva",
+    "intimidade-grinding",
+    "intimidade-cavalgar",
+  ];
+  const presencaDone =
+    (await db.practiceLogs
+      .where("date")
+      .equals(todayISO)
+      .and((p) => PRESENCE_SEQUENCE_IDS.includes(p.sequenceId))
+      .count()) > 0;
+  if (shouldRemindOncePerDay({ currentMin, targetMin: prH * 60 + prM, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
+    notify("Antes de dormir", "Um pouco de presença: postura, gingado, dança ou intimidade");
+    await setSetting("lastPresencaReminderAt", todayISO);
   }
 }
 

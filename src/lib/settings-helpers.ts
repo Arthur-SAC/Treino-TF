@@ -30,10 +30,8 @@ export interface Settings {
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
   walkGoalMin: number;
-  posturaReminderTime: string;
-  walkReminderTime: string;
-  lastPosturaReminderAt: string;
-  lastWalkReminderAt: string;
+  presencaReminderTime: string;
+  lastPresencaReminderAt: string;
   heightCm: number; // altura em cm; 0 = não informada
   targetWhr: number; // meta cintura/quadril
   targetShoulderHipRatio: number; // meta ombro/quadril
@@ -71,10 +69,8 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   walkGoalMin: 30,
-  posturaReminderTime: "19:00",
-  walkReminderTime: "12:00",
-  lastPosturaReminderAt: "",
-  lastWalkReminderAt: "",
+  presencaReminderTime: "21:00",
+  lastPresencaReminderAt: "",
   heightCm: 0,
   targetWhr: 0.72,
   targetShoulderHipRatio: 1.0,
