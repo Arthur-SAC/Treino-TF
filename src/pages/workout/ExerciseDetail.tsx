@@ -21,8 +21,11 @@ export function ExerciseDetail() {
         <Link to="/treino/biblioteca" className="text-muted text-sm">&larr; Biblioteca</Link>
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{ex.name}</h1>
-      <p className="text-muted text-xs mb-4">
+      <p className="text-muted text-xs mb-1">
         {ex.category} · {ex.difficulty} · exposição {ex.exposureLevel}/5
+      </p>
+      <p className="text-muted text-[0.7rem] mb-4">
+        Exposição = quanto o corpo fica à mostra pra fazer o exercício (1 = discreto, dá pra fazer em casa; 5 = bem aparente na academia).
       </p>
 
       <VideoSection

@@ -31,6 +31,9 @@ export function ExerciseLibrary() {
         <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
         <h1 className="font-serif text-2xl text-nude flex-1">Biblioteca</h1>
       </div>
+      <p className="text-muted text-[0.7rem] mb-3">
+        "Exposição X/5" = quão à mostra o corpo fica no exercício (1 discreto → 5 aparente).
+      </p>
       <div className="overflow-x-auto -mx-4 px-4 mb-4">
         <div className="flex gap-2 w-max">
           <button
