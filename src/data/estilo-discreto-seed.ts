@@ -8,9 +8,9 @@ export const ESTILO_DISCRETO: GuideSection[] = [
     title: "Escada de níveis",
     intro: "Sobe um degrau quando você se sentir segura — não é corrida, e dá pra ficar num nível o tempo que quiser.",
     tips: [
-      "Nível 1 (ninguém percebe): pele cuidada, sobrancelha alinhada, unhas limpas e lisas, cabelo cuidado, postura e voz, perfume neutro, roupa que veste bem o corpo",
-      "Nível 2 (lê como 'cuidada/alternativa'): corte mais comprido, base ou brilho incolor na unha, peças unissex mais ajustadas, bálsamo labial com leve cor, um acessório discreto",
-      "Nível 3 (andrógino/fluido, em espaços mais abertos): calça de corte feminino neutro, blusa com caimento, rímel discreto, esmalte nude, brinco pequeno",
+      "Nível 1 (ninguém percebe): pele cuidada, sobrancelha alinhada, unhas limpas e lisas, cabelo cuidado, postura e voz, perfume neutro, roupa que veste bem o corpo — ex.: hidratante Nivea/Payot + lápis Vult pra sobrancelha",
+      "Nível 2 (lê como 'cuidada/alternativa'): corte mais comprido, base ou brilho incolor na unha, peças unissex mais ajustadas, bálsamo labial com leve cor (ex.: Vult Lip Oil, Quem Disse Berenice bálsamo rosado, Payot Rosé), acessório discreto — para detalhes de aplicação: rotina 'Natural · diário' em Maquiagem",
+      "Nível 3 (andrógino/fluido, em espaços mais abertos): calça de corte feminino neutro, blusa com caimento, rímel discreto (ex.: Vult Volume Max, Maybelline Sky High), esmalte nude (ex.: Colorama Nudes, Bruna Tavares nude rosado), brinco pequeno — para detalhes de aplicação: rotina 'Trabalho · profissional' em Maquiagem",
       "Nível 4 (ousado, só em espaço seguro — casa, com a amada, ambientes queer): maquiagem completa, cor nas unhas, silhueta feminina marcada, vestido/saia, lingerie",
     ],
   },
@@ -20,11 +20,11 @@ export const ESTILO_DISCRETO: GuideSection[] = [
     intro: "O que já passa batido hoje, e o empurrãozinho sutil em cada frente.",
     tips: [
       "Roupa: neutros (preto/areia/marrom), corte unissex que veste bem, gola V sutil, cintura levemente marcada, camadas — feminiliza sem gritar",
-      "Maquiagem: começa pela pele (base leve/corretivo) + sobrancelha + bálsamo; depois um rímel discreto; cor só em espaço seguro (veja Maquiagem)",
+      "Maquiagem: começa pela pele (ex.: BT Tint Bruna Tavares ou Base Vult Soft Matte leve) + sobrancelha Vult + bálsamo com cor (ex.: Quem Disse Berenice ou Payot Rosé); depois um rímel discreto (ex.: Vult ou Maybelline); cor só em espaço seguro — veja rotinas 'Natural · diário' e 'Trabalho · profissional' em Maquiagem",
       "Unhas: base ou brilho incolor agora; cor fica pra casa/com a amada (veja o módulo Unhas)",
       "Cabelo: crescer e cuidar dos cachos já feminiliza muito (veja o módulo Cabelo); acessórios neutros ajudam na fase chata",
       "Acessórios: anéis, pulseiras finas, óculos de armação leve, bolsa/lenço neutros — feminilizam sem levantar bandeira",
-      "Perfume: notas mais doces/florais leves entram fácil e mudam a percepção sem ninguém 'ver'",
+      "Perfume: notas mais doces/florais leves entram fácil e mudam a percepção sem ninguém 'ver' — ex.: linhas Boticário (La Femme, Floratta), Natura Essencial Exclusivo, O.U.i (florais suaves)",
     ],
   },
   {
