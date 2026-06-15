@@ -33,7 +33,8 @@ export const NAILS_GUIDE: GuideSection[] = [
     intro: "Curtas por escolha (atenção e intimidade) — a beleza vem do formato, do brilho e do acabamento.",
     tips: [
       "Mantém curtas; o capricho no formato e no brilho é o que dá ar cuidado e feminino",
-      "Lixa sempre num sentido só (vai-e-vem lasca o fio da unha)",
+      "Lixa a cada 3–4 dias pra manter o formato sem deixar a borda crescer torta ou com farpas",
+      "Lixa sempre num sentido só (vai-e-vem lasca o fio da unha); não lixe todo dia — enfraquece a borda com o tempo",
       "Formato arredondado ou quadrado-suave (squoval) afina e alonga visualmente o dedo",
       "Brilho pelo polimento com bloco buffer, em vez de comprimento — fica natural e elegante",
       "Borda BEM lisa, sem cantos nem farpas — importa pra discrição e pra intimidade (conforto e segurança, ativa ou passiva)",
