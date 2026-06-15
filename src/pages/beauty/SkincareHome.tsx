@@ -3,6 +3,23 @@ import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { BeautyTabs } from "../../components/BeautyTabs";
 import { RoutineCard } from "../../components/RoutineCard";
+import { GuideAccordion } from "../../components/GuideAccordion";
+import type { GuideSection } from "../../components/GuideAccordion";
+
+const FPS_GUIDE: GuideSection[] = [
+  {
+    id: "regra-de-ouro-fps",
+    title: "A regra de ouro da pele",
+    intro: "FPS diário é a base de tudo — anti-mancha, anti-envelhecimento, e parte ativa de qualquer tratamento.",
+    tips: [
+      "Protetor solar todo dia, mesmo sem sol, mesmo em casa — raios UVA atravessam vidro e nuvens e escurecem a pele o tempo todo",
+      "Sem FPS qualquer clareamento volta: o ativo clareador desfaz à noite o que o sol refaz de dia",
+      "Reaplica a cada ~3h se estiver exposta ao sol (rosto, pescoço, mãos) — a proteção se consome",
+      "FPS 30+ no mínimo; FPS 60 é o ideal pra pele que está em tratamento de manchas",
+      "Se sair de casa com maquiagem, use protetor em spray ou powder com FPS pra reaplicar sem estragar o make",
+    ],
+  },
+];
 
 function todayISO(): string {
   const d = new Date();
@@ -36,6 +53,8 @@ export function SkincareHome() {
         <Link to="/beleza/pele-cabelo/skincare/nova" className="text-muted text-sm">+ nova</Link>
       </div>
       <BeautyTabs />
+
+      <GuideAccordion sections={FPS_GUIDE} className="mb-4 mt-2" />
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2 mt-2">Manhã</h2>
       <div className="space-y-2 mb-4">
