@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
 import { getSetting, setSetting } from "./settings-helpers";
+import { PRESENCE_ITEMS } from "./daily-routine";
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -77,24 +78,19 @@ async function tick() {
   const presencaTime = await getSetting("presencaReminderTime");
   const lastPresenca = await getSetting("lastPresencaReminderAt");
   const [prH, prM] = presencaTime.split(":").map(Number);
-  const PRESENCE_SEQUENCE_IDS = [
-    "postura-silhueta-diaria",
-    "corporal-caminhada",
-    "sensual-andar-gingado",
-    "soltura-tronco-quadril",
-    "intimidade-flex-passiva",
-    "intimidade-grinding",
-    "intimidade-cavalgar",
-  ];
-  const presencaDone =
-    (await db.practiceLogs
-      .where("date")
-      .equals(todayISO)
-      .and((p) => PRESENCE_SEQUENCE_IDS.includes(p.sequenceId))
-      .count()) > 0;
-  if (shouldRemindOncePerDay({ currentMin, targetMin: prH * 60 + prM, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
-    notify("Antes de dormir", "Um pouco de presença: postura, gingado, dança ou intimidade");
-    await setSetting("lastPresencaReminderAt", todayISO);
+  const presencaMin = prH * 60 + prM;
+  if (!Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
+    const presenceIds = PRESENCE_ITEMS.map((p) => p.id);
+    const presencaDone =
+      (await db.practiceLogs
+        .where("date")
+        .equals(todayISO)
+        .and((p) => presenceIds.includes(p.sequenceId))
+        .count()) > 0;
+    if (shouldRemindOncePerDay({ currentMin, targetMin: presencaMin, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
+      notify("Antes de dormir", "Um pouco de presença: postura, gingado, dança ou intimidade");
+      await setSetting("lastPresencaReminderAt", todayISO);
+    }
   }
 }
 
