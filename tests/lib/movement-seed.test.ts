@@ -39,7 +39,11 @@ describe("seedMovement", () => {
     await seedMovement();
     const seqs = await db.danceSequences.toArray();
     const intimidade = seqs.filter((s) => s.category === "intimidade");
-    expect(intimidade.length).toBe(3);
+    expect(intimidade.map((s) => s.id).sort()).toEqual([
+      "intimidade-cavalgar",
+      "intimidade-flex-passiva",
+      "intimidade-grinding",
+    ]);
     for (const s of intimidade) {
       expect(s.moves.length).toBeGreaterThan(0);
       expect(s.durationMin).toBeGreaterThan(0);
