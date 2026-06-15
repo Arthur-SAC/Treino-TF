@@ -28,6 +28,7 @@ export const HAIR_GUIDE: GuideSection[] = [
       "Apara SÓ as pontas a cada 3-4 meses: tira a ponta dupla sem perder comprimento (ponta dupla sobe e quebra mais)",
       "Seca com camiseta de algodão ou toalha de microfibra, amassando — nunca esfregando",
       "Continua longe de calor e química, como você já faz — é o maior favor pro comprimento",
+      "UV danifica e desbota os cachos abertos: em exposição solar longa, use boné ou aplique um leave-in com FPS antes de sair — protege o fio e preserva a cor natural",
     ],
   },
   {
