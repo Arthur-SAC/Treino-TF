@@ -42,6 +42,7 @@ export interface Exercise {
   exposureLevel: 1 | 2 | 3 | 4 | 5;
   startLoadKg?: number; // peso sugerido inicial (só exercícios com carga externa)
   proTips?: string[]; // dicas pra maximizar resultado
+  successCue?: string; // "fez certo se sentir X" — sensação-alvo
 }
 
 export interface WorkoutTemplate {
@@ -56,6 +57,7 @@ export interface WorkoutTemplate {
     notes?: string;
   }>;
   durationMin: number;
+  purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
   cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
 }
 
