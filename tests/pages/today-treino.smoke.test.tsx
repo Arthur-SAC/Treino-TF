@@ -5,6 +5,7 @@ import { db } from "../../src/lib/db";
 import { Today } from "../../src/pages/Today";
 
 const todayISO = new Date().toISOString().slice(0, 10);
+const todayDow = new Date().getDay();
 
 describe("Today — cards de treino", () => {
   beforeEach(async () => {
@@ -25,5 +26,22 @@ describe("Today — cards de treino", () => {
       const log = await db.dailyLog.get(todayISO);
       expect(log?.walkMin).toBe(10);
     });
+  });
+
+  it("exibe o propósito (purpose) do treino do dia quando há template", async () => {
+    await db.workoutTemplates.put({
+      id: "test-seg-gluteo",
+      name: "Glúteo A (teste)",
+      dayOfWeek: todayDow,
+      durationMin: 50,
+      cycle: "adaptacao",
+      purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum.",
+      exercises: [],
+    });
+    await db.settings.put({ key: "activeCycle", value: "adaptacao" });
+
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    const matches = await screen.findAllByText(/glúteo|cintura|quadril/i);
+    expect(matches.length).toBeGreaterThan(0);
   });
 });

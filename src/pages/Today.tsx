@@ -203,6 +203,7 @@ export function Today() {
         <TodayCard
           title={todayTemplate.name}
           subtitle={`Treino · ${todayTemplate.durationMin} min · ${(sessionsToday ?? 0) > 0 ? "concluído ✓" : "ainda não feito"}`}
+          note={todayTemplate.purpose}
           to={`/treino/sessao/${todayTemplate.id}`}
           variant={(sessionsToday ?? 0) > 0 ? "default" : "highlight"}
         />
@@ -255,6 +256,7 @@ export function Today() {
         <TodayCard
           title="Movimento"
           subtitle={`${suggestedSeq.name} · ${suggestedSeq.durationMin} min · ${(practiceToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+          note="Solta o quadril e treina o gingado — mobilidade que dá fluidez feminina"
           to={`/treino/movimento/${suggestedSeq.id}`}
           variant={(practiceToday ?? 0) === 0 ? "highlight" : "default"}
         />
@@ -263,6 +265,7 @@ export function Today() {
       <TodayCard
         title="Postura"
         subtitle={`Rotina diária · 7 min · ${(posturaDoneToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+        note="Alinhamento que feminiliza a silhueta na hora — ombro pra trás, peito aberto"
         to="/treino/movimento/postura-silhueta-diaria"
         variant={(posturaDoneToday ?? 0) === 0 ? "highlight" : "default"}
       />
@@ -271,6 +274,7 @@ export function Today() {
         <TodayCard
           title="Apresentação"
           subtitle={`${apresentacaoSeq.name} · ${apresentacaoSeq.durationMin} min · ${(apresentacaoToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
+          note="Gestos, olhar e caminhada — a feminilização que aparece antes mesmo da TRH"
           to={`/treino/movimento/${apresentacaoSeq.id}`}
           variant={(apresentacaoToday ?? 0) === 0 ? "highlight" : "default"}
         />
