@@ -28,7 +28,7 @@ describe("Today — cards de treino", () => {
     });
   });
 
-  it("exibe o propósito (purpose) do treino do dia quando há template", async () => {
+  it("exibe o treino do dia quando há template", async () => {
     await db.workoutTemplates.put({
       id: "test-seg-gluteo",
       name: "Glúteo A (teste)",
@@ -41,7 +41,7 @@ describe("Today — cards de treino", () => {
     await db.settings.put({ key: "activeCycle", value: "adaptacao" });
 
     render(<MemoryRouter><Today /></MemoryRouter>);
-    const matches = await screen.findAllByText(/glúteo|cintura|quadril/i);
+    const matches = await screen.findAllByText(/Glúteo A \(teste\)/);
     expect(matches.length).toBeGreaterThan(0);
   });
 });

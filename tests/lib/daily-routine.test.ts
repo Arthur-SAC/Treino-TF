@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { CARE_ITEMS, careItemsFor } from "../../src/lib/daily-routine";
+import { CARE_ITEMS, careItemsFor, PRESENCE_ITEMS, presenceSuggestionForDay } from "../../src/lib/daily-routine";
 
 describe("careItemsFor", () => {
   it("manhã traz cabelo/maquiagem/look (sem skincare)", () => {
@@ -20,8 +20,6 @@ describe("careItemsFor", () => {
     }
   });
 });
-
-import { PRESENCE_ITEMS, presenceSuggestionForDay } from "../../src/lib/daily-routine";
 
 describe("presença", () => {
   it("tem pelo menos postura, gingado e uma sequência de intimidade", () => {
