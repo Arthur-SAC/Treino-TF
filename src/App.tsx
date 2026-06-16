@@ -12,7 +12,7 @@ function App() {
 
   return (
     <OnboardingGate>
-      <div className="min-h-screen flex flex-col">
+      <div className="h-screen flex flex-col">
         <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
