@@ -11,6 +11,7 @@ export function Settings() {
   const morning = useSetting("morningReminderTime");
   const evening = useSetting("eveningReminderTime");
   const workout = useSetting("workoutReminderTime");
+  const presenca = useSetting("presencaReminderTime");
   const quietHours = useSetting("quietHours");
   const breakInterval = useSetting("activeBreakIntervalMin");
   const hydrInterval = useSetting("hydrationIntervalMin");
@@ -191,6 +192,11 @@ export function Settings() {
         <div>
           <label className="block text-muted text-xs uppercase tracking-wider mb-1">Noite</label>
           <input type="time" value={evening} onChange={(e) => void setSetting("eveningReminderTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Lembrete de presença (noite)</label>
+          <input type="time" value={presenca} onChange={(e) => void setSetting("presencaReminderTime", e.target.value)}
                  className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
         </div>
         <div>
