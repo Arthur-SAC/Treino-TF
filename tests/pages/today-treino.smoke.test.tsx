@@ -12,15 +12,15 @@ describe("Today — cards de treino", () => {
     await db.dailyLog.clear();
   });
 
-  it("mostra os cards Postura e Caminhada", async () => {
+  it("mostra os cards de Presença e Caminhada/cardio zona 2", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText("Postura")).toBeInTheDocument());
-    expect(screen.getByText("Caminhada")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText("Presença & intimidade")).toBeInTheDocument());
+    expect(screen.getByText("Caminhada / cardio zona 2")).toBeInTheDocument();
   });
 
   it("o botão +10 min registra caminhada no dailyLog", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText("Caminhada")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Caminhada / cardio zona 2")).toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: /\+10 min/i }));
     await waitFor(async () => {
       const log = await db.dailyLog.get(todayISO);

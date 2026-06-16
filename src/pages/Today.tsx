@@ -9,11 +9,16 @@ import { CYCLE_TO_GOAL } from "../data/cycles-seed";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { computeFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
+import { careItemsFor, presenceSuggestionForDay } from "../lib/daily-routine";
 
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const todayISO = today.toISOString().slice(0, 10);
+
+  const presencaSeq = presenceSuggestionForDay(dayOfWeek);
+  const morningCare = careItemsFor("morning");
+  const nightCare = careItemsFor("night");
 
   const activeCycle = useSetting("activeCycle");
   const todayTemplate = useLiveQuery(
@@ -44,46 +49,6 @@ export function Today() {
   const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
 
   const walkGoalMin = useSetting("walkGoalMin");
-  const posturaDoneToday = useLiveQuery(
-    () => db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === "postura-silhueta-diaria").count(),
-    [todayISO],
-  );
-
-  const sequences = useLiveQuery(() => db.danceSequences.toArray(), []);
-
-  const suggestedSeq = (() => {
-    if (!sequences || sequences.length === 0) return null;
-    if (dayOfWeek === 1) return sequences.find((s) => s.id === "danca-semana-1");
-    if (dayOfWeek === 3) return sequences.find((s) => s.id === "danca-semana-2");
-    if (dayOfWeek === 5) return sequences.find((s) => s.id === "danca-semana-3");
-    if (dayOfWeek === 2 || dayOfWeek === 4) return sequences.find((s) => s.id === "mobilidade-pelvica-matinal");
-    if (dayOfWeek === 6) return sequences.find((s) => s.id === "alongamento-pelvico-profundo");
-    if (dayOfWeek === 0) return sequences.find((s) => s.id === "pelvic-kegel-classico"); // domingo livre → pelvic
-    return null;
-  })();
-
-  const practiceToday = useLiveQuery(
-    async () => {
-      if (!suggestedSeq) return 0;
-      return db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === suggestedSeq.id).count();
-    },
-    [todayISO, suggestedSeq?.id],
-  );
-
-  const APRESENTACAO_IDS = [
-    "corporal-postura-sentar",
-    "corporal-caminhada",
-    "corporal-gestual-maos",
-    "corporal-olhar-expressao",
-  ];
-  const apresentacaoSeq = sequences?.find((s) => s.id === APRESENTACAO_IDS[dayOfWeek % 4]) ?? null;
-  const apresentacaoToday = useLiveQuery(
-    async () => {
-      if (!apresentacaoSeq) return 0;
-      return db.practiceLogs.where("date").equals(todayISO).and((p) => p.sequenceId === apresentacaoSeq.id).count();
-    },
-    [todayISO, apresentacaoSeq?.id],
-  );
 
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
@@ -185,118 +150,17 @@ export function Today() {
       </div>
 
       {focus && (
-        <TodayCard
-          title={`✦ ${focus.title}`}
-          subtitle={focus.subtitle}
-          to={focus.to}
-          variant="highlight"
-        />
+        <TodayCard title={`✦ ${focus.title}`} subtitle={focus.subtitle} to={focus.to} variant="highlight" />
       )}
 
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className="grid grid-cols-3 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
 
-      {todayTemplate ? (
-        <TodayCard
-          title={todayTemplate.name}
-          subtitle={`Treino · ${todayTemplate.durationMin} min · ${(sessionsToday ?? 0) > 0 ? "concluído ✓" : "ainda não feito"}`}
-          note={todayTemplate.purpose}
-          to={`/treino/sessao/${todayTemplate.id}`}
-          variant={(sessionsToday ?? 0) > 0 ? "default" : "highlight"}
-        />
-      ) : (
-        <TodayCard title="Descanso" subtitle="Hoje não tem treino programado" />
-      )}
-
-      <TodayCard
-        title="Hidratação"
-        subtitle={`${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`}
-        rightSlot={
-          <button
-            type="button"
-            onClick={() => void addWater(200)}
-            className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md"
-          >
-            +200ml
-          </button>
-        }
-      />
-
-      <TodayCard
-        title="Caminhada"
-        subtitle={`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`}
-        note="Esteira inclinada 8–12% · ~5 km/h · zona 2 (ofegante, mas ainda conversando)"
-        rightSlot={
-          <button
-            type="button"
-            onClick={() => void addWalk(10)}
-            className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md"
-          >
-            +10 min
-          </button>
-        }
-      />
-
-      <TodayCard
-        title="Refeições"
-        subtitle={`${mealsDone}/4 do plano`}
-        to="/refeicoes-hoje"
-        variant={mealsDone < 4 ? "highlight" : "default"}
-      />
-      <TodayCard
-        title="Diário"
-        subtitle={dailyLog?.mood ? `humor registrado` : "como foi o dia?"}
-        to="/trilha/diario"
-      />
-
-      {suggestedSeq && (
-        <TodayCard
-          title="Movimento"
-          subtitle={`${suggestedSeq.name} · ${suggestedSeq.durationMin} min · ${(practiceToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
-          note="Solta o quadril e treina o gingado — mobilidade que dá fluidez feminina"
-          to={`/treino/movimento/${suggestedSeq.id}`}
-          variant={(practiceToday ?? 0) === 0 ? "highlight" : "default"}
-        />
-      )}
-
-      <TodayCard
-        title="Postura"
-        subtitle={`Rotina diária · 7 min · ${(posturaDoneToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
-        note="Alinhamento que feminiliza a silhueta na hora — ombro pra trás, peito aberto"
-        to="/treino/movimento/postura-silhueta-diaria"
-        variant={(posturaDoneToday ?? 0) === 0 ? "highlight" : "default"}
-      />
-
-      {apresentacaoSeq && (
-        <TodayCard
-          title="Apresentação"
-          subtitle={`${apresentacaoSeq.name} · ${apresentacaoSeq.durationMin} min · ${(apresentacaoToday ?? 0) > 0 ? "feito ✓" : "pendente"}`}
-          note="Gestos, olhar e caminhada — a feminilização que aparece antes mesmo da TRH"
-          to={`/treino/movimento/${apresentacaoSeq.id}`}
-          variant={(apresentacaoToday ?? 0) === 0 ? "highlight" : "default"}
-        />
-      )}
-
-      {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
-        <TodayCard
-          title="Hora de medir"
-          subtitle={`Última medida há ${daysSinceMeasurement} dias`}
-          to="/corpo/medidas"
-          variant="highlight"
-        />
-      )}
-      {daysSincePhoto !== null && daysSincePhoto > 14 && (
-        <TodayCard
-          title="Hora de tirar fotos"
-          subtitle={`Última foto há ${daysSincePhoto} dias`}
-          to="/corpo/fotos"
-          variant="highlight"
-        />
-      )}
-
+      {/* BLOCO 1 — Cuidados ao acordar */}
+      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Cuidados ao acordar</h2>
       <TodayCard
         title="Skincare manhã"
         subtitle={
@@ -307,6 +171,57 @@ export function Today() {
         to="/beleza/pele-cabelo/skincare"
         variant={!morningDone && morningRoutines && morningRoutines.length > 0 ? "highlight" : "default"}
       />
+      {morningCare.map((c) => (
+        <TodayCard key={c.id} title={c.label} subtitle={c.cadence ?? (c.optional ? "se quiser" : "diário")} to={c.to} />
+      ))}
+
+      {/* BLOCO 2 — Treino + cardio */}
+      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Treino + cardio</h2>
+      {todayTemplate ? (
+        <TodayCard
+          title={todayTemplate.name}
+          subtitle={`Treino + cardio · ${todayTemplate.durationMin} min + zona 2 · ${(sessionsToday ?? 0) > 0 ? "concluído ✓" : "ainda não feito"}`}
+          note="Aquece curto → levanta peso → fecha com a zona 2 na MESMA esteira (cardio é finalizador, não aquecimento). Bater o cardio aqui já cumpre a caminhada do dia."
+          to={`/treino/sessao/${todayTemplate.id}`}
+          variant={(sessionsToday ?? 0) > 0 ? "default" : "highlight"}
+        />
+      ) : (
+        <TodayCard title="Descanso" subtitle="Hoje não tem treino — se quiser, faça só a caminhada zona 2" />
+      )}
+      <TodayCard
+        title="Caminhada / cardio zona 2"
+        subtitle={`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`}
+        note="Esteira inclinada 8–12% · ~5 km/h · zona 2 (ofegante, mas ainda conversando)"
+        rightSlot={
+          <button type="button" onClick={() => void addWalk(10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">
+            +10 min
+          </button>
+        }
+      />
+
+      {/* APOIO */}
+      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Apoio</h2>
+      <TodayCard
+        title="Hidratação"
+        subtitle={`${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`}
+        rightSlot={
+          <button type="button" onClick={() => void addWater(200)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">
+            +200ml
+          </button>
+        }
+      />
+      <TodayCard title="Refeições" subtitle={`${mealsDone}/4 do plano`} to="/refeicoes-hoje" />
+      <TodayCard title="Diário" subtitle={dailyLog?.mood ? "humor registrado" : "como foi o dia?"} to="/trilha/diario" />
+
+      {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
+        <TodayCard title="Hora de medir" subtitle={`Última medida há ${daysSinceMeasurement} dias`} to="/corpo/medidas" variant="highlight" />
+      )}
+      {daysSincePhoto !== null && daysSincePhoto > 14 && (
+        <TodayCard title="Hora de tirar fotos" subtitle={`Última foto há ${daysSincePhoto} dias`} to="/corpo/fotos" variant="highlight" />
+      )}
+
+      {/* BLOCO 3 — Antes de dormir */}
+      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Antes de dormir</h2>
       <TodayCard
         title="Skincare noite"
         subtitle={
@@ -317,6 +232,16 @@ export function Today() {
         to="/beleza/pele-cabelo/skincare"
         variant={!eveningDone && eveningRoutines && eveningRoutines.length > 0 ? "highlight" : "default"}
       />
+      {nightCare.map((c) => (
+        <TodayCard key={c.id} title={c.label} subtitle={c.cadence ?? "diário"} to={c.to} />
+      ))}
+      <TodayCard
+        title="Presença & intimidade"
+        subtitle={`Sugestão de hoje: ${presencaSeq.label}`}
+        note="Opcional, sem pressa. Postura, gingado, dança, mobilidade ou intimidade — pegue o que pedir o corpo."
+        to={presencaSeq.to}
+      />
+      <TodayCard title="Ver tudo de movimento" subtitle="postura · dança · gingado · intimidade · voz" to="/treino/movimento" />
     </div>
   );
 }
