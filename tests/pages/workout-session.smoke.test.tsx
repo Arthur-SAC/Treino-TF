@@ -22,13 +22,9 @@ describe("Workout session smoke", () => {
     await waitFor(() => expect(screen.getByText(/Glúteo A/)).toBeInTheDocument());
     expect(await screen.findByText(/Antes de começar/i)).toBeInTheDocument();
 
-    // Encontra o primeiro SessionRecorder (cardio leve), digita uma série, salva
-    const weightInputs = await screen.findAllByPlaceholderText("kg");
-    const repsInputs = await screen.findAllByPlaceholderText("reps");
-
-    fireEvent.change(weightInputs[0], { target: { value: "0" } });
-    fireEvent.change(repsInputs[0], { target: { value: "5" } });
-    fireEvent.click(screen.getAllByRole("button", { name: /salvar exercício/i })[0]);
+    // O primeiro exercício é cardio (por tempo): agora é só "Marcar feito", sem reps/peso
+    const marcarFeito = await screen.findAllByRole("button", { name: /marcar feito/i });
+    fireEvent.click(marcarFeito[0]);
 
     await waitFor(() => expect(screen.getByText(/Cardio leve .esteira ou bike. ✓/)).toBeInTheDocument());
 

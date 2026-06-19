@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icons/*.svg"],
       manifest: {
-        name: "Trein-Final",
-        short_name: "Trein-Final",
+        name: "Treino",
+        short_name: "Treino",
         description: "App pessoal de transição",
         lang: "pt-BR",
         theme_color: "#1a0a0e",

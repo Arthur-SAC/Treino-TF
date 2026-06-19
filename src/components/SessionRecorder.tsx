@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
-import { suggestNextLoad, isHoldLight } from "../lib/progression";
+import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, type LastPerformance } from "../lib/progression";
+import { formatDateBR } from "../lib/format";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 
@@ -19,11 +20,20 @@ function formatTime(s: number): string {
   return `${m}:${String(r).padStart(2, "0")}`;
 }
 
+/** Resumo legível da última vez: "40kg×12 · 40×12" ou "12 reps · 12". */
+function describeLast(last: LastPerformance): string {
+  return last.sets
+    .map((s) => (s.weight > 0 ? `${s.weight}kg×${s.reps}` : `${s.reps} reps`))
+    .join(" · ");
+}
+
 export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onSave }: Props) {
+  const timeBased = isTimeBased(repsTarget);
   const [sets, setSets] = useState<Array<{ reps: string; weight: string; done: boolean }>>(
     () => Array.from({ length: setsTarget }, () => ({ reps: "", weight: "", done: false })),
   );
   const [suggested, setSuggested] = useState<number | null>(null);
+  const [last, setLast] = useState<LastPerformance | null>(null);
   const [restRemaining, setRestRemaining] = useState<number | null>(null);
   const [restRunning, setRestRunning] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -38,20 +48,37 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
       .toArray()
       .then((prev) => {
         if (!mounted) return;
-        for (const session of prev) {
-          const found = session.exercises.find((e) => e.exerciseId === exercise.id);
-          if (found && found.sets.length > 0) {
-            const lastSet = found.sets[found.sets.length - 1];
-            const prevWeight = lastSet.weight;
-            const completedAllReps = found.sets.every((s) => s.reps > 0);
-            const prevFeedback = session.difficultySelf ?? "medium";
-            setSuggested(suggestNextLoad({ lastLoad: prevWeight, feedback: prevFeedback, completedAllReps, category: exercise.category }));
-            break;
-          }
-        }
+        const lastPerf = findLastPerformance(prev, exercise.id);
+        if (!lastPerf) return;
+        setLast(lastPerf);
+        if (timeBased) return;
+        const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
+        const completedAllReps = lastPerf.sets.every((s) => s.reps > 0);
+        setSuggested(
+          suggestNextLoad({
+            lastLoad: lastSet.weight,
+            feedback: lastPerf.feedback,
+            completedAllReps,
+            category: exercise.category,
+          }),
+        );
+        // Pré-preenche as séries com o que foi feito da última vez (a usuária ajusta).
+        setSets((prev) =>
+          prev.map((s, i) => {
+            if (s.done) return s;
+            const src = lastPerf.sets[i] ?? lastPerf.sets[lastPerf.sets.length - 1];
+            return {
+              ...s,
+              reps: String(src.reps),
+              weight: src.weight > 0 ? String(src.weight) : "",
+            };
+          }),
+        );
       });
-    return () => { mounted = false; };
-  }, [exercise.id]);
+    return () => {
+      mounted = false;
+    };
+  }, [exercise.id, timeBased]);
 
   useEffect(() => {
     if (!restRunning || restRemaining === null) return;
@@ -117,6 +144,37 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
     if (entry.sets.length > 0) onSave(entry);
   }
 
+  // ── Exercícios por TEMPO (cardio, aquecimento, isometria): só "feito" ──────
+  if (timeBased) {
+    return (
+      <div className="card mb-3">
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-nude-warm font-medium break-words flex-1 min-w-0">{exercise.name}</h3>
+          <button
+            type="button"
+            onClick={() => setShowInfo(true)}
+            className="text-muted hover:text-nude transition flex-shrink-0"
+            aria-label="Como fazer este exercício"
+          >
+            <InfoIcon />
+          </button>
+        </div>
+        <p className="text-muted text-xs mt-0.5">
+          {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
+        </p>
+        {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
+        <button
+          type="button"
+          onClick={() => onSave({ exerciseId: exercise.id, sets: [] })}
+          className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm mt-3"
+        >
+          Marcar feito
+        </button>
+        {showInfo && <ExerciseInfoModal exercise={exercise} onClose={() => setShowInfo(false)} />}
+      </div>
+    );
+  }
+
   return (
     <div className="card mb-3">
       {/* Header — quebra em linha 2 se nome longo */}
@@ -142,6 +200,11 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
       )}
       {exercise.successCue && (
         <p className="text-xs text-nude/80 mb-2">✦ {exercise.successCue}</p>
+      )}
+      {last && (
+        <p className="text-xs text-muted mb-2">
+          Última vez ({formatDateBR(new Date(last.date))}): {describeLast(last)}
+        </p>
       )}
       {suggested !== null ? (
         <button

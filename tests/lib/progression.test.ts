@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { suggestNextLoad, suggestNextHoldTime, isHoldLight } from "../../src/lib/progression";
+import { suggestNextLoad, suggestNextHoldTime, isHoldLight, isTimeBased, findLastPerformance } from "../../src/lib/progression";
 
 describe("suggestNextLoad", () => {
   it("fácil + carga <5kg → +0,5", () => {
@@ -59,5 +59,43 @@ describe("progressão consciente da categoria", () => {
   });
   it("sem categoria segue a lógica normal (retrocompat)", () => {
     expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true })).toBe(12);
+  });
+});
+
+describe("isTimeBased", () => {
+  it("detecta exercícios por tempo (minutos/segundos)", () => {
+    expect(isTimeBased("5-7min")).toBe(true);
+    expect(isTimeBased("5min")).toBe(true);
+    expect(isTimeBased("1min cada")).toBe(true);
+    expect(isTimeBased("30-45s")).toBe(true);
+    expect(isTimeBased("2min")).toBe(true);
+  });
+  it("não marca exercícios de repetição", () => {
+    expect(isTimeBased("12")).toBe(false);
+    expect(isTimeBased("10 cada")).toBe(false);
+    expect(isTimeBased("15 (LEVE)")).toBe(false);
+    expect(isTimeBased("15-20")).toBe(false);
+    expect(isTimeBased("8 + pausa")).toBe(false);
+  });
+});
+
+describe("findLastPerformance", () => {
+  const sessions = [
+    { date: "2026-06-18", difficultySelf: "medium" as const, exercises: [{ exerciseId: "hip-thrust", sets: [{ reps: 12, weight: 40 }, { reps: 12, weight: 40 }] }] },
+    { date: "2026-06-11", difficultySelf: "easy" as const, exercises: [{ exerciseId: "hip-thrust", sets: [{ reps: 10, weight: 35 }] }] },
+    { date: "2026-06-10", difficultySelf: "hard" as const, exercises: [{ exerciseId: "agacha", sets: [{ reps: 8, weight: 0 }] }] },
+  ];
+  it("retorna a sessão mais recente com o exercício (lista já vem ordenada desc)", () => {
+    const r = findLastPerformance(sessions, "hip-thrust");
+    expect(r?.date).toBe("2026-06-18");
+    expect(r?.sets).toEqual([{ reps: 12, weight: 40 }, { reps: 12, weight: 40 }]);
+    expect(r?.feedback).toBe("medium");
+  });
+  it("ignora sessões sem o exercício ou com sets vazios", () => {
+    const withEmpty = [{ date: "2026-06-19", exercises: [{ exerciseId: "hip-thrust", sets: [] }] }, ...sessions];
+    expect(findLastPerformance(withEmpty, "hip-thrust")?.date).toBe("2026-06-18");
+  });
+  it("retorna null se nunca foi feito", () => {
+    expect(findLastPerformance(sessions, "inexistente")).toBeNull();
   });
 });

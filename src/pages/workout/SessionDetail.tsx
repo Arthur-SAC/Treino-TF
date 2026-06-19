@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
@@ -20,6 +20,32 @@ export function SessionDetail() {
 
   const [recorded, setRecorded] = useState<WorkoutSession["exercises"]>([]);
   const [feedback, setFeedback] = useState<WorkoutSession["difficultySelf"]>("medium");
+  const sessionIdRef = useRef<number | undefined>(undefined);
+  const saveChain = useRef<Promise<void>>(Promise.resolve());
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
+  // que já foi registrado em vez de começar do zero.
+  useEffect(() => {
+    if (!templateId) return;
+    let mounted = true;
+    db.workoutSessions
+      .where("date")
+      .equals(todayISO)
+      .toArray()
+      .then((rows) => {
+        if (!mounted) return;
+        const existing = rows.find((r) => r.templateId === templateId);
+        if (existing) {
+          sessionIdRef.current = existing.id;
+          setRecorded(existing.exercises);
+          if (existing.difficultySelf) setFeedback(existing.difficultySelf);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [templateId, todayISO]);
 
   if (!template || !exercises) {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
@@ -27,16 +53,38 @@ export function SessionDetail() {
 
   const exMap = new Map<string, Exercise>(exercises.map((e) => [e.id, e]));
 
+  // Persiste o estado atual da sessão (upsert). As chamadas são SERIALIZADAS num
+  // encadeamento de promise pra não criar linhas duplicadas se "salvar" e
+  // "finalizar" dispararem quase juntos (o id real só existe após o 1º put).
+  function persist(
+    nextRecorded: WorkoutSession["exercises"],
+    nextFeedback: WorkoutSession["difficultySelf"],
+  ): Promise<void> {
+    if (!template) return saveChain.current;
+    const tplId = template.id;
+    const durationMin = template.durationMin;
+    saveChain.current = saveChain.current.then(async () => {
+      const id = (await db.workoutSessions.put({
+        id: sessionIdRef.current,
+        date: todayISO,
+        templateId: tplId,
+        exercises: nextRecorded,
+        durationMin,
+        difficultySelf: nextFeedback,
+      })) as number;
+      sessionIdRef.current = id;
+    });
+    return saveChain.current;
+  }
+
+  function handleSave(entry: WorkoutSession["exercises"][number]) {
+    const next = [...recorded, entry];
+    setRecorded(next);
+    void persist(next, feedback);
+  }
+
   async function finishSession() {
-    if (!template) return;
-    const session: Omit<WorkoutSession, "id"> = {
-      date: new Date().toISOString().slice(0, 10),
-      templateId: template.id,
-      exercises: recorded,
-      durationMin: template.durationMin,
-      difficultySelf: feedback,
-    };
-    await db.workoutSessions.add(session as WorkoutSession);
+    await persist(recorded, feedback);
     navigate("/treino", { replace: true });
   }
 
@@ -87,7 +135,7 @@ export function SessionDetail() {
             setsTarget={tplEx.sets}
             repsTarget={tplEx.repsTarget}
             restSec={tplEx.restSec}
-            onSave={(entry) => setRecorded((prev) => [...prev, entry])}
+            onSave={handleSave}
           />
         );
       })}
