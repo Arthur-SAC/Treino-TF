@@ -54,7 +54,31 @@
       "WebSearch",
       "PowerShell(Test-Path \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\"; & \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" --version)",
       "Bash(npx vitest *)",
-      "PowerShell(npx vitest run 2>&1 | Select-Object -Last 60)"
+      "PowerShell(npx vitest run 2>&1 | Select-Object -Last 60)",
+      "Skill(run)",
+      "PowerShell(Test-Path node_modules/playwright; Test-Path node_modules/.bin/playwright.cmd; \\(Get-Command chromium-cli -ErrorAction SilentlyContinue\\); \\(Get-Command chrome -ErrorAction SilentlyContinue\\) | Select-Object -First 1; Test-Path \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"; Test-Path \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\")",
+      "PowerShell($ok=$false; for\\($i=0;$i -lt 20;$i++\\){ try{ $r=Invoke-WebRequest -Uri \"http://localhost:5173/Treino-TF/\" -UseBasicParsing -TimeoutSec 2; if\\($r.StatusCode -eq 200\\){$ok=$true; break} }catch{ Start-Sleep -Milliseconds 800 } }; \"ready=$ok\")",
+      "PowerShell(Remove-Item *)",
+      "PowerShell($prof = \"$env:TEMP\\\\chrome-dom-profile\"; & \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --headless=new --disable-gpu --no-first-run --user-data-dir=\"$prof\" --virtual-time-budget=10000 --dump-dom \"http://localhost:5173/Treino-TF/\" 2>$null | Select-String -Pattern \"root|Bom dia|Hoje|onboarding|Vamos|Treino|Cuidados|error|Error\" | Select-Object -First 20)",
+      "PowerShell(try{ $r=Invoke-WebRequest \"http://localhost:5173/Treino-TF/\" -UseBasicParsing -TimeoutSec 3; \"dev 5173: $\\($r.StatusCode\\)\" }catch{ \"dev 5173: DOWN\" }; try{ $r2=Invoke-WebRequest \"http://localhost:4173/Treino-TF/\" -UseBasicParsing -TimeoutSec 3; \"preview 4173: $\\($r2.StatusCode\\)\" }catch{ \"preview 4173: DOWN\" })",
+      "Bash(bash __TRACKED_VAR__/scripts/review-package 21bbd0f 511d06e)",
+      "Bash(bash __TRACKED_VAR__/scripts/task-brief docs/superpowers/plans/2026-06-25-estilo-combinacoes-discricao.md 2)",
+      "Bash(bash __TRACKED_VAR__/scripts/review-package 511d06e edb8d12)",
+      "Bash(sed -i 's/- \\\\[ \\\\] Task 2:/- [x] Task 2:/' .superpowers/sdd/progress.md)",
+      "Bash(echo \"Task 2: complete \\(commits 511d06e..$\\(git rev-parse --short HEAD\\), review approved; 2 minor brief defects corrigidos: id typo + fitTip duplicada do cardigan-curto\\)\")",
+      "Bash(bash __TRACKED_VAR__/scripts/task-brief docs/superpowers/plans/2026-06-25-estilo-combinacoes-discricao.md 3)",
+      "Bash(bash __TRACKED_VAR__/scripts/review-package 7fef496 34259e8)",
+      "Bash(sed -i 's/- \\\\[ \\\\] Task 3:/- [x] Task 3:/' .superpowers/sdd/progress.md)",
+      "Bash(echo \"Task 3: complete \\(commits 7fef496..34259e8, review approved; minor: link /novo resolvido na Task 4, hover/40 é padrão existente\\)\")",
+      "Bash(bash __TRACKED_VAR__/scripts/task-brief docs/superpowers/plans/2026-06-25-estilo-combinacoes-discricao.md 4)",
+      "Bash(bash __TRACKED_VAR__/scripts/review-package 34259e8 deed754)",
+      "Bash(sed -i 's/- \\\\[ \\\\] Task 4:/- [x] Task 4:/' .superpowers/sdd/progress.md)",
+      "Bash(echo \"Task 4: complete \\(commits 34259e8..deed754, review approved após adjudicação; 'Important' hover:text-red-300 = convenção universal de apagar no app, mantido por consistência; 2 minor herdados do brief não-bloqueantes\\)\")",
+      "Bash(bash __TRACKED_VAR__/scripts/task-brief docs/superpowers/plans/2026-06-25-estilo-combinacoes-discricao.md 5)",
+      "Bash(bash __TRACKED_VAR__/scripts/review-package deed754 45c4583)",
+      "Bash(sed -i 's/- \\\\[ \\\\] Task 5:/- [x] Task 5:/' .superpowers/sdd/progress.md)",
+      "Bash(echo \"Task 5: complete \\(commits deed754..45c4583, review approved; 2 minor não-bloqueantes: perf in-memory filter, cobertura do filtro Livre\\)\")",
+      "Bash(bash __TRACKED_VAR__/scripts/task-brief docs/superpowers/plans/2026-06-25-estilo-combinacoes-discricao.md 6)"
     ]
   }
 }

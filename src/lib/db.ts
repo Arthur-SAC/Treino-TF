@@ -181,6 +181,8 @@ export interface Garment {
   whyItWorks: string;
   cautions?: string;
   imagePath?: string;
+  discretion: "discreto" | "livre";   // passa despercebido no dia a dia × só casa/noiva
+  fitTip?: string;                     // dica de corte/caimento/tamanho
 }
 
 export interface Look {
@@ -199,6 +201,19 @@ export interface WishlistItem {
   url?: string;
   imagePath?: string;
   notes?: string;
+}
+
+export interface Outfit {
+  id?: number;
+  name: string;
+  context: "discreto" | "livre";       // dia a dia × casa/noiva
+  occasion: string;                    // trabalho, casual, sair, casa…
+  pieces: string[];                    // peças que compõem o look (texto livre)
+  whyItWorks: string;
+  silhouetteNote: string;              // efeito na silhueta (cria cintura / disfarça barriga)
+  status: "ideia" | "comprando" | "tenho" | "testei";
+  notes?: string;
+  lookId?: number;                     // status "testei" pode linkar a um Look
 }
 
 export interface Milestone {
@@ -307,6 +322,7 @@ export class TreinFinalDB extends Dexie {
   garments!: Table<Garment, string>;
   looks!: Table<Look, number>;
   wishlist!: Table<WishlistItem, number>;
+  outfits!: Table<Outfit, number>;
   milestones!: Table<Milestone, number>;
   dailyLog!: Table<DailyLog, string>;
   settings!: Table<Setting, string>;
@@ -357,6 +373,9 @@ export class TreinFinalDB extends Dexie {
     });
     this.version(7).stores({
       hairRemovalSessions: "++id, date, area, method",
+    });
+    this.version(8).stores({
+      outfits: "++id, context, status",
     });
   }
 }

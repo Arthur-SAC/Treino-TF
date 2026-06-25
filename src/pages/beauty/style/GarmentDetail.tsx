@@ -26,6 +26,13 @@ export function GarmentDetail() {
         <p className="text-sm">{garment.whyItWorks}</p>
       </div>
 
+      {garment.fitTip && (
+        <div className="card mb-3">
+          <h2 className="text-nude-warm font-medium mb-2">Caimento / corte</h2>
+          <p className="text-sm">{garment.fitTip}</p>
+        </div>
+      )}
+
       {garment.cautions && (
         <div className="card !bg-wine/20 !border-wine-light">
           <h2 className="text-nude font-medium mb-2">Cuidado</h2>

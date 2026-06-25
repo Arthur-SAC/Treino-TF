@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const ITEMS = [
   { to: "/beleza/estilo", label: "Paleta", end: true },
   { to: "/beleza/estilo/pecas", label: "Peças" },
+  { to: "/beleza/estilo/combinacoes", label: "Combinações" },
   { to: "/beleza/estilo/looks", label: "Looks" },
   { to: "/beleza/estilo/wishlist", label: "Wishlist" },
   { to: "/beleza/estilo/intimo", label: "Íntimo" },
