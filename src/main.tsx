@@ -28,6 +28,7 @@ import { LooksView } from "./pages/beauty/style/LooksView";
 import { LookNew } from "./pages/beauty/style/LookNew";
 import { WishlistView } from "./pages/beauty/style/WishlistView";
 import { IntimateView } from "./pages/beauty/style/IntimateView";
+import { CombosView } from "./pages/beauty/style/CombosView";
 import { DiscreetView } from "./pages/beauty/style/DiscreetView";
 import { SkincareHome } from "./pages/beauty/SkincareHome";
 import { SkincareNew } from "./pages/beauty/SkincareNew";
@@ -102,6 +103,7 @@ const router = createBrowserRouter(
         { path: "beleza/estilo", element: <PaletteView /> },
         { path: "beleza/estilo/pecas", element: <GarmentsView /> },
         { path: "beleza/estilo/pecas/:id", element: <GarmentDetail /> },
+        { path: "beleza/estilo/combinacoes", element: <CombosView /> },
         { path: "beleza/estilo/looks", element: <LooksView /> },
         { path: "beleza/estilo/looks/novo", element: <LookNew /> },
         { path: "beleza/estilo/wishlist", element: <WishlistView /> },
