@@ -146,7 +146,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "trabalho"],
     whyItWorks: "Pára na cintura, mantendo o ponto focal alto sem cobrir o quadril.",
     discretion: "discreto",
-    fitTip: "Pára na cintura, mantendo o ponto focal alto sem cobrir o quadril.",
+    fitTip: "Comprimento que pare na linha da cintura. Em malha mais encorpada, abre reto e cria camada vertical sobre a barriga.",
   },
   {
     id: "blusa-ombro-cair",
@@ -185,7 +185,7 @@ export const GARMENTS: Garment[] = [
     fitTip: "Cintura alta + caimento reto/leve flare. Tecido com estrutura (não fino) esconde o ventre; barra na altura do sapato alonga.",
   },
   {
-    id: "camisa-estruturada-entallada",
+    id: "camisa-estruturada-entalhada",
     name: "Camisa de botão estruturada (leve entalhe)",
     category: "top",
     occasion: ["trabalho", "casual"],
