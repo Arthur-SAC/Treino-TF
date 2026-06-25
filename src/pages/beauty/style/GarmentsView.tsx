@@ -14,16 +14,22 @@ const CATEGORIES: Array<{ value: Garment["category"] | "all"; label: string }> =
   { value: "outerwear", label: "Casacos" },
 ];
 
+const DISCRETIONS: Array<{ value: Garment["discretion"] | "all"; label: string }> = [
+  { value: "all", label: "Todas" },
+  { value: "discreto", label: "Discreto" },
+  { value: "livre", label: "Casa/Livre" },
+];
+
 export function GarmentsView() {
   const [filter, setFilter] = useState<Garment["category"] | "all">("all");
+  const [discretion, setDiscretion] = useState<Garment["discretion"] | "all">("all");
   const garments = useLiveQuery(async () => {
-    if (filter === "all") {
-      // exclui íntimas (aparecem só na aba Íntimo)
-      const all = await db.garments.toArray();
-      return all.filter((g) => g.category !== "intimate");
-    }
-    return db.garments.where("category").equals(filter).toArray();
-  }, [filter]);
+    const all = await db.garments.toArray();
+    return all
+      .filter((g) => g.category !== "intimate") // íntimas só na aba Íntimo
+      .filter((g) => filter === "all" || g.category === filter)
+      .filter((g) => discretion === "all" || g.discretion === discretion);
+  }, [filter, discretion]);
 
   return (
     <div className="p-4 pb-24">
@@ -34,7 +40,7 @@ export function GarmentsView() {
       <BeautyTabs />
       <StyleTabs />
 
-      <div className="overflow-x-auto -mx-4 px-4 mb-4">
+      <div className="overflow-x-auto -mx-4 px-4 mb-2">
         <div className="flex gap-2 w-max">
           {CATEGORIES.map((c) => (
             <button
@@ -46,6 +52,23 @@ export function GarmentsView() {
               }`}
             >
               {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto -mx-4 px-4 mb-4">
+        <div className="flex gap-2 w-max">
+          {DISCRETIONS.map((d) => (
+            <button
+              key={d.value}
+              type="button"
+              onClick={() => setDiscretion(d.value)}
+              className={`px-3 py-1.5 rounded-pill text-xs whitespace-nowrap ${
+                discretion === d.value ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
+              }`}
+            >
+              {d.label}
             </button>
           ))}
         </div>
