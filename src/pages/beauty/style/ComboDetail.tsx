@@ -18,25 +18,36 @@ export function ComboDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const outfit = useLiveQuery(
-    async () => (id ? await db.outfits.get(Number(id)) : undefined),
+    async () => (id ? (await db.outfits.get(Number(id))) ?? null : null),
     [id],
+    "loading" as const,
   );
 
-  if (!outfit) {
+  if (outfit === "loading") {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
   }
-
-  async function setStatus(s: Outfit["status"]) {
-    if (outfit?.id == null) return;
-    await db.outfits.update(outfit.id, { status: s });
+  if (!outfit) {
+    return (
+      <div className="p-4 pb-24">
+        <div className="mb-4 flex items-center gap-3">
+          <Link to="/beleza/estilo/combinacoes" className="text-muted text-sm">&larr; Combinações</Link>
+        </div>
+        <p className="text-muted text-sm">Combinação não encontrada.</p>
+      </div>
+    );
   }
 
-  async function remove() {
-    if (outfit?.id == null) return;
+  const setStatus = async (s: Outfit["status"]) => {
+    if (outfit.id == null) return;
+    await db.outfits.update(outfit.id, { status: s });
+  };
+
+  const remove = async () => {
+    if (outfit.id == null) return;
     if (!confirm("Apagar esta combinação?")) return;
     await db.outfits.delete(outfit.id);
     navigate("/beleza/estilo/combinacoes", { replace: true });
-  }
+  };
 
   return (
     <div className="p-4 pb-24">
@@ -49,7 +60,7 @@ export function ComboDetail() {
       <div className="card mb-3">
         <h2 className="text-nude-warm font-medium mb-2">Peças</h2>
         <ul className="space-y-1 text-sm list-disc pl-5">
-          {outfit.pieces.map((p) => <li key={p}>{p}</li>)}
+          {outfit.pieces.map((p, i) => <li key={i}>{p}</li>)}
         </ul>
       </div>
 

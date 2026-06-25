@@ -27,7 +27,9 @@ export function OutfitCard({ outfit }: { outfit: Outfit }) {
       </div>
       <h3 className="text-nude-warm font-medium">{outfit.name}</h3>
       <p className="text-muted text-xs mt-1">{outfit.pieces.join(" · ")}</p>
-      <p className="text-nude-warm/80 text-xs mt-1">{outfit.silhouetteNote}</p>
+      {outfit.silhouetteNote && (
+        <p className="text-nude-warm/80 text-xs mt-1">{outfit.silhouetteNote}</p>
+      )}
     </Link>
   );
 }
