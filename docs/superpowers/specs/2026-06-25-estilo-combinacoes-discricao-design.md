@@ -22,6 +22,11 @@ O módulo Estilo hoje tem um catálogo de **peças avulsas** (muitas abertamente
 - `Looks` — fotos do que vestiu, com rating.
 - `Wishlist` — peças avulsas pra comprar.
 - `Íntimo` — catálogo íntimo/sensual.
+- `Discreto` — **guia já existente** (`GuideAccordion` sobre `ESTILO_DISCRETO`): escada de níveis (do imperceptível ao ousado em espaço seguro), "o que passa → como puxar pro feminino" por categoria, e lista de **peças-curinga andróginas**. É conteúdo estático, sem combinações nem acompanhamento de compra/teste.
+
+### Por que ainda falta algo
+
+A aba `Discreto` já cobre os **princípios** (níveis, categorias, curingas) e a parte conceitual do eixo de discrição. O que **não existe** e é o pedido central da usuária: **combinações montadas como itens acompanháveis** — conjuntos concretos (top + baixo + acessório + cor) com *status* `ideia → comprando → tenho → testei`, pra ir comprando e testando. Este design entrega isso e evita duplicar o guia Discreto (a tela de Combinações **linka** pra ele em vez de reexplicar os princípios).
 
 ## Decisões de design
 
@@ -83,15 +88,13 @@ Schema Dexie: `outfits: "++id, context, status"`.
 
 **~6 combinações seed:** ~4 **discretas** (trabalho neutro, casual fim de semana, camadas verticais, etc.) + ~2 **livres** (casa/com a noiva), já montadas com `whyItWorks` + `silhouetteNote`, prontas pra comprar/testar (status inicial `"ideia"`).
 
-**Card "Princípios"** no topo da aba Combinações — texto curto explicando a lógica:
-- Não é a roupa ser feminina; é o corte/caimento/tamanho que molda a silhueta.
-- Barriga: linha vertical afina; tecido que desliza (não cola) disfarça; ponto focal alto na cintura cria ampulheta.
+**Sem card de Princípios próprio** (evita duplicar a aba Discreto). No topo da `CombosView` entra apenas um link curto: "Os princípios estão na aba **Discreto**" apontando pra `/beleza/estilo/discreto`.
 
 ### 3. Navegação e telas
 
-- **`StyleTabs`** ganha a aba **Combinações** entre Peças e Looks:
-  `Paleta · Peças · Combinações · Looks · Wishlist · Íntimo`.
-- **`CombosView`** (`src/pages/beauty/style/CombosView.tsx`) — lista de combinações com filtro **Discreto / Livre / Todas** e por status; card (`OutfitCard`) mostra nome, peças, `silhouetteNote` e status. Card de Princípios no topo. Botão "+ novo".
+- **`StyleTabs`** ganha a aba **Combinações** entre Peças e Looks (a aba `Discreto`, que já existe, continua no fim):
+  `Paleta · Peças · Combinações · Looks · Wishlist · Íntimo · Discreto`.
+- **`CombosView`** (`src/pages/beauty/style/CombosView.tsx`) — lista de combinações com filtro **Discreto / Livre / Todas** e por status; card (`OutfitCard`) mostra nome, peças, `silhouetteNote` e status. No topo, link curto pra aba Discreto (princípios). Botão "+ novo".
 - **`ComboNew`** (`src/pages/beauty/style/ComboNew.tsx`) — criar combinação própria (nome, contexto, ocasião, peças, por que funciona, nota de silhueta, status).
 - **`ComboDetail`** (`src/pages/beauty/style/ComboDetail.tsx`) — ver/editar e avançar o status (ideia → comprando → tenho → testei); apagar.
 - **`GarmentsView`** (Peças) ganha o mesmo filtro **Discreto / Livre**, somado ao filtro de categoria existente — assim a aba que já existe passa a priorizar o dia a dia discreto.
