@@ -6,6 +6,7 @@ import { BeautyTabs } from "../../components/BeautyTabs";
 import { DisclaimerCard } from "../../components/DisclaimerCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { FOLICULITE_GUIDE } from "../../data/foliculite-guide-seed";
+import { DEPILACAO_STRATEGY } from "../../data/depilacao-strategy-seed";
 import { formatDateBR } from "../../lib/format";
 
 const AREA_LABEL: Record<HairRemovalSession["area"], string> = {
@@ -66,6 +67,9 @@ export function DepilacaoHome() {
       <BeautyTabs />
 
       <DisclaimerCard text="Laser e luz pulsada precisam de profissional. Pra área íntima e rosto, procura clínica especializada — feito errado mancha ou queima. Laser são 8-10 sessões pra resultado duradouro." />
+
+      <h2 className="text-muted text-xs uppercase tracking-wider mt-4 mb-2">Estratégia (barba, sombra, corpo)</h2>
+      <GuideAccordion sections={DEPILACAO_STRATEGY} />
 
       <h2 className="text-muted text-xs uppercase tracking-wider mt-4 mb-2">Foliculite e pelos encravados</h2>
       <GuideAccordion sections={FOLICULITE_GUIDE} />
