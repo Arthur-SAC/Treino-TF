@@ -115,10 +115,9 @@ export function SessionDetail() {
           {
             id: "ao-terminar",
             title: "Ao terminar",
-            intro: "Fechamento rápido, sem alongar demais.",
+            intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
-              "Alonga 3-5 min o glúteo e o quadril que você treinou — ou deixa pro alongamento da noite, tanto faz.",
-              "Cardio do dia: seu passeio com os cães (1h) já conta como zona 2. Não precisa de 30 min extras. Se num dia não caminhou, faz 10-15 min de bike/esteira leve aqui.",
+              "Cardio do dia: seu passeio com os cães (1h) já conta como zona 2. Se num dia não caminhou, faz 10-15 min de bike/esteira leve aqui.",
               "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
