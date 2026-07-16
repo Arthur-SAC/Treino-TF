@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../lib/db";
@@ -9,9 +10,10 @@ import { CYCLE_TO_GOAL } from "../data/cycles-seed";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
-import { buildDayRoutine, type RoutineItem } from "../lib/today-routine";
+import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import { RoutineRow } from "../components/RoutineRow";
+import { RecipeModal } from "../components/RecipeModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 
 export function Today() {
@@ -138,6 +140,7 @@ export function Today() {
 
   const routine = buildDayRoutine(dayOfWeek);
   const { done, toggle } = useRoutineChecks(todayISO);
+  const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -209,12 +212,15 @@ export function Today() {
               onToggle={() => void toggle(item.id)}
               rightSlot={rightSlotFor(item)}
               navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
+              onOpen={item.control === "recipe" && item.mealType ? () => setRecipeMealType(item.mealType!) : undefined}
             />
           ))}
         </section>
       ))}
 
       <ShortcutsGrid />
+
+      {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
     </div>
   );
 }

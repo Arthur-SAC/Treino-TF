@@ -8,6 +8,7 @@ export interface RoutineRowProps {
   onToggle: () => void;
   rightSlot?: ReactNode;
   navValue?: string;
+  onOpen?: () => void; // itens control:"recipe": abre a receita ao tocar no corpo
 }
 
 function Body({ item, done }: { item: RoutineItem; done: boolean }) {
@@ -31,7 +32,7 @@ function Box({ done }: { done: boolean }) {
   );
 }
 
-export function RoutineRow({ item, done, onToggle, rightSlot, navValue }: RoutineRowProps) {
+export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }: RoutineRowProps) {
   const isLink = item.control === "link";
   const cls = `card flex items-start gap-3 ${item.optional ? "opacity-90" : ""}`;
 
@@ -42,6 +43,21 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue }: Routin
         <Body item={item} done={done} />
         <span className="flex-none self-center text-xs text-nude">{navValue ?? (done ? "feito ✓" : "ver →")}</span>
       </Link>
+    );
+  }
+
+  // Refeição: a caixinha marca como feita; o corpo abre a receita num card.
+  if (item.control === "recipe" && onOpen) {
+    return (
+      <div className={cls}>
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+          <Box done={done} />
+        </button>
+        <button type="button" onClick={onOpen} aria-label={item.label} className="flex-1 min-w-0 text-left">
+          <Body item={item} done={done} />
+        </button>
+        <span className="flex-none self-center text-xs text-nude">receita →</span>
+      </div>
     );
   }
 

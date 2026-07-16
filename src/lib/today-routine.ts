@@ -4,8 +4,9 @@
 // NÃO são marcados aqui; refletem o estado do módulo correspondente.
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
-export type RoutineControl = "check" | "water" | "walk" | "breaks" | "invert" | "link";
+export type RoutineControl = "check" | "water" | "walk" | "breaks" | "invert" | "link" | "recipe";
 export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout";
+export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
   id: string;
@@ -17,6 +18,7 @@ export interface RoutineItem {
   control?: RoutineControl;
   optional?: boolean;
   linkKey?: RoutineLinkKey;
+  mealType?: RoutineMealType; // itens control:"recipe" abrem a receita dessa refeição
 }
 
 export interface RoutineBlockGroup {
@@ -35,18 +37,18 @@ const MANHA: RoutineItem[] = [
   { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento" },
   { id: "skincare-manha", block: "manha", label: "Skincare manhã", to: "/beleza/pele-cabelo/skincare", control: "link", linkKey: "skincareMorning" },
-  { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver o preparo · não esquece a marmita", to: "/refeicoes-hoje" },
+  { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe" },
 ];
 
 const TRABALHO: RoutineItem[] = [
-  { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Proteína + feijão/macaxeira + legume", to: "/refeicoes-hoje" },
+  { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco" },
   { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" },
   { id: "agua", block: "trabalho", label: "Água", control: "water" },
 ];
 
 function tardeSemana(): RoutineItem[] {
   return [
-    { id: "lanche-saida", block: "tarde", label: "Lanche da saída (pré-treino)", subtitle: "Banana + ovos ou tapioca+ovo — pra chegar no treino com energia", to: "/refeicoes-hoje" },
+    { id: "lanche-saida", block: "tarde", label: "Lanche da saída (pré-treino)", subtitle: "Toque pra ver a receita · pra chegar no treino com energia", control: "recipe", mealType: "lanche" },
     { id: "caes", block: "tarde", label: "Passear com os cães · 1h", subtitle: "Dá pra fazer antes ou depois do treino", control: "invert" },
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout" },
   ];
@@ -54,6 +56,7 @@ function tardeSemana(): RoutineItem[] {
 
 const NOITE: RoutineItem[] = [
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamento axila/virilha + hidratante corpo", to: "/beleza/pele-cabelo/skincare", control: "link", linkKey: "skincareNight" },
+  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "jantar" },
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda + quadril e assoalho pélvico", to: "/treino/movimento" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },

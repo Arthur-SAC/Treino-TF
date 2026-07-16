@@ -3,13 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
 import { getActiveMealPlan } from "../../lib/meal-plan";
-
-const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
-  cafe: "Café da manhã",
-  almoco: "Almoço",
-  lanche: "Lanche",
-  jantar: "Jantar",
-};
+import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
 
 function todayISO(): string {
   const d = new Date();
@@ -118,36 +112,7 @@ export function MealsToday() {
         })}
       </div>
 
-      {recipeOf && (() => {
-        const idx = MEAL_ORDER.find((o) => o.type === recipeOf)?.index ?? 0;
-        const meal = meals?.find((m) => m.mealType === recipeOf);
-        const foods = meal?.foods ?? plan.defaultMeals[idx] ?? [];
-        const recipeFoods = foods.filter((f) => f.preparation);
-        return (
-          <div
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4"
-            onClick={() => setRecipeOf(null)}
-          >
-            <div
-              className="card w-full max-w-md max-h-[80vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="font-serif text-xl text-nude">{MEAL_TYPE_LABEL[recipeOf]} · preparo</h2>
-                <button type="button" onClick={() => setRecipeOf(null)} aria-label="Fechar" className="text-muted text-lg px-2">✕</button>
-              </div>
-              <ul className="space-y-3">
-                {recipeFoods.map((f, j) => (
-                  <li key={j}>
-                    <p className="text-nude-warm text-sm font-medium">{f.name}</p>
-                    <p className="text-muted text-xs mt-1 leading-relaxed">{f.preparation}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        );
-      })()}
+      {recipeOf && <RecipeModal mealType={recipeOf} onClose={() => setRecipeOf(null)} />}
     </div>
   );
 }
