@@ -23,7 +23,9 @@ Transformar o Trein-Final no app único e definitivo que guia **todas as frentes
 
 ## 3. Equipamentos disponíveis (academia do prédio)
 
-Bicicleta **horizontal/reclinada** (cardio baixo impacto), esteira Olympikus, máquina **adutora/abdutora** Olympikus M3, multiestação (polia **alta** OK; polia **baixa é curta**), banco com suporte de barra, espaldar + barra, step, bola suíça, caneleiras (~até 3 kg), halteres/anilhas/barra reta e W. **Sem Smith.** Não há leg press isolado evidente (a multiestação pode cobrir).
+**Leg press 45°** (básica, de anilhas — plataforma quadrada meio pequena; ver nota de coaching abaixo), bicicleta **horizontal/reclinada** (cardio baixo impacto), esteira Olympikus, máquina **adutora/abdutora** Olympikus M3, multiestação (polia **alta** OK; polia **baixa é curta**), banco com suporte de barra, espaldar + barra, step, bola suíça, caneleiras (~até 3 kg), halteres/anilhas/barra reta e W. **Sem Smith.**
+
+**Leg press pra glúteo (plataforma pequena):** pés **altos** e levemente abertos na plataforma, ponta dos pés um pouco pra fora, empurrar pelo **calcanhar**, descer com boa amplitude (joelho em direção ao peito) **sem** o lombar/quadril descolarem do encosto. Se a plataforma apertar o pé, usar **leg press unilateral** (um pé por vez) — ganha espaço e recruta mais glúteo. Pés baixos = mais quadríceps (evitar pro objetivo).
 
 ---
 
