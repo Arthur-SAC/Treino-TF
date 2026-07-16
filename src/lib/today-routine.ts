@@ -35,7 +35,7 @@ const MANHA: RoutineItem[] = [
   { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento" },
   { id: "skincare-manha", block: "manha", label: "Skincare manhã", to: "/beleza/pele-cabelo/skincare", control: "link", linkKey: "skincareMorning" },
-  { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Tapioca/cuscuz + ovo · não esquece a marmita" },
+  { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver o preparo · não esquece a marmita", to: "/refeicoes-hoje" },
 ];
 
 const TRABALHO: RoutineItem[] = [

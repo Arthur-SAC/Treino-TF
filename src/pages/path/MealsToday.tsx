@@ -102,6 +102,18 @@ export function MealsToday() {
                   <li key={j}>{f.name}</li>
                 ))}
               </ul>
+              {foods.some((f) => f.preparation) && (
+                <details className="mt-2 ml-9">
+                  <summary className="text-nude text-xs cursor-pointer">Modo de preparo</summary>
+                  <ul className="mt-1.5 space-y-2">
+                    {foods.filter((f) => f.preparation).map((f, j) => (
+                      <li key={j} className="text-xs text-muted leading-relaxed">
+                        <span className="text-nude-warm">{f.name}: </span>{f.preparation}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
             </div>
           );
         })}
