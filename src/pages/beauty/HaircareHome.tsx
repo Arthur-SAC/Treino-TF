@@ -44,22 +44,22 @@ export function HaircareHome() {
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
         <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
-        <h1 className="font-serif text-2xl text-nude flex-1">Cabelo · jornada de crescimento</h1>
+        <h1 className="font-serif text-2xl text-nude flex-1">Cabelo · corte do cacho</h1>
       </div>
       <BeautyTabs />
 
       <p className="text-muted text-sm mb-4">
-        Objetivo: crescer os cachos saudáveis até um pouco abaixo dos ombros. Constância no
-        cronograma + retenção de comprimento é o que entrega.
+        Objetivo: feminizar o cacho sem depender de comprimento — corte andrógino→feminino
+        (franja cortina + camadas que emolduram + volume no topo) e cacho saudável com a linha Juba.
       </p>
 
       <GuideAccordion sections={HAIR_GUIDE} className="mb-4" />
 
       <div className="card mb-4">
-        <h2 className="text-nude-warm font-medium mb-2">Cronograma capilar — crescimento saudável</h2>
+        <h2 className="text-nude-warm font-medium mb-2">Cronograma capilar — cacho saudável</h2>
         <p className="text-muted text-sm mb-3">
-          Hidratação semanal · Nutrição quinzenal · Reconstrução mensal.
-          Não passa proteína (reconstrução) toda semana — em excesso quebra fios.
+          Hidratação/nutrição pela máscara Juba 1–2x/semana · Reconstrução LEVE ~1x a cada 15–30 dias.
+          Não passa proteína (reconstrução) toda semana — em excesso endurece e quebra o fio.
         </p>
         <ul className="space-y-1 text-sm">
           {(["hidratacao", "nutricao", "reconstrucao"] as const).map((t) => (
