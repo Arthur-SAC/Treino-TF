@@ -136,7 +136,6 @@ export function Today() {
     }
   }
 
-  const now = new Date();
   const routine = buildDayRoutine(dayOfWeek);
   const { done, toggle } = useRoutineChecks(todayISO);
 
@@ -176,14 +175,14 @@ export function Today() {
     return item.subtitle;
   };
 
-  const activeFocus = focus ?? timeBlockFocus(now.getHours(), dayOfWeek);
+  const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
 
   return (
     <div className="p-4 pb-24 space-y-3">
       <div className="flex justify-between items-start">
         <div>
           <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
-          <h1 className="font-serif text-2xl text-nude">{now.getHours() < 12 ? "Bom dia" : now.getHours() < 18 ? "Boa tarde" : "Boa noite"}</h1>
+          <h1 className="font-serif text-2xl text-nude">{today.getHours() < 12 ? "Bom dia" : today.getHours() < 18 ? "Boa tarde" : "Boa noite"}</h1>
         </div>
         <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
       </div>
