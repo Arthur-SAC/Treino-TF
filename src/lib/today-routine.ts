@@ -76,12 +76,14 @@ function buildBlocks(dayOfWeek: number): RoutineBlockGroup[] {
         ] }
       : { id: "tarde", label: "Fim de tarde", timeHint: "16h30", items: tardeSemana() };
 
-  const semanaItems: RoutineItem[] = [
-    { id: "exame-vitd", block: "semana", label: "Marcar exame: vitamina D · ferro · B12", subtitle: "Tem no SUS · resolve o cansaço na raiz", to: "/trilha" },
-  ];
+  const semanaItems: RoutineItem[] = [];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
   if (!isSunday) semanaItems.push({ id: "lembrete-domingo-marmita", block: "semana", label: "Domingo · marmita da semana", to: "/trilha/alimentacao" });
-  if (isSunday) semanaItems.unshift({ id: "marmita-domingo", block: "semana", label: "Marmita da semana", subtitle: "Frango + ovos + feijão + macaxeira + legumes", to: "/trilha/alimentacao" });
+  if (isSunday) {
+    semanaItems.unshift({ id: "marmita-domingo", block: "semana", label: "Marmita da semana", subtitle: "Frango + ovos + feijão + macaxeira + legumes", to: "/trilha/alimentacao" });
+    // Vitamina D semanal: tomada no domingo junto da marmita (refeição com gordura).
+    semanaItems.push({ id: "vitamina-d", block: "semana", label: "Vitamina D · 10.000 UI (semanal)", subtitle: "Toma junto de uma refeição com gordura — resolve o cansaço" });
+  }
 
   return [
     { id: "manha", label: "Manhã", timeHint: "~6h", items: MANHA },

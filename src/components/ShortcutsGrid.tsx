@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 interface Shortcut { icon: string; label: string; sub: string; to: string }
 
 const SHORTCUTS: Shortcut[] = [
-  { icon: "🎙️", label: "Voz", sub: "treino diário 15 min", to: "/beleza/voz" },
-  { icon: "🪒", label: "Depilação", sub: "registro + plano", to: "/beleza/depilacao" },
-  { icon: "💇🏻", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
-  { icon: "👗", label: "Estilo", sub: "discreto · combinações", to: "/beleza/estilo/pecas" },
+  { icon: "♪", label: "Voz", sub: "treino diário 15 min", to: "/beleza/voz" },
+  { icon: "✦", label: "Depilação", sub: "registro + plano", to: "/beleza/depilacao" },
+  { icon: "❋", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
+  { icon: "❖", label: "Estilo", sub: "discreto · combinações", to: "/beleza/estilo/pecas" },
   { icon: "◈", label: "Corpo", sub: "medidas · fotos", to: "/corpo/medidas" },
   { icon: "❀", label: "Maquiagem", sub: "rotinas", to: "/beleza/maquiagem" },
 ];
