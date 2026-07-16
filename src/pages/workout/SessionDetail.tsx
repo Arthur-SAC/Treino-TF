@@ -117,7 +117,7 @@ export function SessionDetail() {
             title: "Ao terminar",
             intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
-              "Cardio zona 2 (3-4x/semana): 15-20 min contínuos de bike reclinada ou esteira inclinada, num ritmo ofegante mas que ainda dá pra conversar. Começa com 15 min e sobe. Pode ser aqui no fim do treino OU numa caminhada sua mais rápida à parte.",
+              "Cardio zona 2 (3-4x/semana): 15-20 min contínuos. Esteira em inclinação 6-10% e ~4,5-5,5 km/h (caminhada inclinada = mais glúteo, poupa o joelho), ou bike reclinada numa resistência que te deixe ofegante mas ainda conversando. Começa com 15 min e sobe.",
               "O passeio lento com os cães é movimento bônus (bom pra saúde), mas NÃO substitui esse cardio contínuo.",
               "Bebe água — você sua mais no calor de Aracaju.",
             ],
