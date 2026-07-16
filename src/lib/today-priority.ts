@@ -41,3 +41,27 @@ export function computeFocus(s: FocusState): Focus | null {
   }
   return null;
 }
+
+export function currentBlock(hour: number): "manha" | "trabalho" | "tarde" | "noite" {
+  if (hour < 11) return "manha";
+  if (hour < 16) return "trabalho";
+  if (hour < 19) return "tarde";
+  return "noite";
+}
+
+export function timeBlockFocus(hour: number, dayOfWeek: number): { title: string; subtitle: string; to: string } {
+  const block = currentBlock(hour);
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  if (block === "manha") {
+    return { title: "Comece leve", subtitle: "Alongamento, skincare e café — desperta o corpo", to: "/treino/movimento" };
+  }
+  if (block === "trabalho") {
+    return { title: "No trabalho", subtitle: "Bebe água e faz as micro-pausas de postura", to: "/refeicoes-hoje" };
+  }
+  if (block === "tarde") {
+    if (dayOfWeek === 6) return { title: "Hora da dança", subtitle: "A sessão divertida da semana", to: "/treino/movimento" };
+    if (dayOfWeek === 0) return { title: "Descanso", subtitle: "Dia livre — se quiser, uma caminhada leve", to: "/treino/movimento" };
+    return { title: "Agora: lanche da saída → treino", subtitle: "Come o pré-treino, passeia com os cães e cai no treino", to: "/treino" };
+  }
+  return { title: "Antes de dormir", subtitle: isWeekend ? "Skincare, alongamento e seu tempo" : "Skincare, alongamento noite e seu tempo (desenho/leitura)", to: "/beleza/pele-cabelo/skincare" };
+}
