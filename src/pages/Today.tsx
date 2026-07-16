@@ -209,7 +209,12 @@ export function Today() {
           {block.items.map((item) => (
             <RoutineRow
               key={item.id}
-              item={{ ...item, subtitle: subtitleFor(item) }}
+              item={{
+                ...item,
+                subtitle: subtitleFor(item),
+                // O item de treino leva direto pra sessão do dia (não pra aba Treino)
+                to: item.linkKey === "workout" && todayTemplate ? `/treino/sessao/${todayTemplate.id}` : item.to,
+              }}
               done={isDone(item)}
               onToggle={() => void toggle(item.id)}
               rightSlot={rightSlotFor(item)}

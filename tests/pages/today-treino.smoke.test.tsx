@@ -45,5 +45,12 @@ describe("Today — cards de treino", () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
     const matches = await screen.findAllByText(/Glúteo A \(teste\)/);
     expect(matches.length).toBeGreaterThan(0);
+
+    // Em dia de semana, o item "Treino do dia" leva direto pra sessão do dia
+    // (não pra aba Treino genérica).
+    if (todayDow >= 1 && todayDow <= 5) {
+      const link = screen.getByRole("link", { name: "Treino do dia" });
+      expect(link.getAttribute("href")).toContain("/treino/sessao/test-seg-gluteo");
+    }
   });
 });
