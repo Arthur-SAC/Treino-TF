@@ -38,7 +38,7 @@ A tela Hoje é a espinha. Reorganiza a rotina **por blocos de horário**, destac
 - **No trabalho (7h–16h):** Almoço · Micro-pausas de postura (discretas, contador) · Água (contador +200 ml).
 - **Fim de tarde (~16h30):** **Lanche da saída (pré-treino)** · Passear com cães (1h, botão **⇄ inverter** com treino) · **Treino do dia** + cardio zona 2.
 - **Noite (~20h):** Skincare noite · Alongamento 10 min (flexibilidade + quadril/assoalho pélvico) · **Seu tempo: desenho + leitura** (descanso protegido, não é "tarefa") · Diário/humor.
-- **Esta semana (contextual):** exame de vitamina D/ferro/B12 (marco) · sábado dança · domingo marmita.
+- **Esta semana (contextual):** vitamina D 10.000 UI semanal (no domingo, com a marmita) · sábado dança · domingo marmita.
 - **Quando precisar (atalhos):** Fertilidade & TRH · Apoio · Voz · Depilação · Cabelo · Estilo.
 
 **Comportamento por dia:** sábado entra "modo dança"; domingo abre avisando "dia de marmita" com lista e receitas; lembretes de medir/fotos aparecem quando vencem.
@@ -84,6 +84,7 @@ Sessões de **30–40 min**, sempre fechando com **cardio zona 2** (bike reclina
 - **Meta:** ~**120–140 g proteína/dia** (~30 g/refeição), **déficit leve** (recomposição). Regra do prato: ½ legume, ¼ proteína (palma), ¼ carbo (punho) — sem balança.
 - **Timing real:** café 6h (tapioca/cuscuz + ovo + whey) · almoço 12h (marmita) · **lanche da saída 16h30** (banana+ovos ou tapioca+ovo, pré-treino) · jantar pós-treino · ceia leve se com fome.
 - **Menos suplemento:** 2 ovos ≈ 1 dose de whey. Whey só **1x/dia no café** por praticidade; resto é comida real (ovo, frango, peixe, feijão). **Ovo:** cozinhar fresco (8 min) ou em pequenas levas — nada de pote de 12 parado a semana toda.
+- **RECEITA/MODO DE PREPARO em TODA refeição (requisito, pedido da usuária):** não basta listar ingredientes — cada item precisa dizer COMO preparar, respeitando as restrições do plano (ex.: cuscuz hidratado com água quente + fio de azeite, **sem manteiga**; whey batido com água ou leite + banana/fruta; ovos mexidos/cozidos; frango desfiado temperado). O modelo já suporta `foods[].preparation` (ver `MealVariant`/`Meal` em `db.ts`) — preencher `preparation` em cada `food` de cada variante (café, almoço, lanche, jantar).
 - **Carbo:** arroz **integral como padrão** ou meio a meio (mais fibra/saciedade), mas **macaxeira e cuscuz de milho** já servem — sem virar refém do integral.
 - **Comida local barata (Nordeste):** ovo, frango (coxa mais barata), peixe barato (sardinha/tainha/pescada), feijão de corda, cuscuz, tapioca, macaxeira, banana, jerimum, quiabo, frutas (manga, caju).
 - **Marmita de domingo:** frango desfiado + ovos + feijão + macaxeira + legumes assados → monta a semana rápido.
@@ -100,7 +101,7 @@ Sessões de **30–40 min**, sempre fechando com **cardio zona 2** (bike reclina
 - **Genital/íntima (pele fina):** Ada Tina Gliventi Bio Sensitive (~R$165). **Alerta:** teste antes, só pele externa, **nada de ácido forte em mucosa**.
 - **Protetor solar facial toque seco (inegociável em Aracaju):** Nivea Sun Facial FPS60 (~R$45).
 - **Custos:** kit rosto+axila+virilha+solar ≈ **R$181**; + corpo ≈ **R$60–85**; + íntima ≈ **R$165**.
-- **Rotina no app:** manhã (limpeza salicílica → hidratante → protetor) e noite (limpeza → tratamento → clareadores corporais → hidratante), com aviso de **introduzir ácido devagar** e não empilhar ácidos.
+- **Rotina no app — ROTEIRO ÚNICO, não abas (pedido da usuária):** skincare NÃO deve exigir navegar parte por parte em várias telas. Da tela Hoje, um único card (manhã e noite) abre **um roteiro guiado à frente** com TODOS os passos em ordem, cada um mostrando **o que passar, onde, e o tempo de espera até o próximo** — o app já tem o modo player `SkincarePlay` (`/beleza/pele-cabelo/skincare/:id/tocar`) e `SkincareRoutine.steps[].waitMin`; a reforma faz o card do Hoje abrir direto nesse roteiro consolidado (rosto + corpo + clareamentos numa sequência só), com aviso de **introduzir ácido devagar** e não empilhar ácidos. Sequência: manhã (limpeza salicílica → hidratante → protetor); noite (limpeza → tratamento → clareadores corporais axila/virilha/íntima → hidratante corpo).
 
 ---
 
@@ -144,9 +145,8 @@ O app já **registra** sessões; falta a **estratégia barata**:
 
 Ataca o cansaço na raiz:
 - **Sol** deixa de ser obrigação diária (trabalho sem luz natural): opcional/fim de semana + almoço se der.
-- **Vitamina D:** suplemento é o caminho principal. **D3 10.000 UI 1x/semana é dose de manutenção segura pra uso contínuo** (≈1.400 UI/dia na média). Tomar **com refeição com gordura**, dia fixo (ex.: domingo). Se deficiente, considerar **fase de correção mais forte** no início (guiada por médico) e depois manter no semanal.
-- **Exame de sangue** como marco: **25-OH vitamina D, ferro/ferritina, B12** (barato/SUS); reavaliar D em ~3 meses.
-- **B12/ferro:** resolvidos pela alimentação (carne, ovo, peixe, feijão, folhas + vitamina C). Suplementar só se o exame acusar.
+- **Vitamina D (decisão da usuária 2026-07-16):** vai tomar **D3 10.000 UI 1x/semana de forma contínua, SEM exame** — é dose de manutenção segura (≈1.400 UI/dia na média). No app: item **semanal no domingo** (com a marmita/refeição com gordura). NÃO empurrar exame — fica só como opção honesta se ela quiser confirmar/acelerar, não como obrigação/marco.
+- **B12/ferro:** resolvidos pela alimentação (carne, ovo, peixe, feijão, folhas + vitamina C). Exame só se ela quiser.
 - **Sono:** protegido pelo bloco "seu tempo" à noite.
 
 ## 14. Polimento — Voz
