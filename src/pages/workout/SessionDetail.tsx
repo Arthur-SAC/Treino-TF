@@ -117,7 +117,8 @@ export function SessionDetail() {
             title: "Ao terminar",
             intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
-              "Cardio do dia: seu passeio com os cães (1h) já conta como zona 2. Se num dia não caminhou, faz 10-15 min de bike/esteira leve aqui.",
+              "Cardio zona 2 (3-4x/semana): 15-20 min contínuos de bike reclinada ou esteira inclinada, num ritmo ofegante mas que ainda dá pra conversar. Começa com 15 min e sobe. Pode ser aqui no fim do treino OU numa caminhada sua mais rápida à parte.",
+              "O passeio lento com os cães é movimento bônus (bom pra saúde), mas NÃO substitui esse cardio contínuo.",
               "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
