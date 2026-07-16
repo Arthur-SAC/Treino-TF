@@ -56,6 +56,8 @@ import { ShoppingList } from "./pages/path/ShoppingList";
 import { MealsToday } from "./pages/path/MealsToday";
 import { DiaryView } from "./pages/path/DiaryView";
 import { LegalResources } from "./pages/path/LegalResources";
+import { FertilityTRH } from "./pages/path/FertilityTRH";
+import { Support } from "./pages/path/Support";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -126,6 +128,8 @@ const router = createBrowserRouter(
         { path: "trilha/alimentacao/lista-compras", element: <ShoppingList /> },
         { path: "refeicoes-hoje", element: <MealsToday /> },
         { path: "trilha/diario", element: <DiaryView /> },
+        { path: "trilha/fertilidade", element: <FertilityTRH /> },
+        { path: "trilha/apoio", element: <Support /> },
         { path: "trilha/direitos", element: <LegalResources /> },
         { path: "configuracoes", element: <Settings /> },
       ],

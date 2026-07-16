@@ -1,14 +1,9 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
 import { getActiveMealPlan } from "../../lib/meal-plan";
-
-const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
-  cafe: "Café da manhã",
-  almoco: "Almoço",
-  lanche: "Lanche",
-  jantar: "Jantar",
-};
+import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
 
 function todayISO(): string {
   const d = new Date();
@@ -19,6 +14,7 @@ export function MealsToday() {
   const today = todayISO();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
+  const [recipeOf, setRecipeOf] = useState<Meal["mealType"] | null>(null);
 
   async function toggleMeal(type: Meal["mealType"], mealIndex: number) {
     if (!plan) return;
@@ -102,10 +98,21 @@ export function MealsToday() {
                   <li key={j}>{f.name}</li>
                 ))}
               </ul>
+              {foods.some((f) => f.preparation) && (
+                <button
+                  type="button"
+                  onClick={() => setRecipeOf(type)}
+                  className="ml-9 mt-2 text-nude text-xs underline"
+                >
+                  Ver modo de preparo
+                </button>
+              )}
             </div>
           );
         })}
       </div>
+
+      {recipeOf && <RecipeModal mealType={recipeOf} onClose={() => setRecipeOf(null)} />}
     </div>
   );
 }

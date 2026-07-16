@@ -105,12 +105,21 @@ export function SessionDetail() {
           {
             id: "antes-de-comecar",
             title: "Antes de começar",
-            intro: "Dois minutos que evitam lesão e fazem o treino render mais.",
+            intro: "Os dois primeiros itens (esteira leve + mobilidade articular) já são o seu aquecimento — comece por eles.",
             tips: [
-              "Aqueça: 5-7 min de esteira leve + mobilidade articular (os dois primeiros itens do treino já fazem isso).",
               "Regra de ouro da dor: queimação e fadiga no músculo = normal, pode seguir. Dor aguda, em articulação ou uma fisgada = PARE na hora.",
               "Forma antes de carga: só sobe o peso quando o movimento sai redondo.",
               "Respira: solta o ar no esforço, puxa na volta.",
+            ],
+          },
+          {
+            id: "ao-terminar",
+            title: "Ao terminar",
+            intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
+            tips: [
+              "Cardio zona 2 (3-4x/semana): 15-20 min contínuos. Esteira em inclinação 6-10% e ~4,5-5,5 km/h (caminhada inclinada = mais glúteo, poupa o joelho), ou bike reclinada numa resistência que te deixe ofegante mas ainda conversando. Começa com 15 min e sobe.",
+              "O passeio lento com os cães é movimento bônus (bom pra saúde), mas NÃO substitui esse cardio contínuo.",
+              "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
         ]}

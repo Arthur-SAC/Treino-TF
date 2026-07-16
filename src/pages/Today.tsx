@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../lib/db";
@@ -7,18 +8,19 @@ import { useSetting } from "../hooks/useSetting";
 import { formatDateBR } from "../lib/format";
 import { CYCLE_TO_GOAL } from "../data/cycles-seed";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
-import { computeFocus } from "../lib/today-priority";
+import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
-import { careItemsFor, presenceSuggestionForDay } from "../lib/daily-routine";
+import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
+import { useRoutineChecks } from "../hooks/useRoutineChecks";
+import { RoutineRow } from "../components/RoutineRow";
+import { RecipeModal } from "../components/RecipeModal";
+import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
+import { ShortcutsGrid } from "../components/ShortcutsGrid";
 
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const todayISO = today.toISOString().slice(0, 10);
-
-  const presencaSeq = presenceSuggestionForDay(dayOfWeek);
-  const morningCare = careItemsFor("morning");
-  const nightCare = careItemsFor("night");
 
   const activeCycle = useSetting("activeCycle");
   const todayTemplate = useLiveQuery(
@@ -45,8 +47,6 @@ export function Today() {
   );
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
-  const mealsToday = useLiveQuery(() => db.meals.where("date").equals(todayISO).toArray(), [todayISO]);
-  const mealsDone = mealsToday?.filter((m) => m.checked).length ?? 0;
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -139,19 +139,60 @@ export function Today() {
     }
   }
 
+  const routine = buildDayRoutine(dayOfWeek);
+  const { done, toggle } = useRoutineChecks(todayISO);
+  const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
+  const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
+
+  const linkDone = (item: RoutineItem): boolean => {
+    if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
+    if (item.linkKey === "skincareMorning") return !!morningDone;
+    if (item.linkKey === "skincareNight") return !!eveningDone;
+    return false;
+  };
+
+  const isDone = (item: RoutineItem): boolean =>
+    item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
+
+  const rightSlotFor = (item: RoutineItem) => {
+    if (item.control === "water") {
+      return (
+        <button type="button" onClick={() => void addWater(200)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+200 ml</button>
+      );
+    }
+    if (item.control === "walk") {
+      return (
+        <button type="button" onClick={() => void addWalk(10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+10 min</button>
+      );
+    }
+    if (item.control === "invert") {
+      return <span className="text-[11px] text-nude border border-bg-border rounded-full px-2 py-1">⇄ trocar</span>;
+    }
+    if (item.control === "breaks") {
+      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} hoje</span>;
+    }
+    return undefined;
+  };
+
+  const subtitleFor = (item: RoutineItem): string | undefined => {
+    if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
+    if (item.control === "walk") return `${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`;
+    return item.subtitle;
+  };
+
+  const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
+
   return (
     <div className="p-4 pb-24 space-y-3">
       <div className="flex justify-between items-start">
         <div>
           <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
-          <h1 className="font-serif text-2xl text-nude">Bom dia</h1>
+          <h1 className="font-serif text-2xl text-nude">{today.getHours() < 12 ? "Bom dia" : today.getHours() < 18 ? "Boa tarde" : "Boa noite"}</h1>
         </div>
         <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
       </div>
 
-      {focus && (
-        <TodayCard title={`✦ ${focus.title}`} subtitle={focus.subtitle} to={focus.to} variant="highlight" />
-      )}
+      <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
       <div className="grid grid-cols-3 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
@@ -159,89 +200,41 @@ export function Today() {
         <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
 
-      {/* BLOCO 1 — Cuidados ao acordar */}
-      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Cuidados ao acordar</h2>
-      <TodayCard
-        title="Skincare manhã"
-        subtitle={
-          morningRoutines && morningRoutines.length > 0
-            ? `${morningRoutines.length} rotina${morningRoutines.length > 1 ? "s" : ""} · ${morningDone ? "concluído ✓" : "pendente"}`
-            : "sem rotina configurada"
-        }
-        to="/beleza/pele-cabelo/skincare"
-        variant={!morningDone && morningRoutines && morningRoutines.length > 0 ? "highlight" : "default"}
-      />
-      {morningCare.map((c) => (
-        <TodayCard key={c.id} title={c.label} subtitle={c.cadence ?? (c.optional ? "se quiser" : "diário")} to={c.to} />
+      {routine.blocks.map((block) => (
+        <section key={block.id} className="space-y-2">
+          <div className="flex items-center gap-2 pt-2">
+            <h2 className="text-muted text-xs uppercase tracking-wider">{block.label}</h2>
+            {block.timeHint && <span className="text-nude text-xs ml-auto opacity-80">{block.timeHint}</span>}
+          </div>
+          {block.items.map((item) => (
+            <RoutineRow
+              key={item.id}
+              item={{
+                ...item,
+                subtitle: subtitleFor(item),
+                // O item de treino leva direto pra sessão do dia (não pra aba Treino)
+                to: item.linkKey === "workout" && todayTemplate ? `/treino/sessao/${todayTemplate.id}` : item.to,
+              }}
+              done={isDone(item)}
+              onToggle={() => void toggle(item.id)}
+              rightSlot={rightSlotFor(item)}
+              navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
+              onOpen={
+                item.control === "recipe" && item.mealType
+                  ? () => setRecipeMealType(item.mealType!)
+                  : item.control === "skincare" && item.skincareTime
+                    ? () => setSkincareTime(item.skincareTime!)
+                    : undefined
+              }
+            />
+          ))}
+        </section>
       ))}
 
-      {/* BLOCO 2 — Treino + cardio */}
-      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Treino + cardio</h2>
-      {todayTemplate ? (
-        <TodayCard
-          title={todayTemplate.name}
-          subtitle={`Treino + cardio · ${todayTemplate.durationMin} min + zona 2 · ${(sessionsToday ?? 0) > 0 ? "concluído ✓" : "ainda não feito"}`}
-          note="Aquece curto → levanta peso → fecha com a zona 2 na MESMA esteira (cardio é finalizador, não aquecimento). Bater o cardio aqui já cumpre a caminhada do dia."
-          to={`/treino/sessao/${todayTemplate.id}`}
-          variant={(sessionsToday ?? 0) > 0 ? "default" : "highlight"}
-        />
-      ) : (
-        <TodayCard title="Descanso" subtitle="Hoje não tem treino — se quiser, faça só a caminhada zona 2" />
-      )}
-      <TodayCard
-        title="Caminhada / cardio zona 2"
-        subtitle={`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`}
-        note="Esteira inclinada 8–12% · ~5 km/h · zona 2 (ofegante, mas ainda conversando)"
-        rightSlot={
-          <button type="button" onClick={() => void addWalk(10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">
-            +10 min
-          </button>
-        }
-      />
+      <ShortcutsGrid />
 
-      {/* APOIO */}
-      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Apoio</h2>
-      <TodayCard
-        title="Hidratação"
-        subtitle={`${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`}
-        rightSlot={
-          <button type="button" onClick={() => void addWater(200)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">
-            +200ml
-          </button>
-        }
-      />
-      <TodayCard title="Refeições" subtitle={`${mealsDone}/4 do plano`} to="/refeicoes-hoje" />
-      <TodayCard title="Diário" subtitle={dailyLog?.mood ? "humor registrado" : "como foi o dia?"} to="/trilha/diario" />
-
-      {daysSinceMeasurement !== null && daysSinceMeasurement > 28 && (
-        <TodayCard title="Hora de medir" subtitle={`Última medida há ${daysSinceMeasurement} dias`} to="/corpo/medidas" variant="highlight" />
-      )}
-      {daysSincePhoto !== null && daysSincePhoto > 14 && (
-        <TodayCard title="Hora de tirar fotos" subtitle={`Última foto há ${daysSincePhoto} dias`} to="/corpo/fotos" variant="highlight" />
-      )}
-
-      {/* BLOCO 3 — Antes de dormir */}
-      <h2 className="text-muted text-xs uppercase tracking-wider pt-2">Antes de dormir</h2>
-      <TodayCard
-        title="Skincare noite"
-        subtitle={
-          eveningRoutines && eveningRoutines.length > 0
-            ? `${eveningRoutines.length} rotina${eveningRoutines.length > 1 ? "s" : ""} · ${eveningDone ? "concluído ✓" : "pendente"}`
-            : "sem rotina configurada"
-        }
-        to="/beleza/pele-cabelo/skincare"
-        variant={!eveningDone && eveningRoutines && eveningRoutines.length > 0 ? "highlight" : "default"}
-      />
-      {nightCare.map((c) => (
-        <TodayCard key={c.id} title={c.label} subtitle={c.cadence ?? "diário"} to={c.to} />
-      ))}
-      <TodayCard
-        title="Presença & intimidade"
-        subtitle={`Sugestão de hoje: ${presencaSeq.label}`}
-        note="Opcional, sem pressa. Postura, gingado, dança, mobilidade ou intimidade — pegue o que pedir o corpo."
-        to={presencaSeq.to}
-      />
-      <TodayCard title="Ver tudo de movimento" subtitle="postura · dança · gingado · intimidade · voz" to="/treino/movimento" />
+      {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
+      {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
     </div>
   );
 }

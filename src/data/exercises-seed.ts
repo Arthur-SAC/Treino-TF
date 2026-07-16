@@ -606,16 +606,18 @@ export const EXERCISES: Exercise[] = [
     category: "aquecimento",
     equipment: ["esteira"],
     difficulty: "iniciante",
-    description: "5-7 min em ritmo confortável (consegue conversar). Eleva temperatura corporal, prepara articulações.",
+    description: "AQUECIMENTO (5 min): esteira em inclinação 0-2% e ~4,5-5 km/h, ou bike reclinada em resistência leve. Ritmo confortável (consegue conversar) só pra elevar a temperatura e soltar as articulações.",
     commonMistakes: [
       "Começar muito intenso",
       "Pular essa fase",
+      "Confundir o aquecimento (5 min leve) com o cardio zona 2 do fim (15-20 min mais forte)",
     ],
     exposureLevel: 1,
+    successCue: "Fez certo se terminou o aquecimento respirando um pouco mais forte, mas SEM cansar.",
     proTips: [
-      "Ritmo em que você ainda conversa — é aquecimento, não treino de fôlego",
-      "A bike reclinada é uma ótima opção se quiser poupar os joelhos",
-      "Eleva a temperatura e prepara as articulações pro que vem",
+      "CARDIO ZONA 2 (fim do treino, queima gordura, 3-4x/semana): esteira em inclinação 6-10% e ~4,5-5,5 km/h — caminhada inclinada pega glúteo e poupa o joelho. Ou bike reclinada numa resistência que te deixe OFEGANTE mas ainda conversando. 15-20 min contínuos, começa com 15 e sobe.",
+      "Teste da conversa: no aquecimento você fala tranquila; na zona 2 você fala em frases curtas, ofegante.",
+      "A bike reclinada é ótima pra poupar os joelhos.",
     ],
   },
   // === MOBILIDADE PÉLVICA (vida íntima — base de flexibilidade) ===

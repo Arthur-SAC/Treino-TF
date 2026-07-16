@@ -2,9 +2,9 @@ import { db } from "./db";
 import { PRODUCTS } from "../data/products-seed";
 import { ROUTINES } from "../data/skincare-routines-seed";
 
-// Bump quando entrarem rotinas novas no seed: a migração adiciona as que faltam
-// (por nome), sem duplicar nem sobrescrever rotinas que a usuária editou/criou.
-const ROUTINE_SEED_VERSION = 2;
+// Bump quando o seed de rotinas mudar. A migração faz upsert POR NOME: atualiza
+// os passos das rotinas do seed (troca de produtos) e adiciona as que faltam.
+const ROUTINE_SEED_VERSION = 3;
 
 export async function seedBeauty(): Promise<void> {
   const seeded = await db.settings.get("beautySeeded");
@@ -21,15 +21,21 @@ export async function seedBeauty(): Promise<void> {
     });
   }
 
-  // Migração de rotinas pra contas existentes: adiciona qualquer rotina do seed
-  // cujo `name` ainda não exista no banco. Idempotente.
+  // Migração de rotinas pra contas existentes: upsert POR NOME — atualiza os
+  // passos das rotinas do seed (ex.: troca de produtos pelo kit barato) e
+  // adiciona as que faltam. Idempotente.
   const rvSetting = await db.settings.get("routineSeedVersion");
   const rv = (rvSetting?.value as number) ?? 1;
   if (rv < ROUTINE_SEED_VERSION) {
     await db.transaction("rw", [db.skincareRoutines, db.settings], async () => {
-      const names = new Set((await db.skincareRoutines.toArray()).map((r) => r.name));
+      const existing = await db.skincareRoutines.toArray();
       for (const r of ROUTINES) {
-        if (!names.has(r.name)) await db.skincareRoutines.add(r as never);
+        const match = existing.find((x) => x.name === r.name);
+        if (match?.id !== undefined) {
+          await db.skincareRoutines.update(match.id, { time: r.time, target: r.target, steps: r.steps });
+        } else {
+          await db.skincareRoutines.add(r as never);
+        }
       }
       await db.settings.put({ key: "routineSeedVersion", value: ROUTINE_SEED_VERSION });
     });

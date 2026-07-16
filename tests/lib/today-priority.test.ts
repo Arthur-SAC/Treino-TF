@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeFocus } from "../../src/lib/today-priority";
+import { computeFocus, currentBlock, timeBlockFocus } from "../../src/lib/today-priority";
 import type { FocusState } from "../../src/lib/today-priority";
 
 const empty: FocusState = {
@@ -51,5 +51,25 @@ describe("computeFocus", () => {
 
   it("foto atrasada é o último critério", () => {
     expect(computeFocus({ ...empty, daysSincePhoto: 20 })?.to).toBe("/corpo/fotos");
+  });
+});
+
+describe("currentBlock / timeBlockFocus", () => {
+  it("mapeia a hora para o bloco certo", () => {
+    expect(currentBlock(6)).toBe("manha");
+    expect(currentBlock(13)).toBe("trabalho");
+    expect(currentBlock(17)).toBe("tarde");
+    expect(currentBlock(21)).toBe("noite");
+  });
+
+  it("à tarde num dia de semana, o foco chama o lanche + treino", () => {
+    const f = timeBlockFocus(17, 3);
+    expect(f.title.toLowerCase()).toContain("treino");
+    expect(f.to).toBe("/treino");
+  });
+
+  it("no sábado à tarde o foco é a dança", () => {
+    const f = timeBlockFocus(17, 6);
+    expect(f.title.toLowerCase()).toContain("dança");
   });
 });
