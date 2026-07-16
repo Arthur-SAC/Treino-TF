@@ -12,19 +12,19 @@ describe("Today — cards de treino", () => {
     await db.dailyLog.clear();
   });
 
-  it("mostra os cards de Presença e Caminhada/cardio zona 2", async () => {
+  it("mostra o item de treino do dia e o Seu tempo na rotina", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText("Presença & intimidade")).toBeInTheDocument());
-    expect(screen.getByText("Caminhada / cardio zona 2")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText("Treino do dia")).toBeInTheDocument());
+    expect(screen.getByText(/Seu tempo/i)).toBeInTheDocument();
   });
 
-  it("o botão +10 min registra caminhada no dailyLog", async () => {
+  it("o botão +200 ml registra água no dailyLog", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText("Caminhada / cardio zona 2")).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /\+10 min/i }));
+    await waitFor(() => expect(screen.getByRole("button", { name: /\+200 ml/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /\+200 ml/i }));
     await waitFor(async () => {
       const log = await db.dailyLog.get(todayISO);
-      expect(log?.walkMin).toBe(10);
+      expect(log?.waterMl).toBe(200);
     });
   });
 
