@@ -113,6 +113,8 @@ Cacho ~3A/3B, hoje médio; não gosta do comprimento grande. **Motor da feminiza
 - **Se topar comprimento curto:** curly bob/lob no queixo.
 - **Cuidado com cacho budget (~R$50–70):** creme Salon Line #TodeCacho, geleia de linhaça Lola, finalizar com difusor, toalha de microfibra/camiseta (evita frizz), dormir em "pineapple"/fronha de cetim.
 
+**Rotina de lavagem (produtos que ela já usa — linha Juba/Widi Care):** a Juba é adequada pro caso (cacheado, vegana, foco nutrição/definição); manter. Ordem no dia da lavagem (2–3x/semana): (1) **shampoo** só no couro; (2) **condicionador OU máscara** alternando — máscara 1–2x/semana com **5–15 min** de pausa; desembaraçar no chuveiro; (3) finalizar com cabelo **encharcado**, tirando excesso com camiseta, aplicando do mais leve ao mais pesado: leave-in → **finalizador/geleia Juba** → **gel** por cima, amassando (scrunch); (4) secar ao natural ou **difusor** morno sem mexer; (5) **SOTC**: com o cabelo 100% seco, amassar com **1 gota de óleo** (blend Juba) pra quebrar a casquinha do gel = cacho definido mas macio. Entre lavagens: pineapple + fronha de cetim, reavivar com água+leave-in. **Cronograma capilar:** hidratação/nutrição pela máscara Juba (1–2x/sem) + **reconstrução leve ~1x a cada 15–30 dias** (queratina barata — a Juba é fraca em reconstrução; não exagerar pra não endurecer o fio).
+
 ---
 
 ## 10. Lacuna 1 — Fertilidade & TRH (novo, alto impacto)
