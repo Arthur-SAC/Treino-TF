@@ -77,7 +77,7 @@ function buildBlocks(dayOfWeek: number): RoutineBlockGroup[] {
       : { id: "tarde", label: "Fim de tarde", timeHint: "16h30", items: tardeSemana() };
 
   const semanaItems: RoutineItem[] = [
-    { id: "exame-vitd", block: "semana", label: "Marcar exame: vitamina D · ferro · B12", subtitle: "Tem no SUS · resolve o cansaço na raiz", to: "/trilha/marcos" },
+    { id: "exame-vitd", block: "semana", label: "Marcar exame: vitamina D · ferro · B12", subtitle: "Tem no SUS · resolve o cansaço na raiz", to: "/trilha" },
   ];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
   if (!isSunday) semanaItems.push({ id: "lembrete-domingo-marmita", block: "semana", label: "Domingo · marmita da semana", to: "/trilha/alimentacao" });
