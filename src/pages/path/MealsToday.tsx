@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
@@ -19,6 +20,7 @@ export function MealsToday() {
   const today = todayISO();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
+  const [recipeOf, setRecipeOf] = useState<Meal["mealType"] | null>(null);
 
   async function toggleMeal(type: Meal["mealType"], mealIndex: number) {
     if (!plan) return;
@@ -103,21 +105,49 @@ export function MealsToday() {
                 ))}
               </ul>
               {foods.some((f) => f.preparation) && (
-                <details className="mt-2 ml-9">
-                  <summary className="text-nude text-xs cursor-pointer">Modo de preparo</summary>
-                  <ul className="mt-1.5 space-y-2">
-                    {foods.filter((f) => f.preparation).map((f, j) => (
-                      <li key={j} className="text-xs text-muted leading-relaxed">
-                        <span className="text-nude-warm">{f.name}: </span>{f.preparation}
-                      </li>
-                    ))}
-                  </ul>
-                </details>
+                <button
+                  type="button"
+                  onClick={() => setRecipeOf(type)}
+                  className="ml-9 mt-2 text-nude text-xs underline"
+                >
+                  Ver modo de preparo
+                </button>
               )}
             </div>
           );
         })}
       </div>
+
+      {recipeOf && (() => {
+        const idx = MEAL_ORDER.find((o) => o.type === recipeOf)?.index ?? 0;
+        const meal = meals?.find((m) => m.mealType === recipeOf);
+        const foods = meal?.foods ?? plan.defaultMeals[idx] ?? [];
+        const recipeFoods = foods.filter((f) => f.preparation);
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4"
+            onClick={() => setRecipeOf(null)}
+          >
+            <div
+              className="card w-full max-w-md max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="font-serif text-xl text-nude">{MEAL_TYPE_LABEL[recipeOf]} · preparo</h2>
+                <button type="button" onClick={() => setRecipeOf(null)} aria-label="Fechar" className="text-muted text-lg px-2">✕</button>
+              </div>
+              <ul className="space-y-3">
+                {recipeFoods.map((f, j) => (
+                  <li key={j}>
+                    <p className="text-nude-warm text-sm font-medium">{f.name}</p>
+                    <p className="text-muted text-xs mt-1 leading-relaxed">{f.preparation}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
