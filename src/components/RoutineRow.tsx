@@ -61,6 +61,17 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }
     );
   }
 
+  // Skincare: a linha inteira abre o roteiro guiado; o "feito" vem dos logs.
+  if (item.control === "skincare" && onOpen) {
+    return (
+      <button type="button" onClick={onOpen} aria-label={item.label} className={`${cls} hover:border-nude/40 text-left w-full`}>
+        <Box done={done} />
+        <Body item={item} done={done} />
+        <span className="flex-none self-center text-xs text-nude">{done ? "feito ✓" : "abrir →"}</span>
+      </button>
+    );
+  }
+
   return (
     <div className={cls}>
       <button

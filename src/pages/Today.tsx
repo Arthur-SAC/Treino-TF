@@ -14,6 +14,7 @@ import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
+import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 
 export function Today() {
@@ -141,6 +142,7 @@ export function Today() {
   const routine = buildDayRoutine(dayOfWeek);
   const { done, toggle } = useRoutineChecks(todayISO);
   const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
+  const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -150,7 +152,7 @@ export function Today() {
   };
 
   const isDone = (item: RoutineItem): boolean =>
-    item.control === "link" ? linkDone(item) : done.has(item.id);
+    item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
 
   const rightSlotFor = (item: RoutineItem) => {
     if (item.control === "water") {
@@ -212,7 +214,13 @@ export function Today() {
               onToggle={() => void toggle(item.id)}
               rightSlot={rightSlotFor(item)}
               navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
-              onOpen={item.control === "recipe" && item.mealType ? () => setRecipeMealType(item.mealType!) : undefined}
+              onOpen={
+                item.control === "recipe" && item.mealType
+                  ? () => setRecipeMealType(item.mealType!)
+                  : item.control === "skincare" && item.skincareTime
+                    ? () => setSkincareTime(item.skincareTime!)
+                    : undefined
+              }
             />
           ))}
         </section>
@@ -221,6 +229,7 @@ export function Today() {
       <ShortcutsGrid />
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
+      {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
     </div>
   );
 }

@@ -4,7 +4,7 @@
 // NÃO são marcados aqui; refletem o estado do módulo correspondente.
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
-export type RoutineControl = "check" | "water" | "walk" | "breaks" | "invert" | "link" | "recipe";
+export type RoutineControl = "check" | "water" | "walk" | "breaks" | "invert" | "link" | "recipe" | "skincare";
 export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
@@ -19,6 +19,7 @@ export interface RoutineItem {
   optional?: boolean;
   linkKey?: RoutineLinkKey;
   mealType?: RoutineMealType; // itens control:"recipe" abrem a receita dessa refeição
+  skincareTime?: "morning" | "evening"; // itens control:"skincare" abrem o roteiro do período
 }
 
 export interface RoutineBlockGroup {
@@ -36,7 +37,7 @@ export interface DayRoutine {
 const MANHA: RoutineItem[] = [
   { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento" },
-  { id: "skincare-manha", block: "manha", label: "Skincare manhã", to: "/beleza/pele-cabelo/skincare", control: "link", linkKey: "skincareMorning" },
+  { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning" },
   { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe" },
 ];
 
@@ -55,7 +56,7 @@ function tardeSemana(): RoutineItem[] {
 }
 
 const NOITE: RoutineItem[] = [
-  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamento axila/virilha + hidratante corpo", to: "/beleza/pele-cabelo/skincare", control: "link", linkKey: "skincareNight" },
+  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening" },
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "jantar" },
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda + quadril e assoalho pélvico", to: "/treino/movimento" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
