@@ -306,6 +306,12 @@ export interface HairRemovalSession {
   notes?: string;
 }
 
+export interface RoutineCheck {
+  date: string;
+  itemId: string;
+  done: boolean;
+}
+
 export class TreinFinalDB extends Dexie {
   measurements!: Table<Measurement, number>;
   photos!: Table<ProgressPhoto, number>;
@@ -333,6 +339,7 @@ export class TreinFinalDB extends Dexie {
   voiceRecordings!: Table<VoiceRecording, number>;
   voicePracticeLogs!: Table<VoicePracticeLog, number>;
   hairRemovalSessions!: Table<HairRemovalSession, number>;
+  routineChecks!: Table<RoutineCheck, [string, string]>;
 
   constructor() {
     super("trein-final");
@@ -376,6 +383,9 @@ export class TreinFinalDB extends Dexie {
     });
     this.version(8).stores({
       outfits: "++id, context, status",
+    });
+    this.version(9).stores({
+      routineChecks: "[date+itemId], date",
     });
   }
 }
