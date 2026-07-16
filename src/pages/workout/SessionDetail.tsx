@@ -105,12 +105,21 @@ export function SessionDetail() {
           {
             id: "antes-de-comecar",
             title: "Antes de começar",
-            intro: "Dois minutos que evitam lesão e fazem o treino render mais.",
+            intro: "Os dois primeiros itens (esteira leve + mobilidade articular) já são o seu aquecimento — comece por eles.",
             tips: [
-              "Aqueça: 5-7 min de esteira leve + mobilidade articular (os dois primeiros itens do treino já fazem isso).",
               "Regra de ouro da dor: queimação e fadiga no músculo = normal, pode seguir. Dor aguda, em articulação ou uma fisgada = PARE na hora.",
               "Forma antes de carga: só sobe o peso quando o movimento sai redondo.",
               "Respira: solta o ar no esforço, puxa na volta.",
+            ],
+          },
+          {
+            id: "ao-terminar",
+            title: "Ao terminar",
+            intro: "Fechamento rápido, sem alongar demais.",
+            tips: [
+              "Alonga 3-5 min o glúteo e o quadril que você treinou — ou deixa pro alongamento da noite, tanto faz.",
+              "Cardio do dia: seu passeio com os cães (1h) já conta como zona 2. Não precisa de 30 min extras. Se num dia não caminhou, faz 10-15 min de bike/esteira leve aqui.",
+              "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
         ]}
