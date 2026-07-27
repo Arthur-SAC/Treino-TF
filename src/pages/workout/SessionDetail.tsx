@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
@@ -23,6 +23,18 @@ export function SessionDetail() {
   const sessionIdRef = useRef<number | undefined>(undefined);
   const saveChain = useRef<Promise<void>>(Promise.resolve());
   const todayISO = new Date().toISOString().slice(0, 10);
+  const [soloPrimeiro, setSoloPrimeiro] = useState(false);
+
+  // Templates antigos (de outros ciclos) não têm `block` — a UI segue igual pra
+  // eles: sem card explicativo, sem botão, ordem original do template.
+  const temBlocos = template?.exercises.some((e) => e.block) ?? false;
+  const ordenados = useMemo(() => {
+    if (!template) return [];
+    if (!temBlocos) return template.exercises;
+    const maquina = template.exercises.filter((e) => e.block !== "solo");
+    const solo = template.exercises.filter((e) => e.block === "solo");
+    return soloPrimeiro ? [...solo, ...maquina] : [...maquina, ...solo];
+  }, [template, temBlocos, soloPrimeiro]);
 
   // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
   // que já foi registrado em vez de começar do zero.
@@ -125,13 +137,32 @@ export function SessionDetail() {
         ]}
       />
 
-      {template.exercises.map((tplEx, i) => {
+      {temBlocos && (
+        <div className="card mb-4">
+          <p className="text-sm text-nude-warm">
+            Esta sessão tem dois blocos independentes. Se a área de colchonete estiver ocupada, troca a ordem e faz o outro primeiro — a sessão não depende da sala estar vazia.
+          </p>
+          <button
+            type="button"
+            onClick={() => setSoloPrimeiro((v) => !v)}
+            className="w-full mt-3 py-2 rounded-md text-sm bg-bg-deep text-muted border border-bg-border"
+          >
+            {soloPrimeiro ? "Começar pelas máquinas" : "Começar pelo colchonete"}
+          </button>
+        </div>
+      )}
+
+      {ordenados.map((tplEx) => {
         const ex = exMap.get(tplEx.exerciseId);
         if (!ex) return null;
         const alreadyRecorded = recorded.some((r) => r.exerciseId === ex.id);
+        // Key por exerciseId (não pelo índice): ao trocar a ordem com
+        // soloPrimeiro, o mesmo índice passa a apontar pra outro exercício, e um
+        // key posicional faria o React reaproveitar o SessionRecorder errado —
+        // vazando reps/peso digitados de um exercício pra outro.
         if (alreadyRecorded) {
           return (
-            <div key={i} className="card mb-3 border-nude">
+            <div key={tplEx.exerciseId} className="card mb-3 border-nude">
               <h3 className="text-nude-warm font-medium">{ex.name} ✓</h3>
               <p className="text-muted text-xs">Registrado</p>
             </div>
@@ -139,7 +170,7 @@ export function SessionDetail() {
         }
         return (
           <SessionRecorder
-            key={i}
+            key={tplEx.exerciseId}
             exercise={ex}
             setsTarget={tplEx.sets}
             repsTarget={tplEx.repsTarget}
