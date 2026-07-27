@@ -55,6 +55,9 @@ export interface WorkoutTemplate {
     repsTarget: string;
     restSec: number;
     notes?: string;
+    /** Bloco da sessão. Permite trocar a ordem quando a sala de solo está
+     *  ocupada — a sessão não depende da academia estar vazia. */
+    block?: "maquina" | "solo";
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
