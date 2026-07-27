@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import type { MealVariant } from "../../lib/db";
-import { getActiveMealPlan } from "../../lib/meal-plan";
+import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM } from "../../lib/meal-plan";
+import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
 import { buildShoppingList } from "../../lib/shopping-list";
 import { renderDietMarkdown, renderDietHtml } from "../../lib/diet-export";
@@ -48,6 +49,7 @@ function VariantDetails({ v }: { v: MealVariant }) {
 
 export function MealPlanView() {
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
+  const activeCycle = useSetting("activeCycle");
 
   if (!plan) {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
@@ -107,6 +109,14 @@ export function MealPlanView() {
           <div><p className="text-muted text-xs">gordura</p><p className="text-nude-warm text-lg">{plan.fatG}g</p></div>
         </div>
       </div>
+
+      {plan?.goal !== "superavit" && activeCycle === "hipertrofia" && (
+        <div className="card mb-4 border-nude">
+          <p className="text-sm text-nude-warm">
+            Você está no ciclo de crescimento, mas o plano segue em manutenção de propósito: superávit calórico com a cintura acima de {CINTURA_LIBERA_SUPERAVIT_CM} cm deposita gordura na barriga, que é o que mais atrapalha a silhueta agora. O glúteo cresce em manutenção nesta fase. Registre uma medição nova pra liberar o superávit quando chegar lá.
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-2 mb-3">
         <button

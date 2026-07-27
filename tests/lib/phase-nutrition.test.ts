@@ -8,6 +8,7 @@ describe("planos alimentares por fase", () => {
   beforeEach(async () => {
     await db.mealPlans.clear();
     for (const p of ALL_MEAL_PLANS) await db.mealPlans.add(p as never);
+    await db.measurements.clear();
   });
 
   it("tem 3 planos com metas distintas e kcal crescente", () => {
@@ -20,6 +21,10 @@ describe("planos alimentares por fase", () => {
 
   it("seleciona o plano pela fase do ciclo ativo", async () => {
     await setSetting("activeCycle", "hipertrofia");
+    // Sem medição de cintura registrada, o superávit da hipertrofia fica
+    // condicionado — cai no conservador (manutenção).
+    expect((await getActiveMealPlan())?.goal).toBe("manutencao");
+    await db.measurements.add({ date: "2026-07-27", waistCm: 84 });
     expect((await getActiveMealPlan())?.goal).toBe("superavit");
     await setSetting("activeCycle", "adaptacao");
     expect((await getActiveMealPlan())?.goal).toBe("deficit");
