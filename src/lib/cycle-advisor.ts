@@ -2,6 +2,9 @@ import type { CycleId } from "../data/cycles-seed";
 import type { Trend } from "./measurement-trend";
 
 const NEXT: Record<CycleId, CycleId | null> = {
+  "entrada-1": "entrada-2",
+  "entrada-2": "entrada-3",
+  "entrada-3": "adaptacao",
   adaptacao: "variacao",
   variacao: "hipertrofia",
   hipertrofia: "refinamento",

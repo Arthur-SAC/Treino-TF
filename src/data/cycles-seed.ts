@@ -382,9 +382,12 @@ export const CYCLE_TEMPLATES: WorkoutTemplate[] = [
 ];
 
 export const CYCLES = [
+  { id: "entrada-1", name: "Entrada · Semana 1", description: "Só máquina sentada, bike e solo. Aprende os padrões e se acostuma com o espaço.", threshold: 5 },
+  { id: "entrada-2", name: "Entrada · Semana 2", description: "Entra a dobradiça de quadril com halteres leves e o step-up.", threshold: 5 },
+  { id: "entrada-3", name: "Entrada · Semana 3", description: "Entra o hip thrust — primeiro com o peso do corpo, depois com a barra vazia.", threshold: 5 },
   { id: "adaptacao", name: "Adaptação", description: "Aprende os movimentos, ativa glúteo, seca a barriga (déficit). Cargas leves (~6 semanas).", threshold: 28 },
   { id: "variacao", name: "Variação", description: "Mesmo objetivo de glúteo, exercícios variados pra estímulo novo.", threshold: 60 },
-  { id: "hipertrofia", name: "Hipertrofia", description: "Fase de ouro: sai do déficit, volume alto, foco máximo em crescimento de glúteo.", threshold: 60 },
+  { id: "hipertrofia", name: "Hipertrofia", description: "Fase de ouro: volume alto, foco máximo em crescimento de glúteo.", threshold: 60 },
   { id: "refinamento", name: "Refinamento", description: "Cargas leves, reps altas, simetria e densidade do glúteo.", threshold: 60 },
   { id: "manutencao", name: "Manutenção", description: "Segura a forma com volume reduzido. Fase ideal pra alinhar com o início da TRH.", threshold: 120 },
 ] as const;
@@ -394,6 +397,9 @@ export type CycleId = typeof CYCLES[number]["id"];
 // Qual meta nutricional cada fase usa. O app seleciona o plano alimentar
 // correspondente ao ciclo de treino ativo.
 export const CYCLE_TO_GOAL: Record<CycleId, "deficit" | "manutencao" | "superavit"> = {
+  "entrada-1": "deficit",
+  "entrada-2": "deficit",
+  "entrada-3": "deficit",
   adaptacao: "deficit",   // secar a barriga
   variacao: "deficit",    // ainda secando
   hipertrofia: "superavit", // fase de crescer o glúteo

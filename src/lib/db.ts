@@ -58,7 +58,7 @@ export interface WorkoutTemplate {
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
-  cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
+  cycle?: "entrada-1" | "entrada-2" | "entrada-3" | "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
 }
 
 export interface WorkoutSession {
