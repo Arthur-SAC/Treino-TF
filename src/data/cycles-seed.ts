@@ -26,6 +26,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "agachamento-sumo", sets: 4, repsTarget: "10-12", restSec: 75, notes: "Glúteo + coxa interna" },
       { exerciseId: "stiff", sets: 3, repsTarget: "10", restSec: 75 },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 60 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -81,6 +82,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "good-morning", sets: 3, repsTarget: "12-15", restSec: 60, notes: "Dobradiça de quadril — estímulo novo do ciclo" },
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -119,6 +121,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 4, repsTarget: "10-12", restSec: 90 },
       { exerciseId: "agachamento-livre", sets: 3, repsTarget: "10", restSec: 90 },
       { exerciseId: "abdutor-maquina", sets: 4, repsTarget: "12-15", restSec: 60 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -131,10 +134,9 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "supino-inclinado-halteres", sets: 4, repsTarget: "10 (leve)", restSec: 60 },
+      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Leve de propósito: peitoral leve dá base que projeta o busto, pesado constrói um peito que lê como masculino" },
       { exerciseId: "cross-over-cabo", sets: 3, repsTarget: "12 (leve)", restSec: 60 },
       { exerciseId: "remada-baixa-maquina", sets: 4, repsTarget: "10-12", restSec: 75 },
-      { exerciseId: "puxada-frente-maquina", sets: 3, repsTarget: "10", restSec: 60 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
     ],
   },
@@ -190,6 +192,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -211,6 +214,7 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 3, repsTarget: "15", restSec: 60 },
       { exerciseId: "kickback", sets: 4, repsTarget: "20 cada", restSec: 30, notes: "Densidade — caneleira, alta repetição" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -282,6 +286,7 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "ponte-gluteo-bola", sets: 3, repsTarget: "15", restSec: 30, notes: "Instabilidade recruta mais glúteo + core" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "45s cada", restSec: 30 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -304,6 +309,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 75 },
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60 },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -370,6 +376,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
