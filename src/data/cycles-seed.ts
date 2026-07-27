@@ -80,6 +80,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "12 cada", restSec: 30 },
       { exerciseId: "smith-squat", sets: 4, repsTarget: "10", restSec: 90, notes: "Leg press 45° pés altos" },
       { exerciseId: "good-morning", sets: 3, repsTarget: "12-15", restSec: 60, notes: "Dobradiça de quadril — estímulo novo do ciclo" },
+      { exerciseId: "kettlebell-swing", sets: 3, repsTarget: "15", restSec: 60, notes: "Mesma dobradiça do stiff, agora com velocidade. Começa no kettlebell de 8 kg" },
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
       { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },

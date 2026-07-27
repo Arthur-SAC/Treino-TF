@@ -1166,6 +1166,30 @@ export const EXERCISES: Exercise[] = [
       "O passeio lento com os cães é movimento bônus e conta pra sua meta de passos, mas NÃO substitui isso aqui",
     ],
   },
+  {
+    id: "kettlebell-swing",
+    name: "Swing com kettlebell",
+    category: "gluteo",
+    equipment: ["kettlebell"],
+    difficulty: "intermediario",
+    description: "Pés um pouco mais que a largura do quadril, kettlebell no chão à frente. Empurra o quadril pra TRÁS (não agacha), joga o peso entre as pernas e projeta o quadril pra frente com força — o kettlebell sobe sozinho até a altura do peito. Não é exercício de braço.",
+    commonMistakes: [
+      "Agachar em vez de empurrar o quadril pra trás",
+      "Levantar o peso com o braço em vez do impulso do quadril",
+      "Arquear a lombar no topo em vez de apertar o glúteo",
+      "Subir acima da altura do ombro (não acrescenta nada e machuca)",
+    ],
+    easierVariation: "Swing só até a altura do umbigo, com peso menor",
+    harderVariation: "Mais peso, mantendo a mesma velocidade de quadril",
+    exposureLevel: 3,
+    startLoadKg: 8,
+    successCue: "Fez certo se o cansaço vier do glúteo e da respiração — não do ombro nem da lombar.",
+    proTips: [
+      "É glúteo, dobradiça e cardio no mesmo movimento — dos exercícios com melhor retorno pro seu objetivo",
+      "Só entra depois que o stiff já sai redondo: é a mesma dobradiça, feita com velocidade",
+      "A força vem de um movimento explosivo de quadril, como fechar a porta do carro com o bumbum",
+    ],
+  },
 ];
 
 // Vídeos de demonstração — auto-curados via busca no YouTube (pt-BR preferencial).
