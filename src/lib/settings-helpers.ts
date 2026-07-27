@@ -29,6 +29,7 @@ export interface Settings {
   activeCycle: "entrada-1" | "entrada-2" | "entrada-3" | "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
+  entradaMigration: number;
   walkGoalMin: number;
   presencaReminderTime: string;
   lastPresencaReminderAt: string;
@@ -65,9 +66,10 @@ const DEFAULTS: Settings = {
   lastSkincareMorningAt: "",
   lastSkincareEveningAt: "",
   mealPlanVersion: 1,
-  activeCycle: "adaptacao",
+  activeCycle: "entrada-1",
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
+  entradaMigration: 0,
   walkGoalMin: 30,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",

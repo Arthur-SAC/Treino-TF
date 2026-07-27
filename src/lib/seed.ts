@@ -2,6 +2,7 @@ import { db } from "./db";
 import { EXERCISES } from "../data/exercises-seed";
 import { WORKOUT_PLAN } from "../data/workout-plan-seed";
 import { CYCLE_TEMPLATES } from "../data/cycles-seed";
+import { ENTRADA_TEMPLATES } from "../data/entrada-seed";
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -14,6 +15,9 @@ export async function seedDatabase(): Promise<void> {
         await db.workoutTemplates.put(tpl);
       }
       for (const tpl of CYCLE_TEMPLATES) {
+        await db.workoutTemplates.put(tpl);
+      }
+      for (const tpl of ENTRADA_TEMPLATES) {
         await db.workoutTemplates.put(tpl);
       }
       await db.settings.put({ key: "seeded", value: true });
@@ -41,6 +45,9 @@ export async function seedDatabase(): Promise<void> {
       }
       // Adiciona os novos ciclos
       for (const tpl of CYCLE_TEMPLATES) {
+        await db.workoutTemplates.put(tpl);
+      }
+      for (const tpl of ENTRADA_TEMPLATES) {
         await db.workoutTemplates.put(tpl);
       }
       await db.settings.put({ key: "cyclesSeeded", value: true });
@@ -71,7 +78,7 @@ export async function seedDatabase(): Promise<void> {
   // glúteo-prioritário, novo ciclo de manutenção), bumpar TEMPLATE_SEED_VERSION
   // re-grava todos os templates. put() sobrescreve os de mesmo id e adiciona os
   // novos (manutenção). Idempotente.
-  const TEMPLATE_SEED_VERSION = 7;
+  const TEMPLATE_SEED_VERSION = 8;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {
@@ -81,7 +88,24 @@ export async function seedDatabase(): Promise<void> {
       for (const tpl of CYCLE_TEMPLATES) {
         await db.workoutTemplates.put(tpl);
       }
+      for (const tpl of ENTRADA_TEMPLATES) {
+        await db.workoutTemplates.put(tpl);
+      }
       await db.settings.put({ key: "templateSeedVersion", value: TEMPLATE_SEED_VERSION });
     });
+  }
+
+  // Migração pontual: quem ainda não começou a treinar (nenhuma sessão
+  // registrada) entra pela Fase de Entrada em vez da Adaptação, que estreava
+  // com hip thrust de barra no primeiro dia.
+  const ENTRADA_MIGRATION = 1;
+  const migrated = await db.settings.get("entradaMigration");
+  if (((migrated?.value as number) ?? 0) < ENTRADA_MIGRATION) {
+    const sessoes = await db.workoutSessions.count();
+    if (sessoes === 0) {
+      await db.settings.put({ key: "activeCycle", value: "entrada-1" });
+      await db.settings.put({ key: "cycleStartSessionCount", value: 0 });
+    }
+    await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
   }
 }
