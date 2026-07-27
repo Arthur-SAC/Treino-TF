@@ -1124,6 +1124,48 @@ export const EXERCISES: Exercise[] = [
       "Não dá pulinho com a perna de baixo — ela só toca de leve pra equilíbrio",
     ],
   },
+  {
+    id: "bike-reclinada",
+    name: "Bike reclinada",
+    category: "cardio",
+    equipment: ["bike-reclinada"],
+    difficulty: "iniciante",
+    description: "Sentada com as costas apoiadas, pedala em ritmo confortável. Ajusta o banco pra perna quase esticar no ponto mais longe, sem travar o joelho.",
+    commonMistakes: [
+      "Banco perto demais — joelho dobra muito e sobrecarrega a frente da coxa",
+      "Resistência tão alta que vira treino de perna em vez de cardio",
+    ],
+    easierVariation: "Menos resistência, mesmo tempo",
+    harderVariation: "Sobe a resistência até ficar ofegante mas ainda conseguindo falar",
+    exposureLevel: 1,
+    successCue: "Fez certo se terminar ofegante mas ainda conseguindo conversar.",
+    proTips: [
+      "É o cardio mais confortável que você tem: sentada, com apoio nas costas e sem impacto no joelho",
+      "Serve tanto de aquecimento (5 min leve) quanto de zona 2 no fim do treino (15-20 min ofegante)",
+    ],
+  },
+  {
+    id: "cardio-zona2",
+    name: "Cardio zona 2 (fim do treino)",
+    category: "cardio",
+    equipment: ["esteira", "bike-reclinada"],
+    difficulty: "iniciante",
+    description: "15 a 20 minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar. Esteira em inclinação 6-10% a 4,5-5,5 km/h, ou bike reclinada numa resistência que puxe.",
+    commonMistakes: [
+      "Ir rápido demais — se não dá pra falar, saiu da zona 2",
+      "Parar antes dos 15 min contínuos (fracionado não tem o mesmo efeito)",
+      "Fazer antes do treino de força e chegar cansada no glúteo",
+    ],
+    easierVariation: "Começa com 15 min e sobe 2 min por semana",
+    harderVariation: "20 min mantendo a mesma conversa possível",
+    exposureLevel: 1,
+    successCue: "Fez certo se conseguiu falar uma frase inteira sem engasgar, mas não cantaria.",
+    proTips: [
+      "Vai no FIM do treino, nunca antes — cardio antes rouba energia do glúteo",
+      "A caminhada inclinada recruta mais glúteo que a corrida e poupa o joelho",
+      "O passeio lento com os cães é movimento bônus e conta pra sua meta de passos, mas NÃO substitui isso aqui",
+    ],
+  },
 ];
 
 // Vídeos de demonstração — auto-curados via busca no YouTube (pt-BR preferencial).
