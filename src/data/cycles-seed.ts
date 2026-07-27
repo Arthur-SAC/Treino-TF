@@ -7,6 +7,10 @@ import type { WorkoutTemplate } from "../lib/db";
 // pra alinhar com o início da TRH).
 // Regras fixas: dias de força (seg/ter/qui/sex) começam com cardio + articular;
 // quarta começa com articular e tem o circuito de glúteo médio (ponte + abdução).
+// ZONA 2: fecha os dias de inferior — os que têm hip thrust, agachamento,
+// stiff ou good-morning — e só eles. Dá 3 dias por semana em todo ciclo, que é
+// a dose que o guia da tela de sessão promete (3-4x/semana). Cardio no fim,
+// nunca antes: antes rouba a energia do glúteo.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Ciclo 2 — VARIAÇÃO — mesmos objetivos, exercícios variados
@@ -101,6 +105,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "ponte-gluteo-bola", sets: 3, repsTarget: "15", restSec: 45, notes: "Instabilidade recruta mais glúteo + core" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -175,6 +180,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "stiff", sets: 4, repsTarget: "10-12", restSec: 75 },
       { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -270,6 +276,7 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "15 cada (leve)", restSec: 45 },
       { exerciseId: "stiff-unilateral", sets: 3, repsTarget: "15 cada (leve)", restSec: 45 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "20", restSec: 30 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -361,6 +368,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {

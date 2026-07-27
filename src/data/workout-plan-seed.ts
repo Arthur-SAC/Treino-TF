@@ -40,7 +40,6 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
       { exerciseId: "prancha", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Core sem engrossar a cintura" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura por dentro, sem engrossar" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, notes: "Fecha aqui — cardio no fim não rouba energia do glúteo" },
     ],
   },
   {
@@ -59,7 +58,6 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30 },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "rebolado-basico", sets: 3, repsTarget: "1min", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, notes: "Fecha aqui — cardio no fim não rouba energia do glúteo" },
     ],
   },
   {
