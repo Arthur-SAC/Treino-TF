@@ -805,11 +805,25 @@ Bumpar `TEMPLATE_SEED_VERSION` de `7` para `8` (linha ~74) para que a instalaç�
 
 - [ ] **Step 4: Migrar o ciclo ativo**
 
-Em `src/lib/settings-helpers.ts`, trocar o default:
+**Atenção — o default de `activeCycle` está duplicado em dois arquivos.** Trocar só um deixa a camada de
+dados dizendo `entrada-1` enquanto a UI lê `adaptacao`, e a tela Hoje mostraria a Adaptação (que estreia com
+hip thrust de barra) — exatamente o que esta fase existe para evitar. Os dois têm que mudar juntos:
+
+Em `src/lib/settings-helpers.ts`, no objeto `DEFAULTS`:
 
 ```ts
   activeCycle: "entrada-1",
 ```
+
+Em `src/hooks/useSetting.ts` (linha ~31), no objeto de defaults:
+
+```ts
+  activeCycle: "entrada-1",
+```
+
+Nenhuma outra mudança de UI é necessária: `Today.tsx:29` e `WeeklyPlan.tsx:13` já filtram os templates por
+`(t.cycle ?? "adaptacao") === activeCycle`, então a tela Hoje passa a mostrar a sessão da Entrada do dia
+automaticamente assim que o ciclo ativo mudar.
 
 Em `src/lib/seed.ts`, ao final da função de seed, adicionar a migração de instalação existente:
 
