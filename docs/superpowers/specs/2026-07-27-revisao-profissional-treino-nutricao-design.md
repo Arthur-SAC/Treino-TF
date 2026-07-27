@@ -234,17 +234,45 @@ priorizar:
   jerimum, arroz — a marmita de domingo já está na rotina e passa a ser a espinha dorsal do almoço
 - **Air fryer** onde couber (filé de peixe congelado)
 
-**Premissas de equipamento a confirmar antes da implementação** (não perguntadas ainda; a implementação deve
-usar o caminho mais conservador se não houver resposta):
+### Equipamento disponível (confirmado pela usuária)
 
-| Premissa | Se falsa |
-|---|---|
-| Há geladeira e micro-ondas no trabalho | O lanche das 16h precisa ser de prateleira: banana, castanha, biscoito de arroz, barra — nada de iogurte |
-| Há air fryer em casa | Cortar as variantes de peixe/frango em air fryer; ficar em cozido e frigideira |
-| Há cuscuzeira ou micro-ondas em casa | Cuscuz sai como base rápida do café |
-| O almoço é marmita esquentada no trabalho | Se ela come fora, o plano do almoço vira orientação de escolha em restaurante, não receita |
+**Em casa:** air fryer, cuscuzeira, micro-ondas, geladeira.
+**No trabalho:** geladeira e micro-ondas.
+**Almoço:** marmita, esquentada no trabalho.
 
-Caminho conservador padrão: lanche de prateleira, sem air fryer, almoço de marmita.
+Ou seja: nenhuma restrição de preparo. O lanche das 16h pode ser refrigerado (não precisa ser de
+prateleira), e o almoço de marmita confirma o lote de domingo como espinha dorsal do plano.
+
+### Desenho das quatro refeições
+
+| Refeição | Hora | Alvo | Critério de montagem | Exemplos |
+|---|---|---|---|---|
+| Café | 6h | ~500 kcal | ≤ 7 min, ela sai 7h | Cuscuz na cuscuzeira + ovo mexido · tapioca + ovo · whey batido (o único whey do dia) |
+| Almoço | 12h | ~650 kcal | Marmita do lote de domingo, só esquentar | Frango desfiado / carne moída / peixe + arroz + feijão de corda + jerimum ou macaxeira + salada |
+| **Lanche pré-treino** | **16h** | **~350–400 kcal** | **Carbo de digestão fácil + proteína moderada, baixa gordura e baixa fibra** | Iogurte natural + banana + aveia · sanduíche de pão de forma com peito de peru + fruta |
+| Jantar (pós-treino) | 19h | ~600 kcal | Air fryer ou ≤ 10 min | Filé de peixe ou frango na air fryer + macaxeira ou batata doce + legume · ovos + cuscuz nos dias sem energia |
+
+**O lanche das 16h é a refeição mais restrita do dia em composição**, e é a que mais erra na prática. Ela come
+às 16h, caminha 1h com os cães a partir das ~16h40 e treina às ~17h45. Gordura e fibra alta atrasam o
+esvaziamento gástrico e pesam durante a caminhada e o treino. Por isso: iogurte sim, castanha e pasta de
+amendoim não — essas ficam em outra refeição.
+
+O jantar das 19h é o pós-treino, e é onde a proteína e o carboidrato fecham o dia.
+
+### Lote de domingo
+
+O domingo já é "livre + marmita" na rotina. Passa a ser tratado explicitamente como o mecanismo que faz o
+plano funcionar numa semana cansada. A lista de compras semanal que já existe deve derivar deste lote.
+
+Cozinhar de uma vez: frango desfiado, carne moída, feijão de corda, macaxeira cozida (congela bem), jerimum,
+arroz, ovos cozidos. Peixe fica para preparo na hora na air fryer (Aracaju, barato e fresco).
+
+### Marcador de praticidade
+
+Cada variante de refeição ganha um marcador visível de esforço, para que a escolha em dia cansado seja
+óbvia sem ler a receita inteira: **"pronto em 5 min"**, **"air fryer"**, **"do lote de domingo"**,
+**"zero preparo"**. Este é o mecanismo que atende a restrição declarada pela usuária ("sou preguiçosa") —
+o cardápio já é acessível, o que faltava era tornar o custo de esforço legível na hora da decisão.
 
 Cada variante ganha um marcador de praticidade visível (ex.: "pronto em 5 min" / "do lote de domingo"), para
 que a escolha em dia cansado seja óbvia. Whey permanece em 1× no café — sem aumentar dependência de
