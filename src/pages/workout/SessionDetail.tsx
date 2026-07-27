@@ -2,6 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
+import { ordenarPorBloco } from "../../lib/session-order";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
 
@@ -28,13 +29,10 @@ export function SessionDetail() {
   // Templates antigos (de outros ciclos) não têm `block` — a UI segue igual pra
   // eles: sem card explicativo, sem botão, ordem original do template.
   const temBlocos = template?.exercises.some((e) => e.block) ?? false;
-  const ordenados = useMemo(() => {
-    if (!template) return [];
-    if (!temBlocos) return template.exercises;
-    const maquina = template.exercises.filter((e) => e.block !== "solo");
-    const solo = template.exercises.filter((e) => e.block === "solo");
-    return soloPrimeiro ? [...solo, ...maquina] : [...maquina, ...solo];
-  }, [template, temBlocos, soloPrimeiro]);
+  const ordenados = useMemo(
+    () => (template ? ordenarPorBloco(template.exercises, soloPrimeiro) : []),
+    [template, soloPrimeiro],
+  );
 
   // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
   // que já foi registrado em vez de começar do zero.

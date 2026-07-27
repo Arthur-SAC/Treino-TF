@@ -55,9 +55,10 @@ export interface WorkoutTemplate {
     repsTarget: string;
     restSec: number;
     notes?: string;
-    /** Bloco da sessão. Permite trocar a ordem quando a sala de solo está
-     *  ocupada — a sessão não depende da academia estar vazia. */
-    block?: "maquina" | "solo";
+    /** Bloco da sessão. `aquecimento` e `final` são âncoras: abrem e fecham a
+     *  sessão sempre na ordem autorada. Só `maquina` e `solo` — o miolo — podem
+     *  trocar de lugar, pra quando a área está ocupada. */
+    block?: "aquecimento" | "maquina" | "solo" | "final";
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
