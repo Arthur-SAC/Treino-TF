@@ -6,8 +6,8 @@ import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { formatDateBR } from "../lib/format";
-import { CYCLE_TO_GOAL } from "../data/cycles-seed";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
+import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
@@ -102,12 +102,13 @@ export function Today() {
     : null;
 
   const advice = useCycleAdvice();
+  const resolvedGoal = useResolvedGoal();
   const measurementsAsc = useLiveQuery(() => db.measurements.orderBy("date").toArray(), []);
   const latestM = measurementsAsc?.at(-1);
   const prevM = measurementsAsc?.at(-2);
   const guardTriggered = !!(latestM?.waistCm && prevM?.waistCm) &&
     waistGuard({
-      cycleGoal: CYCLE_TO_GOAL[activeCycle],
+      cycleGoal: resolvedGoal,
       waistStartCm: prevM!.waistCm!,
       waistNowCm: latestM!.waistCm!,
     }).triggered;

@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
 import { useSetting } from "../../hooks/useSetting";
 import { calculateWhr } from "../../lib/waist-hip-ratio";
-import { CYCLE_TO_GOAL } from "../../data/cycles-seed";
+import { useResolvedGoal } from "../../hooks/useResolvedGoal";
 import { estimateBodyFatNavy, classifyBodyFat } from "../../lib/body-composition";
 import {
   shoulderHipRatio,
@@ -73,7 +73,10 @@ export function Silhouette() {
   const heightCm = useSetting("heightCm");
   const targetWhr = useSetting("targetWhr");
   const targetShr = useSetting("targetShoulderHipRatio");
-  const activeCycle = useSetting("activeCycle");
+  // Meta que o app concede de fato — não a que o ciclo pediria. Em hipertrofia
+  // com a cintura acima do limiar, o plano alimentar fica em manutenção, e esta
+  // tela não pode anunciar um superávit que não existe.
+  const goal = useResolvedGoal();
 
   if (!measurements) {
     return <div className="p-4 pb-24 text-muted">Carregando…</div>;
@@ -81,7 +84,6 @@ export function Silhouette() {
 
   const latest = measurements.at(-1);
   const prev = measurements.at(-2);
-  const goal = CYCLE_TO_GOAL[activeCycle];
   const lever = leverGuidance(goal);
 
   const whr =
