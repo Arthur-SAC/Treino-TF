@@ -12,7 +12,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "seg-gluteo-mobilidade",
     name: "◆Glúteo A · Força",
     dayOfWeek: 1,
-    durationMin: 40,
+    durationMin: 45,
     cycle: "adaptacao",
     purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum — a fundação que a TRH vai arredondar depois.",
     exercises: [
@@ -64,7 +64,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "qui-gluteo-coxa",
     name: "◆Glúteo B · Unilateral + Coxa",
     dayOfWeek: 4,
-    durationMin: 40,
+    durationMin: 45,
     cycle: "adaptacao",
     purpose: "Hoje é glúteo e coxa um lado de cada vez: corrige assimetria e deixa as pernas mais cheias e femininas.",
     exercises: [
@@ -82,7 +82,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "sex-peitoral-postura",
     name: "◆Glúteo C · Volume + Core",
     dayOfWeek: 5,
-    durationMin: 38,
+    durationMin: 40,
     cycle: "adaptacao",
     purpose: "Hoje é bombeamento de glúteo (muita repetição) + core que segura a cintura fina.",
     exercises: [
