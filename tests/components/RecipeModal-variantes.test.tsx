@@ -3,7 +3,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { db } from "../../src/lib/db";
 import { seedPath } from "../../src/lib/path-seed";
+import { getActiveMealPlan } from "../../src/lib/meal-plan";
 import { RecipeModal } from "../../src/components/RecipeModal";
+
+function todayISO(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 beforeEach(async () => {
   await db.mealPlans.clear();
@@ -61,5 +67,33 @@ describe("RecipeModal — as três opções", () => {
   it("mostra o modo de preparo dos itens da variante escolhida", async () => {
     render(<RecipeModal mealType="cafe" onClose={() => {}} />);
     expect(await screen.findByText(/modo de preparo/i)).toBeInTheDocument();
+  });
+
+  it("clicar em 'Comi essa' na variante já escolhida (checked: true) não regrava nem reseta o checked", async () => {
+    // Estado inicial: a refeição de hoje já foi marcada como comida, com os
+    // foods da primeira variante — exatamente como ficaria depois de um
+    // "toggleMeal" em MealsToday ou de uma confirmação anterior no modal.
+    const plan = await getActiveMealPlan();
+    const slot = plan!.slots.find((s) => s.mealType === "lanche")!;
+    const variantJaEscolhida = slot.variants[0];
+    await db.meals.add({
+      date: todayISO(),
+      mealType: "lanche",
+      foods: variantJaEscolhida.foods,
+      checked: true,
+    });
+
+    const user = userEvent.setup();
+    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+
+    // A variante já escolhida abre expandida por padrão, então o botão de
+    // confirmação dela já está visível sem precisar tocar no cabeçalho.
+    const botaoConfirmar = await screen.findByRole("button", { name: /comi essa|comida hoje/i });
+    await user.click(botaoConfirmar);
+
+    const meals = await db.meals.toArray();
+    const lanches = meals.filter((m) => m.mealType === "lanche");
+    expect(lanches).toHaveLength(1);
+    expect(lanches[0].checked).toBe(true);
   });
 });
