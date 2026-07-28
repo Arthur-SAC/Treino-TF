@@ -12,6 +12,13 @@ export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
 
 const MEAL_INDEX: Record<Meal["mealType"], number> = { cafe: 0, almoco: 1, lanche: 2, jantar: 3 };
 
+const EFFORT_LABEL: Record<NonNullable<MealVariant["effort"]>, string> = {
+  "zero-preparo": "zero preparo",
+  "5-min": "pronto em 5 min",
+  "air-fryer": "air fryer",
+  "lote-domingo": "do lote de domingo",
+};
+
 function todayISO(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -134,6 +141,11 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
                   }`}
                 >
                   {v.label}
+                  {v.effort && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wider text-muted border border-bg-border rounded px-1.5 py-0.5 align-middle">
+                      {EFFORT_LABEL[v.effort]}
+                    </span>
+                  )}
                   {isChosen && <span className="ml-2 text-nude">✓ escolhida hoje</span>}
                 </button>
 

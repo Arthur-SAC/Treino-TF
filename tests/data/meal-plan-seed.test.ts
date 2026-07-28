@@ -8,12 +8,15 @@ describe("INITIAL_PLAN", () => {
     expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(175);
   });
 
-  it("tem 4 períodos com 3 variantes cada, todas com ingredientes", () => {
+  it("tem 4 períodos com ao menos 3 variantes cada, todas com ingredientes", () => {
     expect(INITIAL_PLAN.slots).toHaveLength(4);
     const types = INITIAL_PLAN.slots.map((s) => s.mealType);
     expect(types).toEqual(["cafe", "almoco", "lanche", "jantar"]);
+    // Café tem 5: as 3 opções originais + as 2 que migraram do lanche das 16h
+    // (gordura não atrapalha de manhã, atrapalha antes do treino das 17h45).
+    const expectedVariants: Record<string, number> = { cafe: 5, almoco: 3, lanche: 3, jantar: 3 };
     for (const slot of INITIAL_PLAN.slots) {
-      expect(slot.variants.length).toBe(3);
+      expect(slot.variants.length).toBe(expectedVariants[slot.mealType]);
       for (const v of slot.variants) {
         expect(v.foods.length).toBeGreaterThan(0);
         expect(v.ingredients.length).toBeGreaterThan(0);

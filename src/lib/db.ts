@@ -107,6 +107,10 @@ export interface MealVariant {
   label: string;              // nome neutro: "Opção 1 · Ovos & pão integral"
   foods: Meal["foods"];       // mesmo shape atual (name, qtyG, kcal, macros, preparation)
   ingredients: Ingredient[];  // ingredientes crus pra lista de compras
+  /** Custo de preparo, mostrado como etiqueta na escolha da refeição. Existe
+   *  porque a usuária declarou que não quer cozinhar — o cardápio já era
+   *  acessível, faltava o esforço ficar legível na hora de decidir. */
+  effort?: "zero-preparo" | "5-min" | "air-fryer" | "lote-domingo";
 }
 
 export interface MealSlot {
