@@ -19,23 +19,40 @@ describe("RecipeModal — as três opções", () => {
     expect(opcoes).toHaveLength(3);
   });
 
-  it("escolher uma variante grava a refeição do dia", async () => {
+  it("só expandir uma variante não grava nada", async () => {
     const user = userEvent.setup();
     render(<RecipeModal mealType="lanche" onClose={() => {}} />);
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
+    // expandiu (o modo de preparo da opção aparece), mas nada foi gravado
+    await screen.findByRole("button", { name: /comi essa/i });
+    const meals = await db.meals.toArray();
+    expect(meals.find((m) => m.mealType === "lanche")).toBeUndefined();
+  });
+
+  it("expandir e confirmar 'Comi essa' grava a refeição do dia", async () => {
+    const user = userEvent.setup();
+    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    const opcoes = await screen.findAllByRole("button", { name: /opção/i });
+    await user.click(opcoes[1]);
+    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
     const meals = await db.meals.toArray();
     const lanche = meals.find((m) => m.mealType === "lanche");
     expect(lanche).toBeDefined();
     expect(lanche!.foods.length).toBeGreaterThan(0);
   });
 
-  it("escolher uma segunda vez atualiza o mesmo registro, sem duplicar", async () => {
+  it("confirmar uma segunda vez (outra opção) atualiza o mesmo registro, sem duplicar", async () => {
     const user = userEvent.setup();
     render(<RecipeModal mealType="lanche" onClose={() => {}} />);
-    const opcoes = await screen.findAllByRole("button", { name: /opção/i });
+    let opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
+    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
+
+    opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[2]);
+    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
+
     const meals = await db.meals.toArray();
     const lanches = meals.filter((m) => m.mealType === "lanche");
     expect(lanches).toHaveLength(1);
