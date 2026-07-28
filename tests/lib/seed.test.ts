@@ -47,7 +47,7 @@ describe("seedDatabase", () => {
     const exercises = await db.exercises.toArray();
     const loaded = ["halteres", "halter", "barra", "anilhas", "polia", "step",
       "maquina-abdutor", "maquina-adutor", "maquina-remada", "maquina-puxada",
-      "maquina-voador", "leg-press", "caneleira"];
+      "maquina-voador", "leg-press", "caneleira", "kettlebell"];
     for (const ex of exercises) {
       const hasLoad = ex.equipment.some((e) => loaded.includes(e));
       if (hasLoad) {

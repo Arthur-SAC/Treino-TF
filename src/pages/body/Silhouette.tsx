@@ -3,7 +3,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
 import { useSetting } from "../../hooks/useSetting";
 import { calculateWhr } from "../../lib/waist-hip-ratio";
-import { CYCLE_TO_GOAL } from "../../data/cycles-seed";
+import { useResolvedGoal } from "../../hooks/useResolvedGoal";
+import { CINTURA_LIBERA_SUPERAVIT_CM } from "../../lib/meal-plan";
 import { estimateBodyFatNavy, classifyBodyFat } from "../../lib/body-composition";
 import {
   shoulderHipRatio,
@@ -73,6 +74,10 @@ export function Silhouette() {
   const heightCm = useSetting("heightCm");
   const targetWhr = useSetting("targetWhr");
   const targetShr = useSetting("targetShoulderHipRatio");
+  // Meta que o app concede de fato — não a que o ciclo pediria. Em hipertrofia
+  // com a cintura acima do limiar, o plano alimentar fica em manutenção, e esta
+  // tela não pode anunciar um superávit que não existe.
+  const goal = useResolvedGoal();
   const activeCycle = useSetting("activeCycle");
 
   if (!measurements) {
@@ -81,7 +86,6 @@ export function Silhouette() {
 
   const latest = measurements.at(-1);
   const prev = measurements.at(-2);
-  const goal = CYCLE_TO_GOAL[activeCycle];
   const lever = leverGuidance(goal);
 
   const whr =
@@ -138,6 +142,11 @@ export function Silhouette() {
         <h2 className="text-nude-warm font-medium">Alavanca do momento</h2>
         <p className="text-nude text-sm font-medium capitalize">Foco: {lever.focus}</p>
         <p className="text-muted text-sm">{lever.why}</p>
+        {activeCycle === "hipertrofia" && goal !== "superavit" && (
+          <p className="text-muted text-sm">
+            O treino é de crescimento, mas a comida segue em manutenção: com a cintura acima de {CINTURA_LIBERA_SUPERAVIT_CM} cm o superávit iria pra barriga. Nesta fase o glúteo cresce em manutenção mesmo. Registre uma medição nova pra liberar quando chegar lá.
+          </p>
+        )}
       </div>
 
       {/* WHR */}

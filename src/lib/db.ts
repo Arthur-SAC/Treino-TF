@@ -55,10 +55,14 @@ export interface WorkoutTemplate {
     repsTarget: string;
     restSec: number;
     notes?: string;
+    /** Bloco da sessão. `aquecimento` e `final` são âncoras: abrem e fecham a
+     *  sessão sempre na ordem autorada. Só `maquina` e `solo` — o miolo — podem
+     *  trocar de lugar, pra quando a área está ocupada. */
+    block?: "aquecimento" | "maquina" | "solo" | "final";
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
-  cycle?: "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
+  cycle?: "entrada-1" | "entrada-2" | "entrada-3" | "adaptacao" | "variacao" | "hipertrofia" | "refinamento" | "manutencao";
 }
 
 export interface WorkoutSession {

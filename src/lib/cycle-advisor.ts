@@ -2,6 +2,9 @@ import type { CycleId } from "../data/cycles-seed";
 import type { Trend } from "./measurement-trend";
 
 const NEXT: Record<CycleId, CycleId | null> = {
+  "entrada-1": "entrada-2",
+  "entrada-2": "entrada-3",
+  "entrada-3": "adaptacao",
   adaptacao: "variacao",
   variacao: "hipertrofia",
   hipertrofia: "refinamento",
@@ -38,7 +41,9 @@ export function recommendCycleChange(i: CycleAdviceInput): CycleAdvice | null {
       const why = atTarget
         ? `sua cintura atingiu o alvo de WHR (${i.targetWhr.toFixed(2)})`
         : "sua cintura estabilizou — o déficit deu o que tinha pra dar";
-      return { recommend: true, toCycle: to, reason: `Hora de crescer o glúteo: ${why}. Bora pra hipertrofia (superávit).` };
+      // Sem prometer superávit: quem decide a meta alimentar é `resolveGoal`,
+      // e ele só a libera com a cintura abaixo do limiar.
+      return { recommend: true, toCycle: to, reason: `Hora de crescer o glúteo: ${why}. Bora pra hipertrofia — a comida acompanha: sobe pra superávit quando a cintura permitir, e até lá o glúteo cresce em manutenção.` };
     }
     return null;
   }
