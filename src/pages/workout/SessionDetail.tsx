@@ -27,8 +27,12 @@ export function SessionDetail() {
   const [soloPrimeiro, setSoloPrimeiro] = useState(false);
 
   // Templates antigos (de outros ciclos) não têm `block` — a UI segue igual pra
-  // eles: sem card explicativo, sem botão, ordem original do template.
-  const temBlocos = template?.exercises.some((e) => e.block) ?? false;
+  // eles: sem card explicativo, sem botão, ordem original do template. E dias
+  // sem os DOIS blocos do miolo (só máquina, ou só solo) também não entram
+  // aqui: não há o que trocar, então o card/botão não podem existir.
+  const temBlocos =
+    (template?.exercises.some((e) => e.block === "maquina") ?? false) &&
+    (template?.exercises.some((e) => e.block === "solo") ?? false);
   const ordenados = useMemo(
     () => (template ? ordenarPorBloco(template.exercises, soloPrimeiro) : []),
     [template, soloPrimeiro],
