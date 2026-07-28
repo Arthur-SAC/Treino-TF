@@ -126,7 +126,7 @@ export function SessionDetail() {
           {
             id: "antes-de-comecar",
             title: "Antes de começar",
-            intro: "Os dois primeiros itens (esteira leve + mobilidade articular) já são o seu aquecimento — comece por eles.",
+            intro: "Os primeiros itens da lista já são o seu aquecimento — bike ou esteira leve e mobilidade, conforme o dia. Comece por eles, na ordem em que aparecem.",
             tips: [
               "Regra de ouro da dor: queimação e fadiga no músculo = normal, pode seguir. Dor aguda, em articulação ou uma fisgada = PARE na hora.",
               "Forma antes de carga: só sobe o peso quando o movimento sai redondo.",

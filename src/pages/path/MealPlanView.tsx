@@ -13,7 +13,7 @@ const PERIOD_LABEL: Record<"cafe" | "almoco" | "lanche" | "jantar", string> = {
 };
 
 const GOAL_LABEL: Record<"deficit" | "manutencao" | "superavit", string> = {
-  deficit: "Déficit · secar a barriga (fase adaptação/variação)",
+  deficit: "Déficit · secar a barriga (fases entrada, adaptação e variação)",
   manutencao: "Manutenção (fase refinamento/manutenção)",
   superavit: "Superávit leve · crescer o glúteo (fase hipertrofia)",
 };
