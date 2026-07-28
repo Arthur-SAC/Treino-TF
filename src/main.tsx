@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import { Today } from "./pages/Today";
+import { RoutineTimes } from "./pages/RoutineTimes";
 import { WorkoutHome } from "./pages/workout/WorkoutHome";
 import { WeeklyPlan } from "./pages/workout/WeeklyPlan";
 import { Cycles } from "./pages/workout/Cycles";
@@ -75,6 +76,7 @@ const router = createBrowserRouter(
       element: <App />,
       children: [
         { index: true, element: <Today /> },
+        { path: "hoje/horarios", element: <RoutineTimes /> },
         { path: "treino", element: <WorkoutHome /> },
         { path: "treino/plano", element: <WeeklyPlan /> },
         { path: "treino/ciclos", element: <Cycles /> },

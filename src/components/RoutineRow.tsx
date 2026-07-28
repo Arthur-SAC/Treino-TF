@@ -9,12 +9,19 @@ export interface RoutineRowProps {
   rightSlot?: ReactNode;
   navValue?: string;
   onOpen?: () => void; // itens control:"recipe": abre a receita ao tocar no corpo
+  /** Horário já resolvido (ajuste da usuária ou padrão), formatado pra exibir. */
+  hora?: string;
 }
 
-function Body({ item, done }: { item: RoutineItem; done: boolean }) {
+function Body({ item, done, hora }: { item: RoutineItem; done: boolean; hora?: string }) {
   return (
     <span className="flex-1 min-w-0">
-      <span className={`block text-sm font-medium ${done ? "text-muted line-through" : "text-nude-warm"}`}>{item.label}</span>
+      <span className="flex items-baseline gap-2">
+        {hora && (
+          <span className={`flex-none text-xs tabular-nums ${done ? "text-muted" : "text-nude"}`}>{hora}</span>
+        )}
+        <span className={`text-sm font-medium ${done ? "text-muted line-through" : "text-nude-warm"}`}>{item.label}</span>
+      </span>
       {item.subtitle && <span className="block text-xs text-muted mt-0.5">{item.subtitle}</span>}
       {item.note && <span className="block text-[11px] text-muted opacity-80 mt-0.5">{item.note}</span>}
     </span>
@@ -32,7 +39,7 @@ function Box({ done }: { done: boolean }) {
   );
 }
 
-export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }: RoutineRowProps) {
+export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, hora }: RoutineRowProps) {
   const isLink = item.control === "link";
   const cls = `card flex items-start gap-3 ${item.optional ? "opacity-90" : ""}`;
 
@@ -40,7 +47,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }
     return (
       <Link to={item.to} role="link" aria-label={item.label} className={`${cls} hover:border-nude/40`}>
         <Box done={done} />
-        <Body item={item} done={done} />
+        <Body item={item} done={done} hora={hora} />
         <span className="flex-none self-center text-xs text-nude">{navValue ?? (done ? "feito ✓" : "ver →")}</span>
       </Link>
     );
@@ -54,7 +61,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }
           <Box done={done} />
         </button>
         <button type="button" onClick={onOpen} aria-label={item.label} className="flex-1 min-w-0 text-left">
-          <Body item={item} done={done} />
+          <Body item={item} done={done} hora={hora} />
         </button>
         <span className="flex-none self-center text-xs text-nude">receita →</span>
       </div>
@@ -66,7 +73,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }
     return (
       <button type="button" onClick={onOpen} aria-label={item.label} className={`${cls} hover:border-nude/40 text-left w-full`}>
         <Box done={done} />
-        <Body item={item} done={done} />
+        <Body item={item} done={done} hora={hora} />
         <span className="flex-none self-center text-xs text-nude">{done ? "feito ✓" : "abrir →"}</span>
       </button>
     );
@@ -83,7 +90,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen }
         className="flex items-start gap-3 flex-1 text-left"
       >
         <Box done={done} />
-        <Body item={item} done={done} />
+        <Body item={item} done={done} hora={hora} />
       </button>
       {item.to && !rightSlot && (
         <Link to={item.to} aria-label={`abrir ${item.label}`} className="flex-none self-center text-xs text-nude">ver →</Link>

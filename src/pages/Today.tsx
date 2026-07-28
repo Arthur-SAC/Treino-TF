@@ -11,6 +11,7 @@ import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
+import { resolveRoutineTime, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
@@ -141,6 +142,11 @@ export function Today() {
   }
 
   const routine = buildDayRoutine(dayOfWeek);
+  const routineTimes = useSetting("routineTimes");
+  const horaDe = (item: RoutineItem) => {
+    const hhmm = resolveRoutineTime(item, routineTimes);
+    return hhmm ? formatHora(hhmm) : undefined;
+  };
   const { done, toggle } = useRoutineChecks(todayISO);
   const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
   const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
@@ -201,6 +207,12 @@ export function Today() {
         <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
       </div>
 
+      <div className="flex justify-end pt-2">
+        <Link to="/hoje/horarios" className="text-xs text-muted underline decoration-dotted">
+          Ajustar horários
+        </Link>
+      </div>
+
       {routine.blocks.map((block) => (
         <section key={block.id} className="space-y-2">
           <div className="flex items-center gap-2 pt-2">
@@ -216,6 +228,7 @@ export function Today() {
                 // O item de treino leva direto pra sessão do dia (não pra aba Treino)
                 to: item.linkKey === "workout" && todayTemplate ? `/treino/sessao/${todayTemplate.id}` : item.to,
               }}
+              hora={horaDe(item)}
               done={isDone(item)}
               onToggle={() => void toggle(item.id)}
               rightSlot={rightSlotFor(item)}

@@ -19,6 +19,8 @@ export interface Settings {
   hydrationIntervalMin: number;
   hydrationGoalMl: number;
   quietHours: { from: string; to: string };
+  /** Ajustes de horário da rotina: id do item -> "HH:MM". Vazio = usa os padrões. */
+  routineTimes: Record<string, string>;
   focusModeUntil: number | null; // timestamp ms
   notificationsEnabled: boolean;
   lastActiveBreakAt: number;
@@ -59,6 +61,7 @@ const DEFAULTS: Settings = {
   hydrationIntervalMin: 60,
   hydrationGoalMl: 2000,
   quietHours: { from: "22:00", to: "08:00" },
+  routineTimes: {},
   focusModeUntil: null,
   notificationsEnabled: true,
   lastActiveBreakAt: 0,
