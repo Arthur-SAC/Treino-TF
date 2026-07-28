@@ -22,7 +22,9 @@ import type { WorkoutTemplate } from "../lib/db";
 //                   energia do glúteo.
 // Só o MIOLO troca de ordem (`src/lib/session-order.ts`) — a sessão nunca
 // depende de a área livre estar vazia. Por isso o miolo é escrito em blocos
-// contíguos, máquina antes de solo: essa é a ordem padrão da tela.
+// contíguos; a ordem em que máquina e solo aparecem AQUI é a ordem padrão da
+// tela (soloPrimeiro = false segue a ordem autorada, seja ela qual for —
+// `ordenarPorBloco` não fixa máquina antes de solo).
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── SEMANA 1 — teto de exposição 2 ────────────────────────────────────────
@@ -178,9 +180,9 @@ const SEMANA_2: WorkoutTemplate[] = [
     purpose: "Hoje você aprende a dobradiça de quadril — o padrão que mais constrói glúteo e o mais fácil de fazer errado.",
     exercises: [
       { exerciseId: "bike-reclinada", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "AMPLITUDE CURTA por enquanto: halteres de 3-4 kg, empurra o quadril pra trás e desce SÓ até onde o posterior da coxa deixa, sem arredondar a lombar. A amplitude aumenta sozinha nas próximas semanas — forçar agora é como se machuca a lombar" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 60, block: "maquina", notes: "Leg press pés altos" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "AMPLITUDE CURTA por enquanto: halteres de 3-4 kg, empurra o quadril pra trás e desce SÓ até onde o posterior da coxa deixa, sem arredondar a lombar. A amplitude aumenta sozinha nas próximas semanas — forçar agora é como se machuca a lombar" },
       { exerciseId: "cardio-zona2", sets: 1, repsTarget: "12min", restSec: 0, block: "final" },
     ],
   },
@@ -256,9 +258,9 @@ const SEMANA_3: WorkoutTemplate[] = [
     purpose: "Última sessão da Entrada. Se a dobradiça já sai redonda, você está pronta pra Adaptação.",
     exercises: [
       { exerciseId: "bike-reclinada", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "Amplitude ainda controlada — desce só até onde o posterior deixa sem arredondar a lombar. Se já está descendo mais que na semana passada, é sinal de que a mobilidade está vindo" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "15", restSec: 60, block: "maquina", notes: "Leg press pés altos" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "Amplitude ainda controlada — desce só até onde o posterior deixa sem arredondar a lombar. Se já está descendo mais que na semana passada, é sinal de que a mobilidade está vindo" },
       { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, block: "final" },
     ],
   },

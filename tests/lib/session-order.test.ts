@@ -60,6 +60,24 @@ describe("ordenarPorBloco", () => {
     }
   });
 
+  it("a ordem padrão segue a ordem autorada, não uma convenção fixa de máquina-antes-de-solo", () => {
+    const soloAutoradoPrimeiro: TplEx[] = [
+      ex("bike-reclinada", "aquecimento"),
+      ex("stiff", "solo"),
+      ex("smith-squat", "maquina"),
+      ex("adutora-maquina", "maquina"),
+      ex("cardio-zona2", "final"),
+    ];
+    // soloPrimeiro = false (padrão): a ordem renderizada segue a autorada — solo antes de máquina.
+    expect(ids(ordenarPorBloco(soloAutoradoPrimeiro, false))).toEqual([
+      "bike-reclinada", "stiff", "smith-squat", "adutora-maquina", "cardio-zona2",
+    ]);
+    // soloPrimeiro = true inverte a ordem natural: máquina passa a vir primeiro.
+    expect(ids(ordenarPorBloco(soloAutoradoPrimeiro, true))).toEqual([
+      "bike-reclinada", "smith-squat", "adutora-maquina", "stiff", "cardio-zona2",
+    ]);
+  });
+
   it("nos 15 templates da Entrada, a ordem padrão é IDÊNTICA à ordem autorada", () => {
     expect(ENTRADA_TEMPLATES).toHaveLength(15);
     for (const t of ENTRADA_TEMPLATES) {

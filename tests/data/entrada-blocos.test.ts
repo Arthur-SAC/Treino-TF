@@ -1,8 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { ENTRADA_TEMPLATES } from "../../src/data/entrada-seed";
 
-const ORDEM_CANONICA = ["aquecimento", "maquina", "solo", "final"] as const;
-
 describe("Fase de Entrada — blocos independentes", () => {
   it("todo exercício da Entrada declara a que bloco pertence", () => {
     const semBloco = ENTRADA_TEMPLATES.flatMap((t) =>
@@ -27,15 +25,18 @@ describe("Fase de Entrada — blocos independentes", () => {
     }
   });
 
-  it("os blocos são trechos contíguos, na ordem canônica — é disso que ordenarPorBloco depende", () => {
+  it("os blocos são trechos contíguos — é disso que ordenarPorBloco depende", () => {
+    // A ordem entre máquina e solo não é fixa (ordenarPorBloco segue a ordem
+    // autorada), mas cada bloco só pode aparecer como UM trecho contíguo —
+    // senão trocar de ordem intercalaria exercícios de blocos diferentes.
     for (const t of ENTRADA_TEMPLATES) {
       const sequencia = t.exercises
         .map((e) => e.block)
         .filter((b, i, arr) => b !== arr[i - 1]); // colapsa repetições vizinhas
-      // cada bloco aparece uma vez só (contíguo) e na ordem canônica
-      expect({ id: t.id, sequencia }).toEqual({
+      const distintos = new Set(sequencia);
+      expect({ id: t.id, contiguo: sequencia.length === distintos.size }).toEqual({
         id: t.id,
-        sequencia: ORDEM_CANONICA.filter((b) => sequencia.includes(b)),
+        contiguo: true,
       });
     }
   });
