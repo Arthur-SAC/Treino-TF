@@ -2,11 +2,9 @@ import { Link } from "react-router-dom";
 
 interface Shortcut { icon: string; label: string; sub: string; to: string }
 
-const SHORTCUTS: Shortcut[] = [
+export const SHORTCUTS: Shortcut[] = [
   { icon: "✚", label: "Fertilidade & TRH", sub: "seu plano · perguntas pro médico", to: "/trilha/fertilidade" },
   { icon: "♡", label: "Apoio", sub: "dia difícil · disforia · rede", to: "/trilha/apoio" },
-  { icon: "♪", label: "Voz", sub: "treino diário 15 min", to: "/beleza/voz" },
-  { icon: "✦", label: "Depilação", sub: "registro + plano", to: "/beleza/depilacao" },
   { icon: "❋", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
   { icon: "❖", label: "Estilo", sub: "discreto · combinações", to: "/beleza/estilo/pecas" },
   { icon: "◈", label: "Corpo", sub: "medidas · fotos", to: "/corpo/medidas" },

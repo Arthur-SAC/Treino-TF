@@ -3,8 +3,9 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { Today } from "../../src/pages/Today";
+import { hojeISO } from "../../src/lib/today-date";
 
-const todayISO = new Date().toISOString().slice(0, 10);
+const todayISO = hojeISO();
 const todayDow = new Date().getDay();
 
 describe("Today — cards de treino", () => {

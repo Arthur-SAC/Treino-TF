@@ -5,11 +5,7 @@ import { PathTabs } from "../../components/PathTabs";
 import { StreakCard } from "../../components/StreakCard";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { daysInLast, currentStreak } from "../../lib/evolution";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 const WHR_LABEL: Record<string, string> = {
   "ampulheta-forte": "ampulheta forte",
@@ -26,7 +22,7 @@ export function EvolucaoView() {
   const measurements = useLiveQuery(() => db.measurements.orderBy("date").toArray(), []);
   const milestones = useLiveQuery(() => db.milestones.toArray(), []);
 
-  const t = todayISO();
+  const t = hojeISO();
   const voiceDates = (voiceLogs ?? []).map((l) => l.date);
   const moveDates = (practiceLogs ?? []).map((l) => l.date);
   const skinDates = (skincareLogs ?? []).filter((l) => l.completed).map((l) => l.date);

@@ -4,11 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { db, type PracticeLog } from "../../lib/db";
 import { MoveStep } from "../../components/MoveStep";
 import { VideoSection } from "../../components/VideoSection";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 export function SequenceDetail() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +30,7 @@ export function SequenceDetail() {
   async function finish() {
     if (!sequence) return;
     await db.practiceLogs.add({
-      date: todayISO(),
+      date: hojeISO(),
       sequenceId: sequence.id,
       completed: true,
       durationMin: sequence.durationMin,

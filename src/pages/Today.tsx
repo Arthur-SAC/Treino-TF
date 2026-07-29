@@ -13,15 +13,26 @@ import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
 import { resolveRoutineTime, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
+import { addWater, addWalk, creditarPasseio, registrarSono, noitesNoAlvo } from "../lib/daily-log-helpers";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
+import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
+import { hojeISO } from "../lib/today-date";
+import { metaDePausas } from "../lib/micro-pausas";
+
+/** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
+ *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
+function dayOfYear(date: Date): number {
+  const inicioDoAno = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
+}
 
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
-  const todayISO = today.toISOString().slice(0, 10);
+  const todayISO = hojeISO(today);
 
   const activeCycle = useSetting("activeCycle");
   const todayTemplate = useLiveQuery(
@@ -51,6 +62,14 @@ export function Today() {
 
   const walkGoalMin = useSetting("walkGoalMin");
 
+  // Alvo de micro-pausas derivado da mesma configuração que dispara os
+  // lembretes — 9h→18h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
+  // pouco ou muito.
+  const pausaInicio = useSetting("activeBreakStartHour");
+  const pausaFim = useSetting("activeBreakEndHour");
+  const pausaIntervalo = useSetting("activeBreakIntervalMin");
+  const metaPausas = metaDePausas(pausaInicio, pausaFim, pausaIntervalo);
+
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
     [],
@@ -70,7 +89,7 @@ export function Today() {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().slice(0, 10));
+      dates.push(hojeISO(d));
     }
     const logs = await db.skincareLogs.where("date").anyOf(dates).and((l) => l.completed).toArray();
     const uniqueDates = new Set(logs.map((l) => l.date));
@@ -83,12 +102,36 @@ export function Today() {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().slice(0, 10));
+      dates.push(hojeISO(d));
     }
     const sessions = await db.workoutSessions.where("date").anyOf(dates).toArray();
     const uniqueDates = new Set(sessions.map((s) => s.date));
     return uniqueDates.size;
   }, []);
+
+  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
+  const routineTimes = useSetting("routineTimes");
+
+  // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
+  // fez em /hoje/horarios. Era uma constante "22:30" aqui: se ela mudasse o
+  // item pra 23h, a linha mostrava 23h, o subtítulo continuava dizendo "alvo
+  // 22:30" e o streak media contra 22:30 — três respostas pra mesma pergunta.
+  const itemDormir = routine.blocks.flatMap((b) => b.items).find((i) => i.id === "dormir");
+  const alvoSono = (itemDormir ? resolveRoutineTime(itemDormir, routineTimes) : undefined) ?? "22:30";
+
+  // Conta noites dos últimos 7 dias em que ela deitou até o alvo — sono é a
+  // alavanca que ela mais subestima, e o card só existe pra tornar a melhora
+  // (ou piora) visível semana a semana.
+  const last7DaysSleep = useLiveQuery(async () => {
+    const dates: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dates.push(hojeISO(d));
+    }
+    const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
+    return noitesNoAlvo(logs, alvoSono);
+  }, [alvoSono]);
 
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
@@ -123,26 +166,15 @@ export function Today() {
     daysSincePhoto,
   });
 
-  async function addWater(ml: number) {
+  async function addBreak() {
     const log = await db.dailyLog.get(todayISO);
     if (log) {
-      await db.dailyLog.update(todayISO, { waterMl: log.waterMl + ml });
+      await db.dailyLog.update(todayISO, { activeBreakCount: log.activeBreakCount + 1 });
     } else {
-      await db.dailyLog.put({ date: todayISO, waterMl: ml, activeBreakCount: 0 });
+      await db.dailyLog.put({ date: todayISO, waterMl: 0, activeBreakCount: 1 });
     }
   }
 
-  async function addWalk(min: number) {
-    const log = await db.dailyLog.get(todayISO);
-    if (log) {
-      await db.dailyLog.update(todayISO, { walkMin: (log.walkMin ?? 0) + min });
-    } else {
-      await db.dailyLog.put({ date: todayISO, waterMl: 0, activeBreakCount: 0, walkMin: min });
-    }
-  }
-
-  const routine = buildDayRoutine(dayOfWeek);
-  const routineTimes = useSetting("routineTimes");
   const horaDe = (item: RoutineItem) => {
     const hhmm = resolveRoutineTime(item, routineTimes);
     return hhmm ? formatHora(hhmm) : undefined;
@@ -150,6 +182,7 @@ export function Today() {
   const { done, toggle } = useRoutineChecks(todayISO);
   const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
   const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
+  const [pausaAberta, setPausaAberta] = useState(false);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -161,29 +194,60 @@ export function Today() {
   const isDone = (item: RoutineItem): boolean =>
     item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
 
+  // Passear com os cães credita (ou devolve, se desmarcado) 1h de movimento;
+  // marcar "Dormir" registra a hora real do relógio como hora de deitar, e
+  // desmarcar apaga esse registro. Os demais itens só viram o check comum —
+  // por isso o switch é local aqui e não em useRoutineChecks (que não sabe
+  // nada de dailyLog).
+  //
+  // O estado novo vem do RETORNO de `toggle`, não do Set `done`: o Set é o do
+  // render anterior, então dois toques rápidos liam o mesmo valor e somavam
+  // 60 + 60 = 120 min com a caixinha desmarcada, sem caminho de volta ao zero.
+  async function handleToggle(item: RoutineItem) {
+    const marcado = await toggle(item.id);
+    if (item.control === "walk") {
+      // O passeio dos cães tem ids diferentes por tipo de dia (`caes` na
+      // semana, `caes-fds` no fim de semana — ver today-routine.ts), mas em
+      // ambos os casos é o único item com control:"walk" do dia, então
+      // checar o control em vez do id cobre os dois sem duplicar lógica.
+      await creditarPasseio(todayISO, marcado);
+    } else if (item.id === "dormir") {
+      const agora = new Date();
+      const hhmm = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
+      await registrarSono(todayISO, marcado ? hhmm : undefined);
+    }
+  }
+
   const rightSlotFor = (item: RoutineItem) => {
     if (item.control === "water") {
       return (
-        <button type="button" onClick={() => void addWater(200)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+200 ml</button>
+        <button type="button" onClick={() => void addWater(todayISO, 200)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+200 ml</button>
       );
     }
     if (item.control === "walk") {
       return (
-        <button type="button" onClick={() => void addWalk(10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+10 min</button>
+        <button type="button" onClick={() => void addWalk(todayISO, 10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+10 min</button>
       );
     }
-    if (item.control === "invert") {
-      return <span className="text-[11px] text-nude border border-bg-border rounded-full px-2 py-1">⇄ trocar</span>;
-    }
     if (item.control === "breaks") {
-      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} hoje</span>;
+      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} de {metaPausas}</span>;
     }
     return undefined;
   };
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
-    if (item.control === "walk") return `${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`;
+    if (item.id === "dormir") {
+      const alvo = `alvo ${alvoSono}`;
+      return dailyLog?.sleepAt
+        ? `Você deitou às ${dailyLog.sleepAt} · ${alvo}`
+        : [alvo, item.subtitle].filter(Boolean).join(" · ");
+    }
+    // Todo item que soma movimento (cães, caminhadas) abre com o total do dia
+    // contra a meta — uma meta que não aparece na tela não existe.
+    if (item.control === "walk") {
+      return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
+    }
     return item.subtitle;
   };
 
@@ -204,7 +268,7 @@ export function Today() {
       <div className="grid grid-cols-3 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
-        <StreakCard label="Pausas" count={dailyLog?.activeBreakCount ?? 0} unit="hoje" />
+        <StreakCard label="Sono" count={last7DaysSleep ?? 0} total={7} />
       </div>
 
       <div className="flex justify-end pt-2">
@@ -230,7 +294,7 @@ export function Today() {
               }}
               hora={horaDe(item)}
               done={isDone(item)}
-              onToggle={() => void toggle(item.id)}
+              onToggle={() => void handleToggle(item)}
               rightSlot={rightSlotFor(item)}
               navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
               onOpen={
@@ -238,7 +302,9 @@ export function Today() {
                   ? () => setRecipeMealType(item.mealType!)
                   : item.control === "skincare" && item.skincareTime
                     ? () => setSkincareTime(item.skincareTime!)
-                    : undefined
+                    : item.control === "breaks"
+                      ? () => setPausaAberta(true)
+                      : undefined
               }
             />
           ))}
@@ -249,6 +315,13 @@ export function Today() {
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
       {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
+      {pausaAberta && (
+        <MicroPausaModal
+          n={dailyLog?.activeBreakCount ?? 0}
+          onClose={() => setPausaAberta(false)}
+          onFeito={() => void addBreak()}
+        />
+      )}
     </div>
   );
 }

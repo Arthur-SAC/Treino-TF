@@ -2,33 +2,26 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
-import { getActiveMealPlan } from "../../lib/meal-plan";
+import { getActiveMealPlan, variantEscolhida, EFFORT_LABEL } from "../../lib/meal-plan";
 import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 export function MealsToday() {
-  const today = todayISO();
+  const today = hojeISO();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
   const [recipeOf, setRecipeOf] = useState<Meal["mealType"] | null>(null);
 
-  async function toggleMeal(type: Meal["mealType"], mealIndex: number) {
-    if (!plan) return;
+  // Marcar a refeição grava exatamente os `foods` que o card está mostrando.
+  // Antes gravava `plan.defaultMeals[i]` — a opção 1, em silêncio: o card não
+  // dizia qual das três opções estava ali, e o registro do dia saía com uma
+  // escolha que ela nunca fez.
+  async function toggleMeal(type: Meal["mealType"], foods: Meal["foods"]) {
     const existing = meals?.find((m) => m.mealType === type);
     if (existing && existing.id !== undefined) {
       await db.meals.update(existing.id, { checked: !existing.checked });
     } else {
-      const foods = plan.defaultMeals[mealIndex] ?? [];
-      await db.meals.add({
-        date: today,
-        mealType: type,
-        foods,
-        checked: true,
-      } as Meal);
+      await db.meals.add({ date: today, mealType: type, foods, checked: true } as Meal);
     }
   }
 
@@ -70,7 +63,12 @@ export function MealsToday() {
       <div className="space-y-3">
         {MEAL_ORDER.map(({ type, index }) => {
           const meal = meals?.find((m) => m.mealType === type);
-          const foods = meal?.foods ?? plan.defaultMeals[index] ?? [];
+          const variants = plan.slots.find((s) => s.mealType === type)?.variants ?? [];
+          const escolhida = variantEscolhida(variants, meal);
+          // Sem escolha do dia, o card mostra a opção 1 — mas mostra QUE é ela,
+          // com o mesmo selo de esforço das outras duas telas de refeição.
+          const exibida = escolhida ?? variants[0];
+          const foods = meal?.foods ?? exibida?.foods ?? plan.defaultMeals[index] ?? [];
           const checked = Boolean(meal?.checked);
           const kcal = foods.reduce((s, f) => s + f.kcal, 0);
           return (
@@ -78,7 +76,7 @@ export function MealsToday() {
               <div className="flex items-center gap-3 mb-2">
                 <button
                   type="button"
-                  onClick={() => void toggleMeal(type, index)}
+                  onClick={() => void toggleMeal(type, foods)}
                   className={`w-6 h-6 rounded-md flex-shrink-0 border ${
                     checked ? "bg-nude border-nude" : "bg-bg-deep border-bg-border"
                   }`}
@@ -93,20 +91,28 @@ export function MealsToday() {
                   <span className="text-muted text-xs">{kcal} kcal</span>
                 </div>
               </div>
+              {exibida && (
+                <p className="ml-9 mb-2 text-xs text-muted flex items-center gap-2 flex-wrap">
+                  <span>{escolhida ? exibida.label : `${exibida.label} · sugestão`}</span>
+                  {exibida.effort && (
+                    <span className="text-[10px] uppercase tracking-wider text-muted border border-bg-border rounded px-1.5 py-0.5">
+                      {EFFORT_LABEL[exibida.effort]}
+                    </span>
+                  )}
+                </p>
+              )}
               <ul className="space-y-1 text-sm text-muted ml-9">
                 {foods.map((f, j) => (
                   <li key={j}>{f.name}</li>
                 ))}
               </ul>
-              {foods.some((f) => f.preparation) && (
-                <button
-                  type="button"
-                  onClick={() => setRecipeOf(type)}
-                  className="ml-9 mt-2 text-nude text-xs underline"
-                >
-                  Ver modo de preparo
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setRecipeOf(type)}
+                className="ml-9 mt-2 text-nude text-xs underline"
+              >
+                {escolhida ? "Ver modo de preparo" : "Ver as opções e o modo de preparo"}
+              </button>
             </div>
           );
         })}

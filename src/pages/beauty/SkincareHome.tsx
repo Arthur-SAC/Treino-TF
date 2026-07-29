@@ -5,6 +5,7 @@ import { BeautyTabs } from "../../components/BeautyTabs";
 import { RoutineCard } from "../../components/RoutineCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import type { GuideSection } from "../../components/GuideAccordion";
+import { hojeISO } from "../../lib/today-date";
 
 const FPS_GUIDE: GuideSection[] = [
   {
@@ -21,13 +22,8 @@ const FPS_GUIDE: GuideSection[] = [
   },
 ];
 
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
 export function SkincareHome() {
-  const today = todayISO();
+  const today = hojeISO();
   const routines = useLiveQuery(() => db.skincareRoutines.orderBy("time").toArray(), []);
   const todayLogs = useLiveQuery(() => db.skincareLogs.where("date").equals(today).toArray(), [today]);
 

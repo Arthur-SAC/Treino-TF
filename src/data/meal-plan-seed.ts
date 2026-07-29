@@ -13,6 +13,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "cafe-1",
         label: "Opção 1 · Cuscuz de milho, ovo mexido & whey",
+        effort: "5-min",
         foods: [
           {
             name: "Cuscuz de milho (sem manteiga)",
@@ -56,6 +57,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "cafe-2",
         label: "Opção 2 · Tapioca, ovo & queijo coalho",
+        effort: "5-min",
         foods: [
           {
             name: "Tapioca (2 unidades, ~70g goma)",
@@ -97,6 +99,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "cafe-3",
         label: "Opção 3 · Vitamina de whey, banana & aveia",
+        effort: "5-min",
         foods: [
           {
             name: "Aveia em flocos (5 colheres de sopa)",
@@ -145,6 +148,108 @@ const SLOTS: MealSlot[] = [
           { item: "Leite", qty: 200, unit: "ml", category: "laticinio" },
         ],
       },
+      // Opções 4 e 5 migraram do lanche das 16h: eram leves demais em gordura
+      // pra caber antes do treino (caminhada + treino logo em seguida), mas a
+      // gordura não atrapalha de manhã — e ela tem cuscuzeira e frigideira em
+      // casa nesse horário. Vieram, porém, com a PORÇÃO de lanche (~350 kcal,
+      // ~10-15g proteína) — 145 kcal e até 32g de proteína a menos que as
+      // outras três opções do café (~500 kcal, 21-42g proteína). Escolher a 4
+      // ou a 5 custava proteína bem na fase em que ela mais precisa dela
+      // (construção de glúteo). Porções aumentadas aqui pra ficar na mesma
+      // faixa das outras — ver tests/data/meal-plan-seed.test.ts.
+      {
+        id: "cafe-4",
+        label: "Opção 4 · Banana & ovos cozidos",
+        // Ovo cozido é o prato mais loteável que existe — 10 min de fervura
+        // não bate com o bucket "5-min", mas bate com "lote-domingo": cozinha
+        // a semana toda de uma vez e guarda na geladeira.
+        effort: "lote-domingo",
+        foods: [
+          {
+            name: "Banana (2 unidades médias)",
+            qtyG: 240,
+            kcal: 200,
+            proteinG: 2,
+            carbG: 48,
+            fatG: 0,
+            preparation: "Come ao natural — uma antes e outra depois do treino, se preferir dividir.",
+          },
+          {
+            // Era 2 ovos (155 kcal, 13g proteína) — subiu pra 3 pra fechar a
+            // conta de proteína do café.
+            name: "Ovos cozidos (3 un)",
+            qtyG: 165,
+            kcal: 232,
+            proteinG: 20,
+            carbG: 2,
+            fatG: 16,
+            preparation:
+              "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria, descasca. Dá pra cozinhar o lote de ovos da semana de uma vez no domingo e guardar na geladeira — de manhã é só descascar.",
+          },
+          {
+            // Novo: sem isso a opção ficava em 432 kcal, abaixo da faixa das
+            // outras (~470-550). Uma fatia fecha a conta sem complicar o preparo.
+            name: "Pão de forma (1 fatia)",
+            qtyG: 25,
+            kcal: 65,
+            proteinG: 2,
+            carbG: 12,
+            fatG: 1,
+            preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
+          },
+        ],
+        ingredients: [
+          { item: "Banana", qty: 2, unit: "un", category: "hortifruti" },
+          { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
+          { item: "Pão de forma", qty: 1, unit: "fatia", category: "carboidrato" },
+        ],
+      },
+      {
+        id: "cafe-5",
+        label: "Opção 5 · Tapioca com ovo, queijo coalho & banana",
+        effort: "5-min",
+        foods: [
+          {
+            name: "Tapioca (2 unidades, ~70g goma)",
+            qtyG: 70,
+            kcal: 220,
+            proteinG: 1,
+            carbG: 54,
+            fatG: 0,
+            preparation:
+              "Espalha ~35g de goma hidratada em frigideira antiaderente quente. Espera firmar (~2 min), vira delicadamente, recheia e dobra.",
+          },
+          {
+            // Era 1 ovo + 15g de coalho (140 kcal, 9g proteína) — subiu pra 2
+            // ovos + 25g de coalho pra fechar a conta de proteína do café.
+            name: "Ovo mexido (2 un) com queijo coalho (25g)",
+            qtyG: 135,
+            kcal: 239,
+            proteinG: 19,
+            carbG: 1,
+            fatG: 17,
+            preparation:
+              "Bate 2 ovos com sal, junta queijo coalho picado em cubinhos pequenos. Frigideira antiaderente, mexe em fogo médio ~2-3 min até o queijo amolecer. Recheia a tapioca.",
+          },
+          {
+            // Novo: sem isso a opção ficava em 360 kcal, abaixo da faixa das
+            // outras (~470-550) — a fruta fecha a conta sem mudar o preparo.
+            name: "Banana pequena",
+            qtyG: 100,
+            kcal: 84,
+            proteinG: 1,
+            carbG: 20,
+            fatG: 0,
+            preparation: "Ao natural, do lado da tapioca.",
+          },
+        ],
+        ingredients: [
+          { item: "Goma de tapioca", qty: 70, unit: "g", category: "carboidrato" },
+          { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
+          { item: "Queijo coalho", qty: 25, unit: "g", category: "laticinio" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+        ],
+      },
     ],
   },
 
@@ -156,6 +261,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "almoco-1",
         label: "Opção 1 · Frango grelhado, arroz & feijão de corda",
+        effort: "lote-domingo",
         foods: [
           {
             name: "Frango grelhado (180g)",
@@ -221,6 +327,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "almoco-2",
         label: "Opção 2 · Carne moída, macaxeira & jerimum",
+        effort: "lote-domingo",
         foods: [
           {
             name: "Carne moída patinho (150g)",
@@ -285,6 +392,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "almoco-3",
         label: "Opção 3 · Peixe (tainha ou sardinha), arroz & quiabo",
+        effort: "lote-domingo",
         foods: [
           {
             name: "Peixe assado — tainha ou sardinha (200g)",
@@ -339,83 +447,26 @@ const SLOTS: MealSlot[] = [
   },
 
   // ─── LANCHE (~350 kcal) ───────────────────────────────────────────────────
+  // Ela come às 16h, caminha 1h com os cães e treina 17h45 — logo em seguida.
+  // Todas as opções ficam em ≤5g de gordura (gordura pesa exatamente nessa
+  // janela) e evitam excesso de integral/castanha (fibra também pesa aqui).
   {
     mealType: "lanche",
     targetKcal: 350,
     variants: [
       {
         id: "lanche-1",
-        label: "Opção 1 · Banana & ovos cozidos",
+        label: "Opção 1 · Iogurte, banana & aveia",
+        effort: "zero-preparo",
         foods: [
           {
-            name: "Banana (2 unidades médias)",
-            qtyG: 240,
-            kcal: 200,
-            proteinG: 2,
-            carbG: 48,
+            name: "Iogurte natural desnatado (170g)",
+            qtyG: 170,
+            kcal: 68,
+            proteinG: 7,
+            carbG: 10,
             fatG: 0,
-            preparation: "Come ao natural — uma antes e outra depois do treino, se preferir dividir.",
-          },
-          {
-            name: "Ovos cozidos (2 un)",
-            qtyG: 110,
-            kcal: 155,
-            proteinG: 13,
-            carbG: 1,
-            fatG: 11,
-            preparation:
-              "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria, descasca.",
-          },
-        ],
-        ingredients: [
-          { item: "Banana", qty: 2, unit: "un", category: "hortifruti" },
-          { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
-        ],
-      },
-      {
-        id: "lanche-2",
-        label: "Opção 2 · Tapioca com ovo & queijo coalho",
-        foods: [
-          {
-            name: "Tapioca (2 unidades, ~70g goma)",
-            qtyG: 70,
-            kcal: 220,
-            proteinG: 1,
-            carbG: 54,
-            fatG: 0,
-            preparation:
-              "Espalha ~35g de goma hidratada em frigideira antiaderente quente. Espera firmar (~2 min), vira delicadamente, recheia e dobra.",
-          },
-          {
-            name: "Ovo mexido (1 un) com queijo coalho (15g)",
-            qtyG: 70,
-            kcal: 140,
-            proteinG: 9,
-            carbG: 1,
-            fatG: 10,
-            preparation:
-              "Bate 1 ovo com sal, junta queijo coalho picado. Frigideira antiaderente, mexe ~2 min. Recheia a tapioca.",
-          },
-        ],
-        ingredients: [
-          { item: "Goma de tapioca", qty: 70, unit: "g", category: "carboidrato" },
-          { item: "Ovos", qty: 1, unit: "un", category: "proteina" },
-          { item: "Queijo coalho", qty: 15, unit: "g", category: "laticinio" },
-        ],
-      },
-      {
-        id: "lanche-3",
-        label: "Opção 3 · Vitamina de whey & banana",
-        foods: [
-          {
-            name: "Whey protein (1 scoop)",
-            qtyG: 30,
-            kcal: 120,
-            proteinG: 24,
-            carbG: 3,
-            fatG: 1,
-            preparation:
-              "Bate no liquidificador com água ou leite + banana e gelo. Vitamina pronta em 30s.",
+            preparation: "Direto do pote, gelado — sem preparo.",
           },
           {
             name: "Banana média",
@@ -424,22 +475,93 @@ const SLOTS: MealSlot[] = [
             proteinG: 1,
             carbG: 32,
             fatG: 0,
-            preparation: "Coloca inteira no liquidificador. Mais madura = mais doce.",
+            preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
           {
-            name: "Leite (200ml)",
-            qtyG: 200,
-            kcal: 70,
-            proteinG: 7,
-            carbG: 10,
-            fatG: 0,
-            preparation: "Base da vitamina — pode trocar por água se preferir mais leve.",
+            name: "Aveia em flocos (3 colheres de sopa)",
+            qtyG: 40,
+            kcal: 150,
+            proteinG: 6,
+            carbG: 27,
+            fatG: 3,
+            preparation: "Polvilha por cima do iogurte na hora de comer — sem cozinhar.",
           },
         ],
         ingredients: [
-          { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
+          { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-          { item: "Leite", qty: 200, unit: "ml", category: "laticinio" },
+          { item: "Aveia em flocos", qty: 40, unit: "g", category: "carboidrato" },
+        ],
+      },
+      {
+        id: "lanche-2",
+        label: "Opção 2 · Pão com peito de peru & banana",
+        effort: "zero-preparo",
+        foods: [
+          {
+            name: "Pão de forma (2 fatias)",
+            qtyG: 50,
+            kcal: 130,
+            proteinG: 4,
+            carbG: 24,
+            fatG: 2,
+            preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
+          },
+          {
+            name: "Peito de peru fatiado (6 fatias)",
+            qtyG: 90,
+            // 17P + 2C + 2G = 68 + 8 + 18 = 94 kcal. Estava 83, e o buraco de
+            // 11 kcal derrubava a opção 2 do lanche pra 338 contra o alvo 350.
+            kcal: 94,
+            proteinG: 17,
+            carbG: 2,
+            fatG: 2,
+            preparation: "Frios fatiados, direto da geladeira — de casa ou do trabalho.",
+          },
+          {
+            name: "Banana média",
+            qtyG: 150,
+            kcal: 125,
+            proteinG: 1,
+            carbG: 32,
+            fatG: 0,
+            preparation: "Ao natural.",
+          },
+        ],
+        ingredients: [
+          { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
+          { item: "Peito de peru fatiado", qty: 90, unit: "g", category: "proteina" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+        ],
+      },
+      {
+        id: "lanche-3",
+        label: "Opção 3 · Cuscuz pequeno & banana",
+        effort: "5-min",
+        foods: [
+          {
+            name: "Cuscuz de milho pequeno (sem manteiga)",
+            qtyG: 180,
+            kcal: 276,
+            proteinG: 6,
+            carbG: 58,
+            fatG: 4,
+            preparation:
+              "Hidrata 60g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
+          },
+          {
+            name: "Banana média",
+            qtyG: 120,
+            kcal: 100,
+            proteinG: 1,
+            carbG: 24,
+            fatG: 0,
+            preparation: "Ao natural.",
+          },
+        ],
+        ingredients: [
+          { item: "Flocão de milho (cuscuz)", qty: 60, unit: "g", category: "carboidrato" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
     ],
@@ -453,6 +575,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "jantar-1",
         label: "Opção 1 · Frango desfiado, macaxeira & legumes",
+        effort: "lote-domingo",
         foods: [
           {
             name: "Frango desfiado (180g)",
@@ -508,6 +631,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "jantar-2",
         label: "Opção 2 · Omelete com queijo coalho & cuscuz de milho",
+        effort: "5-min",
         foods: [
           {
             name: "Omelete de 4 ovos com queijo coalho (40g)",
@@ -562,6 +686,7 @@ const SLOTS: MealSlot[] = [
       {
         id: "jantar-3",
         label: "Opção 3 · Peixe, jerimum & salada",
+        effort: "lote-domingo",
         foods: [
           {
             name: "Peixe assado — tainha ou sardinha (220g)",
@@ -679,13 +804,16 @@ const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
     ingredients: [{ item: "Whey protein", qty: 30, unit: "g", category: "laticinio" }],
   },
   lanche: {
+    // Sem pasta de amendoim aqui de propósito: mesmo na fase de crescer o
+    // glúteo, o lanche continua sendo o pré-treino (caminhada + treino logo
+    // depois) — o acréscimo de energia vem de carboidrato, não de gordura.
     foods: [
       { name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." },
-      { name: "Pasta de amendoim (1 cs)", qtyG: 15, kcal: 90, proteinG: 4, carbG: 3, fatG: 8, preparation: "Integral, sem açúcar. Na banana ou no pão." },
+      { name: "Mel (1 colher de sopa)", qtyG: 20, kcal: 61, proteinG: 0, carbG: 17, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
     ],
     ingredients: [
       { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-      { item: "Pasta de amendoim", qty: 15, unit: "g", category: "gordura" },
+      { item: "Mel", qty: 20, unit: "g", category: "mercearia" },
     ],
   },
   almoco: {

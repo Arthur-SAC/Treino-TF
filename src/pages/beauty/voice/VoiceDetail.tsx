@@ -5,11 +5,7 @@ import { db, type VoicePracticeLog, type VoiceRecording } from "../../../lib/db"
 import { useSetting } from "../../../hooks/useSetting";
 import { analyzeRecordingPitch } from "../../../lib/pitch-audio";
 import { PitchMeter } from "../../../components/PitchMeter";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../../lib/today-date";
 
 function formatSec(s: number): string {
   const m = Math.floor(s / 60);
@@ -91,7 +87,7 @@ export function VoiceDetail() {
         if (!exercise) return;
         const avgPitchHz = await analyzeRecordingPitch(blob);
         await db.voiceRecordings.add({
-          date: todayISO(),
+          date: hojeISO(),
           blob,
           durationSec: duration,
           exerciseId: exercise.id,
@@ -118,7 +114,7 @@ export function VoiceDetail() {
   async function finish() {
     if (!exercise) return;
     await db.voicePracticeLogs.add({
-      date: todayISO(),
+      date: hojeISO(),
       exerciseId: exercise.id,
       completed: true,
       durationMin: exercise.durationMin,

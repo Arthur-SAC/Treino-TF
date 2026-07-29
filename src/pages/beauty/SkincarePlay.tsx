@@ -2,11 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db } from "../../lib/db";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 function formatSec(s: number): string {
   const m = Math.floor(s / 60);
@@ -69,7 +65,7 @@ export function SkincarePlay() {
 
   async function finish() {
     if (!routine?.id) return;
-    const today = todayISO();
+    const today = hojeISO();
     const existing = await db.skincareLogs
       .where("date").equals(today)
       .and((l) => l.routineId === routine.id)

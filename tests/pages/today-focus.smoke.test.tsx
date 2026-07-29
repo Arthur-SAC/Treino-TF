@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Today } from "../../src/pages/Today";
 import { db } from "../../src/lib/db";
+import { hojeISO } from "../../src/lib/today-date";
 
 beforeEach(async () => {
   await db.measurements.clear();
@@ -15,7 +16,7 @@ describe("Today focus smoke", () => {
   it("mostra o card de foco quando a medida está atrasada", async () => {
     const old = new Date();
     old.setDate(old.getDate() - 40);
-    await db.measurements.add({ date: old.toISOString().slice(0, 10), waistCm: 80, hipCm: 110 });
+    await db.measurements.add({ date: hojeISO(old), waistCm: 80, hipCm: 110 });
     render(
       <MemoryRouter>
         <Today />

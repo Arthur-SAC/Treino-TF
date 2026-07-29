@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { buildDayRoutine } from "../../src/lib/today-routine";
-import { resolveRoutineTime, itensAjustaveis, formatHora } from "../../src/lib/routine-times";
+import { resolveRoutineTime, itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../../src/lib/routine-times";
+import type { RoutineTimeOverrides } from "../../src/lib/routine-times";
 
-// Segunda-feira: o dia completo de semana.
-const SEGUNDA = buildDayRoutine(1);
+// Segunda-feira: o dia completo de semana. Dia do ano ímpar (1) = sem barba,
+// pra não interferir nos horários das refeições/dormir testados aqui.
+const SEGUNDA = buildDayRoutine(1, 1);
 const itens = SEGUNDA.blocks.flatMap((b) => b.items);
 const acharItem = (id: string) => itens.find((i) => i.id === id)!;
 
@@ -31,11 +33,51 @@ describe("horários da rotina", () => {
     expect(acharItem("dormir").defaultTime).toBe("22:30");
   });
 
-  it("dentro de cada bloco, os itens com horário estão em ordem cronológica", () => {
-    for (const bloco of SEGUNDA.blocks) {
+  // Os dois lados da alternância: no dia ÍMPAR não há barba, então o loop
+  // nunca via a única inserção de ordem que a barba (06:15, entre o
+  // alongamento das 06:00 e o skincare das 06:25) representa.
+  it("dentro de cada bloco, os itens com horário estão em ordem cronológica (dia sem barba e dia com barba)", () => {
+    for (const diaDoAno of [1, 2]) {
+      for (const bloco of buildDayRoutine(1, diaDoAno).blocks) {
+        const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
+        expect({ diaDoAno, bloco: bloco.id, horas }).toEqual({ diaDoAno, bloco: bloco.id, horas: [...horas].sort() });
+      }
+    }
+  });
+
+  it("no dia par, a barba realmente entra no meio da manhã (senão o teste acima é trivial)", () => {
+    const manha = buildDayRoutine(1, 2).blocks.find((b) => b.id === "manha")!;
+    const ids = manha.items.map((i) => i.id);
+    expect(ids).toContain("barba");
+    expect(ids.indexOf("alongamento-manha")).toBeLessThan(ids.indexOf("barba"));
+    expect(ids.indexOf("barba")).toBeLessThan(ids.indexOf("skincare-manha"));
+  });
+
+  it("no sábado, os itens com horário também estão em ordem cronológica", () => {
+    const SABADO = buildDayRoutine(6, 1);
+    for (const bloco of SABADO.blocks) {
       const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
       expect({ bloco: bloco.id, horas }).toEqual({ bloco: bloco.id, horas: [...horas].sort() });
     }
+  });
+
+  it("no domingo, os itens com horário também estão em ordem cronológica", () => {
+    const DOMINGO = buildDayRoutine(0, 1);
+    for (const bloco of DOMINGO.blocks) {
+      const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
+      expect({ bloco: bloco.id, horas }).toEqual({ bloco: bloco.id, horas: [...horas].sort() });
+    }
+  });
+
+  // "descanso-domingo" não tem defaultTime de propósito (dia livre, sem hora
+  // marcada) — então o teste de horários filtrados acima passaria mesmo se o
+  // lanche fosse parar depois do descanso, porque sobraria um único horário
+  // no array. Esta checagem cobre a posição real dos itens, não só as horas.
+  it("no domingo, o lanche (com hora) vem antes do descanso (sem hora)", () => {
+    const DOMINGO = buildDayRoutine(0, 1);
+    const tarde = DOMINGO.blocks.find((b) => b.id === "tarde")!;
+    const ids = tarde.items.map((i) => i.id);
+    expect(ids.indexOf("lanche-saida")).toBeLessThan(ids.indexOf("descanso-domingo"));
   });
 
   it("nenhum horário padrão é inválido", () => {
@@ -76,6 +118,82 @@ describe("itensAjustaveis", () => {
     for (const id of ["cafe-marmita", "almoco", "lanche-saida", "jantar", "dormir"]) {
       expect(ids).toContain(id);
     }
+  });
+});
+
+// A tela de ajuste montava a lista só a partir de segunda-feira, então
+// dança (17:30) e caminhada do sábado (18:15) nunca apareciam — apesar de
+// terem horário e da spec dizer "todos ajustáveis".
+describe("blocosDaSemanaInteira", () => {
+  const ajustaveis = itensAjustaveis(blocosDaSemanaInteira()).map((i) => i.id);
+
+  it("cobre os itens de sábado, que têm horário e ficavam de fora", () => {
+    expect(ajustaveis).toContain("danca-sabado");
+  });
+
+  it("continua cobrindo a barba, que só existe em dia do ano par", () => {
+    expect(ajustaveis).toContain("barba");
+  });
+
+  it("todo item com horário padrão dos sete dias está ajustável", () => {
+    for (let dow = 0; dow < 7; dow++) {
+      for (const paridade of [1, 2]) {
+        const faltando = buildDayRoutine(dow, paridade).blocks
+          .flatMap((b) => b.items)
+          .filter((i) => i.defaultTime && !ajustaveis.includes(i.id))
+          .map((i) => i.id);
+        expect({ dow, paridade, faltando }).toEqual({ dow, paridade, faltando: [] });
+      }
+    }
+  });
+
+  it("não repete id — a lista vira um formulário, não pode ter dois campos do mesmo item", () => {
+    expect(new Set(ajustaveis).size).toBe(ajustaveis.length);
+  });
+
+  it("mantém a ordem dos blocos e não perde nenhum", () => {
+    expect(blocosDaSemanaInteira().map((b) => b.id)).toEqual(["manha", "trabalho", "tarde", "noite", "semana"]);
+  });
+});
+
+// Trava a regressão: o passeio dos cães tinha um único id ("caes") pros sete
+// dias, com o sábado só vencendo o horário padrão (18:15 em vez de 16:40) via
+// override no objeto — mas a tela de ajuste dedupava por id e mostrava uma
+// linha só. Ajustar aquela linha reescrevia `routineTimes["caes"]` pros sete
+// dias, inclusive sábado, e o passeio de 1h voltava a cair em cima da dança
+// das 17h30 (o bug que o commit b8c6b30 tinha acabado de corrigir). A
+// correção dá ids diferentes a cada um (`caes` na semana, `caes-fds` no fim
+// de semana) — este teste prova que o ajuste de um não vaza pro outro.
+describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) independentes", () => {
+  it("ids diferentes por tipo de dia", () => {
+    const idDoPasseio = (dow: number) =>
+      buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).find((i) => i.control === "walk")!.id;
+    expect(idDoPasseio(3)).toBe("caes"); // quarta-feira
+    expect(idDoPasseio(6)).toBe("caes-fds"); // sábado
+    expect(idDoPasseio(0)).toBe("caes-fds"); // domingo
+  });
+
+  it("ajustar o horário do passeio de dia de semana NÃO muda o do sábado", () => {
+    // A usuária adianta o passeio de segunda a sexta pra 17:00.
+    const overrides: RoutineTimeOverrides = { caes: "17:00" };
+
+    const passeioSemana = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes")!;
+    const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
+
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("17:00");
+    // O sábado continua no padrão (18:15, depois da dança) — o override da
+    // semana não se aplica a ele porque o id é outro.
+    expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:15");
+  });
+
+  it("e o inverso também vale: ajustar o sábado não muda o passeio de semana", () => {
+    const overrides: RoutineTimeOverrides = { "caes-fds": "18:45" };
+
+    const passeioSemana = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes")!;
+    const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
+
+    expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:45");
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("16:40");
   });
 });
 

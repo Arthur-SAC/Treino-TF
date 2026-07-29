@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import type { MealVariant } from "../../lib/db";
-import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM } from "../../lib/meal-plan";
+import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
 import { buildShoppingList } from "../../lib/shopping-list";
@@ -28,7 +28,16 @@ function VariantDetails({ v }: { v: MealVariant }) {
         onClick={() => setOpen((o) => !o)}
         className="w-full cursor-pointer text-nude-warm text-sm flex justify-between"
       >
-        <span>{v.label} <span className="text-nude text-xs">{open ? "▾" : "▸"}</span></span>
+        <span>
+          {v.label}
+          {v.effort && (
+            <span className="ml-2 text-[10px] uppercase tracking-wider text-muted border border-bg-border rounded px-1.5 py-0.5 align-middle">
+              {EFFORT_LABEL[v.effort]}
+            </span>
+          )}
+          {" "}
+          <span className="text-nude text-xs">{open ? "▾" : "▸"}</span>
+        </span>
         <span className="text-muted text-xs">{v.foods.reduce((s, f) => s + f.kcal, 0)} kcal</span>
       </button>
       {open && (

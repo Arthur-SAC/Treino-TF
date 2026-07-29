@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import type { Measurement } from "../lib/db";
+import { hojeISO } from "../lib/today-date";
 
 type MeasurementInput = Omit<Measurement, "id">;
 
@@ -22,11 +23,6 @@ const FIELDS: Array<{ key: keyof MeasurementInput; label: string }> = [
   { key: "calfCm", label: "Panturrilha" },
 ];
 
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
 function validateCm(value: string): number | undefined {
   if (value.trim() === "") return undefined;
   const n = Number(value.replace(",", "."));
@@ -35,7 +31,7 @@ function validateCm(value: string): number | undefined {
 }
 
 export function MeasurementForm({ initial, onSubmit }: Props) {
-  const [date, setDate] = useState(initial?.date ?? todayISO());
+  const [date, setDate] = useState(initial?.date ?? hojeISO());
   const [values, setValues] = useState<Record<string, string>>(() => {
     const out: Record<string, string> = {};
     for (const { key } of FIELDS) {

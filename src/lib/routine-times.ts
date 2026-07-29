@@ -5,7 +5,7 @@
 // Existe porque a tela Hoje mostrava os blocos com horário ("Manhã ~6h") mas
 // os itens dentro deles não, então não dava pra saber quando comer.
 
-import type { RoutineItem, RoutineBlockGroup } from "./today-routine";
+import { buildDayRoutine, type RoutineItem, type RoutineBlockGroup } from "./today-routine";
 
 /** Ajustes da usuária: id do item -> "HH:MM". */
 export type RoutineTimeOverrides = Record<string, string>;
@@ -31,6 +31,44 @@ export function itensAjustaveis(blocks: RoutineBlockGroup[]): RoutineItem[] {
     }
   }
   return lista;
+}
+
+/** Une vários dias num conjunto único de blocos, sem repetir item (o mesmo id
+ *  pode existir em mais de um dia). A união é por id de bloco, não por posição
+ *  — um dia que não tivesse algum bloco não desalinharia o resto. */
+function unirDias(dias: RoutineBlockGroup[][]): RoutineBlockGroup[] {
+  const porId = new Map<string, RoutineBlockGroup>();
+  const ordem: string[] = [];
+  const itensVistos = new Set<string>();
+  for (const blocos of dias) {
+    for (const bloco of blocos) {
+      if (!porId.has(bloco.id)) {
+        porId.set(bloco.id, { ...bloco, items: [] });
+        ordem.push(bloco.id);
+      }
+      const alvo = porId.get(bloco.id)!;
+      for (const item of bloco.items) {
+        if (itensVistos.has(item.id)) continue;
+        itensVistos.add(item.id);
+        alvo.items.push(item);
+      }
+    }
+  }
+  return ordem.map((id) => porId.get(id)!);
+}
+
+/** Todos os itens da semana inteira, num conjunto só — é daqui que a tela de
+ *  ajuste tira a lista. Precisa dos sete dias porque a rotina muda de dia pra
+ *  dia: a barba só aparece em dia do ano par, e dança/caminhada só no sábado.
+ *  A tela dizia "todos ajustáveis" mas montava a lista só a partir de segunda,
+ *  então os itens de sábado (que TÊM horário) nunca apareciam. */
+export function blocosDaSemanaInteira(): RoutineBlockGroup[] {
+  return unirDias([
+    buildDayRoutine(1, 2).blocks, // segunda, dia do ano par — com barba
+    buildDayRoutine(1, 1).blocks, // segunda, dia do ano ímpar — sem barba
+    buildDayRoutine(6, 2).blocks, // sábado: dança e caminhada leve
+    buildDayRoutine(0, 2).blocks, // domingo
+  ]);
 }
 
 /** "19:00" -> "19h" · "16:40" -> "16h40" · "06:05" -> "6h05".

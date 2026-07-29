@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { db, type Measurement, type ProgressPhoto } from "../../lib/db";
 import { MeasurementForm } from "../../components/MeasurementForm";
 import { compressImage } from "../../lib/image-compress";
+import { hojeISO } from "../../lib/today-date";
 
 const PRESET_MEASUREMENT: Partial<Measurement> = {
   neckCm: 40,
@@ -38,7 +39,7 @@ export function Onboarding() {
       try {
         const blob = await compressImage(file);
         await db.photos.add({
-          date: new Date().toISOString().slice(0, 10),
+          date: hojeISO(),
           blob,
           tag: importTag,
           category,

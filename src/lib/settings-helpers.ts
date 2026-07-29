@@ -73,7 +73,7 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   entradaMigration: 0,
-  walkGoalMin: 30,
+  walkGoalMin: 75,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,

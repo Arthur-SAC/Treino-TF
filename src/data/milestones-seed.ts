@@ -1,9 +1,10 @@
 import type { Milestone } from "../lib/db";
+import { hojeISO } from "../lib/today-date";
 
 function isoFromMonthsFromNow(months: number): string {
   const d = new Date();
   d.setMonth(d.getMonth() + months);
-  return d.toISOString().slice(0, 10);
+  return hojeISO(d);
 }
 
 export const MILESTONES: Omit<Milestone, "id">[] = [

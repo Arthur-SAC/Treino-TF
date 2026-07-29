@@ -1,4 +1,4 @@
-import type { Meal, MealSlot, MealPlan } from "./db";
+import type { Meal, MealSlot, MealPlan, MealVariant } from "./db";
 import { db } from "./db";
 import { getSetting } from "./settings-helpers";
 import { CYCLE_TO_GOAL, type CycleId } from "../data/cycles-seed";
@@ -7,6 +7,25 @@ import { CYCLE_TO_GOAL, type CycleId } from "../data/cycles-seed";
 export function deriveDefaultMeals(slots: MealSlot[]): Meal["foods"][] {
   return slots.map((slot) => slot.variants[0]?.foods ?? []);
 }
+
+/** Qual variante do slot corresponde à refeição já gravada no dia. A refeição
+ *  não guarda o id da variante, só o conteúdo — então a comparação é pelo
+ *  conteúdo. (Dívida conhecida: o certo é `variantId` no schema; enquanto isso,
+ *  pelo menos existe UM lugar que faz essa comparação, e não dois.) */
+export function variantEscolhida(variants: MealVariant[], meal: Meal | undefined): MealVariant | undefined {
+  if (!meal) return undefined;
+  return variants.find((v) => JSON.stringify(v.foods) === JSON.stringify(meal.foods));
+}
+
+/** Rótulo legível do selo de esforço — compartilhado entre RecipeModal e
+ *  MealPlanView pra evitar duas telas com o mesmo dado descrito de dois
+ *  jeitos diferentes. */
+export const EFFORT_LABEL: Record<NonNullable<MealVariant["effort"]>, string> = {
+  "zero-preparo": "zero preparo",
+  "5-min": "pronto em 5 min",
+  "air-fryer": "air fryer",
+  "lote-domingo": "do lote de domingo",
+};
 
 /** Cintura a partir da qual o superávit calórico passa a fazer sentido.
  *  Acima disso, superávit deposita gordura abdominal — que é justamente a

@@ -1,7 +1,12 @@
+import { hojeISO } from "./today-date";
+
+// `iso + "T00:00:00"` (sem "Z") é meia-noite LOCAL; o deslocamento é em dias
+// locais e a volta pra string também tem que ser local — com `toISOString()`
+// a data escorregava um dia em qualquer fuso a leste de Greenwich.
 function shiftISO(iso: string, deltaDays: number): string {
   const d = new Date(iso + "T00:00:00");
   d.setDate(d.getDate() + deltaDays);
-  return d.toISOString().slice(0, 10);
+  return hojeISO(d);
 }
 
 export function distinctDays(dates: string[]): number {
