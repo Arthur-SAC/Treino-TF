@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
+import { INITIAL_PLAN, ALL_MEAL_PLANS } from "../../src/data/meal-plan-seed";
 
 describe("INITIAL_PLAN", () => {
   it("é um plano de déficit calibrado", () => {
@@ -48,6 +48,49 @@ describe("INITIAL_PLAN", () => {
       const kcal = v.foods.reduce((s, f) => s + f.kcal, 0);
       expect({ opcao: v.label, dentroDoAlvo: Math.abs(kcal - lanche.targetKcal) <= 30, kcal })
         .toEqual({ opcao: v.label, dentroDoAlvo: true, kcal });
+    }
+  });
+
+  // Generaliza a proteção que antes só existia pro lanche (teste acima, com
+  // margem fixa de 30 kcal): as opções 4 e 5 do café passaram despercebidas
+  // porque nada cobria a faixa calórica das OUTRAS refeições. Cobre os três
+  // planos (déficit/manutenção/superávit) — o boost por fase soma o mesmo
+  // kcal ao alvo e a cada variante, então a folga percentual só encolhe.
+  it("toda variante de toda refeição, em todo plano, fica dentro de ±15% do targetKcal do seu slot", () => {
+    const violacoes: Array<{ plano: string; refeicao: string; opcao: string; kcal: number; alvo: number; desvio: string }> = [];
+    for (const plano of ALL_MEAL_PLANS) {
+      for (const slot of plano.slots) {
+        for (const v of slot.variants) {
+          const kcal = v.foods.reduce((s, f) => s + f.kcal, 0);
+          const desvio = Math.abs(kcal - slot.targetKcal) / slot.targetKcal;
+          if (desvio > 0.15) {
+            violacoes.push({
+              plano: plano.name,
+              refeicao: slot.mealType,
+              opcao: v.label,
+              kcal,
+              alvo: slot.targetKcal,
+              desvio: `${(desvio * 100).toFixed(1)}%`,
+            });
+          }
+        }
+      }
+    }
+    expect(violacoes).toEqual([]);
+  });
+
+  // As opções 4 e 5 migraram do lanche com porção de lanche (~355-360 kcal,
+  // 10-15g proteína) — 145 kcal e até 32g de proteína a menos que as outras
+  // três (~470-550 kcal, 21-42g proteína) num slot calibrado pra 500 kcal.
+  // Proteína é a alavanca que ela menos pode perder (construção de glúteo).
+  it("as cinco opções do café ficam parecidas em kcal, e nenhuma cai abaixo de 20g de proteína", () => {
+    const cafe = INITIAL_PLAN.slots.find((s) => s.mealType === "cafe")!;
+    for (const v of cafe.variants) {
+      const kcal = v.foods.reduce((s, f) => s + f.kcal, 0);
+      const protein = v.foods.reduce((s, f) => s + (f.proteinG ?? 0), 0);
+      expect({ opcao: v.label, dentroDoAlvo: Math.abs(kcal - cafe.targetKcal) / cafe.targetKcal <= 0.15, kcal })
+        .toEqual({ opcao: v.label, dentroDoAlvo: true, kcal });
+      expect({ opcao: v.label, proteinaOk: protein >= 20, protein }).toEqual({ opcao: v.label, proteinaOk: true, protein });
     }
   });
 

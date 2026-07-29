@@ -2,7 +2,7 @@ import { db } from "./db";
 import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES, VOICE_MILESTONES } from "../data/milestones-seed";
 import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
-const MEAL_PLAN_VERSION = 6;
+const MEAL_PLAN_VERSION = 7;
 const MILESTONE_SEED_VERSION = 6;
 
 /** Upsert dos planos por `goal` (déficit/manutenção/superávit): atualiza o que

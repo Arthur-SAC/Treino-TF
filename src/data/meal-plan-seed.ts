@@ -151,8 +151,12 @@ const SLOTS: MealSlot[] = [
       // Opções 4 e 5 migraram do lanche das 16h: eram leves demais em gordura
       // pra caber antes do treino (caminhada + treino logo em seguida), mas a
       // gordura não atrapalha de manhã — e ela tem cuscuzeira e frigideira em
-      // casa nesse horário. Conteúdo idêntico ao original, só rótulo e número
-      // de opção ajustados.
+      // casa nesse horário. Vieram, porém, com a PORÇÃO de lanche (~350 kcal,
+      // ~10-15g proteína) — 145 kcal e até 32g de proteína a menos que as
+      // outras três opções do café (~500 kcal, 21-42g proteína). Escolher a 4
+      // ou a 5 custava proteína bem na fase em que ela mais precisa dela
+      // (construção de glúteo). Porções aumentadas aqui pra ficar na mesma
+      // faixa das outras — ver tests/data/meal-plan-seed.test.ts.
       {
         id: "cafe-4",
         label: "Opção 4 · Banana & ovos cozidos",
@@ -171,24 +175,38 @@ const SLOTS: MealSlot[] = [
             preparation: "Come ao natural — uma antes e outra depois do treino, se preferir dividir.",
           },
           {
-            name: "Ovos cozidos (2 un)",
-            qtyG: 110,
-            kcal: 155,
-            proteinG: 13,
-            carbG: 1,
-            fatG: 11,
+            // Era 2 ovos (155 kcal, 13g proteína) — subiu pra 3 pra fechar a
+            // conta de proteína do café.
+            name: "Ovos cozidos (3 un)",
+            qtyG: 165,
+            kcal: 232,
+            proteinG: 20,
+            carbG: 2,
+            fatG: 16,
             preparation:
               "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria, descasca. Dá pra cozinhar o lote de ovos da semana de uma vez no domingo e guardar na geladeira — de manhã é só descascar.",
+          },
+          {
+            // Novo: sem isso a opção ficava em 432 kcal, abaixo da faixa das
+            // outras (~470-550). Uma fatia fecha a conta sem complicar o preparo.
+            name: "Pão de forma (1 fatia)",
+            qtyG: 25,
+            kcal: 65,
+            proteinG: 2,
+            carbG: 12,
+            fatG: 1,
+            preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
           },
         ],
         ingredients: [
           { item: "Banana", qty: 2, unit: "un", category: "hortifruti" },
-          { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
+          { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
+          { item: "Pão de forma", qty: 1, unit: "fatia", category: "carboidrato" },
         ],
       },
       {
         id: "cafe-5",
-        label: "Opção 5 · Tapioca com ovo & queijo coalho",
+        label: "Opção 5 · Tapioca com ovo, queijo coalho & banana",
         effort: "5-min",
         foods: [
           {
@@ -202,20 +220,34 @@ const SLOTS: MealSlot[] = [
               "Espalha ~35g de goma hidratada em frigideira antiaderente quente. Espera firmar (~2 min), vira delicadamente, recheia e dobra.",
           },
           {
-            name: "Ovo mexido (1 un) com queijo coalho (15g)",
-            qtyG: 70,
-            kcal: 140,
-            proteinG: 9,
+            // Era 1 ovo + 15g de coalho (140 kcal, 9g proteína) — subiu pra 2
+            // ovos + 25g de coalho pra fechar a conta de proteína do café.
+            name: "Ovo mexido (2 un) com queijo coalho (25g)",
+            qtyG: 135,
+            kcal: 239,
+            proteinG: 19,
             carbG: 1,
-            fatG: 10,
+            fatG: 17,
             preparation:
-              "Bate 1 ovo com sal, junta queijo coalho picado. Frigideira antiaderente, mexe ~2 min. Recheia a tapioca.",
+              "Bate 2 ovos com sal, junta queijo coalho picado em cubinhos pequenos. Frigideira antiaderente, mexe em fogo médio ~2-3 min até o queijo amolecer. Recheia a tapioca.",
+          },
+          {
+            // Novo: sem isso a opção ficava em 360 kcal, abaixo da faixa das
+            // outras (~470-550) — a fruta fecha a conta sem mudar o preparo.
+            name: "Banana pequena",
+            qtyG: 100,
+            kcal: 84,
+            proteinG: 1,
+            carbG: 20,
+            fatG: 0,
+            preparation: "Ao natural, do lado da tapioca.",
           },
         ],
         ingredients: [
           { item: "Goma de tapioca", qty: 70, unit: "g", category: "carboidrato" },
-          { item: "Ovos", qty: 1, unit: "un", category: "proteina" },
-          { item: "Queijo coalho", qty: 15, unit: "g", category: "laticinio" },
+          { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
+          { item: "Queijo coalho", qty: 25, unit: "g", category: "laticinio" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
     ],
