@@ -27,17 +27,17 @@ describe("RecipeModal — as três opções", () => {
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
     // expandiu (o modo de preparo da opção aparece), mas nada foi gravado
-    await screen.findByRole("button", { name: /comi essa/i });
+    await screen.findByRole("button", { name: /escolhi essa/i });
     const meals = await db.meals.toArray();
     expect(meals.find((m) => m.mealType === "lanche")).toBeUndefined();
   });
 
-  it("expandir e confirmar 'Comi essa' grava a refeição do dia", async () => {
+  it("expandir e confirmar 'Escolhi essa' grava a refeição do dia", async () => {
     const user = userEvent.setup();
     render(<RecipeModal mealType="lanche" onClose={() => {}} />);
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
-    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
+    await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
     const meals = await db.meals.toArray();
     const lanche = meals.find((m) => m.mealType === "lanche");
     expect(lanche).toBeDefined();
@@ -49,11 +49,11 @@ describe("RecipeModal — as três opções", () => {
     render(<RecipeModal mealType="lanche" onClose={() => {}} />);
     let opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
-    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
+    await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
 
     opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[2]);
-    await user.click(await screen.findByRole("button", { name: /comi essa/i }));
+    await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
 
     const meals = await db.meals.toArray();
     const lanches = meals.filter((m) => m.mealType === "lanche");
@@ -65,7 +65,7 @@ describe("RecipeModal — as três opções", () => {
     expect(await screen.findByText(/modo de preparo/i)).toBeInTheDocument();
   });
 
-  it("clicar em 'Comi essa' na variante já escolhida (checked: true) não regrava nem reseta o checked", async () => {
+  it("clicar em 'Escolhi essa' na variante já escolhida (checked: true) não regrava nem reseta o checked", async () => {
     // Estado inicial: a refeição de hoje já foi marcada como comida, com os
     // foods da primeira variante — exatamente como ficaria depois de um
     // "toggleMeal" em MealsToday ou de uma confirmação anterior no modal.
@@ -84,7 +84,7 @@ describe("RecipeModal — as três opções", () => {
 
     // A variante já escolhida abre expandida por padrão, então o botão de
     // confirmação dela já está visível sem precisar tocar no cabeçalho.
-    const botaoConfirmar = await screen.findByRole("button", { name: /comi essa|comida hoje/i });
+    const botaoConfirmar = await screen.findByRole("button", { name: /escolhi essa|escolhida hoje/i });
     await user.click(botaoConfirmar);
 
     const meals = await db.meals.toArray();

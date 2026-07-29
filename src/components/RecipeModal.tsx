@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal, type MealVariant } from "../lib/db";
-import { getActiveMealPlan, EFFORT_LABEL } from "../lib/meal-plan";
+import { getActiveMealPlan, EFFORT_LABEL, variantEscolhida } from "../lib/meal-plan";
 import { hojeISO } from "../lib/today-date";
 
 export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
@@ -13,18 +13,14 @@ export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
 
 const MEAL_INDEX: Record<Meal["mealType"], number> = { cafe: 0, almoco: 1, lanche: 2, jantar: 3 };
 
-/** Compara os foods gravados hoje com os de uma variante, pra saber qual
- *  opção está escolhida (a refeição não guarda o id da variante — só o
- *  conteúdo). */
-function foodsEqual(a: Meal["foods"], b: Meal["foods"]): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
 /** Card que abre por cima com as três opções da refeição — um acordeão: tocar
  *  numa opção só expande ela (mostra alimentos + modo de preparo), sem gravar
- *  nada. Só o botão "Comi essa", dentro da opção expandida, grava a escolha
- *  do dia. Carrega o plano ativo e a refeição do dia sozinho — usado na tela
- *  Hoje e na tela Refeições, pra receita ficar a um toque de distância. */
+ *  nada. Só o botão "Escolhi essa", dentro da opção expandida, grava a escolha
+ *  do dia. Ele grava `checked: false` — escolher a opção não é a mesma coisa
+ *  que ter comido, e quem marca a refeição como comida é a caixinha em
+ *  /refeicoes-hoje. Por isso a copy está no ato de escolher, não no de comer.
+ *  Carrega o plano ativo e a refeição do dia sozinho — usado na tela Hoje e na
+ *  tela Refeições, pra receita ficar a um toque de distância. */
 export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"]; onClose: () => void }) {
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(hojeISO()).toArray(), []);
@@ -36,13 +32,13 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
   // explicitamente — é um acordeão, uma expandida por vez.
   const [expandedId, setExpandedId] = useState<string | undefined>(undefined);
 
-  const chosenVariant = meal ? variants.find((v) => foodsEqual(v.foods, meal.foods)) : undefined;
+  const chosenVariant = variantEscolhida(variants, meal);
   const defaultExpandedId = chosenVariant?.id ?? variants[0]?.id;
   const effectiveExpandedId = expandedId ?? defaultExpandedId;
 
   /** Grava a escolha do dia. Guarda: se a variante já é a escolhida de hoje,
    *  não regrava e não mexe no `checked` — evita que reabrir o modal só pra
-   *  conferir o preparo e tocar "Comi essa" de novo derrube o "comido hoje". */
+   *  conferir o preparo e tocar de novo derrube o "comido hoje". */
   async function confirmar(variant: MealVariant) {
     if (chosenVariant?.id === variant.id) return;
     await db.meals.put({
@@ -135,7 +131,10 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
                       {EFFORT_LABEL[v.effort]}
                     </span>
                   )}
-                  {isChosen && <span className="ml-2 text-nude">✓ escolhida hoje</span>}
+                  {/* Marcador curto: quem repete o estado por extenso é o
+                      botão de ação lá dentro, e duas frases iguais no mesmo
+                      card só fazem a pessoa ler duas vezes. */}
+                  {isChosen && <span className="ml-2 text-nude">✓ hoje</span>}
                 </button>
 
                 {isExpanded && (
@@ -165,7 +164,7 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
                       onClick={() => void confirmar(v)}
                       className="text-nude text-xs underline"
                     >
-                      {isChosen ? "✓ Comida hoje" : "Comi essa"}
+                      {isChosen ? "✓ Escolhida hoje" : "Escolhi essa"}
                     </button>
                   </div>
                 )}
