@@ -4,7 +4,7 @@
 // NÃO são marcados aqui; refletem o estado do módulo correspondente.
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
-export type RoutineControl = "check" | "water" | "walk" | "breaks" | "invert" | "link" | "recipe" | "skincare";
+export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
 export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
@@ -65,11 +65,37 @@ const ALMOCO: RoutineItem = { id: "almoco", block: "trabalho", label: "Almoço",
 const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", control: "water" };
 const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
 
-const LANCHE: RoutineItem = { id: "lanche-saida", block: "tarde", label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino", control: "recipe", mealType: "lanche", defaultTime: "16:00" };
+type TipoDeDia = "semana" | "sabado" | "domingo";
+
+/** O lanche das 16h existe nos sete dias, mas o motivo dele muda: em dia de
+ *  semana é a janela pré-treino comida ainda no trabalho; no sábado é antes da
+ *  dança; no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
+ *  check do dia e o horário ajustado seguem o item, não a copy. */
+function lanche(dia: TipoDeDia): RoutineItem {
+  const base = { id: "lanche-saida", block: "tarde", control: "recipe", mealType: "lanche", defaultTime: "16:00" } as const;
+  if (dia === "sabado") {
+    return { ...base, label: "Lanche pré-dança", subtitle: "Toque pra ver a receita · come antes de sair, pra não dançar nem passear em jejum" };
+  }
+  if (dia === "domingo") {
+    return { ...base, label: "Lanche da tarde", subtitle: "Toque pra ver a receita · segura a fome até o jantar, mesmo num dia parado" };
+  }
+  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino" };
+}
+
+/** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
+ *  é o movimento do dia inteiro, já que não há treino. `control: "walk"` dá o
+ *  botão de +10 min, então a meta de 75 min é alcançável mesmo quando o
+ *  passeio (60 min) sozinho não fecha a conta. */
+function caes(dia: TipoDeDia): RoutineItem {
+  const base = { id: "caes", block: "tarde", label: "Passear com os cães · 1h", control: "walk", defaultTime: "16:40" } as const;
+  return dia === "semana"
+    ? { ...base, subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino" }
+    : { ...base, subtitle: "NEAT — eles não sabem que é fim de semana; hoje é daqui que vem quase todo o seu movimento" };
+}
 
 function tardeSemana(): RoutineItem[] {
   return [
-    { id: "caes", block: "tarde", label: "Passear com os cães · 1h", subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino", control: "invert", defaultTime: "16:40" },
+    caes("semana"),
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:45" },
   ];
 }
@@ -91,17 +117,19 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
   const tarde: RoutineBlockGroup = isSaturday
     ? {
         id: "tarde", label: "Fim de tarde", items: [
-          LANCHE,
+          lanche("sabado"),
+          caes("sabado"),
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
-          { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", control: "walk", defaultTime: "18:15" },
+          { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", subtitle: "Depois da dança, pra soltar — soma no total do dia", control: "walk", defaultTime: "18:15" },
         ],
       }
     : isSunday
       ? { id: "tarde", label: "Fim de tarde", items: [
-          LANCHE,
-          { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — se quiser, só uma caminhada" },
+          lanche("domingo"),
+          caes("domingo"),
+          { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — uma caminhada leve fecha o que faltar da meta", control: "walk" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [LANCHE, ...tardeSemana()] };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }

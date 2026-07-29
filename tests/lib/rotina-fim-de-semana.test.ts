@@ -31,4 +31,37 @@ describe("fim de semana", () => {
         .toEqual({ dow, refeicoes: 4 });
     }
   });
+
+  // O passeio some da rotina e a meta de 75 min some junto: `subtitleFor` só
+  // mostra "X / 75 min" em item com control "walk". Domingo ficava sem nenhum.
+  it("os cães existem nos sete dias — eles não sabem que é fim de semana", () => {
+    for (let dow = 0; dow < 7; dow++) {
+      const ids = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).map((i) => i.id);
+      expect({ dow, temCaes: ids.includes("caes") }).toEqual({ dow, temCaes: true });
+    }
+  });
+
+  it("todo dia tem item que soma movimento, e o passeio credita a hora cheia", () => {
+    for (let dow = 0; dow < 7; dow++) {
+      const items = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items);
+      const movimento = items.filter((i) => i.control === "walk");
+      expect({ dow, temMovimento: movimento.length > 0 }).toEqual({ dow, temMovimento: true });
+      expect({ dow, caes: items.find((i) => i.id === "caes")!.control }).toEqual({ dow, caes: "walk" });
+    }
+  });
+
+  it("a copy do lanche não fala de trabalho nem de treino no fim de semana", () => {
+    for (const dow of [0, 6]) {
+      const lanche = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "lanche-saida")!;
+      const texto = `${lanche.label} ${lanche.subtitle ?? ""}`.toLowerCase();
+      expect({ dow, mente: texto.includes("trabalho") || texto.includes("treino") })
+        .toEqual({ dow, mente: false });
+    }
+  });
+
+  it("em dia de semana o lanche continua explicando a janela pré-treino", () => {
+    const lanche = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "lanche-saida")!;
+    expect(`${lanche.label} ${lanche.subtitle}`.toLowerCase()).toContain("treino");
+    expect(lanche.subtitle!.toLowerCase()).toContain("trabalho");
+  });
 });

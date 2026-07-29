@@ -41,9 +41,10 @@ describe("buildDayRoutine", () => {
     expect(ids).not.toContain("treino");
   });
 
-  it("água usa control:water e caminhada/inverter existe na tarde", () => {
+  it("água usa control:water e o passeio dos cães soma movimento (control:walk)", () => {
     const items = buildDayRoutine(2, 1).blocks.flatMap((b) => b.items);
     expect(items.find((i) => i.id === "agua")!.control).toBe("water");
-    expect(items.find((i) => i.id === "caes")!.control).toBe("invert");
+    // Era "invert", que na tela virava um chip "⇄ trocar" sem ação nenhuma.
+    expect(items.find((i) => i.id === "caes")!.control).toBe("walk");
   });
 });

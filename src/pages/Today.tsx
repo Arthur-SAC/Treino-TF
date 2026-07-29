@@ -205,9 +205,6 @@ export function Today() {
         <button type="button" onClick={() => void addWalk(todayISO, 10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+10 min</button>
       );
     }
-    if (item.control === "invert") {
-      return <span className="text-[11px] text-nude border border-bg-border rounded-full px-2 py-1">⇄ trocar</span>;
-    }
     if (item.control === "breaks") {
       return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} hoje</span>;
     }
@@ -216,11 +213,14 @@ export function Today() {
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
-    if (item.id === "caes") return `${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min · ${item.subtitle ?? ""}`;
     if (item.id === "dormir") {
       return dailyLog?.sleepAt ? `Você deitou às ${dailyLog.sleepAt} · alvo ${ALVO_SONO}` : item.subtitle;
     }
-    if (item.control === "walk") return `${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`;
+    // Todo item que soma movimento (cães, caminhadas) abre com o total do dia
+    // contra a meta — uma meta que não aparece na tela não existe.
+    if (item.control === "walk") {
+      return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
+    }
     return item.subtitle;
   };
 
