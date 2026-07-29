@@ -18,6 +18,13 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 
+/** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
+ *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
+function dayOfYear(date: Date): number {
+  const inicioDoAno = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
+}
+
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
@@ -141,7 +148,7 @@ export function Today() {
     }
   }
 
-  const routine = buildDayRoutine(dayOfWeek);
+  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
   const routineTimes = useSetting("routineTimes");
   const horaDe = (item: RoutineItem) => {
     const hhmm = resolveRoutineTime(item, routineTimes);

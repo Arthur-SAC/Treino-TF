@@ -2,8 +2,9 @@ import { describe, it, expect } from "vitest";
 import { buildDayRoutine } from "../../src/lib/today-routine";
 import { resolveRoutineTime, itensAjustaveis, formatHora } from "../../src/lib/routine-times";
 
-// Segunda-feira: o dia completo de semana.
-const SEGUNDA = buildDayRoutine(1);
+// Segunda-feira: o dia completo de semana. Dia do ano ímpar (1) = sem barba,
+// pra não interferir nos horários das refeições/dormir testados aqui.
+const SEGUNDA = buildDayRoutine(1, 1);
 const itens = SEGUNDA.blocks.flatMap((b) => b.items);
 const acharItem = (id: string) => itens.find((i) => i.id === id)!;
 

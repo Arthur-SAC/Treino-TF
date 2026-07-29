@@ -38,12 +38,28 @@ export interface DayRoutine {
   blocks: RoutineBlockGroup[];
 }
 
-const MANHA: RoutineItem[] = [
-  { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento/mobilidade-pelvica-matinal", defaultTime: "06:00" },
-  { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning", defaultTime: "06:25" },
-  { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
-  { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
-];
+const BARBA: RoutineItem = {
+  id: "barba", block: "manha", label: "Barba", subtitle: "Rente, no sentido do pelo · depois o corretivo alaranjado se precisar", to: "/beleza/depilacao", defaultTime: "06:15",
+};
+
+/** Barba é dia sim, dia não. `dayOfYear` decide a alternância — vem de quem
+ *  chama `buildDayRoutine`, então a função continua pura (nada de `new Date()` aqui). */
+function isBarbaDay(dayOfYear: number): boolean {
+  return dayOfYear % 2 === 0;
+}
+
+function manhaItems(dayOfYear: number): RoutineItem[] {
+  const items: RoutineItem[] = [
+    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento/mobilidade-pelvica-matinal", defaultTime: "06:00" },
+  ];
+  if (isBarbaDay(dayOfYear)) items.push(BARBA);
+  items.push(
+    { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning", defaultTime: "06:25" },
+    { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
+    { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
+  );
+  return items;
+}
 
 const TRABALHO: RoutineItem[] = [
   { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco", defaultTime: "12:00" },
@@ -62,13 +78,14 @@ function tardeSemana(): RoutineItem[] {
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "jantar", defaultTime: "19:00" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
+  { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
   { id: "dormir", block: "noite", label: "Dormir", subtitle: "Alvo pra fechar 7h30 — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
 ];
 
-function buildBlocks(dayOfWeek: number): RoutineBlockGroup[] {
+function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] {
   const isSaturday = dayOfWeek === 6;
   const isSunday = dayOfWeek === 0;
 
@@ -95,7 +112,7 @@ function buildBlocks(dayOfWeek: number): RoutineBlockGroup[] {
   }
 
   return [
-    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: MANHA },
+    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear) },
     { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: TRABALHO },
     tarde,
     { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: NOITE },
@@ -103,6 +120,8 @@ function buildBlocks(dayOfWeek: number): RoutineBlockGroup[] {
   ];
 }
 
-export function buildDayRoutine(dayOfWeek: number): DayRoutine {
-  return { dayOfWeek, blocks: buildBlocks(dayOfWeek) };
+/** `dayOfYear` decide itens em dias alternados (ex.: barba). Quem chama calcula
+ *  o dia do ano — a função em si continua pura e determinística. */
+export function buildDayRoutine(dayOfWeek: number, dayOfYear: number): DayRoutine {
+  return { dayOfWeek, blocks: buildBlocks(dayOfWeek, dayOfYear) };
 }
