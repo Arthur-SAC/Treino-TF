@@ -107,7 +107,9 @@ const NOITE: RoutineItem[] = [
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
-  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Marcar registra a hora real que você deitou · alvo 22:30 — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
+  // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a
+  // partir do horário do próprio item (que a usuária ajusta em /hoje/horarios).
+  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
 ];
 
 function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] {

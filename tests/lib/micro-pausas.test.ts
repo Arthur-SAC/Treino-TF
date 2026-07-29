@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { MICRO_PAUSAS } from "../../src/data/micro-pausas-seed";
-import { pausaDaVez } from "../../src/lib/micro-pausas";
+import { pausaDaVez, metaDePausas } from "../../src/lib/micro-pausas";
 
 describe("catálogo de micro-pausas", () => {
   it("tem pelo menos seis movimentos", () => {
@@ -44,5 +44,26 @@ describe("pausaDaVez", () => {
 
   it("é estável: a mesma pausa devolve sempre o mesmo conjunto", () => {
     expect(pausaDaVez(3).map((m) => m.id)).toEqual(pausaDaVez(3).map((m) => m.id));
+  });
+});
+
+describe("metaDePausas", () => {
+  it("com os padrões (9h→18h, a cada 90 min) o dia pede 6 pausas", () => {
+    expect(metaDePausas(9, 18, 90)).toBe(6);
+  });
+
+  it("expediente maior ou intervalo menor pedem mais pausas", () => {
+    expect(metaDePausas(7, 16, 60)).toBe(9);
+    expect(metaDePausas(9, 18, 45)).toBe(12);
+  });
+
+  it("arredonda pra baixo — não cobra uma pausa que não cabe no expediente", () => {
+    expect(metaDePausas(9, 18, 120)).toBe(4); // 540 / 120 = 4,5
+  });
+
+  it("configuração torta nunca zera o alvo (senão o contador nasce completo)", () => {
+    expect(metaDePausas(9, 9, 90)).toBe(1);
+    expect(metaDePausas(18, 9, 90)).toBe(1);
+    expect(metaDePausas(9, 18, 0)).toBe(1);
   });
 });

@@ -20,6 +20,7 @@ import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO } from "../lib/today-date";
+import { metaDePausas } from "../lib/micro-pausas";
 
 /** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
  *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
@@ -61,6 +62,14 @@ export function Today() {
 
   const walkGoalMin = useSetting("walkGoalMin");
 
+  // Alvo de micro-pausas derivado da mesma configuração que dispara os
+  // lembretes — 9h→18h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
+  // pouco ou muito.
+  const pausaInicio = useSetting("activeBreakStartHour");
+  const pausaFim = useSetting("activeBreakEndHour");
+  const pausaIntervalo = useSetting("activeBreakIntervalMin");
+  const metaPausas = metaDePausas(pausaInicio, pausaFim, pausaIntervalo);
+
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
     [],
@@ -100,10 +109,19 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  // Conta noites dos últimos 7 dias em que ela deitou até o alvo (22:30) —
-  // sono é a alavanca que ela mais subestima, e o card só existe pra tornar a
-  // melhora (ou piora) visível semana a semana.
-  const ALVO_SONO = "22:30";
+  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
+  const routineTimes = useSetting("routineTimes");
+
+  // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
+  // fez em /hoje/horarios. Era uma constante "22:30" aqui: se ela mudasse o
+  // item pra 23h, a linha mostrava 23h, o subtítulo continuava dizendo "alvo
+  // 22:30" e o streak media contra 22:30 — três respostas pra mesma pergunta.
+  const itemDormir = routine.blocks.flatMap((b) => b.items).find((i) => i.id === "dormir");
+  const alvoSono = (itemDormir ? resolveRoutineTime(itemDormir, routineTimes) : undefined) ?? "22:30";
+
+  // Conta noites dos últimos 7 dias em que ela deitou até o alvo — sono é a
+  // alavanca que ela mais subestima, e o card só existe pra tornar a melhora
+  // (ou piora) visível semana a semana.
   const last7DaysSleep = useLiveQuery(async () => {
     const dates: string[] = [];
     for (let i = 0; i < 7; i++) {
@@ -112,8 +130,8 @@ export function Today() {
       dates.push(hojeISO(d));
     }
     const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
-    return noitesNoAlvo(logs, ALVO_SONO);
-  }, []);
+    return noitesNoAlvo(logs, alvoSono);
+  }, [alvoSono]);
 
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
@@ -157,8 +175,6 @@ export function Today() {
     }
   }
 
-  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
-  const routineTimes = useSetting("routineTimes");
   const horaDe = (item: RoutineItem) => {
     const hhmm = resolveRoutineTime(item, routineTimes);
     return hhmm ? formatHora(hhmm) : undefined;
@@ -179,18 +195,22 @@ export function Today() {
     item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
 
   // Passear com os cães credita (ou devolve, se desmarcado) 1h de movimento;
-  // marcar "Dormir" registra a hora real do relógio como hora de deitar. Os
-  // demais itens só viram o check comum — por isso o switch é local aqui e
-  // não em useRoutineChecks (que não sabe nada de dailyLog).
+  // marcar "Dormir" registra a hora real do relógio como hora de deitar, e
+  // desmarcar apaga esse registro. Os demais itens só viram o check comum —
+  // por isso o switch é local aqui e não em useRoutineChecks (que não sabe
+  // nada de dailyLog).
+  //
+  // O estado novo vem do RETORNO de `toggle`, não do Set `done`: o Set é o do
+  // render anterior, então dois toques rápidos liam o mesmo valor e somavam
+  // 60 + 60 = 120 min com a caixinha desmarcada, sem caminho de volta ao zero.
   async function handleToggle(item: RoutineItem) {
-    const marcandoAgora = !done.has(item.id);
-    await toggle(item.id);
+    const marcado = await toggle(item.id);
     if (item.id === "caes") {
-      await creditarPasseio(todayISO, marcandoAgora);
-    } else if (item.id === "dormir" && marcandoAgora) {
+      await creditarPasseio(todayISO, marcado);
+    } else if (item.id === "dormir") {
       const agora = new Date();
       const hhmm = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
-      await registrarSono(todayISO, hhmm);
+      await registrarSono(todayISO, marcado ? hhmm : undefined);
     }
   }
 
@@ -206,7 +226,7 @@ export function Today() {
       );
     }
     if (item.control === "breaks") {
-      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} hoje</span>;
+      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} de {metaPausas}</span>;
     }
     return undefined;
   };
@@ -214,7 +234,10 @@ export function Today() {
   const subtitleFor = (item: RoutineItem): string | undefined => {
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
-      return dailyLog?.sleepAt ? `Você deitou às ${dailyLog.sleepAt} · alvo ${ALVO_SONO}` : item.subtitle;
+      const alvo = `alvo ${alvoSono}`;
+      return dailyLog?.sleepAt
+        ? `Você deitou às ${dailyLog.sleepAt} · ${alvo}`
+        : [alvo, item.subtitle].filter(Boolean).join(" · ");
     }
     // Todo item que soma movimento (cães, caminhadas) abre com o total do dia
     // contra a meta — uma meta que não aparece na tela não existe.

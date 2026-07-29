@@ -27,20 +27,29 @@ export async function addWalk(date: string, min: number): Promise<void> {
  *  do dia anterior nem de outro item. */
 export async function creditarPasseio(date: string, marcado = true): Promise<void> {
   const delta = marcado ? 60 : -60;
-  const log = await db.dailyLog.get(date);
-  if (log) {
-    await db.dailyLog.update(date, { walkMin: Math.max(0, (log.walkMin ?? 0) + delta) });
-  } else {
-    await db.dailyLog.put({ date, waterMl: 0, activeBreakCount: 0, walkMin: Math.max(0, delta) });
-  }
+  // Ler e escrever na mesma transação: dois toques rápidos no item dos cães
+  // chegavam aqui em paralelo, liam o mesmo `walkMin` e uma das escritas se
+  // perdia — sobrava um total que não voltava mais pro zero.
+  await db.transaction("rw", db.dailyLog, async () => {
+    const log = await db.dailyLog.get(date);
+    if (log) {
+      await db.dailyLog.update(date, { walkMin: Math.max(0, (log.walkMin ?? 0) + delta) });
+    } else {
+      await db.dailyLog.put({ date, waterMl: 0, activeBreakCount: 0, walkMin: Math.max(0, delta) });
+    }
+  });
 }
 
-/** Registra a hora real (HH:MM) em que ela deitou. */
-export async function registrarSono(date: string, hhmm: string): Promise<void> {
+/** Registra a hora real (HH:MM) em que ela deitou — ou apaga o registro, com
+ *  `hhmm` indefinido, quando ela desmarca "Dormir". Sem isso a linha ficava
+ *  desmarcada mas continuava dizendo "Você deitou às…", que é a mesma classe
+ *  de mentira que o check errado. */
+export async function registrarSono(date: string, hhmm?: string): Promise<void> {
   const log = await db.dailyLog.get(date);
   if (log) {
-    await db.dailyLog.update(date, { sleepAt: hhmm });
-  } else {
+    const { sleepAt: _antigo, ...semSono } = log;
+    await db.dailyLog.put(hhmm === undefined ? semSono : { ...semSono, sleepAt: hhmm });
+  } else if (hhmm !== undefined) {
     await db.dailyLog.put({ date, waterMl: 0, activeBreakCount: 0, sleepAt: hhmm });
   }
 }
