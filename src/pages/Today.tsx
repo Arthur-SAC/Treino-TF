@@ -205,7 +205,11 @@ export function Today() {
   // 60 + 60 = 120 min com a caixinha desmarcada, sem caminho de volta ao zero.
   async function handleToggle(item: RoutineItem) {
     const marcado = await toggle(item.id);
-    if (item.id === "caes") {
+    if (item.control === "walk") {
+      // O passeio dos cães tem ids diferentes por tipo de dia (`caes` na
+      // semana, `caes-fds` no fim de semana — ver today-routine.ts), mas em
+      // ambos os casos é o único item com control:"walk" do dia, então
+      // checar o control em vez do id cobre os dois sem duplicar lógica.
       await creditarPasseio(todayISO, marcado);
     } else if (item.id === "dormir") {
       const agora = new Date();

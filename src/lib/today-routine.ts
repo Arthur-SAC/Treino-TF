@@ -85,9 +85,32 @@ function lanche(dia: TipoDeDia): RoutineItem {
 /** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
  *  é o movimento do dia inteiro, já que não há treino. `control: "walk"` dá o
  *  botão de +10 min, então a meta de 75 min é alcançável mesmo quando o
- *  passeio (60 min) sozinho não fecha a conta. */
+ *  passeio (60 min) sozinho não fecha a conta.
+ *
+ *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
+ *  propósito: o passeio de semana é às 16:40, mas no sábado precisa ser às
+ *  18:15 (depois da dança das 17:30, pra não colidir com ela). Com um id só
+ *  pros sete dias, a tela /hoje/horarios deduplicava e mostrava uma linha
+ *  única — ajustar aquele horário reescrevia o override pros sete dias,
+ *  inclusive o sábado, e o passeio de 1h voltava a cair em cima da dança (o
+ *  bug que o commit b8c6b30 tinha acabado de corrigir). `caes` continua com o
+ *  mesmo id de sempre — preserva o histórico de `routineChecks` de quem já
+ *  marcou o passeio de semana; o id novo (`caes-fds`) é só do fim de semana.
+ *
+ *  Domingo passa a usar `caes-fds` também, no mesmo 18:15 do sábado: como os
+ *  dois compartilham id (e portanto o mesmo ajuste em /hoje/horarios), dar a
+ *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
+ *  enquanto o domingo de verdade ainda usasse 16:40 — não há dança no domingo
+ *  pra colidir, então a mudança de horário não tem custo. */
 function caes(dia: TipoDeDia): RoutineItem {
-  const base = { id: "caes", block: "tarde", label: "Passear com os cães · 1h", control: "walk", defaultTime: "16:40" } as const;
+  const fimDeSemana = dia === "sabado" || dia === "domingo";
+  const base = {
+    id: fimDeSemana ? "caes-fds" : "caes",
+    block: "tarde",
+    label: fimDeSemana ? "Passear com os cães · 1h (fim de semana)" : "Passear com os cães · 1h",
+    control: "walk",
+    defaultTime: fimDeSemana ? "18:15" : "16:40",
+  } as const;
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
   }
@@ -122,14 +145,13 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
 
   const tarde: RoutineBlockGroup = isSaturday
     ? {
-        // O passeio ocupa o horário que era da "caminhada leve" (18:15): as
-        // duas eram a mesma caminhada, e mantê-las lado a lado colocaria dois
-        // itens de movimento somando na mesma meta — além de o passeio de 1h
-        // às 16h40 invadir a dança das 17h30.
+        // O passeio (id `caes-fds`, 18:15) já nasce depois da dança das
+        // 17h30 — sem precisar de override na hora de montar o bloco, e sem
+        // colocar dois itens de movimento somando na mesma meta.
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
-          { ...caes("sabado"), defaultTime: "18:15" },
+          caes("sabado"),
         ],
       }
     : isSunday

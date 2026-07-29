@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { buildDayRoutine } from "../../src/lib/today-routine";
 import { resolveRoutineTime, itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../../src/lib/routine-times";
+import type { RoutineTimeOverrides } from "../../src/lib/routine-times";
 
 // Segunda-feira: o dia completo de semana. Dia do ano ímpar (1) = sem barba,
 // pra não interferir nos horários das refeições/dormir testados aqui.
@@ -152,6 +153,47 @@ describe("blocosDaSemanaInteira", () => {
 
   it("mantém a ordem dos blocos e não perde nenhum", () => {
     expect(blocosDaSemanaInteira().map((b) => b.id)).toEqual(["manha", "trabalho", "tarde", "noite", "semana"]);
+  });
+});
+
+// Trava a regressão: o passeio dos cães tinha um único id ("caes") pros sete
+// dias, com o sábado só vencendo o horário padrão (18:15 em vez de 16:40) via
+// override no objeto — mas a tela de ajuste dedupava por id e mostrava uma
+// linha só. Ajustar aquela linha reescrevia `routineTimes["caes"]` pros sete
+// dias, inclusive sábado, e o passeio de 1h voltava a cair em cima da dança
+// das 17h30 (o bug que o commit b8c6b30 tinha acabado de corrigir). A
+// correção dá ids diferentes a cada um (`caes` na semana, `caes-fds` no fim
+// de semana) — este teste prova que o ajuste de um não vaza pro outro.
+describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) independentes", () => {
+  it("ids diferentes por tipo de dia", () => {
+    const idDoPasseio = (dow: number) =>
+      buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).find((i) => i.control === "walk")!.id;
+    expect(idDoPasseio(3)).toBe("caes"); // quarta-feira
+    expect(idDoPasseio(6)).toBe("caes-fds"); // sábado
+    expect(idDoPasseio(0)).toBe("caes-fds"); // domingo
+  });
+
+  it("ajustar o horário do passeio de dia de semana NÃO muda o do sábado", () => {
+    // A usuária adianta o passeio de segunda a sexta pra 17:00.
+    const overrides: RoutineTimeOverrides = { caes: "17:00" };
+
+    const passeioSemana = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes")!;
+    const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
+
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("17:00");
+    // O sábado continua no padrão (18:15, depois da dança) — o override da
+    // semana não se aplica a ele porque o id é outro.
+    expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:15");
+  });
+
+  it("e o inverso também vale: ajustar o sábado não muda o passeio de semana", () => {
+    const overrides: RoutineTimeOverrides = { "caes-fds": "18:45" };
+
+    const passeioSemana = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes")!;
+    const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
+
+    expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:45");
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("16:40");
   });
 });
 
