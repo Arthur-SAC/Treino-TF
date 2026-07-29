@@ -1,30 +1,19 @@
 import { Link } from "react-router-dom";
-import { buildDayRoutine, type RoutineBlockGroup } from "../lib/today-routine";
-import { itensAjustaveis, formatHora } from "../lib/routine-times";
+import { itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../lib/routine-times";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 
-// Segunda-feira monta o dia completo de semana — é dele que sai a lista de
-// itens ajustáveis. Fim de semana reaproveita os mesmos horários.
-//
-// A barba só aparece em dias alternados — pra ela poder ajustar o horário
-// mesmo num dia em que a barba não é feita, juntamos os itens de um dia par
-// e de um dia ímpar (mesmo bloco a bloco). `itensAjustaveis` deduplica por id.
-function unirBlocosDeDiasAlternados(par: RoutineBlockGroup[], impar: RoutineBlockGroup[]): RoutineBlockGroup[] {
-  return par.map((bloco, i) => {
-    const outro = impar[i];
-    const idsVistos = new Set(bloco.items.map((item) => item.id));
-    const extras = outro ? outro.items.filter((item) => !idsVistos.has(item.id)) : [];
-    return { ...bloco, items: [...bloco.items, ...extras] };
-  });
-}
+// A lista cobre a semana inteira, não só a segunda: a barba só existe em dia
+// do ano par e dança/caminhada só no sábado — e todos têm horário.
+const BLOCOS = blocosDaSemanaInteira();
 
-const BLOCOS = unirBlocosDeDiasAlternados(buildDayRoutine(1, 2).blocks, buildDayRoutine(1, 1).blocks);
-
+// Os rótulos aqui são neutros de propósito: a tela junta os sete dias, então
+// "Saída" (que só vale em dia de semana) e "No trabalho" mentiriam pros itens
+// de sábado e domingo que caem nos mesmos blocos.
 const NOME_BLOCO: Record<string, string> = {
   manha: "Manhã",
-  trabalho: "No trabalho",
-  tarde: "Saída",
+  trabalho: "Durante o dia",
+  tarde: "Fim de tarde",
   noite: "Noite",
   semana: "Esta semana",
 };
@@ -51,8 +40,9 @@ export function RoutineTimes() {
 
       <h1 className="text-nude-warm text-lg font-medium">Horários do seu dia</h1>
       <p className="text-muted text-sm">
-        Estes são os horários que aparecem no roteiro do Hoje. Os valores já vêm
-        preenchidos com a sua rotina — muda o que não bater com a vida real.
+        Estes são os horários que aparecem no roteiro do Hoje — a semana
+        inteira, incluindo o que só acontece no sábado. Os valores já vêm
+        preenchidos com a sua rotina: muda o que não bater com a vida real.
       </p>
 
       {itens.map((item, i) => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildDayRoutine } from "../../src/lib/today-routine";
-import { resolveRoutineTime, itensAjustaveis, formatHora } from "../../src/lib/routine-times";
+import { resolveRoutineTime, itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../../src/lib/routine-times";
 
 // Segunda-feira: o dia completo de semana. Dia do ano ímpar (1) = sem barba,
 // pra não interferir nos horários das refeições/dormir testados aqui.
@@ -32,11 +32,24 @@ describe("horários da rotina", () => {
     expect(acharItem("dormir").defaultTime).toBe("22:30");
   });
 
-  it("dentro de cada bloco, os itens com horário estão em ordem cronológica", () => {
-    for (const bloco of SEGUNDA.blocks) {
-      const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
-      expect({ bloco: bloco.id, horas }).toEqual({ bloco: bloco.id, horas: [...horas].sort() });
+  // Os dois lados da alternância: no dia ÍMPAR não há barba, então o loop
+  // nunca via a única inserção de ordem que a barba (06:15, entre o
+  // alongamento das 06:00 e o skincare das 06:25) representa.
+  it("dentro de cada bloco, os itens com horário estão em ordem cronológica (dia sem barba e dia com barba)", () => {
+    for (const diaDoAno of [1, 2]) {
+      for (const bloco of buildDayRoutine(1, diaDoAno).blocks) {
+        const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
+        expect({ diaDoAno, bloco: bloco.id, horas }).toEqual({ diaDoAno, bloco: bloco.id, horas: [...horas].sort() });
+      }
     }
+  });
+
+  it("no dia par, a barba realmente entra no meio da manhã (senão o teste acima é trivial)", () => {
+    const manha = buildDayRoutine(1, 2).blocks.find((b) => b.id === "manha")!;
+    const ids = manha.items.map((i) => i.id);
+    expect(ids).toContain("barba");
+    expect(ids.indexOf("alongamento-manha")).toBeLessThan(ids.indexOf("barba"));
+    expect(ids.indexOf("barba")).toBeLessThan(ids.indexOf("skincare-manha"));
   });
 
   it("no sábado, os itens com horário também estão em ordem cronológica", () => {
@@ -104,6 +117,42 @@ describe("itensAjustaveis", () => {
     for (const id of ["cafe-marmita", "almoco", "lanche-saida", "jantar", "dormir"]) {
       expect(ids).toContain(id);
     }
+  });
+});
+
+// A tela de ajuste montava a lista só a partir de segunda-feira, então
+// dança (17:30) e caminhada do sábado (18:15) nunca apareciam — apesar de
+// terem horário e da spec dizer "todos ajustáveis".
+describe("blocosDaSemanaInteira", () => {
+  const ajustaveis = itensAjustaveis(blocosDaSemanaInteira()).map((i) => i.id);
+
+  it("cobre os itens de sábado, que têm horário e ficavam de fora", () => {
+    expect(ajustaveis).toContain("danca-sabado");
+    expect(ajustaveis).toContain("caminhada-sabado");
+  });
+
+  it("continua cobrindo a barba, que só existe em dia do ano par", () => {
+    expect(ajustaveis).toContain("barba");
+  });
+
+  it("todo item com horário padrão dos sete dias está ajustável", () => {
+    for (let dow = 0; dow < 7; dow++) {
+      for (const paridade of [1, 2]) {
+        const faltando = buildDayRoutine(dow, paridade).blocks
+          .flatMap((b) => b.items)
+          .filter((i) => i.defaultTime && !ajustaveis.includes(i.id))
+          .map((i) => i.id);
+        expect({ dow, paridade, faltando }).toEqual({ dow, paridade, faltando: [] });
+      }
+    }
+  });
+
+  it("não repete id — a lista vira um formulário, não pode ter dois campos do mesmo item", () => {
+    expect(new Set(ajustaveis).size).toBe(ajustaveis.length);
+  });
+
+  it("mantém a ordem dos blocos e não perde nenhum", () => {
+    expect(blocosDaSemanaInteira().map((b) => b.id)).toEqual(["manha", "trabalho", "tarde", "noite", "semana"]);
   });
 });
 
