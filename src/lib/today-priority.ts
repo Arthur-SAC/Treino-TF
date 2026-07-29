@@ -56,6 +56,8 @@ export function timeBlockFocus(hour: number, dayOfWeek: number): { title: string
     return { title: "Comece leve", subtitle: "Alongamento, skincare e café — desperta o corpo", to: "/treino/movimento" };
   }
   if (block === "trabalho") {
+    if (dayOfWeek === 6) return { title: "Durante o dia", subtitle: "Almoço e água — guarda energia pra dança mais tarde", to: "/refeicoes-hoje" };
+    if (dayOfWeek === 0) return { title: "Durante o dia", subtitle: "Almoço, água e a marmita da semana quando bater vontade", to: "/refeicoes-hoje" };
     return { title: "No trabalho", subtitle: "Bebe água e faz as micro-pausas de postura", to: "/refeicoes-hoje" };
   }
   if (block === "tarde") {

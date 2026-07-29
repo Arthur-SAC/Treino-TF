@@ -72,4 +72,18 @@ describe("currentBlock / timeBlockFocus", () => {
     const f = timeBlockFocus(17, 6);
     expect(f.title.toLowerCase()).toContain("dança");
   });
+
+  it("das 11h às 16h, dia de semana fala em trabalho/pausas; fim de semana não", () => {
+    for (const dow of [1, 2, 3, 4, 5]) {
+      const f = timeBlockFocus(13, dow);
+      const texto = `${f.title} ${f.subtitle}`.toLowerCase();
+      expect({ dow, texto }).toEqual({ dow, texto: expect.stringMatching(/trabalho|pausas/) });
+    }
+    for (const dow of [0, 6]) {
+      const f = timeBlockFocus(13, dow);
+      const texto = `${f.title} ${f.subtitle}`.toLowerCase();
+      expect({ dow, mencionaTrabalho: /trabalho|expediente|pausas/.test(texto) })
+        .toEqual({ dow, mencionaTrabalho: false });
+    }
+  });
 });
