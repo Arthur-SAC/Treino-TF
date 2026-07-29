@@ -68,6 +68,23 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
     );
   }
 
+  // Micro-pausas: a caixinha marca o bloco como feito manualmente; o corpo
+  // abre o card com os movimentos da vez; o contador ao lado (rightSlot)
+  // mostra quantas pausas já rolaram hoje.
+  if (item.control === "breaks" && onOpen) {
+    return (
+      <div className={cls}>
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+          <Box done={done} />
+        </button>
+        <button type="button" onClick={onOpen} aria-label={item.label} className="flex-1 min-w-0 text-left">
+          <Body item={item} done={done} hora={hora} />
+        </button>
+        {rightSlot && <span className="flex-none self-center">{rightSlot}</span>}
+      </div>
+    );
+  }
+
   // Skincare: a linha inteira abre o roteiro guiado; o "feito" vem dos logs.
   if (item.control === "skincare" && onOpen) {
     return (

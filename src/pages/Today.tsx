@@ -16,6 +16,7 @@ import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
+import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 
 /** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
@@ -139,6 +140,15 @@ export function Today() {
     }
   }
 
+  async function addBreak() {
+    const log = await db.dailyLog.get(todayISO);
+    if (log) {
+      await db.dailyLog.update(todayISO, { activeBreakCount: log.activeBreakCount + 1 });
+    } else {
+      await db.dailyLog.put({ date: todayISO, waterMl: 0, activeBreakCount: 1 });
+    }
+  }
+
   async function addWalk(min: number) {
     const log = await db.dailyLog.get(todayISO);
     if (log) {
@@ -157,6 +167,7 @@ export function Today() {
   const { done, toggle } = useRoutineChecks(todayISO);
   const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
   const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
+  const [pausaAberta, setPausaAberta] = useState(false);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -245,7 +256,9 @@ export function Today() {
                   ? () => setRecipeMealType(item.mealType!)
                   : item.control === "skincare" && item.skincareTime
                     ? () => setSkincareTime(item.skincareTime!)
-                    : undefined
+                    : item.control === "breaks"
+                      ? () => setPausaAberta(true)
+                      : undefined
               }
             />
           ))}
@@ -256,6 +269,13 @@ export function Today() {
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
       {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
+      {pausaAberta && (
+        <MicroPausaModal
+          n={dailyLog?.activeBreakCount ?? 0}
+          onClose={() => setPausaAberta(false)}
+          onFeito={() => void addBreak()}
+        />
+      )}
     </div>
   );
 }
