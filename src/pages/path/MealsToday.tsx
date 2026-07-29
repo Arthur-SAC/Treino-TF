@@ -4,14 +4,10 @@ import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
 import { getActiveMealPlan } from "../../lib/meal-plan";
 import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 export function MealsToday() {
-  const today = todayISO();
+  const today = hojeISO();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
   const [recipeOf, setRecipeOf] = useState<Meal["mealType"] | null>(null);

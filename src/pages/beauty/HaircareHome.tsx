@@ -6,17 +6,13 @@ import { BeautyTabs } from "../../components/BeautyTabs";
 import { formatDateBR } from "../../lib/format";
 import { HAIR_GUIDE } from "../../data/hair-guide-seed";
 import { GuideAccordion } from "../../components/GuideAccordion";
+import { hojeISO } from "../../lib/today-date";
 
 const TYPE_LABEL: Record<HaircareEntry["type"], string> = {
   hidratacao: "Hidratação",
   nutricao: "Nutrição",
   reconstrucao: "Reconstrução",
 };
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 export function HaircareHome() {
   const entries = useLiveQuery(() => db.haircare.orderBy("date").reverse().limit(30).toArray(), []);
@@ -26,7 +22,7 @@ export function HaircareHome() {
   async function handleAdd(e: FormEvent) {
     e.preventDefault();
     await db.haircare.add({
-      date: todayISO(),
+      date: hojeISO(),
       type,
       products: products.split(",").map((p) => p.trim()).filter(Boolean),
       completed: true,

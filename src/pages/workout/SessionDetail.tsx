@@ -5,6 +5,7 @@ import { db, type Exercise, type WorkoutSession } from "../../lib/db";
 import { ordenarPorBloco } from "../../lib/session-order";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
+import { hojeISO } from "../../lib/today-date";
 
 export function SessionDetail() {
   const { templateId } = useParams<{ templateId: string }>();
@@ -23,7 +24,7 @@ export function SessionDetail() {
   const [feedback, setFeedback] = useState<WorkoutSession["difficultySelf"]>("medium");
   const sessionIdRef = useRef<number | undefined>(undefined);
   const saveChain = useRef<Promise<void>>(Promise.resolve());
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = hojeISO();
   const [soloPrimeiro, setSoloPrimeiro] = useState(false);
 
   // Templates antigos (de outros ciclos) não têm `block` — a UI segue igual pra

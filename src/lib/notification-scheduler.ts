@@ -2,6 +2,7 @@ import { db } from "./db";
 import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
 import { getSetting, setSetting } from "./settings-helpers";
 import { PRESENCE_ITEMS } from "./daily-routine";
+import { hojeISO } from "./today-date";
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -41,7 +42,7 @@ async function tick() {
     lastHydration > 0 &&
     t - lastHydration >= hydrationInterval * 60_000
   ) {
-    const todayISO = now.toISOString().slice(0, 10);
+    const todayISO = hojeISO(now);
     const log = await db.dailyLog.get(todayISO);
     const drunk = log?.waterMl ?? 0;
     const goal = await getSetting("hydrationGoalMl");
@@ -54,7 +55,7 @@ async function tick() {
   // Skincare matinal/noturno (uma vez por dia)
   const morningTime = await getSetting("morningReminderTime");
   const eveningTime = await getSetting("eveningReminderTime");
-  const todayISO = now.toISOString().slice(0, 10);
+  const todayISO = hojeISO(now);
   const lastMorning = await getSetting("lastSkincareMorningAt");
   const lastEvening = await getSetting("lastSkincareEveningAt");
 

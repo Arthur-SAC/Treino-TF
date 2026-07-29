@@ -8,6 +8,7 @@ import { GuideAccordion } from "../../components/GuideAccordion";
 import { FOLICULITE_GUIDE } from "../../data/foliculite-guide-seed";
 import { DEPILACAO_STRATEGY } from "../../data/depilacao-strategy-seed";
 import { formatDateBR } from "../../lib/format";
+import { hojeISO } from "../../lib/today-date";
 
 const AREA_LABEL: Record<HairRemovalSession["area"], string> = {
   rosto: "Rosto", axila: "Axila", pernas: "Pernas", intima: "Íntima",
@@ -18,18 +19,13 @@ const METHOD_LABEL: Record<HairRemovalSession["method"], string> = {
   navalha: "Navalha", creme: "Creme", pinca: "Pinça", eletrolise: "Eletrólise",
 };
 
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
 export function DepilacaoHome() {
   const sessions = useLiveQuery(async () => {
     const all = await db.hairRemovalSessions.orderBy("date").toArray();
     return all.reverse();
   }, []);
 
-  const [date, setDate] = useState(todayISO());
+  const [date, setDate] = useState(hojeISO());
   const [area, setArea] = useState<HairRemovalSession["area"]>("rosto");
   const [method, setMethod] = useState<HairRemovalSession["method"]>("laser");
   const [cost, setCost] = useState("");

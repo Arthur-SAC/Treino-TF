@@ -5,6 +5,7 @@ import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, type La
 import { formatDateBR } from "../lib/format";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
+import { hojeISO } from "../lib/today-date";
 
 interface Props {
   exercise: Exercise;
@@ -43,7 +44,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
     let mounted = true;
     db.workoutSessions
       .where("date")
-      .below(new Date().toISOString().slice(0, 10) + "z")
+      .below(hojeISO() + "z")
       .reverse()
       .toArray()
       .then((prev) => {

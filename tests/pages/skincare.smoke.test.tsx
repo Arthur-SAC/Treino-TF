@@ -4,6 +4,7 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { SkincareHome } from "../../src/pages/beauty/SkincareHome";
 import { db } from "../../src/lib/db";
 import { seedBeauty } from "../../src/lib/beauty-seed";
+import { hojeISO } from "../../src/lib/today-date";
 
 beforeEach(async () => {
   await seedBeauty();
@@ -28,7 +29,7 @@ describe("Skincare smoke", () => {
     // Espera o log persistir
     await waitFor(async () => {
       const logs = await db.skincareLogs.toArray();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = hojeISO();
       const completed = logs.filter((l) => l.completed && l.date === today);
       expect(completed.length).toBeGreaterThanOrEqual(1);
     });

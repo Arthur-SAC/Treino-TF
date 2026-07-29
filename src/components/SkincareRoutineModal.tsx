@@ -1,10 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type SkincareRoutine } from "../lib/db";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../lib/today-date";
 
 /** Roteiro de skincare consolidado do período (manhã/noite): junta TODAS as
  *  rotinas daquele horário numa sequência guiada — produto, técnica e o tempo
@@ -12,7 +8,7 @@ function todayISO(): string {
  *  própria tela Hoje, pra não ter que ir aba por aba. */
 export function SkincareRoutineModal({ time, onClose }: { time: SkincareRoutine["time"]; onClose: () => void }) {
   const routines = useLiveQuery(() => db.skincareRoutines.where("time").equals(time).toArray(), [time]);
-  const logs = useLiveQuery(() => db.skincareLogs.where("date").equals(todayISO()).toArray(), []);
+  const logs = useLiveQuery(() => db.skincareLogs.where("date").equals(hojeISO()).toArray(), []);
   const title = time === "morning" ? "Skincare manhã" : "Skincare noite";
 
   const allDone =
@@ -21,7 +17,7 @@ export function SkincareRoutineModal({ time, onClose }: { time: SkincareRoutine[
 
   async function toggleAll() {
     if (!routines) return;
-    const date = todayISO();
+    const date = hojeISO();
     const target = !allDone;
     const current = await db.skincareLogs.where("date").equals(date).toArray();
     for (const r of routines) {

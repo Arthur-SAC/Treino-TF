@@ -2,13 +2,9 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { db, type Look } from "../../../lib/db";
 import { compressImage } from "../../../lib/image-compress";
+import { hojeISO } from "../../../lib/today-date";
 
 const OCCASIONS = ["trabalho", "casual", "sair", "noite", "namorada", "festa"];
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 export function LookNew() {
   const navigate = useNavigate();
@@ -33,7 +29,7 @@ export function LookNew() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!blob) return;
-    await db.looks.add({ date: todayISO(), blob, occasion, rating, notes: notes.trim() || undefined } as Look);
+    await db.looks.add({ date: hojeISO(), blob, occasion, rating, notes: notes.trim() || undefined } as Look);
     navigate("/beleza/estilo/looks", { replace: true });
   }
 

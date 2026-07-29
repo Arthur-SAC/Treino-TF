@@ -1,16 +1,12 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { db, type Milestone } from "../../lib/db";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 export function MilestoneNew() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [datePlanned, setDatePlanned] = useState(todayISO());
+  const [datePlanned, setDatePlanned] = useState(hojeISO());
   const [category, setCategory] = useState<Milestone["category"]>("medico");
   const [notes, setNotes] = useState("");
 

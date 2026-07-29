@@ -4,14 +4,10 @@ import { db, type DailyLog } from "../../lib/db";
 import { PathTabs } from "../../components/PathTabs";
 import { MoodPicker } from "../../components/MoodPicker";
 import { formatDateBR } from "../../lib/format";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../lib/today-date";
 
 export function DiaryView() {
-  const today = todayISO();
+  const today = hojeISO();
   const log = useLiveQuery(() => db.dailyLog.get(today), [today]);
   const recent = useLiveQuery(
     () => db.dailyLog.orderBy("date").reverse().limit(30).toArray(),

@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { PathTabs } from "../../components/PathTabs";
 import { MilestoneCard } from "../../components/MilestoneCard";
+import { hojeISO } from "../../lib/today-date";
 
 export function MilestonesView() {
   const milestones = useLiveQuery(() => db.milestones.orderBy("datePlanned").toArray(), []);
 
   async function complete(id?: number) {
     if (id === undefined) return;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = hojeISO();
     await db.milestones.update(id, { dateCompleted: today });
   }
 

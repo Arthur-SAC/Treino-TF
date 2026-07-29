@@ -5,6 +5,7 @@ import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
 import { encryptBackup, decryptBackup } from "../lib/backup";
 import { db } from "../lib/db";
+import { hojeISO } from "../lib/today-date";
 
 export function Settings() {
   const notif = useSetting("notificationsEnabled");
@@ -86,7 +87,7 @@ export function Settings() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `trein-final-${new Date().toISOString().slice(0, 10)}.trein-backup`;
+      link.download = `trein-final-${hojeISO()}.trein-backup`;
       link.click();
       URL.revokeObjectURL(url);
       setInfo("Backup baixado.");

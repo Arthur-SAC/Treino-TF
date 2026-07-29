@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal, type MealVariant } from "../lib/db";
 import { getActiveMealPlan, EFFORT_LABEL } from "../lib/meal-plan";
+import { hojeISO } from "../lib/today-date";
 
 export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
   cafe: "Café da manhã",
@@ -11,11 +12,6 @@ export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
 };
 
 const MEAL_INDEX: Record<Meal["mealType"], number> = { cafe: 0, almoco: 1, lanche: 2, jantar: 3 };
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 /** Compara os foods gravados hoje com os de uma variante, pra saber qual
  *  opção está escolhida (a refeição não guarda o id da variante — só o
@@ -31,7 +27,7 @@ function foodsEqual(a: Meal["foods"], b: Meal["foods"]): boolean {
  *  Hoje e na tela Refeições, pra receita ficar a um toque de distância. */
 export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"]; onClose: () => void }) {
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
-  const meals = useLiveQuery(() => db.meals.where("date").equals(todayISO()).toArray(), []);
+  const meals = useLiveQuery(() => db.meals.where("date").equals(hojeISO()).toArray(), []);
   const meal = meals?.find((m) => m.mealType === mealType);
   const slot = plan?.slots.find((s) => s.mealType === mealType);
   const variants = slot?.variants ?? [];
@@ -51,7 +47,7 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
     if (chosenVariant?.id === variant.id) return;
     await db.meals.put({
       ...(meal?.id !== undefined ? { id: meal.id } : {}),
-      date: todayISO(),
+      date: hojeISO(),
       mealType,
       foods: variant.foods,
       checked: false,

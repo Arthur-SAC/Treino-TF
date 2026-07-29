@@ -5,11 +5,7 @@ import { db } from "../../src/lib/db";
 import { seedPath } from "../../src/lib/path-seed";
 import { getActiveMealPlan } from "../../src/lib/meal-plan";
 import { RecipeModal } from "../../src/components/RecipeModal";
-
-function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+import { hojeISO } from "../../src/lib/today-date";
 
 beforeEach(async () => {
   await db.mealPlans.clear();
@@ -77,7 +73,7 @@ describe("RecipeModal — as três opções", () => {
     const slot = plan!.slots.find((s) => s.mealType === "lanche")!;
     const variantJaEscolhida = slot.variants[0];
     await db.meals.add({
-      date: todayISO(),
+      date: hojeISO(),
       mealType: "lanche",
       foods: variantJaEscolhida.foods,
       checked: true,

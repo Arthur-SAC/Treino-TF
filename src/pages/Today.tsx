@@ -19,6 +19,7 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
+import { hojeISO } from "../lib/today-date";
 
 /** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
  *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
@@ -30,7 +31,7 @@ function dayOfYear(date: Date): number {
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
-  const todayISO = today.toISOString().slice(0, 10);
+  const todayISO = hojeISO(today);
 
   const activeCycle = useSetting("activeCycle");
   const todayTemplate = useLiveQuery(
@@ -79,7 +80,7 @@ export function Today() {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().slice(0, 10));
+      dates.push(hojeISO(d));
     }
     const logs = await db.skincareLogs.where("date").anyOf(dates).and((l) => l.completed).toArray();
     const uniqueDates = new Set(logs.map((l) => l.date));
@@ -92,7 +93,7 @@ export function Today() {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().slice(0, 10));
+      dates.push(hojeISO(d));
     }
     const sessions = await db.workoutSessions.where("date").anyOf(dates).toArray();
     const uniqueDates = new Set(sessions.map((s) => s.date));
@@ -108,7 +109,7 @@ export function Today() {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().slice(0, 10));
+      dates.push(hojeISO(d));
     }
     const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
     return noitesNoAlvo(logs, ALVO_SONO);
