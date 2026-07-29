@@ -156,7 +156,10 @@ const SLOTS: MealSlot[] = [
       {
         id: "cafe-4",
         label: "Opção 4 · Banana & ovos cozidos",
-        effort: "5-min",
+        // Ovo cozido é o prato mais loteável que existe — 10 min de fervura
+        // não bate com o bucket "5-min", mas bate com "lote-domingo": cozinha
+        // a semana toda de uma vez e guarda na geladeira.
+        effort: "lote-domingo",
         foods: [
           {
             name: "Banana (2 unidades médias)",
@@ -175,7 +178,7 @@ const SLOTS: MealSlot[] = [
             carbG: 1,
             fatG: 11,
             preparation:
-              "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria, descasca.",
+              "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria, descasca. Dá pra cozinhar o lote de ovos da semana de uma vez no domingo e guardar na geladeira — de manhã é só descascar.",
           },
         ],
         ingredients: [
@@ -435,32 +438,32 @@ const SLOTS: MealSlot[] = [
           },
           {
             name: "Banana média",
-            qtyG: 120,
-            kcal: 100,
+            qtyG: 150,
+            kcal: 125,
             proteinG: 1,
-            carbG: 24,
+            carbG: 32,
             fatG: 0,
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
           {
-            name: "Aveia em flocos (2 colheres de sopa)",
-            qtyG: 30,
-            kcal: 113,
-            proteinG: 4,
-            carbG: 20,
-            fatG: 2,
+            name: "Aveia em flocos (3 colheres de sopa)",
+            qtyG: 40,
+            kcal: 150,
+            proteinG: 6,
+            carbG: 27,
+            fatG: 3,
             preparation: "Polvilha por cima do iogurte na hora de comer — sem cozinhar.",
           },
         ],
         ingredients: [
           { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-          { item: "Aveia em flocos", qty: 30, unit: "g", category: "carboidrato" },
+          { item: "Aveia em flocos", qty: 40, unit: "g", category: "carboidrato" },
         ],
       },
       {
         id: "lanche-2",
-        label: "Opção 2 · Pão com peito de peru & fruta",
+        label: "Opção 2 · Pão com peito de peru & banana",
         effort: "zero-preparo",
         foods: [
           {
@@ -473,28 +476,28 @@ const SLOTS: MealSlot[] = [
             preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
           },
           {
-            name: "Peito de peru fatiado (4 fatias)",
-            qtyG: 60,
-            kcal: 55,
-            proteinG: 11,
-            carbG: 1,
-            fatG: 1,
+            name: "Peito de peru fatiado (6 fatias)",
+            qtyG: 90,
+            kcal: 83,
+            proteinG: 17,
+            carbG: 2,
+            fatG: 2,
             preparation: "Frios fatiados, direto da geladeira — de casa ou do trabalho.",
           },
           {
-            name: "Fruta (banana ou maçã)",
-            qtyG: 120,
-            kcal: 100,
+            name: "Banana média",
+            qtyG: 150,
+            kcal: 125,
             proteinG: 1,
-            carbG: 24,
+            carbG: 32,
             fatG: 0,
             preparation: "Ao natural.",
           },
         ],
         ingredients: [
           { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
-          { item: "Peito de peru fatiado", qty: 60, unit: "g", category: "proteina" },
-          { item: "Banana ou maçã", qty: 1, unit: "un", category: "hortifruti" },
+          { item: "Peito de peru fatiado", qty: 90, unit: "g", category: "proteina" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
       {

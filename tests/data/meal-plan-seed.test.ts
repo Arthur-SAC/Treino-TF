@@ -8,7 +8,7 @@ describe("INITIAL_PLAN", () => {
     expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(175);
   });
 
-  it("tem 4 períodos com ao menos 3 variantes cada, todas com ingredientes", () => {
+  it("tem 4 períodos, cada um com a contagem exata de variantes esperada (café 5, os demais 3), todas com ingredientes", () => {
     expect(INITIAL_PLAN.slots).toHaveLength(4);
     const types = INITIAL_PLAN.slots.map((s) => s.mealType);
     expect(types).toEqual(["cafe", "almoco", "lanche", "jantar"]);

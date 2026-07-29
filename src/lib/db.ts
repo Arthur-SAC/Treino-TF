@@ -116,7 +116,7 @@ export interface MealVariant {
 export interface MealSlot {
   mealType: Meal["mealType"]; // "cafe" | "almoco" | "lanche" | "jantar"
   targetKcal: number;
-  variants: MealVariant[];    // 3 opções por período
+  variants: MealVariant[];    // 3 opções por período (café tem 5)
 }
 
 export interface MealPlan {

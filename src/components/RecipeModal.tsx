@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal, type MealVariant } from "../lib/db";
-import { getActiveMealPlan } from "../lib/meal-plan";
+import { getActiveMealPlan, EFFORT_LABEL } from "../lib/meal-plan";
 
 export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
   cafe: "Café da manhã",
@@ -11,13 +11,6 @@ export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
 };
 
 const MEAL_INDEX: Record<Meal["mealType"], number> = { cafe: 0, almoco: 1, lanche: 2, jantar: 3 };
-
-const EFFORT_LABEL: Record<NonNullable<MealVariant["effort"]>, string> = {
-  "zero-preparo": "zero preparo",
-  "5-min": "pronto em 5 min",
-  "air-fryer": "air fryer",
-  "lote-domingo": "do lote de domingo",
-};
 
 function todayISO(): string {
   const d = new Date();
