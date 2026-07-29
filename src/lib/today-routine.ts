@@ -69,7 +69,7 @@ const LANCHE: RoutineItem = { id: "lanche-saida", block: "tarde", label: "Lanche
 
 function tardeSemana(): RoutineItem[] {
   return [
-    { id: "caes", block: "tarde", label: "Passear com os cães · 1h", subtitle: "Conta pros seus passos do dia", control: "invert", defaultTime: "16:40" },
+    { id: "caes", block: "tarde", label: "Passear com os cães · 1h", subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino", control: "invert", defaultTime: "16:40" },
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:45" },
   ];
 }
@@ -81,7 +81,7 @@ const NOITE: RoutineItem[] = [
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
-  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Alvo pra fechar 7h30 — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
+  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Marcar registra a hora real que você deitou · alvo 22:30 — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
 ];
 
 function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] {

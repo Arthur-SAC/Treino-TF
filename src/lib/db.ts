@@ -240,6 +240,9 @@ export interface DailyLog {
   activeBreakCount: number;
   waterMl: number;
   walkMin?: number;
+  /** Hora "HH:MM" em que ela deitou. Campo novo em objeto existente — o Dexie
+   *  não precisa de bump de versão para isso. */
+  sleepAt?: string;
 }
 
 export interface Setting {
