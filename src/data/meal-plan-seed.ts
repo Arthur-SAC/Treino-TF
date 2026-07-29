@@ -478,7 +478,9 @@ const SLOTS: MealSlot[] = [
           {
             name: "Peito de peru fatiado (6 fatias)",
             qtyG: 90,
-            kcal: 83,
+            // 17P + 2C + 2G = 68 + 8 + 18 = 94 kcal. Estava 83, e o buraco de
+            // 11 kcal derrubava a opção 2 do lanche pra 338 contra o alvo 350.
+            kcal: 94,
             proteinG: 17,
             carbG: 2,
             fatG: 2,
