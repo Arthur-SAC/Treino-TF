@@ -62,7 +62,7 @@ export function timeBlockFocus(hour: number, dayOfWeek: number): { title: string
   }
   if (block === "tarde") {
     if (dayOfWeek === 6) return { title: "Hora da dança", subtitle: "A sessão divertida da semana", to: "/treino/movimento" };
-    if (dayOfWeek === 0) return { title: "Descanso", subtitle: "Dia livre — se quiser, uma caminhada leve", to: "/treino/movimento" };
+    if (dayOfWeek === 0) return { title: "Descanso", subtitle: "Dia livre — só o passeio com os cães, no seu ritmo", to: "/treino/movimento" };
     return { title: "Agora: lanche da saída → treino", subtitle: "Come o pré-treino, passeia com os cães e cai no treino", to: "/treino" };
   }
   return { title: "Antes de dormir", subtitle: isWeekend ? "Skincare, alongamento e seu tempo" : "Skincare, alongamento noite e seu tempo (desenho/leitura)", to: "/beleza/pele-cabelo/skincare" };

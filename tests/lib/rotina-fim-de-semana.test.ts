@@ -52,6 +52,13 @@ describe("fim de semana", () => {
 
   // Dois itens de caminhada no mesmo dia somariam na mesma meta de 75 min e
   // dariam a impressão de que o dia pede duas caminhadas — não pede.
+  it("nenhum dia tem dois itens somando na mesma meta de movimento", () => {
+    for (let dow = 0; dow < 7; dow++) {
+      const walks = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).filter((i) => i.control === "walk");
+      expect({ dow, walks: walks.map((i) => i.id) }).toEqual({ dow, walks: ["caes"] });
+    }
+  });
+
   it("no sábado o passeio é o único item de caminhada, e não invade a dança", () => {
     const tarde = buildDayRoutine(6, 1).blocks.find((b) => b.id === "tarde")!;
     expect(tarde.items.filter((i) => i.control === "walk").map((i) => i.id)).toEqual(["caes"]);

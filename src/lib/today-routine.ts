@@ -136,7 +136,10 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
       ? { id: "tarde", label: "Fim de tarde", items: [
           lanche("domingo"),
           caes("domingo"),
-          { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — uma caminhada leve fecha o que faltar da meta", control: "walk" },
+          // Sem control:"walk" de propósito: o passeio logo acima já mostra o
+          // contador de movimento do dia, e dois itens repetindo "X / 75 min"
+          // fariam parecer que o domingo pede duas caminhadas.
+          { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
       : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
 
