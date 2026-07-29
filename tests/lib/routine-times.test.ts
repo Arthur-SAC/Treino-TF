@@ -55,6 +55,17 @@ describe("horários da rotina", () => {
     }
   });
 
+  // "descanso-domingo" não tem defaultTime de propósito (dia livre, sem hora
+  // marcada) — então o teste de horários filtrados acima passaria mesmo se o
+  // lanche fosse parar depois do descanso, porque sobraria um único horário
+  // no array. Esta checagem cobre a posição real dos itens, não só as horas.
+  it("no domingo, o lanche (com hora) vem antes do descanso (sem hora)", () => {
+    const DOMINGO = buildDayRoutine(0, 1);
+    const tarde = DOMINGO.blocks.find((b) => b.id === "tarde")!;
+    const ids = tarde.items.map((i) => i.id);
+    expect(ids.indexOf("lanche-saida")).toBeLessThan(ids.indexOf("descanso-domingo"));
+  });
+
   it("nenhum horário padrão é inválido", () => {
     for (const i of itens) {
       if (i.defaultTime) expect(i.defaultTime).toMatch(/^([01]\d|2[0-3]):[0-5]\d$/);

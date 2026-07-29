@@ -92,8 +92,8 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
     ? {
         id: "tarde", label: "Fim de tarde", items: [
           LANCHE,
-          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento" },
-          { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", control: "walk" },
+          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
+          { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", control: "walk", defaultTime: "18:15" },
         ],
       }
     : isSunday
