@@ -39,6 +39,22 @@ describe("horários da rotina", () => {
     }
   });
 
+  it("no sábado, os itens com horário também estão em ordem cronológica", () => {
+    const SABADO = buildDayRoutine(6, 1);
+    for (const bloco of SABADO.blocks) {
+      const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
+      expect({ bloco: bloco.id, horas }).toEqual({ bloco: bloco.id, horas: [...horas].sort() });
+    }
+  });
+
+  it("no domingo, os itens com horário também estão em ordem cronológica", () => {
+    const DOMINGO = buildDayRoutine(0, 1);
+    for (const bloco of DOMINGO.blocks) {
+      const horas = bloco.items.map((i) => i.defaultTime).filter(Boolean) as string[];
+      expect({ bloco: bloco.id, horas }).toEqual({ bloco: bloco.id, horas: [...horas].sort() });
+    }
+  });
+
   it("nenhum horário padrão é inválido", () => {
     for (const i of itens) {
       if (i.defaultTime) expect(i.defaultTime).toMatch(/^([01]\d|2[0-3]):[0-5]\d$/);

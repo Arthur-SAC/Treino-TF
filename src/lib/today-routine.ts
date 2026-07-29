@@ -61,15 +61,14 @@ function manhaItems(dayOfYear: number): RoutineItem[] {
   return items;
 }
 
-const TRABALHO: RoutineItem[] = [
-  { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco", defaultTime: "12:00" },
-  { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" },
-  { id: "agua", block: "trabalho", label: "Água", control: "water" },
-];
+const ALMOCO: RoutineItem = { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco", defaultTime: "12:00" };
+const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", control: "water" };
+const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
+
+const LANCHE: RoutineItem = { id: "lanche-saida", block: "tarde", label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino", control: "recipe", mealType: "lanche", defaultTime: "16:00" };
 
 function tardeSemana(): RoutineItem[] {
   return [
-    { id: "lanche-saida", block: "tarde", label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino", control: "recipe", mealType: "lanche", defaultTime: "16:00" },
     { id: "caes", block: "tarde", label: "Passear com os cães · 1h", subtitle: "Conta pros seus passos do dia", control: "invert", defaultTime: "16:40" },
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:45" },
   ];
@@ -92,15 +91,21 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
   const tarde: RoutineBlockGroup = isSaturday
     ? {
         id: "tarde", label: "Fim de tarde", items: [
+          LANCHE,
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento" },
           { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", control: "walk" },
         ],
       }
     : isSunday
       ? { id: "tarde", label: "Fim de tarde", items: [
+          LANCHE,
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — se quiser, só uma caminhada" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: tardeSemana() };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [LANCHE, ...tardeSemana()] };
+
+  const trabalho: RoutineBlockGroup = isSaturday || isSunday
+    ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
+    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ALMOCO, MICRO_PAUSAS, AGUA] };
 
   const semanaItems: RoutineItem[] = [];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
@@ -113,7 +118,7 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
 
   return [
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear) },
-    { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: TRABALHO },
+    trabalho,
     tarde,
     { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: NOITE },
     { id: "semana", label: "Esta semana", items: semanaItems },
