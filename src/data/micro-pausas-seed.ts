@@ -3,8 +3,9 @@
 // Ela sabe que precisa parar, só não sabia o quê — este é o conteúdo.
 //
 // O ambiente de trabalho dela não é receptivo, então discrição não é
-// conforto, é requisito: a maioria dos movimentos tem que ser invisível,
-// feita na própria mesa, sem chamar atenção.
+// conforto, é requisito: boa parte dos movimentos precisa ser invisível,
+// feita na própria mesa, sem chamar atenção — mesmo os que não são
+// (levantar, ir ao bebedouro) são banais o bastante pra não destoar.
 
 export interface MicroPausa {
   id: string;
@@ -23,8 +24,8 @@ export const MICRO_PAUSAS: MicroPausa[] = [
     id: "levantar",
     nome: "Levantar e ficar em pé",
     duracao: "1 min",
-    discricao: "invisivel",
-    como: "Levanta da cadeira e fica em pé por um minuto — aproveita pra pegar algo, atender uma call em pé, o que for. Não precisa anunciar nada.",
+    discricao: "normal",
+    como: "Levanta da cadeira e fica em pé por um minuto — aproveita pra pegar algo ou esticar as pernas. É um gesto banal, que qualquer colega faz sem pensar duas vezes, mas é visível: numa call de vídeo, por exemplo, dá pra ver que você levantou.",
     porque: "Cada hora sentada desliga um pouco mais o glúteo, que passa a trabalho nenhum enquanto o quadril carrega o peso sozinho. Ficar em pé é o oposto direto de 7h sentada — é reativar o músculo que o treino de glúteo-prioritário está tentando construir.",
   },
   {
