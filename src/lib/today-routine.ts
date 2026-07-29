@@ -88,9 +88,13 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  passeio (60 min) sozinho não fecha a conta. */
 function caes(dia: TipoDeDia): RoutineItem {
   const base = { id: "caes", block: "tarde", label: "Passear com os cães · 1h", control: "walk", defaultTime: "16:40" } as const;
-  return dia === "semana"
-    ? { ...base, subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino" }
-    : { ...base, subtitle: "NEAT — eles não sabem que é fim de semana; hoje é daqui que vem quase todo o seu movimento" };
+  if (dia === "sabado") {
+    return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
+  }
+  if (dia === "domingo") {
+    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; hoje é daqui que vem quase todo o seu movimento" };
+  }
+  return { ...base, subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino" };
 }
 
 function tardeSemana(): RoutineItem[] {
@@ -118,11 +122,14 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
 
   const tarde: RoutineBlockGroup = isSaturday
     ? {
+        // O passeio ocupa o horário que era da "caminhada leve" (18:15): as
+        // duas eram a mesma caminhada, e mantê-las lado a lado colocaria dois
+        // itens de movimento somando na mesma meta — além de o passeio de 1h
+        // às 16h40 invadir a dança das 17h30.
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
-          caes("sabado"),
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
-          { id: "caminhada-sabado", block: "tarde", label: "Caminhada leve", subtitle: "Depois da dança, pra soltar — soma no total do dia", control: "walk", defaultTime: "18:15" },
+          { ...caes("sabado"), defaultTime: "18:15" },
         ],
       }
     : isSunday

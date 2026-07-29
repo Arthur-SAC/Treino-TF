@@ -128,7 +128,6 @@ describe("blocosDaSemanaInteira", () => {
 
   it("cobre os itens de sábado, que têm horário e ficavam de fora", () => {
     expect(ajustaveis).toContain("danca-sabado");
-    expect(ajustaveis).toContain("caminhada-sabado");
   });
 
   it("continua cobrindo a barba, que só existe em dia do ano par", () => {

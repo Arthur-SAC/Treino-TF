@@ -50,6 +50,16 @@ describe("fim de semana", () => {
     }
   });
 
+  // Dois itens de caminhada no mesmo dia somariam na mesma meta de 75 min e
+  // dariam a impressão de que o dia pede duas caminhadas — não pede.
+  it("no sábado o passeio é o único item de caminhada, e não invade a dança", () => {
+    const tarde = buildDayRoutine(6, 1).blocks.find((b) => b.id === "tarde")!;
+    expect(tarde.items.filter((i) => i.control === "walk").map((i) => i.id)).toEqual(["caes"]);
+    const ids = tarde.items.map((i) => i.id);
+    expect(ids.indexOf("danca-sabado")).toBeLessThan(ids.indexOf("caes"));
+    expect(tarde.items.find((i) => i.id === "caes")!.defaultTime).toBe("18:15");
+  });
+
   it("a copy do lanche não fala de trabalho nem de treino no fim de semana", () => {
     for (const dow of [0, 6]) {
       const lanche = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "lanche-saida")!;
