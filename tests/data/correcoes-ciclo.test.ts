@@ -73,17 +73,33 @@ describe("correções de programação (Bloco B da spec 2026-07-27)", () => {
     }
   });
 
-  it("na Entrada a regra é a mesma, com o dia leve de exceção — lá o cardio é o treino", () => {
-    const DIA_LEVE = ["e1-qui", "e2-qui", "e3-qui"];
+  // Na Entrada a distribuição é declarada item por item, não derivada de
+  // heurística: são só 5 sessões por semana e cada uma tem uma razão própria.
+  // A quarta (glúteo médio + solo) fecha com zona 2 porque é o dia LEVE de
+  // carga — é o melhor lugar pro cardio, que ali não compete com o glúteo
+  // pesado. A terça (postura + core) é o único dia sem cardio, de propósito.
+  // Resultado: 4 dos 5 dias, dentro dos 3-4x/semana que a rotina prevê.
+  it("na Entrada, o cardio fecha 4 dos 5 dias — todos menos o de postura", () => {
+    const temZona2 = (t: WorkoutTemplate) => t.exercises.some((e) => e.exerciseId === "cardio-zona2");
+    for (const semana of ["1", "2", "3"]) {
+      const comCardio = ENTRADA_TEMPLATES.filter((t) => t.cycle === `entrada-${semana}` && temZona2(t))
+        .map((t) => t.id)
+        .sort();
+      expect(comCardio).toEqual([`e${semana}-qua`, `e${semana}-qui`, `e${semana}-seg`, `e${semana}-sex`]);
+    }
+  });
+
+  it("todo dia de inferior da Entrada fecha com cardio — nenhum fica sem", () => {
     const temZona2 = (t: WorkoutTemplate) => t.exercises.some((e) => e.exerciseId === "cardio-zona2");
     const faltando = ENTRADA_TEMPLATES.filter((t) => ehInferior(t) && !temZona2(t)).map((t) => t.id);
-    const sobrando = ENTRADA_TEMPLATES
-      .filter((t) => !ehInferior(t) && temZona2(t) && !DIA_LEVE.includes(t.id))
-      .map((t) => t.id);
-    expect({ faltando, sobrando }).toEqual({ faltando: [], sobrando: [] });
-    for (const cycle of ["entrada-1", "entrada-2", "entrada-3"]) {
-      const dias = ENTRADA_TEMPLATES.filter((t) => t.cycle === cycle && temZona2(t)).length;
-      expect({ cycle, dias }).toEqual({ cycle, dias: 3 });
-    }
+    expect(faltando).toEqual([]);
+  });
+
+  it("o cardio é sempre o ÚLTIMO exercício da sessão da Entrada, nunca no meio", () => {
+    const foraDoFim = ENTRADA_TEMPLATES.filter((t) => {
+      const i = t.exercises.findIndex((e) => e.exerciseId === "cardio-zona2");
+      return i >= 0 && i !== t.exercises.length - 1;
+    }).map((t) => t.id);
+    expect(foraDoFim).toEqual([]);
   });
 });

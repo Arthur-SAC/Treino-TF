@@ -26,7 +26,7 @@ describe("Workout session smoke", () => {
     const marcarFeito = await screen.findAllByRole("button", { name: /marcar feito/i });
     fireEvent.click(marcarFeito[0]);
 
-    await waitFor(() => expect(screen.getByText(/Cardio leve .esteira ou bike. ✓/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Aquecimento . esteira ou bike \(5 min\) ✓/)).toBeInTheDocument());
 
     // Finaliza a sessão
     fireEvent.click(screen.getByRole("button", { name: /finalizar treino/i }));

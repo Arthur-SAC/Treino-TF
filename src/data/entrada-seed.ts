@@ -75,7 +75,7 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "15 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "15 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 30, block: "solo" },
-      { exerciseId: "bike-reclinada", sets: 1, repsTarget: "10min", restSec: 0, block: "final" },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
@@ -155,7 +155,7 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
-      { exerciseId: "bike-reclinada", sets: 1, repsTarget: "10min", restSec: 0, block: "final" },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
@@ -233,7 +233,7 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
-      { exerciseId: "bike-reclinada", sets: 1, repsTarget: "10min", restSec: 0, block: "final" },
+      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
