@@ -12,6 +12,10 @@ interface Props {
   setsTarget: number;
   repsTarget: string;
   restSec: number;
+  /** Orientação específica DESTA sessão, vinda do template (amplitude curta do
+   *  stiff, pés altos no leg press, a graduação do hip thrust...). Vale mais
+   *  que a descrição genérica do exercício e por isso aparece em destaque. */
+  notes?: string;
   onSave: (entry: WorkoutSession["exercises"][number]) => void;
 }
 
@@ -28,7 +32,7 @@ function describeLast(last: LastPerformance): string {
     .join(" · ");
 }
 
-export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onSave }: Props) {
+export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave }: Props) {
   const timeBased = isTimeBased(repsTarget);
   const [sets, setSets] = useState<Array<{ reps: string; weight: string; done: boolean }>>(
     () => Array.from({ length: setsTarget }, () => ({ reps: "", weight: "", done: false })),
@@ -163,6 +167,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
         <p className="text-muted text-xs mt-0.5">
           {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
         </p>
+        {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mt-2 mb-1">{notes}</p>}
         {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
         <button
           type="button"
@@ -199,6 +204,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, onS
       {isHoldLight(exercise.category) && (
         <p className="text-xs text-muted mb-2">Manter leve — não subir a carga (silhueta).</p>
       )}
+      {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mb-2">{notes}</p>}
       {exercise.successCue && (
         <p className="text-xs text-nude/80 mb-2">✦ {exercise.successCue}</p>
       )}
