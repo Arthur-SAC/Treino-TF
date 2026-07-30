@@ -198,6 +198,7 @@ export function SessionDetail() {
                 setsTarget={tplEx.sets}
                 repsTarget={tplEx.repsTarget}
                 restSec={tplEx.restSec}
+                notes={tplEx.notes}
                 onSave={handleSave}
               />
             )}
