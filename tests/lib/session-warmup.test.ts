@@ -16,9 +16,19 @@ const porId = (id: string) =>
   [...ENTRADA_TEMPLATES, ...WORKOUT_PLAN].find((t) => t.id === id)!;
 
 describe("itensDeAquecimento", () => {
-  it("na segunda da Entrada, o aquecimento é a bike", () => {
+  // Decisão da usuária (2026-07-30): ela quer a ESTEIRA como aquecimento.
+  // O item aceita as duas máquinas — a esteira é a prescrição, a bike é a
+  // alternativa se estiver ocupada.
+  it("na segunda da Entrada, o aquecimento é na esteira", () => {
     const nomes = itensDeAquecimento(porId("e1-seg").exercises, nomeDe);
-    expect(nomes).toEqual(["Bike reclinada"]);
+    expect(nomes).toEqual(["Aquecimento · esteira ou bike (5 min)"]);
+  });
+
+  it("nenhum template da Entrada prescreve a bike como aquecimento", () => {
+    const comBike = ENTRADA_TEMPLATES.filter((t) =>
+      t.exercises.some((e) => e.block === "aquecimento" && e.exerciseId === "bike-reclinada"),
+    ).map((t) => t.id);
+    expect(comBike).toEqual([]);
   });
 
   it("na quinta (dia leve), o aquecimento é mobilidade — sem bike nem esteira", () => {
@@ -54,9 +64,28 @@ describe("textoDeAquecimento", () => {
     expect(texto).not.toMatch(/bike|esteira/i);
   });
 
-  it("no dia que tem bike, o texto diz bike", () => {
-    const texto = textoDeAquecimento(porId("e1-seg").exercises, nomeDe);
-    expect(texto).toMatch(/Bike reclinada/);
+  // Decisão da usuária (2026-07-30): "por que não tem o aquecimento de cardio
+  // todos os dias?". Passou a ter nas quartas também. Nas quintas continua sem,
+  // porque lá o cardio É a sessão (20 min) e os primeiros minutos dele são o
+  // aquecimento — esteira antes da esteira é redundante. A nota do exercício
+  // explica isso na tela, em vez de deixar o buraco sem razão aparente.
+  it("de segunda a sexta, todo dia com trabalho de força começa na esteira", () => {
+    const DIAS_DE_FORCA = ["seg", "ter", "qua", "sex"];
+    for (const semana of ["1", "2", "3"]) {
+      for (const dia of DIAS_DE_FORCA) {
+        const id = `e${semana}-${dia}`;
+        const nomes = itensDeAquecimento(porId(id).exercises, nomeDe);
+        expect({ id, comecaNaEsteira: /esteira/i.test(nomes[0] ?? "") }).toEqual({ id, comecaNaEsteira: true });
+      }
+    }
+  });
+
+  it("na quinta o cardio final explica que ele mesmo é o aquecimento", () => {
+    for (const semana of ["1", "2", "3"]) {
+      const t = porId(`e${semana}-qui`);
+      const z2 = t.exercises.find((e) => e.exerciseId === "cardio-zona2")!;
+      expect({ semana, explica: /aquecimento/i.test(z2.notes ?? "") }).toEqual({ semana, explica: true });
+    }
   });
 
   // Este é o teste que trava o defeito original: se o texto fala de bike ou
@@ -76,8 +105,10 @@ describe("textoDeAquecimento", () => {
     }
   });
 
-  it("nas quartas e quintas da Entrada, o texto não fala de máquina de cardio", () => {
-    for (const id of ["e1-qua", "e1-qui", "e2-qua", "e2-qui", "e3-qua", "e3-qui"]) {
+  // Só as quintas ficam sem máquina no aquecimento (o cardio do fim é o
+  // próprio aquecimento). As quartas passaram a ter esteira em 2026-07-30.
+  it("nas quintas da Entrada, o texto não promete máquina de cardio", () => {
+    for (const id of ["e1-qui", "e2-qui", "e3-qui"]) {
       const texto = textoDeAquecimento(porId(id).exercises, nomeDe);
       expect({ id, prometeMaquina: /bike|esteira/i.test(texto) }).toEqual({ id, prometeMaquina: false });
     }

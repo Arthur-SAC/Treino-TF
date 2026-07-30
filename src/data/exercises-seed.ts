@@ -604,7 +604,7 @@ export const EXERCISES: Exercise[] = [
     id: "cardio-leve-esteira",
     name: "Aquecimento · esteira ou bike (5 min)",
     category: "aquecimento",
-    equipment: ["esteira"],
+    equipment: ["esteira", "bike-reclinada"],
     difficulty: "iniciante",
     description: "AQUECIMENTO (5 min): esteira em inclinação 0-2% e 4,5-5 km/h, ou bike reclinada em resistência nível 2-3 de 8. Ritmo em que você conversa normalmente — é só pra elevar a temperatura e soltar as articulações, não pra cansar.",
     commonMistakes: [
