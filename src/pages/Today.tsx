@@ -5,6 +5,7 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
+import { pelvicDoDia, PELVIC_ORDEM } from "../lib/pelvic-progression";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -59,6 +60,14 @@ export function Today() {
   );
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
+
+  // Quantas práticas de assoalho pélvico ela já concluiu — define em que fase
+  // da progressão ela está (identificar o músculo -> Kegel -> variações).
+  const pelvicFeitas = useLiveQuery(async () => {
+    const logs = await db.practiceLogs.toArray();
+    return logs.filter((l) => l.completed && (PELVIC_ORDEM as readonly string[]).includes(l.sequenceId)).length;
+  }, []);
+  const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -236,6 +245,7 @@ export function Today() {
   };
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
+    if (item.linkKey === "pelvic") return `${item.subtitle} · ${pelvicHoje.etapa}`;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -290,7 +300,12 @@ export function Today() {
                 ...item,
                 subtitle: subtitleFor(item),
                 // O item de treino leva direto pra sessão do dia (não pra aba Treino)
-                to: item.linkKey === "workout" && todayTemplate ? `/treino/sessao/${todayTemplate.id}` : item.to,
+                to:
+                  item.linkKey === "workout" && todayTemplate
+                    ? `/treino/sessao/${todayTemplate.id}`
+                    : item.linkKey === "pelvic"
+                      ? `/treino/movimento/${pelvicHoje.sequenceId}`
+                      : item.to,
               }}
               hora={horaDe(item)}
               done={isDone(item)}

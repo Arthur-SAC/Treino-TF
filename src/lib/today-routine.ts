@@ -5,7 +5,7 @@
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
-export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout";
+export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
@@ -63,6 +63,11 @@ function manhaItems(dayOfYear: number): RoutineItem[] {
 
 const ALMOCO: RoutineItem = { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco", defaultTime: "12:00" };
 const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", control: "water" };
+// Assoalho pélvico como micro-dose diária, no bloco do dia (existe nos 7 dias).
+// É invisível — dá pra fazer sentada na mesa — e o que constrói é frequência,
+// não duração. O `to` é resolvido em Today.tsx pela progressão (ver
+// `pelvic-progression.ts`): identificação -> Kegel clássico -> variações.
+const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "trabalho", label: "Assoalho pélvico · 5 min", subtitle: "Invisível, dá pra fazer sentada — firmeza e controle", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "10:00" };
 const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
 
 type TipoDeDia = "semana" | "sabado" | "domingo";
@@ -166,8 +171,8 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
       : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
-    ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
-    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ALMOCO, MICRO_PAUSAS, AGUA] };
+    ? { id: "trabalho", label: "Durante o dia", items: [ASSOALHO, ALMOCO, AGUA] }
+    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ASSOALHO, ALMOCO, MICRO_PAUSAS, AGUA] };
 
   const semanaItems: RoutineItem[] = [];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
