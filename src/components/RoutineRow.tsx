@@ -96,6 +96,25 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
     );
   }
 
+  // Item com destino e sem botão no canto: o CORPO abre, a caixinha marca.
+  // Antes o corpo marcava e só a setinha "ver →" navegava — um alvo minúsculo
+  // na borda. A usuária foi abrir o alongamento da noite, tocou no nome e o
+  // item só ficou riscado. Mesmo padrão do jantar e do skincare, que já abrem
+  // ao toque no corpo.
+  if (item.to && !rightSlot) {
+    return (
+      <div className={cls}>
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+          <Box done={done} />
+        </button>
+        <Link to={item.to} aria-label={item.label} className="flex-1 min-w-0">
+          <Body item={item} done={done} hora={hora} />
+        </Link>
+        <span className="flex-none self-center text-xs text-nude">ver →</span>
+      </div>
+    );
+  }
+
   return (
     <div className={cls}>
       <button
@@ -109,9 +128,6 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
         <Box done={done} />
         <Body item={item} done={done} hora={hora} />
       </button>
-      {item.to && !rightSlot && (
-        <Link to={item.to} aria-label={`abrir ${item.label}`} className="flex-none self-center text-xs text-nude">ver →</Link>
-      )}
       {rightSlot && <span className="flex-none self-center">{rightSlot}</span>}
     </div>
   );
