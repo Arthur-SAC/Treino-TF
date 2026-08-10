@@ -65,10 +65,10 @@ describe("textoDeAquecimento", () => {
   });
 
   // Decisão da usuária (2026-07-30): "por que não tem o aquecimento de cardio
-  // todos os dias?". Passou a ter nas quartas também. Nas quintas continua sem,
-  // porque lá o cardio É a sessão (20 min) e os primeiros minutos dele são o
-  // aquecimento — esteira antes da esteira é redundante. A nota do exercício
-  // explica isso na tela, em vez de deixar o buraco sem razão aparente.
+  // todos os dias?". Passou a ter nas quartas também. Nas quintas continua
+  // sem — e desde 2026-08-10 nem tem mais cardio nenhum no dia: a caminhada
+  // de 5 km do trabalho pra casa já entrega a zona 2 todo dia útil, em dose
+  // melhor que a antiga sessão de quinta. A quinta vira só mobilidade leve.
   it("de segunda a sexta, todo dia com trabalho de força começa na esteira", () => {
     const DIAS_DE_FORCA = ["seg", "ter", "qua", "sex"];
     for (const semana of ["1", "2", "3"]) {
@@ -80,11 +80,11 @@ describe("textoDeAquecimento", () => {
     }
   });
 
-  it("na quinta o cardio final explica que ele mesmo é o aquecimento", () => {
+  it("na quinta não há mais cardio-zona2 — a caminhada diária já cobre essa dose", () => {
     for (const semana of ["1", "2", "3"]) {
       const t = porId(`e${semana}-qui`);
-      const z2 = t.exercises.find((e) => e.exerciseId === "cardio-zona2")!;
-      expect({ semana, explica: /aquecimento/i.test(z2.notes ?? "") }).toEqual({ semana, explica: true });
+      const z2 = t.exercises.find((e) => e.exerciseId === "cardio-zona2");
+      expect({ semana, temZona2: Boolean(z2) }).toEqual({ semana, temZona2: false });
     }
   });
 

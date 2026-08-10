@@ -22,7 +22,6 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "10-12", restSec: 90, notes: "O MAIOR construtor de glúteo. Some peso quando as reps saírem fácil" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 90, notes: "Leg press 45° com pés ALTOS e um pouco abertos = foco glúteo. Empurra pelo calcanhar. Plataforma pequena? faz unilateral (um pé por vez)" },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, notes: "Glúteo médio — arredonda a lateral" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, notes: "Fecha aqui — cardio no fim não rouba energia do glúteo" },
     ],
   },
   {
@@ -75,7 +74,6 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, notes: "Dobradiça de quadril — o padrão que mais constrói glúteo. Amplitude só até onde o posterior deixa, sem arredondar a lombar" },
       { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "10 cada", restSec: 60 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, notes: "Coxa interna cheia — silhueta curvilínea" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, notes: "Fecha aqui — cardio no fim não rouba energia do glúteo" },
     ],
   },
   {
@@ -92,7 +90,6 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Cinto interno — prioridade sem TRH" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, notes: "Fecha aqui — cardio no fim não rouba energia do glúteo" },
     ],
   },
 ];

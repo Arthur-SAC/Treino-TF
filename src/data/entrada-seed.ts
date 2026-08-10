@@ -42,7 +42,6 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Glúteo médio — é ele que arredonda a lateral" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Coxa interna — silhueta cheia" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 30, block: "solo", notes: "Aperta o glúteo 1-2s lá em cima. É a contração que constrói" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Começa com 10 min nesta fase; sobe pra 15 na Adaptação" },
     ],
   },
   {
@@ -76,7 +75,6 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "15 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "15 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 30, block: "solo" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
@@ -89,7 +87,6 @@ const SEMANA_1: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0, block: "aquecimento" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "20min", restSec: 0, block: "final", notes: "Hoje o cardio é o treino, então ele é o próprio aquecimento: comece os primeiros 3-5 min bem leve e só depois suba pra inclinação 6-10%. Não precisa de esteira antes da esteira" },
     ],
   },
   {
@@ -104,7 +101,6 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 60, block: "maquina", notes: "Leg press com os pés ALTOS na plataforma = foco glúteo. Se a mobilidade ainda não deixar, começa mais baixo e sobe com as semanas" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "12 cada", restSec: 30, block: "solo", notes: "Uma perna de cada vez — corrige diferença entre os lados" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final" },
     ],
   },
 ];
@@ -124,7 +120,6 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "12min", restSec: 0, block: "final" },
     ],
   },
   {
@@ -157,7 +152,6 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
@@ -170,7 +164,6 @@ const SEMANA_2: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
       { exerciseId: "step-up-gluteo", sets: 3, repsTarget: "10 cada", restSec: 45, block: "solo", notes: "Sobe empurrando pelo calcanhar da perna de cima. Desce devagar — a descida é metade do exercício" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, block: "final", notes: "Hoje o cardio é o treino, então ele é o próprio aquecimento: comece os primeiros 3-5 min bem leve e só depois suba pra inclinação 6-10%. Não precisa de esteira antes da esteira" },
     ],
   },
   {
@@ -185,7 +178,6 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "AMPLITUDE CURTA por enquanto: halteres de 3-4 kg, empurra o quadril pra trás e desce SÓ até onde o posterior da coxa deixa, sem arredondar a lombar. A amplitude aumenta sozinha nas próximas semanas — forçar agora é como se machuca a lombar" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 60, block: "maquina", notes: "Leg press pés altos" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "12min", restSec: 0, block: "final" },
     ],
   },
 ];
@@ -204,7 +196,6 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "12 cada", restSec: 30, block: "aquecimento", notes: "Ativação — sente o glúteo ligar antes de carregar" },
       { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "15 (SEM PESO)", restSec: 60, block: "maquina", notes: "ETAPA 1: só o peso do corpo, costas apoiadas no banco. Queixo pra baixo, costela fechada, empurra pelo calcanhar e aperta o glúteo 2s no topo. Quando as 3 séries saírem redondas, passa pra barra vazia (~10 kg) em 3x12 — e só depois disso começa a somar anilha" },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "12min", restSec: 0, block: "final" },
     ],
   },
   {
@@ -236,7 +227,6 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "clamshell", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "10min", restSec: 0, block: "final", notes: "Na Entrada a dose é menor: 10 min. Bike no nível 5-6 ou esteira inclinada — ofegante, mas ainda conversando" },
     ],
   },
   {
@@ -249,7 +239,6 @@ const SEMANA_3: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
       { exerciseId: "step-up-gluteo", sets: 3, repsTarget: "12 cada", restSec: 45, block: "solo" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, block: "final", notes: "Hoje o cardio é o treino, então ele é o próprio aquecimento: comece os primeiros 3-5 min bem leve e só depois suba pra inclinação 6-10%. Não precisa de esteira antes da esteira" },
     ],
   },
   {
@@ -264,7 +253,6 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "Amplitude ainda controlada — desce só até onde o posterior deixa sem arredondar a lombar. Se já está descendo mais que na semana passada, é sinal de que a mobilidade está vindo" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "15", restSec: 60, block: "maquina", notes: "Leg press pés altos" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15min", restSec: 0, block: "final" },
     ],
   },
 ];
