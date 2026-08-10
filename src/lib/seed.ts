@@ -92,4 +92,26 @@ export async function seedDatabase(): Promise<void> {
     }
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
   }
+
+  await seedMedidasPartida();
+}
+
+/** Medição real de 13/05/2026, trazida de fora do app. Sem ao menos uma
+ *  medição com cintura, `resolveGoal` cai em manutenção para sempre e nenhum
+ *  marco de cintura dispara — o app fica inerte por falta de dado. Só semeia
+ *  se ela ainda não tiver registrado nada: medição dela sempre vence. */
+export async function seedMedidasPartida(): Promise<void> {
+  const jaTem = await db.measurements.count();
+  if (jaTem > 0) return;
+  await db.measurements.add({
+    date: "2026-05-13",
+    neckCm: 40,
+    shouldersCm: 120.5,
+    waistCm: 99,
+    hipCm: 114,
+    thighLeftCm: 82.5,
+    thighRightCm: 82.5,
+    armCm: 34,
+    weightKg: 96,
+  });
 }
