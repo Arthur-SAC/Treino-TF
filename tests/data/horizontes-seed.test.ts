@@ -34,17 +34,28 @@ describe("horizontes: duas trilhas, não uma escada esperando a TRH", () => {
     expect(texto).toContain(String(FASES[0].cinturaCm));
   });
 
-  it("declara a faixa dupla de WHR, não um número só", () => {
-    expect(texto).toMatch(/0,7[0-9].*0,7[0-9]/);
+  it("declara a faixa dupla de WHR na trilha do corpo vestida, não um número só", () => {
+    const vestida = HORIZONTES.find((s) => s.id === "trilha-vestida")!;
+    const tipDaRazao = vestida.tips.find((t) => t.includes("0,87"));
+    expect(tipDaRazao).toBeDefined();
+    expect(tipDaRazao!).toMatch(/0,75-0,78/);
+    expect(tipDaRazao!).toMatch(/0,72-0,74/);
   });
 
-  it("a linha do tempo não ancora nada em idade", () => {
-    const linha = HORIZONTES.find((s) => s.id === "linha-do-tempo")!;
-    expect(JSON.stringify(linha)).not.toMatch(/~?2[89]:/);
+  it("a linha do tempo não ancora prazo em idade — o ritmo é adesão, não relógio", () => {
+    const linha = JSON.stringify(HORIZONTES.find((s) => s.id === "linha-do-tempo")!);
+    expect(linha).not.toMatch(/~\s*\d{2}\s*:/);
+    expect(linha).not.toMatch(/\b(aos|dos)\s+\d{2}\b/i);
+    expect(linha).not.toMatch(/\b\d{2}\s*anos\b/i);
   });
 
   it("o BBL vem com o risco de mortalidade escrito", () => {
     const cir = HORIZONTES.find((s) => s.id === "cirurgia")!;
     expect(JSON.stringify(cir)).toMatch(/mortalidade|embolia/i);
+  });
+
+  it("nenhum texto reintroduz faixa no quadril-alvo, que é número único", () => {
+    const alvo = String(FASES.find((f) => f.id === "fase-2")!.quadrilCm);
+    expect(texto).not.toMatch(new RegExp(`${alvo}\\s*-\\s*\\d+`));
   });
 });

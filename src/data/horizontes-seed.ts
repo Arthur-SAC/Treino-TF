@@ -47,7 +47,7 @@ export const HORIZONTES: GuideSection[] = [
       "Semana 8-10: a primeira mudança que aparece em foto.",
       "Mês 3-4: cintura em 88. É a trava que destrava o superávit no app.",
       "Mês 6-8: cintura em 84, peso por volta de 81 kg. É aqui que a silhueta vira.",
-      "Mês 8-30: fase 2. A balança SOBE de propósito, até 85-88 kg, e o quadril volta aos 114-116 de músculo. Ver 85 kg nessa fase é o sinal de que deu certo, não de que falhou.",
+      "Mês 8-30: fase 2. A balança SOBE de propósito, até 85-88 kg, e o quadril volta aos mesmos 114 cm de hoje, agora feitos de músculo. Ver 85 kg nessa fase é o sinal de que deu certo, não de que falhou.",
       "Destreinada com cerca de 28% de gordura é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha.",
     ],
   },
