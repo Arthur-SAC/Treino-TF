@@ -31,11 +31,20 @@ describe("integridade dos templates", () => {
 });
 
 describe("nenhuma fase de treino existe para alinhar com a TRH", () => {
-  // Cobre a sigla e as variações da palavra ("hormônio", "hormonizar",
-  // "hormonal"...) — um template de treino não tem assunto legítimo com
-  // hormônio, então qualquer ocorrência aqui é a mesma moldura de espera
-  // voltando por outra palavra.
-  const MENCAO_HORMONIO = /TRH|hormon/i;
+  // Cobre a sigla e a raiz "horm" — não "hormon", que não bate com
+  // "hormônio" (o "ô" acentuado é um code point diferente de "o" e /i não
+  // normaliza acento). Em português quase toda palavra que começa com
+  // "horm" é da família hormônio, então a raiz curta é segura sem precisar
+  // antecipar cada flexão/acento. Um template de treino não tem assunto
+  // legítimo com hormônio, então qualquer ocorrência aqui é a mesma
+  // moldura de espera voltando por outra palavra.
+  const MENCAO_HORMONIO = /TRH|horm/i;
+
+  it("o padrão de varredura pega as formas acentuadas — foi assim que 'hormônio' escapou antes", () => {
+    const escapou = ["hormônio", "hormônios", "hormonal", "hormonização", "TRH"]
+      .filter((p) => !MENCAO_HORMONIO.test(p));
+    expect(escapou).toEqual([]);
+  });
 
   it("as descrições dos ciclos não citam TRH nem variações de hormônio", () => {
     const comMencao = CYCLES.filter((c) => MENCAO_HORMONIO.test(c.description)).map((c) => c.id);
