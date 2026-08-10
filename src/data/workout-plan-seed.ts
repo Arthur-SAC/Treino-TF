@@ -2,7 +2,9 @@ import type { WorkoutTemplate } from "../lib/db";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CICLO 1 — ADAPTAÇÃO — glúteo é PRIORIDADE Nº 1. Enxuto pra INICIANTE:
-// sessões de ~35–40 min (ela está começando e não quer 2h). Poucos exercícios,
+// sessões de ~22–40 min (ela está começando e não quer 2h; os dias que
+// perderam a zona 2 em 2026-08-10 ficaram mais curtos — a caminhada diária
+// já cobre o cardio). Poucos exercícios,
 // 3 séries, foco em aprender o padrão e ativar glúteo. Cintura fina = só core
 // transverso (sem oblíquo com carga). A progressão de volume vem nas fases
 // seguintes (variação/hipertrofia). Regra: força começa com cardio + articular.
@@ -12,7 +14,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "seg-gluteo-mobilidade",
     name: "◆Glúteo A · Força",
     dayOfWeek: 1,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "adaptacao",
     purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum — a fundação que a TRH vai arredondar depois.",
     exercises: [
@@ -63,7 +65,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "qui-gluteo-coxa",
     name: "◆Glúteo B · Unilateral + Coxa",
     dayOfWeek: 4,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "adaptacao",
     purpose: "Hoje é glúteo e coxa um lado de cada vez: corrige assimetria e deixa as pernas mais cheias e femininas.",
     exercises: [
@@ -80,7 +82,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     id: "sex-peitoral-postura",
     name: "◆Glúteo C · Volume + Core",
     dayOfWeek: 5,
-    durationMin: 40,
+    durationMin: 22,
     cycle: "adaptacao",
     purpose: "Hoje é bombeamento de glúteo (muita repetição) + core que segura a cintura fina.",
     exercises: [

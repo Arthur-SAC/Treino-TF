@@ -18,8 +18,13 @@ import type { WorkoutTemplate } from "../lib/db";
 //   `maquina`     — miolo, na área de aparelhos (inclui o banco com rack do
 //                   hip thrust, que é uma estação).
 //   `solo`        — miolo, na área livre (colchonete, halteres, step, mini band).
-//   `final`       — fecha a sessão, sempre: o cardio zona 2. Cardio antes rouba
-//                   energia do glúteo.
+//   `final`       — fecha a sessão, quando algum item usar. Nenhum template
+//                   da Entrada usa hoje: a zona 2 saiu daqui em 2026-08-10
+//                   (a caminhada de 5 km do trabalho pra casa já entrega a
+//                   dose todo dia útil). O bloco continua existindo no tipo
+//                   e em `ordenarPorBloco`/`itensDeAquecimento` porque a
+//                   prescrição migra pra caminhada — com este mesmo bloco —
+//                   numa task futura.
 // Só o MIOLO troca de ordem (`src/lib/session-order.ts`) — a sessão nunca
 // depende de a área livre estar vazia. Por isso o miolo é escrito em blocos
 // contíguos; a ordem em que máquina e solo aparecem AQUI é a ordem padrão da
@@ -33,7 +38,7 @@ const SEMANA_1: WorkoutTemplate[] = [
     id: "e1-seg",
     name: "Entrada · Inferior (máquinas)",
     dayOfWeek: 1,
-    durationMin: 30,
+    durationMin: 12,
     cycle: "entrada-1",
     purpose: "Primeiro dia: só máquina sentada. Você aprende o movimento e o lugar, sem nada que chame atenção.",
     exercises: [
@@ -64,7 +69,7 @@ const SEMANA_1: WorkoutTemplate[] = [
     id: "e1-qua",
     name: "Entrada · Glúteo médio",
     dayOfWeek: 3,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-1",
     purpose: "Glúteo médio e quadril solto. É o músculo que tira o formato quadrado e arredonda a lateral.",
     exercises: [
@@ -81,9 +86,9 @@ const SEMANA_1: WorkoutTemplate[] = [
     id: "e1-qui",
     name: "Entrada · Dia leve",
     dayOfWeek: 4,
-    durationMin: 25,
+    durationMin: 7,
     cycle: "entrada-1",
-    purpose: "Dia leve de propósito. Recuperar faz parte do treino — é descansando que o músculo cresce.",
+    purpose: "Dia leve de propósito. Recuperar faz parte do treino — é descansando que o músculo cresce. O movimento de hoje já são os 5 km que você caminha do trabalho para casa.",
     exercises: [
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
       { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0, block: "aquecimento" },
@@ -93,7 +98,7 @@ const SEMANA_1: WorkoutTemplate[] = [
     id: "e1-sex",
     name: "Entrada · Inferior B",
     dayOfWeek: 5,
-    durationMin: 30,
+    durationMin: 12,
     cycle: "entrada-1",
     purpose: "Fecha a semana no glúteo. Pés altos no leg press joga o esforço pro bumbum em vez da coxa.",
     exercises: [
@@ -111,7 +116,7 @@ const SEMANA_2: WorkoutTemplate[] = [
     id: "e2-seg",
     name: "Entrada · Inferior (máquinas) II",
     dayOfWeek: 1,
-    durationMin: 32,
+    durationMin: 14,
     cycle: "entrada-2",
     purpose: "Mesma sessão da semana passada, com um pouco mais de repetição. Você já sabe onde fica tudo.",
     exercises: [
@@ -142,7 +147,7 @@ const SEMANA_2: WorkoutTemplate[] = [
     id: "e2-qua",
     name: "Entrada · Glúteo médio II",
     dayOfWeek: 3,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-2",
     purpose: "Glúteo médio com mais repetição. Esse é o trabalho chato que dá o formato redondo.",
     exercises: [
@@ -158,7 +163,7 @@ const SEMANA_2: WorkoutTemplate[] = [
     id: "e2-qui",
     name: "Entrada · Leve + Step-up",
     dayOfWeek: 4,
-    durationMin: 28,
+    durationMin: 10,
     cycle: "entrada-2",
     purpose: "Dia leve com o primeiro exercício em pé: subir no step. Parece pouco e é muito glúteo.",
     exercises: [
@@ -170,7 +175,7 @@ const SEMANA_2: WorkoutTemplate[] = [
     id: "e2-sex",
     name: "Entrada · Inferior B + Dobradiça",
     dayOfWeek: 5,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-2",
     purpose: "Hoje você aprende a dobradiça de quadril — o padrão que mais constrói glúteo e o mais fácil de fazer errado.",
     exercises: [
@@ -188,7 +193,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     id: "e3-seg",
     name: "Entrada · Hip thrust (graduação)",
     dayOfWeek: 1,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-3",
     purpose: "Hoje entra o hip thrust — o maior construtor de bumbum que existe. Primeiro sem peso nenhum, só pra pegar o jeito.",
     exercises: [
@@ -217,7 +222,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     id: "e3-qua",
     name: "Entrada · Glúteo médio III",
     dayOfWeek: 3,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-3",
     purpose: "Glúteo médio de novo. É repetitivo de propósito: esse músculo responde a volume, não a novidade.",
     exercises: [
@@ -233,7 +238,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     id: "e3-qui",
     name: "Entrada · Leve + Step-up II",
     dayOfWeek: 4,
-    durationMin: 28,
+    durationMin: 10,
     cycle: "entrada-3",
     purpose: "Dia leve. Na semana que vem começa a Adaptação e você já vai conhecer todos os movimentos.",
     exercises: [
@@ -245,7 +250,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     id: "e3-sex",
     name: "Entrada · Inferior B + Dobradiça II",
     dayOfWeek: 5,
-    durationMin: 35,
+    durationMin: 17,
     cycle: "entrada-3",
     purpose: "Última sessão da Entrada. Se a dobradiça já sai redonda, você está pronta pra Adaptação.",
     exercises: [

@@ -20,7 +20,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-seg-gluteo-unilateral",
     name: "◆Glúteo A · Força (variação)",
     dayOfWeek: 1,
-    durationMin: 60,
+    durationMin: 42,
     cycle: "variacao",
     purpose: "Glúteo pesado com exercícios novos — mesmo objetivo de volume, estímulo diferente pra não estagnar.",
     exercises: [
@@ -75,7 +75,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-qui-gluteo-stiff",
     name: "◆Glúteo B · Posterior (variação)",
     dayOfWeek: 4,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "variacao",
     purpose: "Foco no posterior e no glúteo pela dobradiça de quadril — bumbum e parte de trás da coxa.",
     exercises: [
@@ -93,7 +93,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-sex-peitoral-postura",
     name: "◆Glúteo C · Volume (variação)",
     dayOfWeek: 5,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "variacao",
     purpose: "Volume de glúteo em alta repetição — bomba de sangue que enche o músculo.",
     exercises: [
@@ -114,7 +114,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     id: "h-seg-gluteo-volume",
     name: "◆Glúteo A · Volume alto",
     dayOfWeek: 1,
-    durationMin: 65,
+    durationMin: 47,
     cycle: "hipertrofia",
     purpose: "Fase de ouro do glúteo: empurra a carga, é agora que ele cresce de verdade.",
     exercises: [
@@ -166,7 +166,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     id: "h-qui-gluteo-posterior",
     name: "◆Glúteo B · Posterior + Coxa (volume)",
     dayOfWeek: 4,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "hipertrofia",
     purpose: "Glúteo e posterior pesados — coxa cheia e bumbum projetado.",
     exercises: [
@@ -183,7 +183,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     id: "h-sex-peitoral-postura",
     name: "◆Glúteo C · Volume + Coxa",
     dayOfWeek: 5,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "hipertrofia",
     purpose: "Mais volume de glúteo e coxa — aproveita a fase de crescimento ao máximo.",
     exercises: [
@@ -205,7 +205,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     id: "r-seg-gluteo-densidade",
     name: "◆Glúteo densidade (alta rep)",
     dayOfWeek: 1,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Densidade do glúteo: muita repetição pra deixar o músculo durinho e desenhado.",
     exercises: [
@@ -259,7 +259,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     id: "r-qui-gluteo-simetria",
     name: "◆Glúteo simetria (unilateral)",
     dayOfWeek: 4,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Glúteo um lado de cada vez — corrige diferença entre os lados pra ficar simétrico.",
     exercises: [
@@ -276,7 +276,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     id: "r-sex-peitoral-refinamento",
     name: "◆Glúteo densidade + Core",
     dayOfWeek: 5,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Densidade de glúteo + core — acabamento da forma.",
     exercises: [
@@ -299,7 +299,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     id: "m-seg-gluteo",
     name: "◆Glúteo · Manutenção (força leve)",
     dayOfWeek: 1,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "manutencao",
     purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — base pronta pra TRH arredondar.",
     exercises: [
@@ -350,7 +350,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     id: "m-qui-gluteo",
     name: "◆Glúteo · Manutenção (unilateral)",
     dayOfWeek: 4,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "manutencao",
     purpose: "Manutenção do glúteo unilateral — preserva simetria e coxa.",
     exercises: [
@@ -365,7 +365,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     id: "m-sex-gluteo",
     name: "◆Glúteo · Manutenção (bombeamento)",
     dayOfWeek: 5,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "manutencao",
     purpose: "Bombeamento leve de glúteo — mantém o músculo ativo e cheio.",
     exercises: [
