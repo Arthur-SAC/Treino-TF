@@ -1150,24 +1150,30 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: "cardio-zona2",
-    name: "Cardio zona 2 (fim do treino)",
+    name: "Cardio zona 2 (caminhada do trabalho)",
     category: "cardio",
     equipment: ["esteira", "bike-reclinada"],
     difficulty: "iniciante",
-    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas. Esteira em inclinação 6-10% a 4,5-5,5 km/h, ou bike reclinada em resistência nível 5-6 de 8. A dose sobe com a fase: 10-12 min na Fase de Entrada, 15-20 min da Adaptação em diante. O tempo do dia está escrito na sua sessão.",
+    // Não fica mais no fim do treino: a caminhada de 5 km do trabalho para
+    // casa, às 16h, já entrega os ~60 min contínuos nesse ritmo — todo dia
+    // útil, não só 3-4x/semana. Prescrever de novo no treino alongava a
+    // sessão e empurrava o jantar pra depois das 20h (ver cycles-seed.ts). A
+    // esteira/bike ficam como alternativa pra dia de chuva ou viagem, quando
+    // a caminhada real não rola.
+    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas. É a caminhada de 5 km do trabalho para casa: passada firme, sem parar, pelos ~60 min que ela já dura. Sem a caminhada (chuva, viagem), substitui por esteira em inclinação 6-10% a 4,5-5,5 km/h, ou bike reclinada em resistência nível 5-6 de 8.",
     commonMistakes: [
       "Ir rápido demais — se não dá pra falar, saiu da zona 2",
-      "Fracionar em pedaços curtos (não tem o mesmo efeito que contínuo)",
-      "Fazer antes do treino de força e chegar cansada no glúteo",
+      "Confundir com o passeio dos cães, que é mais lento — aqui o ritmo é o que tira o fôlego",
+      "Parar no meio do caminho pra mexer no celular — perde o contínuo e some o efeito",
     ],
-    easierVariation: "Fase de Entrada: 10-12 min. Se travar, mantém o tempo e baixa a inclinação/nível",
-    harderVariation: "20 min mantendo a mesma conversa possível",
+    easierVariation: "Se travar antes do fim, mantém o tempo e desacelera o passo, sem se cobrar km/h",
+    harderVariation: "Passada mais acelerada mantendo a mesma conversa possível",
     exposureLevel: 1,
     successCue: "Fez certo se conseguiu falar uma frase inteira sem engasgar, mas não cantaria.",
     proTips: [
-      "Vai no FIM do treino, nunca antes — cardio antes rouba energia do glúteo",
-      "A caminhada inclinada recruta mais glúteo que a corrida e poupa o joelho",
-      "O passeio lento com os cães é movimento bônus e conta pra sua meta de passos, mas NÃO substitui isso aqui",
+      "É a caminhada das 16h que fecha essa conta — não precisa de mais cardio contínuo depois da sessão de força",
+      "A caminhada inclinada (ou o percurso com subida) recruta mais glúteo que andar plano",
+      "O passeio lento com os cães, depois dela, é movimento bônus em cima disso — não é o mesmo estímulo",
     ],
   },
   {

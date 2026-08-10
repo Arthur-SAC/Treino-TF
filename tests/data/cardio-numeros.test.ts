@@ -54,9 +54,15 @@ describe("cardio: aquecimento e zona 2 não se confundem", () => {
     }
   });
 
-  it("a zona 2 diz que vai no FIM do treino", () => {
+  // Task 4 tirou a zona 2 do fim do treino: a caminhada de 5 km do trabalho
+  // para casa (16h, todo dia útil) já entrega a dose, em melhor frequência
+  // que os 3-4x/semana que cabiam no treino. Esta asserção protegia a regra
+  // antiga — agora protege a nova: o texto do exercício aponta pra caminhada.
+  it("a zona 2 diz que é a caminhada do trabalho, não mais o fim do treino", () => {
     const z2 = cardio.find((e) => e.id === "cardio-zona2")!;
-    expect(textoDe(z2).toLowerCase()).toMatch(/fim do treino/);
+    const texto = textoDe(z2).toLowerCase();
+    expect(texto).toMatch(/caminhada.*trabalho|trabalho.*caminhada/);
+    expect(texto).not.toMatch(/fim do treino/);
   });
 
   it("o aquecimento não carrega mais o explicador inteiro da zona 2 — ela virou item próprio", () => {
