@@ -73,7 +73,15 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   entradaMigration: 0,
-  walkGoalMin: 75,
+  // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
+  // a rotina real de dia útil (ver `caminhada-trabalho` e `caes` em
+  // today-routine.ts) — os dois têm `control: "walk"` e cada um credita 60
+  // min fixos via `creditarPasseio`. A meta existe pra avisar quando um dos
+  // dois NÃO aconteceu; se ficasse em 75, batia sozinha antes de ela chegar
+  // em casa e o medidor "X / Y min" parava de informar qualquer coisa. No
+  // fim de semana só há o passeio, então o medidor mostra 60/120 — verdade,
+  // não falha: o fim de semana é mesmo mais parado.
+  walkGoalMin: 120,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,

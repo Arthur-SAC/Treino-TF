@@ -216,9 +216,13 @@ export function Today() {
     const marcado = await toggle(item.id);
     if (item.control === "walk") {
       // O passeio dos cães tem ids diferentes por tipo de dia (`caes` na
-      // semana, `caes-fds` no fim de semana — ver today-routine.ts), mas em
-      // ambos os casos é o único item com control:"walk" do dia, então
-      // checar o control em vez do id cobre os dois sem duplicar lógica.
+      // semana, `caes-fds` no fim de semana — ver today-routine.ts). Em dia
+      // de semana existe ainda um SEGUNDO item control:"walk"
+      // (`caminhada-trabalho`, os 5 km do trabalho para casa) — duas
+      // caminhadas reais e distintas, cada uma creditando os seus 60 min. É
+      // exatamente por isso que checar o control em vez do id está certo
+      // desde o início: cobre qualquer quantidade de itens de caminhada do
+      // dia sem duplicar lógica por id.
       await creditarPasseio(todayISO, marcado);
     } else if (item.id === "dormir") {
       const agora = new Date();

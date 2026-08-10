@@ -189,8 +189,15 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
           lanche("domingo"),
           caes("domingo"),
           // Sem control:"walk" de propósito: o passeio logo acima já mostra o
-          // contador de movimento do dia, e dois itens repetindo "X / 75 min"
-          // fariam parecer que o domingo pede duas caminhadas.
+          // contador de movimento do dia, e dois itens repetindo "X / 120 min"
+          // fariam parecer que o domingo pede duas caminhadas — não pede, só
+          // há o passeio.
+          //
+          // Em dia de semana é o INVERSO: `tardeSemana()` dá control:"walk" a
+          // DOIS itens de propósito (`caminhada-trabalho` e `caes`), porque
+          // ali são duas caminhadas reais e distintas (5 km do trabalho +
+          // passeio com os cães) e as duas devem creditar — daí a meta padrão
+          // de `walkGoalMin` ter subido para 120 (ver settings-helpers.ts).
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
       : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
