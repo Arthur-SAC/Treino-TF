@@ -31,15 +31,28 @@ describe("integridade dos templates", () => {
 });
 
 describe("nenhuma fase de treino existe para alinhar com a TRH", () => {
-  it("as descrições dos ciclos não citam TRH", () => {
-    const comTRH = CYCLES.filter((c) => /TRH/i.test(c.description)).map((c) => c.id);
-    expect(comTRH).toEqual([]);
+  // Cobre a sigla e as variações da palavra ("hormônio", "hormonizar",
+  // "hormonal"...) — um template de treino não tem assunto legítimo com
+  // hormônio, então qualquer ocorrência aqui é a mesma moldura de espera
+  // voltando por outra palavra.
+  const MENCAO_HORMONIO = /TRH|hormon/i;
+
+  it("as descrições dos ciclos não citam TRH nem variações de hormônio", () => {
+    const comMencao = CYCLES.filter((c) => MENCAO_HORMONIO.test(c.description)).map((c) => c.id);
+    expect(comMencao).toEqual([]);
   });
 
-  it("os propósitos dos templates não citam TRH", () => {
-    const comTRH = ALL_TEMPLATES
-      .filter((t) => /TRH/i.test(t.purpose ?? ""))
-      .map((t) => t.id);
-    expect(comTRH).toEqual([]);
+  it("nem o propósito nem as notas dos exercícios citam TRH ou variações de hormônio", () => {
+    // Reporta template + campo (e o exercício, quando é `notes`) pra não
+    // obrigar quem for corrigir a caçar a linha de novo.
+    const achados = ALL_TEMPLATES.flatMap((t) => {
+      const hits: string[] = [];
+      if (MENCAO_HORMONIO.test(t.purpose ?? "")) hits.push(`${t.id}: purpose`);
+      for (const ex of t.exercises) {
+        if (MENCAO_HORMONIO.test(ex.notes ?? "")) hits.push(`${t.id}: notes (${ex.exerciseId})`);
+      }
+      return hits;
+    });
+    expect(achados).toEqual([]);
   });
 });

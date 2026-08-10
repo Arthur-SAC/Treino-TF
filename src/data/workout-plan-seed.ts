@@ -91,7 +91,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 4, repsTarget: "15-20 (bombeamento)", restSec: 45, notes: "Reps altas, carga média — bomba de sangue no glúteo" },
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
-      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Cinto interno — prioridade sem TRH" },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Cinto interno — é o transverso que afina a cintura por dentro, e é a alavanca que você tem" },
     ],
   },
 ];

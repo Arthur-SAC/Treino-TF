@@ -48,15 +48,19 @@ describe("leverGuidance", () => {
 });
 
 describe("leverGuidance não trata a ausência de TRH como provisório", () => {
+  // Cobre a sigla e as variações da palavra — "hormônio", "hormonizar" etc.
+  // voltariam a prometer o mesmo horizonte condicional por outra porta.
+  const MENCAO_HORMONIO = /TRH|hormon/i;
+
   it("o conselho de superávit explica a vigilância da cintura sem prometer hormônio", () => {
     const g = leverGuidance("superavit");
-    expect(g.why).not.toMatch(/TRH/i);
+    expect(g.why).not.toMatch(MENCAO_HORMONIO);
     expect(g.why).toMatch(/cintura/i);
   });
 
-  it("nenhum dos três conselhos cita TRH", () => {
+  it("nenhum dos três conselhos cita TRH ou variações de hormônio", () => {
     for (const meta of ["deficit", "manutencao", "superavit"] as const) {
-      expect(leverGuidance(meta).why).not.toMatch(/TRH/i);
+      expect(leverGuidance(meta).why).not.toMatch(MENCAO_HORMONIO);
     }
   });
 });
