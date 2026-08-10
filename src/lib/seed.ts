@@ -99,10 +99,22 @@ export async function seedDatabase(): Promise<void> {
 /** Medição real de 13/05/2026, trazida de fora do app. Sem ao menos uma
  *  medição com cintura, `resolveGoal` cai em manutenção para sempre e nenhum
  *  marco de cintura dispara — o app fica inerte por falta de dado. Só semeia
- *  se ela ainda não tiver registrado nada: medição dela sempre vence. */
+ *  se ela ainda não tiver registrado nada: medição dela sempre vence.
+ *
+ *  A guarda de fato é a contagem de `db.measurements` (mais forte: cobre até
+ *  medição que ela insira manualmente antes deste bloco rodar). A chave
+ *  `medidasPartidaSeeded` abaixo não decide nada — é só o registro de
+ *  execução, no mesmo estilo dos blocos vizinhos em `seedDatabase`. Ela é
+ *  gravada nos dois caminhos (semeou ou não): "este bloco já rodou" é
+ *  verdadeiro tanto quando a semeadura aconteceu quanto quando saiu cedo por
+ *  já haver medição real — os dois são o mesmo fato para quem só quer saber
+ *  se essa migração pontual já foi executada. */
 export async function seedMedidasPartida(): Promise<void> {
   const jaTem = await db.measurements.count();
-  if (jaTem > 0) return;
+  if (jaTem > 0) {
+    await db.settings.put({ key: "medidasPartidaSeeded", value: true });
+    return;
+  }
   await db.measurements.add({
     date: "2026-05-13",
     neckCm: 40,
@@ -114,4 +126,5 @@ export async function seedMedidasPartida(): Promise<void> {
     armCm: 34,
     weightKg: 96,
   });
+  await db.settings.put({ key: "medidasPartidaSeeded", value: true });
 }

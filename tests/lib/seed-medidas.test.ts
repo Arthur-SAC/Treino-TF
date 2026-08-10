@@ -28,4 +28,17 @@ describe("medidas de partida (13/05/2026)", () => {
     expect(todas).toHaveLength(1);
     expect(todas[0].waistCm).toBe(95);
   });
+
+  it("grava a chave de registro medidasPartidaSeeded ao semear", async () => {
+    await seedMedidasPartida();
+    const flag = await db.settings.get("medidasPartidaSeeded");
+    expect(flag?.value).toBe(true);
+  });
+
+  it("grava a chave de registro medidasPartidaSeeded mesmo quando já havia medição (saída antecipada)", async () => {
+    await db.measurements.add({ date: "2026-08-01", waistCm: 95 } as never);
+    await seedMedidasPartida();
+    const flag = await db.settings.get("medidasPartidaSeeded");
+    expect(flag?.value).toBe(true);
+  });
 });
