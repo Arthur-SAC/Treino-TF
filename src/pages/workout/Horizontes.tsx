@@ -10,9 +10,9 @@ export function Horizontes() {
         <h1 className="font-serif text-2xl text-nude flex-1">Até onde dá pra chegar</h1>
       </div>
       <p className="text-muted text-sm mb-4">
-        Três horizontes do seu corpo, com sinceridade pra não te iludir e carinho pra te motivar.
-        O fio condutor: <span className="text-nude-warm">perder a barriga e construir glúteo agora</span> é
-        pré-requisito de tudo — melhora o presente e multiplica o resultado da TRH e de uma cirurgia, se você quiser.
+        Duas trilhas rodando ao mesmo tempo, com sinceridade pra não te iludir. A TRH não tem data —
+        então nada aqui espera por ela: <span className="text-nude-warm">perder a barriga e construir glúteo agora</span> tem
+        teto sem hormônio, e ainda assim é o que mais aproxima o corpo do que você quer, vestida e na cama.
       </p>
       <GuideAccordion sections={HORIZONTES} />
       <p className="text-muted text-[0.7rem] mt-4">
