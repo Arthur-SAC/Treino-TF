@@ -47,6 +47,20 @@ describe("leverGuidance", () => {
   });
 });
 
+describe("leverGuidance não trata a ausência de TRH como provisório", () => {
+  it("o conselho de superávit explica a vigilância da cintura sem prometer hormônio", () => {
+    const g = leverGuidance("superavit");
+    expect(g.why).not.toMatch(/TRH/i);
+    expect(g.why).toMatch(/cintura/i);
+  });
+
+  it("nenhum dos três conselhos cita TRH", () => {
+    for (const meta of ["deficit", "manutencao", "superavit"] as const) {
+      expect(leverGuidance(meta).why).not.toMatch(/TRH/i);
+    }
+  });
+});
+
 describe("waistGuard", () => {
   it("dispara no superávit quando cintura subiu >= 1,5cm", () => {
     expect(waistGuard({ cycleGoal: "superavit", waistStartCm: 75, waistNowCm: 77 }))

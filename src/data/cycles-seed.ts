@@ -3,8 +3,8 @@ import type { WorkoutTemplate } from "../lib/db";
 // ═══════════════════════════════════════════════════════════════════════════
 // Todos os ciclos mantêm glúteo como PRIORIDADE Nº 1 (4 estímulos/semana) e
 // vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
-// refinamento (alta rep/densidade) → manutenção (segura a forma; fase ideal
-// pra alinhar com o início da TRH).
+// refinamento (alta rep/densidade) → manutenção (segura a forma quando o
+// objetivo do momento é consolidar, não crescer).
 // Regras fixas: dias de força (seg/ter/qui/sex) começam com cardio + articular;
 // quarta começa com articular e tem o circuito de glúteo médio (ponte + abdução).
 // ZONA 2 NÃO ENTRA AQUI: ela caminha 5 km do trabalho para casa todo dia, o
@@ -291,9 +291,9 @@ const REFINEMENT: WorkoutTemplate[] = [
   },
 ];
 
-// Ciclo 5 — MANUTENÇÃO — segura a forma com volume reduzido. Fase ideal pra
-// alinhar com o início da TRH: o estrogênio arredonda e amacia por cima da base
-// muscular já construída.
+// Ciclo 5 — MANUTENÇÃO — segura a forma com volume reduzido. Serve para
+// consolidar depois de uma fase de crescimento, ou para atravessar um período
+// em que a vida não comporta volume alto. Não é sala de espera de nada.
 const MAINTENANCE: WorkoutTemplate[] = [
   {
     id: "m-seg-gluteo",
@@ -301,7 +301,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 32,
     cycle: "manutencao",
-    purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — base pronta pra TRH arredondar.",
+    purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — volume menor, carga mantida.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -394,7 +394,7 @@ export const CYCLES = [
   { id: "variacao", name: "Variação", description: "Mesmo objetivo de glúteo, exercícios variados pra estímulo novo.", threshold: 60 },
   { id: "hipertrofia", name: "Hipertrofia", description: "Fase de ouro: volume alto, foco máximo em crescimento de glúteo.", threshold: 60 },
   { id: "refinamento", name: "Refinamento", description: "Cargas leves, reps altas, simetria e densidade do glúteo.", threshold: 60 },
-  { id: "manutencao", name: "Manutenção", description: "Segura a forma com volume reduzido. Fase ideal pra alinhar com o início da TRH.", threshold: 120 },
+  { id: "manutencao", name: "Manutenção", description: "Segura a forma com volume reduzido. Para consolidar depois de crescer, ou atravessar um período apertado.", threshold: 120 },
 ] as const;
 
 export type CycleId = typeof CYCLES[number]["id"];

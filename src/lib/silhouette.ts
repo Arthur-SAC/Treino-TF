@@ -49,7 +49,7 @@ export function leverGuidance(cycleGoal: CycleGoal): LeverGuidance {
   if (cycleGoal === "superavit")
     return {
       focus: "quadril",
-      why: "Ciclo em superávit: a alavanca é crescer quadril/glúteo. Vigie a cintura — sem TRH, o superávit também deposita gordura na barriga.",
+      why: "Ciclo em superávit: a alavanca é crescer quadril e glúteo. Vigie a cintura — a gordura do seu corpo se deposita na barriga, então superávit sem vigilância vira barriga em vez de bumbum. A trava dos 88 cm existe justamente por isso.",
     };
   return {
     focus: "manter",

@@ -16,7 +16,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
     dayOfWeek: 1,
     durationMin: 27,
     cycle: "adaptacao",
-    purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum — a fundação que a TRH vai arredondar depois.",
+    purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum. É a alavanca mais forte que você tem, e responde rápido porque você está começando.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, notes: "Aquece leve" },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
