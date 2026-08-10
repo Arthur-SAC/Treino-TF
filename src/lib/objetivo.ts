@@ -1,0 +1,126 @@
+// src/lib/objetivo.ts
+// Fonte única dos números do objetivo. Módulo puro — sem I/O, sem Date.
+//
+// Antes deste módulo, cada número de objetivo era prosa dentro de um seed. Foi
+// exatamente essa dispersão que permitiu o app se contradizer: a Silhueta
+// prometia um superávit que o plano alimentar negava. Toda tela que AFIRMA algo
+// sobre o objetivo lê daqui.
+
+/** A medição real de 13/05/2026 — o ponto de partida de tudo. */
+export const MEDIDAS_PARTIDA = {
+  data: "2026-05-13",
+  alturaM: 1.73,
+  pesoKg: 96,
+  pescocoCm: 40,
+  ombrosCm: 120.5,
+  bustoCm: 106.5,
+  cinturaCm: 99,
+  quadrilCm: 114,
+  coxaCm: 82.5,
+  bracoCm: 34,
+} as const;
+
+const arredonda2 = (n: number) => Math.round(n * 100) / 100;
+
+/** Cintura ÷ quadril. Abaixo de ~0,85 é faixa feminina. */
+export function razaoCinturaQuadril(cinturaCm: number, quadrilCm: number): number {
+  return arredonda2(cinturaCm / quadrilCm);
+}
+
+/** Ombro ÷ quadril. Homem cis típico fica entre 1,15 e 1,25 — ela está em 1,06,
+ *  que já é faixa feminina. É por isso que o ombro nunca foi o gargalo. */
+export function razaoOmbroQuadril(ombrosCm: number, quadrilCm: number): number {
+  return arredonda2(ombrosCm / quadrilCm);
+}
+
+export interface FaseObjetivo {
+  id: "fase-1" | "fase-2";
+  nome: string;
+  resumo: string;
+  mesInicio: number;
+  mesFim: number;
+  pesoKgMin: number;
+  pesoKgMax: number;
+  cinturaCm: number;
+  quadrilCm: number;
+  /** Resultado provável com execução normal. */
+  whrProvavel: number;
+  /** Resultado de execução muito boa. Faixa única ilude ou desanima. */
+  whrExcelente?: number;
+}
+
+export const FASES: readonly FaseObjetivo[] = [
+  {
+    id: "fase-1",
+    nome: "Tirar a barriga",
+    resumo:
+      "A cintura é o problema inteiro: hoje ela é o ponto mais largo do tronco. Enquanto for, não existe silhueta possível.",
+    mesInicio: 0,
+    mesFim: 8,
+    pesoKgMin: 80,
+    pesoKgMax: 82,
+    cinturaCm: 84,
+    // O quadril também cai — tem gordura nele. Isso é esperado, não perda.
+    quadrilCm: 106,
+    whrProvavel: 0.79,
+  },
+  {
+    id: "fase-2",
+    nome: "Construir glúteo",
+    resumo:
+      "A balança sobe de propósito. O quadril volta ao mesmo 114 de hoje, feito de músculo — mesmo número, corpo irreconhecível. Compare por foto, não por fita.",
+    mesInicio: 8,
+    mesFim: 30,
+    pesoKgMin: 85,
+    pesoKgMax: 88,
+    cinturaCm: 83,
+    quadrilCm: 115,
+    whrProvavel: 0.77,
+    whrExcelente: 0.73,
+  },
+] as const;
+
+/** Piso de cintura. Busto 106,5 significa caixa torácica larga, e costela não
+ *  encolhe: abaixo disso não existe, por mais déficit que se faça. */
+export const CINTURA_PISO_CM = 80;
+
+export const CONSUMO = {
+  /** Mifflin-St Jeor + 5 km a pé por dia + 1h de cães + força 4-5x/semana. */
+  gastoEstimadoKcalMin: 2900,
+  gastoEstimadoKcalMax: 3100,
+  metaKcal: 2300,
+  proteinaGMin: 150,
+  proteinaGMax: 160,
+  /** Verba de besteira, declarada e sem culpa. Não é indulgência: os dois pontos
+   *  de falha dela (16h e o jantar) são déficit agudo depois de esforço, que é
+   *  fisiologia funcionando certo. Plano que finge que besteira não acontece
+   *  quebra na primeira semana e leva o resto junto. */
+  discricionariaKcal: 250,
+} as const;
+
+export interface MarcoCintura {
+  cinturaCm: number;
+  mesMin: number;
+  mesMax: number;
+  titulo: string;
+  porQue: string;
+}
+
+export const MARCOS_CINTURA: readonly MarcoCintura[] = [
+  {
+    cinturaCm: 88,
+    mesMin: 3,
+    mesMax: 4,
+    titulo: "Cintura 88 — destrava o superávit",
+    porQue:
+      "É a trava de CINTURA_LIBERA_SUPERAVIT_CM em meal-plan.ts. Abaixo dela, superávit vira glúteo; acima, vira barriga.",
+  },
+  {
+    cinturaCm: 84,
+    mesMin: 6,
+    mesMax: 8,
+    titulo: "Cintura 84 — a silhueta vira",
+    porQue:
+      "Fim da fase 1. Não é o fim do caminho: é o ponto em que roupa justa passa a fazer o que você quer.",
+  },
+] as const;
