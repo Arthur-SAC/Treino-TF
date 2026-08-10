@@ -47,9 +47,14 @@ export interface FaseObjetivo {
   cinturaCm: number;
   /** Alvo de medida de execução excelente. Ver comentário de cinturaCm. */
   quadrilCm: number;
-  /** Resultado provável com execução normal. */
+  /** Resultado provável com execução normal.
+   *  Ponto, não faixa: a invariante testada (razaoCinturaQuadril bater com whrExcelente)
+   *  precisa de um número exato para comparar. Telas de texto que citam este valor devem
+   *  citar uma FAIXA ao redor dele (incerteza é honesta), com um teste garantindo que o
+   *  ponto caia dentro da faixa citada — senão texto e dado derivam em silêncio. */
   whrProvavel: number;
-  /** Resultado de execução muito boa. Faixa única ilude ou desanima. */
+  /** Resultado de execução muito boa. Mesma regra de whrProvavel: ponto aqui, faixa no texto,
+   *  teste amarrando os dois. */
   whrExcelente?: number;
 }
 

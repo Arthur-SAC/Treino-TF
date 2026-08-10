@@ -95,7 +95,7 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
     datePlanned: isoFromMonthsFromNow(18),
     title: "▣Check-in 18 meses — comparar com a foto de partida",
     category: "fisico",
-    notes: "Aqui a comparação por foto entrega o que a fita não consegue mostrar. Razão-alvo do fim da fase 2: 0,77 provável, 0,73 com execução muito boa.",
+    notes: "Aqui a comparação por foto entrega o que a fita não consegue mostrar. Razão-alvo do fim da fase 2: 0,75-0,78 provável, 0,72-0,74 com execução muito boa.",
   },
 ];
 

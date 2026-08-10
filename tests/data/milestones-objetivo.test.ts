@@ -24,4 +24,19 @@ describe("marcos do objetivo", () => {
     expect(texto).not.toContain("2.200");
     expect(texto).toMatch(/2\.?300/);
   });
+
+  it("as faixas citadas no texto contêm os valores pontuais do módulo — texto e dado não podem derivar", () => {
+    const fase2 = FASES.find((f) => f.id === "fase-2")!;
+    const limites = (s: string) => s.split("-").map((n) => Number(n.replace(",", ".")));
+    const [provMin, provMax] = limites("0,75-0,78");
+    const [excMin, excMax] = limites("0,72-0,74");
+
+    expect(texto).toContain("0,75-0,78");
+    expect(texto).toContain("0,72-0,74");
+
+    expect(fase2.whrProvavel).toBeGreaterThanOrEqual(provMin);
+    expect(fase2.whrProvavel).toBeLessThanOrEqual(provMax);
+    expect(fase2.whrExcelente!).toBeGreaterThanOrEqual(excMin);
+    expect(fase2.whrExcelente!).toBeLessThanOrEqual(excMax);
+  });
 });
