@@ -13,14 +13,14 @@ describe("horários da rotina", () => {
   it("as refeições têm horário — era a queixa: 'não tem quando comer'", () => {
     expect(acharItem("cafe-marmita").defaultTime).toBeDefined();
     expect(acharItem("almoco").defaultTime).toBe("12:00");
-    expect(acharItem("lanche-saida").defaultTime).toBe("16:00");
-    expect(acharItem("jantar").defaultTime).toBe("19:00");
+    expect(acharItem("lanche-saida").defaultTime).toBe("15:30");
+    expect(acharItem("jantar").defaultTime).toBe("19:30");
   });
 
-  it("a sequência da saída bate com o dia real: lanche, cães, treino", () => {
+  it("a sequência da saída bate com o dia real: lanche, caminhada, cães, treino", () => {
     const tarde = SEGUNDA.blocks.find((b) => b.id === "tarde")!;
-    expect(tarde.items.map((i) => i.id)).toEqual(["lanche-saida", "caes", "treino"]);
-    expect(tarde.items.map((i) => i.defaultTime)).toEqual(["16:00", "16:40", "17:45"]);
+    expect(tarde.items.map((i) => i.id)).toEqual(["lanche-saida", "caminhada-trabalho", "caes", "treino"]);
+    expect(tarde.items.map((i) => i.defaultTime)).toEqual(["15:30", "16:00", "17:15", "18:15"]);
   });
 
   it("o jantar vem antes do skincare da noite — ela chega do treino e come", () => {
@@ -89,7 +89,7 @@ describe("horários da rotina", () => {
 
 describe("resolveRoutineTime", () => {
   it("usa o padrão quando não há ajuste", () => {
-    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("19:00");
+    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("19:30");
   });
 
   it("o ajuste da usuária vence o padrão", () => {
@@ -166,8 +166,12 @@ describe("blocosDaSemanaInteira", () => {
 // de semana) — este teste prova que o ajuste de um não vaza pro outro.
 describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) independentes", () => {
   it("ids diferentes por tipo de dia", () => {
+    // Em dia de semana existem DOIS itens control:"walk" (a caminhada do
+    // trabalho e os cães) — filtra pelo id do passeio dos cães especificamente,
+    // que é o que este teste (e o bug histórico) tratam.
     const idDoPasseio = (dow: number) =>
-      buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).find((i) => i.control === "walk")!.id;
+      buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items)
+        .find((i) => i.control === "walk" && i.id !== "caminhada-trabalho")!.id;
     expect(idDoPasseio(3)).toBe("caes"); // quarta-feira
     expect(idDoPasseio(6)).toBe("caes-fds"); // sábado
     expect(idDoPasseio(0)).toBe("caes-fds"); // domingo
@@ -193,7 +197,7 @@ describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) ind
     const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
 
     expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:45");
-    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("16:40");
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("17:15");
   });
 });
 

@@ -55,15 +55,19 @@ describe("fim de semana", () => {
     }
   });
 
-  // Dois itens de caminhada no mesmo dia somariam na mesma meta de 75 min e
-  // dariam a impressão de que o dia pede duas caminhadas — não pede. (Cada
-  // DIA continua com só um item de movimento; são ids diferentes em dias
-  // diferentes, não dois itens no mesmo dia.)
-  it("nenhum dia tem dois itens somando na mesma meta de movimento", () => {
+  // No fim de semana continua um item só de movimento (o passeio com os
+  // cães) — não há trabalho de onde voltar, então não há caminhada de 5 km
+  // pra somar junto. Em dia de semana agora são DOIS de propósito: a
+  // caminhada do trabalho (5 km, ~1h) e o passeio com os cães (1h) são
+  // deslocamentos reais e distintos, e a meta de 75 min soma os dois —
+  // diferente do caso antigo (já corrigido) de um único passeio aparecendo
+  // duas vezes sob ids diferentes.
+  it("no fim de semana só há um item de movimento; em dia de semana são dois (caminhada + cães)", () => {
     for (let dow = 0; dow < 7; dow++) {
-      const idEsperado = dow === 0 || dow === 6 ? "caes-fds" : "caes";
+      const fimDeSemana = dow === 0 || dow === 6;
+      const walksEsperados = fimDeSemana ? ["caes-fds"] : ["caminhada-trabalho", "caes"];
       const walks = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).filter((i) => i.control === "walk");
-      expect({ dow, walks: walks.map((i) => i.id) }).toEqual({ dow, walks: [idEsperado] });
+      expect({ dow, walks: walks.map((i) => i.id) }).toEqual({ dow, walks: walksEsperados });
     }
   });
 

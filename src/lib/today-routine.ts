@@ -77,7 +77,16 @@ type TipoDeDia = "semana" | "sabado" | "domingo";
  *  dança; no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
 function lanche(dia: TipoDeDia): RoutineItem {
-  const base = { id: "lanche-saida", block: "tarde", control: "recipe", mealType: "lanche", defaultTime: "16:00" } as const;
+  const base = {
+    id: "lanche-saida",
+    block: "tarde",
+    control: "recipe",
+    mealType: "lanche",
+    // Na semana o lanche antecede a caminhada de 5 km das 16h — comido na
+    // mesa, meia hora antes, pra não sair de casa 4h em jejum e prestes a
+    // andar. Fim de semana não tem essa pressa, então mantém as 16h.
+    defaultTime: dia === "semana" ? "15:30" : "16:00",
+  } as const;
   if (dia === "sabado") {
     return { ...base, label: "Lanche pré-dança", subtitle: "Toque pra ver a receita · come antes de sair, pra não dançar nem passear em jejum" };
   }
@@ -114,7 +123,7 @@ function caes(dia: TipoDeDia): RoutineItem {
     block: "tarde",
     label: fimDeSemana ? "Passear com os cães · 1h (fim de semana)" : "Passear com os cães · 1h",
     control: "walk",
-    defaultTime: fimDeSemana ? "18:15" : "16:40",
+    defaultTime: fimDeSemana ? "18:15" : "17:15",
   } as const;
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
@@ -122,18 +131,34 @@ function caes(dia: TipoDeDia): RoutineItem {
   if (dia === "domingo") {
     return { ...base, subtitle: "NEAT — eles não sabem que é domingo; hoje é daqui que vem quase todo o seu movimento" };
   }
-  return { ...base, subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino" };
+  return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
 }
+
+/** A caminhada de 5 km do trabalho para casa, todos os dias úteis. São ~370
+ *  kcal/dia que o app não contava, e é ela que empurra todo o resto da tarde.
+ *  `to` aponta para o exercício de zona 2 porque a prescrição (tempo, ritmo,
+ *  teste da conversa) saiu do fim do treino e passou a valer aqui — ver o
+ *  comentário no topo de cycles-seed.ts. */
+const CAMINHADA_TRABALHO: RoutineItem = {
+  id: "caminhada-trabalho",
+  block: "tarde",
+  label: "Caminhada do trabalho para casa · 5 km",
+  subtitle: "~1h em zona 2 — é ela que substitui o cardio do fim do treino",
+  control: "walk",
+  to: "/treino/exercicio/cardio-zona2",
+  defaultTime: "16:00",
+};
 
 function tardeSemana(): RoutineItem[] {
   return [
+    CAMINHADA_TRABALHO,
     caes("semana"),
-    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:45" },
+    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "Sem cardio no fim — a caminhada das 16h já cobriu", to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
   ];
 }
 
 const NOITE: RoutineItem[] = [
-  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "jantar", defaultTime: "19:00" },
+  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
