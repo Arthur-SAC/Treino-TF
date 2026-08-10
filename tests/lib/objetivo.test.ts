@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  MEDIDAS_PARTIDA, FASES, CONSUMO, MARCOS_CINTURA,
+  MEDIDAS_PARTIDA, FASES, CONSUMO, MARCOS_CINTURA, CINTURA_PISO_CM,
   razaoCinturaQuadril, razaoOmbroQuadril,
 } from "../../src/lib/objetivo";
 
@@ -28,11 +28,11 @@ describe("fases", () => {
   });
 
   it("o quadril termina no mesmo número da partida, feito de músculo", () => {
-    expect(fase2.quadrilCm).toBeGreaterThanOrEqual(MEDIDAS_PARTIDA.quadrilCm);
+    expect(fase2.quadrilCm).toBe(MEDIDAS_PARTIDA.quadrilCm);
   });
 
   it("o piso de cintura respeita a caixa torácica — nunca abaixo de 80", () => {
-    for (const f of FASES) expect(f.cinturaCm).toBeGreaterThanOrEqual(80);
+    for (const f of FASES) expect(f.cinturaCm).toBeGreaterThanOrEqual(CINTURA_PISO_CM);
   });
 
   it("a razão melhora fase a fase", () => {
@@ -46,6 +46,14 @@ describe("fases", () => {
 
   it("as fases se encadeiam sem buraco nem sobreposição", () => {
     expect(fase2.mesInicio).toBe(fase1.mesFim);
+  });
+
+  it("os alvos de medida produzem a razão de execução excelente — é essa a regra que amarra os dois campos", () => {
+    for (const f of FASES) {
+      const esperado = f.whrExcelente ?? f.whrProvavel;
+      expect({ fase: f.id, razao: razaoCinturaQuadril(f.cinturaCm, f.quadrilCm) })
+        .toEqual({ fase: f.id, razao: esperado });
+    }
   });
 });
 

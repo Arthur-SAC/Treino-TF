@@ -41,7 +41,11 @@ export interface FaseObjetivo {
   mesFim: number;
   pesoKgMin: number;
   pesoKgMax: number;
+  /** Alvo de medida de execução excelente. Quando dividido pelo quadril, produz whrExcelente
+   *  (ou whrProvavel se whrExcelente não existe). A razão provável será pior porque erra
+   *  um pouco nas duas pontas. */
   cinturaCm: number;
+  /** Alvo de medida de execução excelente. Ver comentário de cinturaCm. */
   quadrilCm: number;
   /** Resultado provável com execução normal. */
   whrProvavel: number;
@@ -74,7 +78,7 @@ export const FASES: readonly FaseObjetivo[] = [
     pesoKgMin: 85,
     pesoKgMax: 88,
     cinturaCm: 83,
-    quadrilCm: 115,
+    quadrilCm: 114,
     whrProvavel: 0.77,
     whrExcelente: 0.73,
   },
