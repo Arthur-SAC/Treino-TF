@@ -189,7 +189,7 @@ disciplina que `useResolvedGoal` já aplica pra meta nutricional.
 | `src/lib/today-routine.ts` | item `caminhada-trabalho`; horários 15:30 / 18:15 / 19:30 |
 | `src/pages/path/FertilityTRH.tsx` | TRH como possibilidade sem data |
 | `src/data/estilo-discreto-seed.ts` | "passar despercebido" → escolha declarada |
-| `.gitignore` | `*.png` (há um PNG solto na raiz; hoje fora do git, mas um `git add -A` o levaria) |
+| `.gitignore` | `*.png` — o arquivo já cobre `eu/`, `objetivo/`, `*.jpg` e `*.jpeg`, mas não PNG. Print de tela com corpo ou medidas é PNG por padrão no Windows, e o repo publica no GitHub Pages. Prevenção, não conserto: não há PNG solto agora |
 
 `CINTURA_LIBERA_SUPERAVIT_CM = 88` em `meal-plan.ts` **fica como está** — está bem
 calibrado e é o gatilho do marco do mês 3–4.
