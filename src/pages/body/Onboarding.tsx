@@ -10,6 +10,7 @@ import { MEDIDAS_PARTIDA } from "../../lib/objetivo";
 // MEDIDAS_PARTIDA — são campos que só este formulário pede, então continuam
 // declarados aqui, e não há divergência com o módulo em nenhum campo comum.
 const PRESET_MEASUREMENT: Partial<Measurement> = {
+  weightKg: MEDIDAS_PARTIDA.pesoKg,
   neckCm: MEDIDAS_PARTIDA.pescocoCm,
   shouldersCm: MEDIDAS_PARTIDA.ombrosCm,
   chestCm: MEDIDAS_PARTIDA.bustoCm,

@@ -24,6 +24,21 @@ export interface ShoulderHipGap {
   hipDeltaCm: number; // cm a somar ao quadril pra baixar a razão até o alvo
 }
 
+/** Nenhuma tela chama esta função, e isso é decisão, não esquecimento.
+ *
+ *  A conta trata o ombro como número fixo e devolve toda a diferença como
+ *  dívida de quadril: com as medidas de 13/05 ela dizia "+6,5 cm de quadril"
+ *  para uma razão-alvo que o plano alcança sem centímetro nenhum a mais — o
+ *  alvo de quadril da fase 2 é 114, exatamente onde ela já está. A razão anda
+ *  pelas duas pontas: a circunferência do ombro inclui gordura e cai junto com
+ *  o emagrecimento, então o número superestimava uma dívida que não existe, e
+ *  a Silhueta parou de exibi-lo.
+ *
+ *  Fica exportada e testada porque a matemática está certa para a pergunta que
+ *  ela responde, e porque descobrir isso custou caro: apagá-la em silêncio
+ *  apagaria junto o motivo. Para voltar ao ar, ela precisa receber um ombro
+ *  PROJETADO (o do fim da fase, não o de hoje) — aí a conta faz sentido de novo,
+ *  sem mudar a assinatura. */
 export function shoulderHipGap(
   currentRatio: number,
   target: number,

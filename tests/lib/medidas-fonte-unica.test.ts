@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { MEDIDAS_PARTIDA } from "../../src/lib/objetivo";
 
 // Os valores da medição de 13/05 estavam redigitados em três lugares (o módulo,
 // o seed e o preset do onboarding) — e o módulo criado justamente para acabar
@@ -31,4 +32,15 @@ describe("as medidas de partida vivem só em objetivo.ts", () => {
       expect(culpados).toEqual([]);
     });
   }
+});
+
+describe("o preset do Onboarding cobre a medição inteira", () => {
+  const FONTE = Object.entries(FONTES).find(([c]) => c.endsWith("src/pages/body/Onboarding.tsx"))![1];
+
+  it("pré-preenche o peso, que é a mesma medição do resto do formulário", () => {
+    // O peso ficava de fora e ela digitava um número que o app já tinha. Ele é
+    // derivado do módulo como os demais — se mudou, ela edita, igual aos outros.
+    expect(FONTE).toContain("weightKg: MEDIDAS_PARTIDA.pesoKg");
+    expect(MEDIDAS_PARTIDA.pesoKg).toBeGreaterThan(0);
+  });
 });
