@@ -174,7 +174,7 @@ export const GARMENTS: Garment[] = [
     discretion: "livre",
   },
 
-  // === DISCRETAS (dia a dia, passa despercebido, pró-barriga) ===
+  // === MODO PÚBLICO (dia a dia, discretion: "discreto", pró-barriga) ===
   {
     id: "calca-alfaiataria-alta",
     name: "Calça de alfaiataria de cintura alta",

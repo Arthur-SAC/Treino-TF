@@ -189,7 +189,7 @@ export interface Garment {
   whyItWorks: string;
   cautions?: string;
   imagePath?: string;
-  discretion: "discreto" | "livre";   // passa despercebido no dia a dia × só casa/noiva
+  discretion: "discreto" | "livre";   // "discreto" = modo que ela escolhe usar em público × "livre" = modo de casa/com a noiva
   fitTip?: string;                     // dica de corte/caimento/tamanho
 }
 

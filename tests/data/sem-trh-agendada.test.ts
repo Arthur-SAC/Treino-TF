@@ -14,7 +14,15 @@ const PROIBIDOS: { re: RegExp; porque: string }[] = [
   { re: /enquanto a TRH n[ãa]o/i, porque: "linguagem de sala de espera" },
   { re: /quando a TRH (come[çc]ar|entrar)/i, porque: "trata a TRH como evento futuro certo" },
   { re: /a TRH vai /i, porque: "promessa sobre o que a TRH fará" },
-  { re: /passar despercebid/i, porque: "estilo público é escolha declarada, não camuflagem forçada" },
+  {
+    // A raiz de "passar" é "pass-" (remove o -ar): passei/passou/passaram,
+    // passava/passavam, passando, passasse... nenhuma dessas formas contém
+    // "passar" nem "passa" sozinho como prefixo fechado. \w* depois de "pass"
+    // cobre a conjugação inteira, então "passa despercebido" (3ª pessoa) não
+    // escapa mais da rede como escapava quando o padrão exigia o infinitivo.
+    re: /pass\w* despercebid/i,
+    porque: "estilo público é escolha declarada, não camuflagem forçada — em qualquer conjugação",
+  },
 ];
 
 describe("nenhum lugar do app trata a TRH como etapa agendada", () => {
