@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { seedDatabase } from "../../src/lib/seed";
 import { seedStyle } from "../../src/lib/style-seed";
+import { seedMovement } from "../../src/lib/movement-seed";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
 
 // Conteúdo de seed vive no IndexedDB, não no arquivo: sem bump de versão, texto
@@ -115,5 +116,34 @@ describe("estilo", () => {
     const antes = await db.outfits.count();
     await seedStyle();
     expect(await db.outfits.count()).toBe(antes);
+  });
+});
+
+describe("sequências de movimento", () => {
+  beforeEach(async () => {
+    await db.danceSequences.clear();
+    await db.settings.clear();
+  });
+
+  it("as cinco sequências de soltura alcançam quem estava na versão anterior (7)", async () => {
+    // Reconstrói o banco de quem já usava o app antes desta task: seed antigo
+    // já rodou, mas parado na versão 7 — sem as cinco sequências de soltura.
+    await db.settings.put({ key: "movementSeeded", value: true });
+    await db.settings.put({ key: "movementVersion", value: 7 });
+
+    await seedMovement();
+
+    const ids = [
+      "pelvic-soltura-identificacao",
+      "pelvic-soltura-sustentada",
+      "pelvic-alternancia",
+      "pelvic-start-stop",
+      "pelvic-receber-preparo",
+    ];
+    for (const id of ids) {
+      const s = await db.danceSequences.get(id);
+      expect(s).toBeDefined();
+      expect(s?.category).toBe("pelvic");
+    }
   });
 });
