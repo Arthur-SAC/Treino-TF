@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 interface Shortcut { icon: string; label: string; sub: string; to: string }
 
 export const SHORTCUTS: Shortcut[] = [
+  { icon: "◉", label: "Vitalidade", sub: "assoalho pélvico · firmeza · controle", to: "/trilha/vitalidade" },
   { icon: "✚", label: "Fertilidade & TRH", sub: "seu plano · perguntas pro médico", to: "/trilha/fertilidade" },
   { icon: "♡", label: "Apoio", sub: "dia difícil · disforia · rede", to: "/trilha/apoio" },
   { icon: "❋", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
