@@ -4,7 +4,7 @@ import { INITIAL_PLAN, ALL_MEAL_PLANS } from "../../src/data/meal-plan-seed";
 describe("INITIAL_PLAN", () => {
   it("é um plano de déficit calibrado", () => {
     expect(INITIAL_PLAN.goal).toBe("deficit");
-    expect(INITIAL_PLAN.kcalDaily).toBe(2200);
+    expect(INITIAL_PLAN.kcalDaily).toBe(2300);
     expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(175);
   });
 
@@ -24,7 +24,7 @@ describe("INITIAL_PLAN", () => {
     }
   });
 
-  it("a variante 0 de cada período soma ~2200 kcal e ~180g proteína no dia", () => {
+  it("a variante 0 de cada período soma ~2300 kcal e ~190g proteína no dia", () => {
     let kcal = 0;
     let protein = 0;
     for (const slot of INITIAL_PLAN.slots) {
@@ -33,9 +33,10 @@ describe("INITIAL_PLAN", () => {
         protein += f.proteinG ?? 0;
       }
     }
-    expect(kcal).toBeGreaterThanOrEqual(2100);
-    expect(kcal).toBeLessThanOrEqual(2300);
-    expect(protein).toBeGreaterThanOrEqual(165);
+    // Mesma tolerância de 5% usada em tests/data/meal-plan-coerencia.test.ts.
+    expect(kcal).toBeGreaterThanOrEqual(2185);
+    expect(kcal).toBeLessThanOrEqual(2415);
+    expect(protein).toBeGreaterThanOrEqual(175);
   });
 
   // As três opções do lanche têm que ser intercambiáveis: escolher a 2 em vez

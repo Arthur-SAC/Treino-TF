@@ -29,7 +29,7 @@ describe("seedPath", () => {
   it("plano alimentar é de déficit com slots", async () => {
     await seedPath();
     const plan = (await db.mealPlans.toArray())[0];
-    expect(plan.kcalDaily).toBe(2200);
+    expect(plan.kcalDaily).toBe(2300);
     expect(plan.proteinG).toBeGreaterThanOrEqual(175);
     expect(plan.slots).toHaveLength(4);
     // Café tem 5 variantes: as 3 originais + as 2 que migraram do lanche das

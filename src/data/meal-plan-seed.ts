@@ -1,8 +1,11 @@
 import type { MealPlan, MealSlot, MealVariant, Ingredient } from "../lib/db";
 import { deriveDefaultMeals } from "../lib/meal-plan";
 
-// 2200 kcal pra déficit moderado — 96kg, 27 anos, 1,73m
-// Proteína ~180g · Gordura ~70g · Carbo ~210g · ~0,5-0,7 kg/semana
+// 2300 kcal pra déficit moderado — 96kg, 27 anos, 1,73m. Recalibrado de 2200:
+// o número velho foi calculado antes do app saber que ela caminha 5km/dia
+// (ver CONSUMO.gastoEstimadoKcalMin/Max em objetivo.ts). Deficit contra o
+// gasto real de hoje continua na mesma faixa de ritmo de perda.
+// Proteína ~190g · Gordura ~53g · Carbo ~271g · ~0,5-0,7 kg/semana
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
 const SLOTS: MealSlot[] = [
   // ─── CAFÉ DA MANHÃ (~500 kcal) ────────────────────────────────────────────
@@ -16,11 +19,13 @@ const SLOTS: MealSlot[] = [
         effort: "5-min",
         foods: [
           {
+            // Era 150g/230kcal — subiu pra 160g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima).
             name: "Cuscuz de milho (sem manteiga)",
-            qtyG: 150,
-            kcal: 230,
+            qtyG: 160,
+            kcal: 245,
             proteinG: 5,
-            carbG: 48,
+            carbG: 51,
             fatG: 3,
             preparation:
               "Hidrata 1 xícara de flocão de milho com ½ xícara de água morna e uma pitada de sal, descansa 5 min. Cozinha na cuscuzeira (ou no micro-ondas, ~4 min). Finaliza com um fio de azeite — nunca manteiga.",
@@ -47,7 +52,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Flocão de milho (cuscuz)", qty: 50, unit: "g", category: "carboidrato" },
+          { item: "Flocão de milho (cuscuz)", qty: 53, unit: "g", category: "carboidrato" },
           { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
@@ -274,11 +279,13 @@ const SLOTS: MealSlot[] = [
               "Tempera com sal, pimenta, alho amassado e suco de limão. Marina 10 min. Frigideira em fogo alto com fio de azeite, grelha 4-5 min cada lado. Coxa desossada é mais barata que o peito e serve igual.",
           },
           {
-            name: "Arroz cozido (150g)",
-            qtyG: 150,
-            kcal: 163,
+            // Era 150g/163kcal — subiu pra 170g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima).
+            name: "Arroz cozido (170g)",
+            qtyG: 170,
+            kcal: 185,
             proteinG: 3,
-            carbG: 34,
+            carbG: 39,
             fatG: 1,
             preparation:
               "Refoga alho em azeite, adiciona o arroz, cobre com água (2:1). Fogo baixo, tampado, ~18 min.",
@@ -315,7 +322,7 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Coxa de frango (ou peito)", qty: 180, unit: "g", category: "proteina" },
-          { item: "Arroz", qty: 80, unit: "g", category: "carboidrato" },
+          { item: "Arroz", qty: 91, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
@@ -469,11 +476,14 @@ const SLOTS: MealSlot[] = [
             preparation: "Direto do pote, gelado — sem preparo.",
           },
           {
-            name: "Banana média",
-            qtyG: 150,
-            kcal: 125,
+            // Era "Banana média" 150g/125kcal — subiu pra uma banana grande
+            // pra ajudar a fechar a conta dos 2300kcal do plano (ver
+            // comentário de SLOTS acima).
+            name: "Banana grande",
+            qtyG: 170,
+            kcal: 142,
             proteinG: 1,
-            carbG: 32,
+            carbG: 36,
             fatG: 0,
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
@@ -578,12 +588,15 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Frango desfiado (180g)",
-            qtyG: 180,
-            kcal: 297,
-            proteinG: 56,
+            // Era 180g/297kcal — subiu pra 200g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima). Frango é
+            // fonte de proteína, não gordura — preferido pra somar kcal.
+            name: "Frango desfiado (200g)",
+            qtyG: 200,
+            kcal: 330,
+            proteinG: 62,
             carbG: 0,
-            fatG: 7,
+            fatG: 8,
             preparation:
               "Cozinha o frango em água com sal e alho ~20 min na pressão (ou 15 min fervendo). Deixa esfriar, desfia com dois garfos. Refoga com cebola, alho, tomate e pimenta.",
           },
@@ -618,7 +631,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Peito de frango", qty: 180, unit: "g", category: "proteina" },
+          { item: "Peito de frango", qty: 200, unit: "g", category: "proteina" },
           { item: "Macaxeira (aipim)", qty: 200, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 100, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
@@ -743,12 +756,14 @@ const SLOTS: MealSlot[] = [
 ];
 
 export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano padrão · emagrecimento (2200 kcal)",
+  name: "Plano padrão · emagrecimento (2300 kcal)",
   goal: "deficit",
-  kcalDaily: 2200,
-  proteinG: 180,
-  carbG: 210,
-  fatG: 70,
+  kcalDaily: 2300,
+  // Batem com a soma real da variante 0 (ver tests/data/meal-plan-coerencia.test.ts):
+  // 2330 kcal, 190g proteína, 271g carbo, 53g gordura.
+  proteinG: 190,
+  carbG: 271,
+  fatG: 53,
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
 };
@@ -829,6 +844,16 @@ const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
 const MAINTENANCE_SLOTS = boostSlots(SLOTS, MAINTENANCE_BOOST);
 const SURPLUS_SLOTS = boostSlots(SLOTS, SURPLUS_BOOST);
 
+// DÍVIDA REGISTRADA (2026-08): manutenção (2450) e superávit (2700) foram
+// calculados contra um gasto estimado de ~2700kcal — antes de CONSUMO.gastoEstimadoKcalMin/Max
+// (objetivo.ts) contar a caminhada de 5km/dia. Com ela contada, o gasto real
+// é 2900-3100kcal, e "manutenção" a 2450 é na verdade um déficit de ~550kcal,
+// não manutenção. Não recalibrado aqui de propósito: ela só troca pra estes
+// planos depois da cintura chegar a 88 (mês 3-4, ver MARCOS_CINTURA em
+// objetivo.ts), e a reforma de cardápio da frente 5 vai reconstruir as
+// refeições de qualquer jeito — recalibrar os números agora seria trabalho
+// que a frente 5 descarta. Mas o número errado precisa ficar escrito: dívida
+// silenciosa vira mentira.
 export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · manutenção (2450 kcal)",
   goal: "manutencao",

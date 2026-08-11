@@ -98,6 +98,12 @@ export const CONSUMO = {
   gastoEstimadoKcalMin: 2900,
   gastoEstimadoKcalMax: 3100,
   metaKcal: 2300,
+  /** Piso, não faixa fechada: em déficit, exceder proteína protege músculo —
+   *  não é erro nutricional entregar mais que proteinaGMax. proteinaGMax
+   *  existe só como referência de "alvo confortável", nunca como teto a não
+   *  ultrapassar. Por isso o plano de déficit (meal-plan-seed.ts) testa
+   *  proteína contra este mínimo, não contra um intervalo — ver
+   *  tests/data/meal-plan-coerencia.test.ts. */
   proteinaGMin: 150,
   proteinaGMax: 160,
   /** Verba de besteira, declarada e sem culpa. Não é indulgência: os dois pontos
