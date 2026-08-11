@@ -62,3 +62,32 @@ export async function registrarSono(date: string, hhmm?: string): Promise<void> 
 export function noitesNoAlvo(logs: DailyLog[], alvo: string): number {
   return logs.filter((l) => l.sleepAt !== undefined && l.sleepAt <= alvo).length;
 }
+
+/** Marca (ou desmarca) o dia como gasto automático. Lê e escreve na mesma
+ *  transação pelo mesmo motivo de `creditarPasseio`: dois toques rápidos em
+ *  paralelo liam o mesmo registro e uma das escritas se perdia. */
+export async function registrarGastoAutomatico(date: string, marcado: boolean): Promise<void> {
+  await db.transaction("rw", db.dailyLog, async () => {
+    const log = await db.dailyLog.get(date);
+    if (log) {
+      await db.dailyLog.update(date, { gastoAutomatico: marcado });
+    } else {
+      await db.dailyLog.put({ date, waterMl: 0, activeBreakCount: 0, gastoAutomatico: marcado });
+    }
+  });
+}
+
+/** Dias marcados como gasto automático. */
+export async function diasComGasto(): Promise<string[]> {
+  const logs = await db.dailyLog.toArray();
+  return logs.filter((l) => l.gastoAutomatico).map((l) => l.date);
+}
+
+/** Dia mais antigo com registro diário — serve de início do acompanhamento pro
+ *  streak. Sem isso, "nenhum gasto" seria indistinguível de "nunca registrou",
+ *  e o app inventaria um recorde que ela não fez. `date` é a chave primária de
+ *  `dailyLog`, então `orderBy` usa o índice dela sem precisar de índice extra. */
+export async function inicioDoAcompanhamento(): Promise<string | null> {
+  const logs = await db.dailyLog.orderBy("date").limit(1).toArray();
+  return logs[0]?.date ?? null;
+}
