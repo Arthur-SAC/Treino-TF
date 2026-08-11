@@ -1284,3 +1284,128 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 **Consistência de tipos:** `FaseObjetivo` e `MarcoCintura` são definidos na Task 2 e consumidos nas Tasks 3 e 6 com os mesmos nomes de campo (`cinturaCm`, `quadrilCm`, `pesoKgMin`, `pesoKgMax`, `whrProvavel`, `whrExcelente`, `mesMin`, `mesMax`). `seedMedidasPartida` é definida e consumida só na Task 1.
 
 **Risco conhecido:** a Task 1 grava um objeto em `db.measurements` cujos campos precisam bater com a interface `Measurement` de `src/lib/db.ts`. Só três campos foram confirmados por leitura (`shouldersCm`, `waistCm`, `hipCm`); o Step 3 manda conferir os demais no schema e remover os que não existirem, em vez de inventar.
+
+---
+
+### Task 9: O plano alimentar de déficit passa a valer 2.300 kcal
+
+Acrescentada em 2026-08-11, durante a execução. A Task 6 escreveu **2.300 kcal** nos marcos, mas `src/data/meal-plan-seed.ts` tem comida real somando **2.200** — o número que foi calculado sem saber que ela caminha 5 km por dia. Duas metas calóricas em telas diferentes é exatamente o defeito que esta frente existe para eliminar.
+
+Isto **não** é a reforma de comida da frente 5 (tirar ultraprocessado, receita preguiçosa de Aracaju). Aqui só se recalibra a quantidade.
+
+**Files:**
+- Modify: `src/data/meal-plan-seed.ts` (`INITIAL_PLAN` e os slots do plano de déficit)
+- Modify: `src/lib/objetivo.ts` (só comentário: proteína é piso, não teto)
+- Test: `tests/data/meal-plan-coerencia.test.ts` (novo)
+
+**Interfaces:**
+- Consumes: `CONSUMO` de `src/lib/objetivo.ts` (`metaKcal: 2300`, `proteinaGMin: 150`, `proteinaGMax: 160`, `discricionariaKcal: 250`)
+- Produces: plano de déficit com `kcalDaily` igual a `CONSUMO.metaKcal`
+
+- [ ] **Step 1: Medir antes de mexer**
+
+Somar, por variante 0 de cada slot, `kcal` e `proteinG` dos `foods`, e comparar com `targetKcal` do slot e com `kcalDaily`/`proteinG` declarados em `INITIAL_PLAN` (hoje 2200 / 180).
+
+Registrar a tabela no relatório. Sem essa medição não dá para saber se o plano já era coerente consigo mesmo antes da mudança — e se não era, isso é um defeito anterior que precisa aparecer.
+
+- [ ] **Step 2: Escrever o teste que falha**
+
+Criar `tests/data/meal-plan-coerencia.test.ts`:
+
+```ts
+import { describe, it, expect } from "vitest";
+import { ALL_MEAL_PLANS } from "../../src/data/meal-plan-seed";
+import { CONSUMO } from "../../src/lib/objetivo";
+
+const somaDaVariante0 = (plan: (typeof ALL_MEAL_PLANS)[number]) =>
+  plan.slots.reduce(
+    (acc, slot) => {
+      const foods = slot.variants[0]?.foods ?? [];
+      return {
+        kcal: acc.kcal + foods.reduce((s, f) => s + (f.kcal ?? 0), 0),
+        proteinG: acc.proteinG + foods.reduce((s, f) => s + (f.proteinG ?? 0), 0),
+      };
+    },
+    { kcal: 0, proteinG: 0 },
+  );
+
+describe("plano de déficit bate com a meta declarada em objetivo.ts", () => {
+  const deficit = ALL_MEAL_PLANS.find((p) => p.goal === "deficit")!;
+
+  it("a meta declarada do plano é a meta do módulo de objetivo", () => {
+    expect(deficit.kcalDaily).toBe(CONSUMO.metaKcal);
+  });
+
+  it("a comida de verdade soma a meta declarada, com 5% de tolerância", () => {
+    const { kcal } = somaDaVariante0(deficit);
+    const desvio = Math.abs(kcal - deficit.kcalDaily) / deficit.kcalDaily;
+    expect({ kcal, alvo: deficit.kcalDaily, dentroDe5pct: desvio <= 0.05 })
+      .toMatchObject({ dentroDe5pct: true });
+  });
+
+  it("a proteína entregue respeita o piso — exceder é bom, ficar abaixo não", () => {
+    const { proteinG } = somaDaVariante0(deficit);
+    expect(proteinG).toBeGreaterThanOrEqual(CONSUMO.proteinaGMin);
+  });
+
+  it("o nome do plano não contradiz o número", () => {
+    expect(deficit.name).not.toContain("2200");
+    expect(deficit.name).toContain(String(CONSUMO.metaKcal));
+  });
+});
+```
+
+- [ ] **Step 3: Rodar e confirmar que falha**
+
+Run: `npm run test -- tests/data/meal-plan-coerencia.test.ts`
+Expected: FAIL — `kcalDaily` é 2200, nome diz "2200 kcal"
+
+- [ ] **Step 4: Recalibrar**
+
+Subir ~100 kcal distribuídas nos slots, ajustando **quantidades de alimentos que já existem** — não introduzir alimento novo, que é escopo da frente 5. Preferir aumentar fonte de proteína ou carboidrato de verdade (ovo, whey, arroz, macaxeira, fruta) a aumentar gordura.
+
+Atualizar em `INITIAL_PLAN`:
+
+```ts
+  name: "Plano padrão · emagrecimento (2300 kcal)",
+  kcalDaily: 2300,
+```
+
+Ajustar `proteinG`, `carbG` e `fatG` declarados para bater com a soma real depois do ajuste, e os `targetKcal` dos slots que mudarem.
+
+- [ ] **Step 5: Proteína é piso, não teto**
+
+O plano entrega 180 g de proteína e `CONSUMO.proteinaGMax` é 160. Isso não é erro nutricional — proteína alta em déficit protege músculo. É erro de modelagem: a faixa está escrita como se 160 fosse um limite.
+
+Em `src/lib/objetivo.ts`, **só no comentário** dos campos de proteína, registrar que a faixa é **alvo mínimo**, que exceder é desejável em déficit, e que por isso o teste do plano assevera piso e não intervalo. Não alterar valor nenhum.
+
+- [ ] **Step 6: Rodar tudo**
+
+Run: `npm run test -- tests/data/meal-plan-coerencia.test.ts` → PASS
+Run: `npm run test` → PASS. Se `tests/data/meal-plan-seed.test.ts`, `tests/lib/phase-nutrition.test.ts` ou `tests/lib/diet-export.test.ts` quebrarem por número fixo, ler cada um antes de editar: o teste de `phase-nutrition` assevera que déficit < manutenção < superávit, e 2300 < 2450 continua verdadeiro.
+
+- [ ] **Step 7: Registrar a dívida dos outros dois planos**
+
+Manutenção (2.450) e superávit (2.700) foram calculados contra um gasto estimado de ~2.700. Com a caminhada contada, o gasto real é 2.900–3.100 — o plano chamado "manutenção" é na verdade um déficit de ~550 kcal.
+
+**Não recalibrar aqui.** Ela só usa esses planos depois da cintura chegar a 88 (mês 3–4), e a frente 5 vai reconstruir as refeições de qualquer jeito. Acrescentar um comentário em `meal-plan-seed.ts`, acima dos dois planos, registrando o número, o porquê e que a recalibração é da frente 5 — dívida escrita é dívida que alguém paga; dívida silenciosa vira mentira.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add src/data/meal-plan-seed.ts src/lib/objetivo.ts tests/data/meal-plan-coerencia.test.ts
+git commit -m "feat(comida): o plano de deficit passa a valer 2.300 kcal
+
+Os marcos ja diziam 2.300 e o prato somava 2.200 — o numero antigo foi
+calculado sem saber que ela caminha 5 km do trabalho pra casa todo dia.
+
+O teste novo amarra as duas pontas: a meta declarada do plano tem que ser
+a do modulo de objetivo, e a comida de verdade tem que somar essa meta.
+Proteina passa a ser piso explicito, nao teto — exceder em deficit protege
+musculo.
+
+Manutencao e superavit ficam registrados como divida da frente 5: com a
+caminhada contada, 2.450 nao e manutencao, e um deficit de ~550.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
