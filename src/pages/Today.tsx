@@ -15,7 +15,16 @@ import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
 import { resolveRoutineTime, resolverAlvoSono, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
-import { addWater, addWalk, creditarPasseio, registrarSono, noitesNoAlvo } from "../lib/daily-log-helpers";
+import {
+  addWater,
+  addWalk,
+  creditarPasseio,
+  registrarSono,
+  noitesNoAlvo,
+  diasComGasto,
+  inicioDoAcompanhamento,
+} from "../lib/daily-log-helpers";
+import { calcularStreak } from "../lib/vitalidade";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
@@ -136,6 +145,20 @@ export function Today() {
     const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
     return noitesNoAlvo(logs, alvoSono);
   }, [alvoSono]);
+
+  // Streak de Vitalidade — mesmo cálculo que a página Vitalidade usa
+  // (`calcularStreak` sobre `diasComGasto`/`inicioDoAcompanhamento`), pra não
+  // abrir uma segunda fonte de verdade pro mesmo número. `inicio` fica
+  // `undefined` enquanto carrega e `null` com o banco vazio; nos dois casos
+  // cair em `todayISO` faz o streak nascer em "hoje é o primeiro dia" em vez
+  // de quebrar a conta com uma data inexistente.
+  const inicioVitalidade = useLiveQuery(() => inicioDoAcompanhamento(), []);
+  const diasGastoVitalidade = useLiveQuery(() => diasComGasto(), []);
+  const streakVitalidade = calcularStreak(
+    diasGastoVitalidade ?? [],
+    todayISO,
+    inicioVitalidade ?? todayISO,
+  );
 
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
@@ -274,10 +297,21 @@ export function Today() {
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
-      <div className="grid grid-cols-3 gap-2">
+      {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
+          `.card` com padding e borda próprios — em 4 colunas numa tela
+          estreita "Skincare" e "Vitalidade" espremem contra a borda do
+          próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
+      <div className="grid grid-cols-2 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Sono" count={last7DaysSleep ?? 0} total={7} />
+        {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele
+            conta. Ela escolheu o streak visível nesta tela, que fica aberta
+            em ambiente não receptivo; a mitigação combinada é exatamente
+            este rótulo neutro, não um esconderijo atrás do atalho. Sem
+            `total`: os outros três são "de 7 dias", este não tem teto — "19
+            / 7" seria absurdo. */}
+        <StreakCard label="Vitalidade" count={streakVitalidade.atual} />
       </div>
 
       <div className="flex justify-end pt-2">
