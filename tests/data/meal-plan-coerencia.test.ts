@@ -21,11 +21,15 @@ describe("plano de déficit bate com a meta declarada em objetivo.ts", () => {
     expect(deficit.kcalDaily).toBe(CONSUMO.metaKcal);
   });
 
-  it("a comida de verdade soma a meta declarada, com 5% de tolerância", () => {
+  it("a comida de verdade soma a meta declarada, com 3% de tolerância", () => {
     const { kcal } = somaDaVariante0(deficit);
     const desvio = Math.abs(kcal - deficit.kcalDaily) / deficit.kcalDaily;
-    expect({ kcal, alvo: deficit.kcalDaily, dentroDe5pct: desvio <= 0.05 })
-      .toMatchObject({ dentroDe5pct: true });
+    // Era 5% (115 kcal de folga em cima de 2300) — folga grande o bastante
+    // pra um alimento inteiro mal contado passar batido sem o teste notar.
+    // O desvio real é 1,3%, então 3% (69 kcal) ainda sobra margem confortável
+    // pra comida de verdade nunca bater no grama, sem abrir mão de detectar erro.
+    expect({ kcal, alvo: deficit.kcalDaily, dentroDe3pct: desvio <= 0.03 })
+      .toMatchObject({ dentroDe3pct: true });
   });
 
   it("a proteína entregue respeita o piso — exceder é bom, ficar abaixo não", () => {
@@ -36,5 +40,16 @@ describe("plano de déficit bate com a meta declarada em objetivo.ts", () => {
   it("o nome do plano não contradiz o número", () => {
     expect(deficit.name).not.toContain("2200");
     expect(deficit.name).toContain(String(CONSUMO.metaKcal));
+  });
+
+  // Fix round 1: MealPlanView mostra plan.kcalDaily no topo do cartão e a
+  // soma dos slot.targetKcal (um por refeição) logo abaixo, na mesma tela
+  // (src/pages/path/MealPlanView.tsx:115 e :158). Se as duas somas não
+  // baterem, a usuária lê duas metas diferentes rolando a mesma tela — a
+  // contradição que esta frente existe pra eliminar, agora dentro do próprio
+  // plano em vez de entre telas.
+  it("a soma dos alvos por refeição é o alvo do dia — os dois aparecem na mesma tela", () => {
+    const somaDosSlots = deficit.slots.reduce((s, slot) => s + slot.targetKcal, 0);
+    expect(somaDosSlots).toBe(deficit.kcalDaily);
   });
 });

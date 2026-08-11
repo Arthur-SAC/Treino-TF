@@ -8,10 +8,15 @@ import { deriveDefaultMeals } from "../lib/meal-plan";
 // Proteína ~190g · Gordura ~53g · Carbo ~271g · ~0,5-0,7 kg/semana
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
 const SLOTS: MealSlot[] = [
-  // ─── CAFÉ DA MANHÃ (~500 kcal) ────────────────────────────────────────────
+  // ─── CAFÉ DA MANHÃ (~550 kcal) ────────────────────────────────────────────
   {
     mealType: "cafe",
-    targetKcal: 500,
+    // Subiu de 500 pra 550 junto com a variante 0 (fix round 1 da Task 9): a
+    // soma dos 4 targetKcal precisa bater com INITIAL_PLAN.kcalDaily, senão
+    // MealPlanView mostra 2300 no topo e 2200 somando os alvos por refeição
+    // logo abaixo — a mesma classe de contradição que esta frente existe pra
+    // eliminar, só que dentro da própria tela.
+    targetKcal: 550,
     variants: [
       {
         id: "cafe-1",
@@ -258,10 +263,11 @@ const SLOTS: MealSlot[] = [
     ],
   },
 
-  // ─── ALMOÇO (~650 kcal) ───────────────────────────────────────────────────
+  // ─── ALMOÇO (~700 kcal) ───────────────────────────────────────────────────
   {
     mealType: "almoco",
-    targetKcal: 650,
+    // Subiu de 650 pra 700 pelo mesmo motivo do café acima — ver comentário lá.
+    targetKcal: 700,
     variants: [
       {
         id: "almoco-1",
