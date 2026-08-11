@@ -802,15 +802,17 @@ function boostSlots(slots: MealSlot[], boostByMeal: Partial<Record<MealSlot["mea
   });
 }
 
-// Manutenção: +~250 kcal (refinamento e fase final)
+// Manutenção: +150 kcal (refinamento e fase final). Era +250 (almoço 65 +
+// lanche 100 + jantar 85) até o café e o almoço da BASE (SLOTS, compartilhada
+// pelos 3 planos) subirem 50 kcal cada na Task 9 fix round 1 — o que também
+// empurrou os alvos de manutenção pra 2550, 100 acima do kcalDaily fixo
+// (2450). Fix round 2: removido o boost do lanche (que já valia exatamente
+// 100 kcal) em vez de coar a diferença em vários itens — soma volta a bater
+// exato (2300 de base + 150 de boost = 2450) sem tocar em kcalDaily.
 const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   almoco: {
     foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Mais ~1 colher e meia de arroz no almoço — a fase pede um pouco mais de energia." }],
     ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
-  },
-  lanche: {
-    foods: [{ name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." }],
-    ingredients: [{ item: "Banana", qty: 1, unit: "un", category: "hortifruti" }],
   },
   jantar: {
     foods: [{ name: "Carboidrato extra da fase (+60g arroz/batata)", qtyG: 60, kcal: 85, proteinG: 2, carbG: 18, fatG: 0, preparation: "Aumenta a porção de carbo do jantar." }],
@@ -818,7 +820,12 @@ const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   },
 };
 
-// Superávit leve: +~500 kcal (hipertrofia — fase de crescer o glúteo)
+// Superávit leve: +400 kcal (hipertrofia — fase de crescer o glúteo). Era
+// +479 (já 21 kcal alto antes da Task 9). Fix round 2: cortados 79 kcal do
+// almoço, do mel do lanche e da batata doce do jantar — não do café (o
+// scoop de whey inteiro é o que o teste de phase-nutrition espera em toda
+// variante) — pra soma dos alvos bater exato com kcalDaily (2300 de base +
+// 400 de boost = 2700) sem tocar no número declarado.
 const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   cafe: {
     foods: [{ name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." }],
@@ -830,20 +837,28 @@ const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
     // depois) — o acréscimo de energia vem de carboidrato, não de gordura.
     foods: [
       { name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." },
-      { name: "Mel (1 colher de sopa)", qtyG: 20, kcal: 61, proteinG: 0, carbG: 17, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
+      // Era 20g/61kcal (1 colher de sopa) — reduzido na Task 9 fix round 2
+      // pra ajudar a fechar a soma dos alvos em 2700 (ver comentário de
+      // SURPLUS_BOOST acima).
+      { name: "Mel (2 colheres de chá)", qtyG: 13, kcal: 40, proteinG: 0, carbG: 11, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
     ],
     ingredients: [
       { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-      { item: "Mel", qty: 20, unit: "g", category: "mercearia" },
+      { item: "Mel", qty: 13, unit: "g", category: "mercearia" },
     ],
   },
   almoco: {
-    foods: [{ name: "Arroz extra da fase (+75g cozido)", qtyG: 75, kcal: 98, proteinG: 2, carbG: 21, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
-    ingredients: [{ item: "Arroz integral", qty: 38, unit: "g", category: "carboidrato" }],
+    // Era 75g/98kcal — reduzido pra 50g na Task 9 fix round 2 (mesma
+    // quantidade do arroz extra de manutenção) pra ajudar a fechar a soma
+    // dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
+    foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
+    ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
   },
   jantar: {
-    foods: [{ name: "Batata doce extra da fase (+70g)", qtyG: 70, kcal: 100, proteinG: 2, carbG: 23, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
-    ingredients: [{ item: "Batata doce", qty: 70, unit: "g", category: "carboidrato" }],
+    // Era 70g/100kcal — reduzido pra 52g na Task 9 fix round 2 pra ajudar a
+    // fechar a soma dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
+    foods: [{ name: "Batata doce extra da fase (+52g)", qtyG: 52, kcal: 75, proteinG: 1, carbG: 17, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
+    ingredients: [{ item: "Batata doce", qty: 52, unit: "g", category: "carboidrato" }],
   },
 };
 
