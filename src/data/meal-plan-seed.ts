@@ -1,14 +1,22 @@
 import type { MealPlan, MealSlot, MealVariant, Ingredient } from "../lib/db";
 import { deriveDefaultMeals } from "../lib/meal-plan";
 
-// 2200 kcal pra déficit moderado — 96kg, 27 anos, 1,73m
-// Proteína ~180g · Gordura ~70g · Carbo ~210g · ~0,5-0,7 kg/semana
+// 2300 kcal pra déficit moderado — 96kg, 27 anos, 1,73m. Recalibrado de 2200:
+// o número velho foi calculado antes do app saber que ela caminha 5km/dia
+// (ver CONSUMO.gastoEstimadoKcalMin/Max em objetivo.ts). Deficit contra o
+// gasto real de hoje continua na mesma faixa de ritmo de perda.
+// Proteína ~190g · Gordura ~53g · Carbo ~271g · ~0,5-0,7 kg/semana
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
 const SLOTS: MealSlot[] = [
-  // ─── CAFÉ DA MANHÃ (~500 kcal) ────────────────────────────────────────────
+  // ─── CAFÉ DA MANHÃ (~550 kcal) ────────────────────────────────────────────
   {
     mealType: "cafe",
-    targetKcal: 500,
+    // Subiu de 500 pra 550 junto com a variante 0 (fix round 1 da Task 9): a
+    // soma dos 4 targetKcal precisa bater com INITIAL_PLAN.kcalDaily, senão
+    // MealPlanView mostra 2300 no topo e 2200 somando os alvos por refeição
+    // logo abaixo — a mesma classe de contradição que esta frente existe pra
+    // eliminar, só que dentro da própria tela.
+    targetKcal: 550,
     variants: [
       {
         id: "cafe-1",
@@ -16,11 +24,13 @@ const SLOTS: MealSlot[] = [
         effort: "5-min",
         foods: [
           {
+            // Era 150g/230kcal — subiu pra 160g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima).
             name: "Cuscuz de milho (sem manteiga)",
-            qtyG: 150,
-            kcal: 230,
+            qtyG: 160,
+            kcal: 245,
             proteinG: 5,
-            carbG: 48,
+            carbG: 51,
             fatG: 3,
             preparation:
               "Hidrata 1 xícara de flocão de milho com ½ xícara de água morna e uma pitada de sal, descansa 5 min. Cozinha na cuscuzeira (ou no micro-ondas, ~4 min). Finaliza com um fio de azeite — nunca manteiga.",
@@ -47,7 +57,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Flocão de milho (cuscuz)", qty: 50, unit: "g", category: "carboidrato" },
+          { item: "Flocão de milho (cuscuz)", qty: 53, unit: "g", category: "carboidrato" },
           { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
@@ -253,10 +263,11 @@ const SLOTS: MealSlot[] = [
     ],
   },
 
-  // ─── ALMOÇO (~650 kcal) ───────────────────────────────────────────────────
+  // ─── ALMOÇO (~700 kcal) ───────────────────────────────────────────────────
   {
     mealType: "almoco",
-    targetKcal: 650,
+    // Subiu de 650 pra 700 pelo mesmo motivo do café acima — ver comentário lá.
+    targetKcal: 700,
     variants: [
       {
         id: "almoco-1",
@@ -274,11 +285,13 @@ const SLOTS: MealSlot[] = [
               "Tempera com sal, pimenta, alho amassado e suco de limão. Marina 10 min. Frigideira em fogo alto com fio de azeite, grelha 4-5 min cada lado. Coxa desossada é mais barata que o peito e serve igual.",
           },
           {
-            name: "Arroz cozido (150g)",
-            qtyG: 150,
-            kcal: 163,
+            // Era 150g/163kcal — subiu pra 170g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima).
+            name: "Arroz cozido (170g)",
+            qtyG: 170,
+            kcal: 185,
             proteinG: 3,
-            carbG: 34,
+            carbG: 39,
             fatG: 1,
             preparation:
               "Refoga alho em azeite, adiciona o arroz, cobre com água (2:1). Fogo baixo, tampado, ~18 min.",
@@ -315,7 +328,7 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Coxa de frango (ou peito)", qty: 180, unit: "g", category: "proteina" },
-          { item: "Arroz", qty: 80, unit: "g", category: "carboidrato" },
+          { item: "Arroz", qty: 91, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
@@ -469,11 +482,14 @@ const SLOTS: MealSlot[] = [
             preparation: "Direto do pote, gelado — sem preparo.",
           },
           {
-            name: "Banana média",
-            qtyG: 150,
-            kcal: 125,
+            // Era "Banana média" 150g/125kcal — subiu pra uma banana grande
+            // pra ajudar a fechar a conta dos 2300kcal do plano (ver
+            // comentário de SLOTS acima).
+            name: "Banana grande",
+            qtyG: 170,
+            kcal: 142,
             proteinG: 1,
-            carbG: 32,
+            carbG: 36,
             fatG: 0,
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
@@ -578,12 +594,15 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Frango desfiado (180g)",
-            qtyG: 180,
-            kcal: 297,
-            proteinG: 56,
+            // Era 180g/297kcal — subiu pra 200g pra ajudar a fechar a conta
+            // dos 2300kcal do plano (ver comentário de SLOTS acima). Frango é
+            // fonte de proteína, não gordura — preferido pra somar kcal.
+            name: "Frango desfiado (200g)",
+            qtyG: 200,
+            kcal: 330,
+            proteinG: 62,
             carbG: 0,
-            fatG: 7,
+            fatG: 8,
             preparation:
               "Cozinha o frango em água com sal e alho ~20 min na pressão (ou 15 min fervendo). Deixa esfriar, desfia com dois garfos. Refoga com cebola, alho, tomate e pimenta.",
           },
@@ -618,7 +637,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Peito de frango", qty: 180, unit: "g", category: "proteina" },
+          { item: "Peito de frango", qty: 200, unit: "g", category: "proteina" },
           { item: "Macaxeira (aipim)", qty: 200, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 100, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
@@ -743,12 +762,14 @@ const SLOTS: MealSlot[] = [
 ];
 
 export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano padrão · emagrecimento (2200 kcal)",
+  name: "Plano padrão · emagrecimento (2300 kcal)",
   goal: "deficit",
-  kcalDaily: 2200,
-  proteinG: 180,
-  carbG: 210,
-  fatG: 70,
+  kcalDaily: 2300,
+  // Batem com a soma real da variante 0 (ver tests/data/meal-plan-coerencia.test.ts):
+  // 2330 kcal, 190g proteína, 271g carbo, 53g gordura.
+  proteinG: 190,
+  carbG: 271,
+  fatG: 53,
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
 };
@@ -781,15 +802,17 @@ function boostSlots(slots: MealSlot[], boostByMeal: Partial<Record<MealSlot["mea
   });
 }
 
-// Manutenção: +~250 kcal (refinamento e fase final)
+// Manutenção: +150 kcal (refinamento e fase final). Era +250 (almoço 65 +
+// lanche 100 + jantar 85) até o café e o almoço da BASE (SLOTS, compartilhada
+// pelos 3 planos) subirem 50 kcal cada na Task 9 fix round 1 — o que também
+// empurrou os alvos de manutenção pra 2550, 100 acima do kcalDaily fixo
+// (2450). Fix round 2: removido o boost do lanche (que já valia exatamente
+// 100 kcal) em vez de coar a diferença em vários itens — soma volta a bater
+// exato (2300 de base + 150 de boost = 2450) sem tocar em kcalDaily.
 const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   almoco: {
     foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Mais ~1 colher e meia de arroz no almoço — a fase pede um pouco mais de energia." }],
     ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
-  },
-  lanche: {
-    foods: [{ name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." }],
-    ingredients: [{ item: "Banana", qty: 1, unit: "un", category: "hortifruti" }],
   },
   jantar: {
     foods: [{ name: "Carboidrato extra da fase (+60g arroz/batata)", qtyG: 60, kcal: 85, proteinG: 2, carbG: 18, fatG: 0, preparation: "Aumenta a porção de carbo do jantar." }],
@@ -797,7 +820,12 @@ const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   },
 };
 
-// Superávit leve: +~500 kcal (hipertrofia — fase de crescer o glúteo)
+// Superávit leve: +400 kcal (hipertrofia — fase de crescer o glúteo). Era
+// +479 (já 21 kcal alto antes da Task 9). Fix round 2: cortados 79 kcal do
+// almoço, do mel do lanche e da batata doce do jantar — não do café (o
+// scoop de whey inteiro é o que o teste de phase-nutrition espera em toda
+// variante) — pra soma dos alvos bater exato com kcalDaily (2300 de base +
+// 400 de boost = 2700) sem tocar no número declarado.
 const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   cafe: {
     foods: [{ name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." }],
@@ -809,26 +837,44 @@ const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
     // depois) — o acréscimo de energia vem de carboidrato, não de gordura.
     foods: [
       { name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." },
-      { name: "Mel (1 colher de sopa)", qtyG: 20, kcal: 61, proteinG: 0, carbG: 17, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
+      // Era 20g/61kcal (1 colher de sopa) — reduzido na Task 9 fix round 2
+      // pra ajudar a fechar a soma dos alvos em 2700 (ver comentário de
+      // SURPLUS_BOOST acima).
+      { name: "Mel (2 colheres de chá)", qtyG: 13, kcal: 40, proteinG: 0, carbG: 11, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
     ],
     ingredients: [
       { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-      { item: "Mel", qty: 20, unit: "g", category: "mercearia" },
+      { item: "Mel", qty: 13, unit: "g", category: "mercearia" },
     ],
   },
   almoco: {
-    foods: [{ name: "Arroz extra da fase (+75g cozido)", qtyG: 75, kcal: 98, proteinG: 2, carbG: 21, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
-    ingredients: [{ item: "Arroz integral", qty: 38, unit: "g", category: "carboidrato" }],
+    // Era 75g/98kcal — reduzido pra 50g na Task 9 fix round 2 (mesma
+    // quantidade do arroz extra de manutenção) pra ajudar a fechar a soma
+    // dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
+    foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
+    ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
   },
   jantar: {
-    foods: [{ name: "Batata doce extra da fase (+70g)", qtyG: 70, kcal: 100, proteinG: 2, carbG: 23, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
-    ingredients: [{ item: "Batata doce", qty: 70, unit: "g", category: "carboidrato" }],
+    // Era 70g/100kcal — reduzido pra 52g na Task 9 fix round 2 pra ajudar a
+    // fechar a soma dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
+    foods: [{ name: "Batata doce extra da fase (+52g)", qtyG: 52, kcal: 75, proteinG: 1, carbG: 17, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
+    ingredients: [{ item: "Batata doce", qty: 52, unit: "g", category: "carboidrato" }],
   },
 };
 
 const MAINTENANCE_SLOTS = boostSlots(SLOTS, MAINTENANCE_BOOST);
 const SURPLUS_SLOTS = boostSlots(SLOTS, SURPLUS_BOOST);
 
+// DÍVIDA REGISTRADA (2026-08): manutenção (2450) e superávit (2700) foram
+// calculados contra um gasto estimado de ~2700kcal — antes de CONSUMO.gastoEstimadoKcalMin/Max
+// (objetivo.ts) contar a caminhada de 5km/dia. Com ela contada, o gasto real
+// é 2900-3100kcal, e "manutenção" a 2450 é na verdade um déficit de ~550kcal,
+// não manutenção. Não recalibrado aqui de propósito: ela só troca pra estes
+// planos depois da cintura chegar a 88 (mês 3-4, ver MARCOS_CINTURA em
+// objetivo.ts), e a reforma de cardápio da frente 5 vai reconstruir as
+// refeições de qualquer jeito — recalibrar os números agora seria trabalho
+// que a frente 5 descarta. Mas o número errado precisa ficar escrito: dívida
+// silenciosa vira mentira.
 export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · manutenção (2450 kcal)",
   goal: "manutencao",

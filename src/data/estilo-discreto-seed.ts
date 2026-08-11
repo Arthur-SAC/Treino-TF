@@ -6,9 +6,9 @@ export const ESTILO_DISCRETO: GuideSection[] = [
   {
     id: "escada",
     title: "Escada de níveis",
-    intro: "Sobe um degrau quando você se sentir segura — não é corrida, e dá pra ficar num nível o tempo que quiser.",
+    intro: "Três modos, três contextos, todos escolhidos por você: masculina em público, feminina em casa, safada na intimidade. Sobe e desce de degrau quando quiser — nenhum deles é derrota nem estação de passagem.",
     tips: [
-      "Nível 1 (ninguém percebe): pele cuidada, sobrancelha alinhada, unhas limpas e lisas, cabelo cuidado, postura e voz, perfume neutro, roupa que veste bem o corpo — ex.: hidratante Nivea/Payot + lápis Vult pra sobrancelha",
+      "Nível 1 (leitura neutra — o que você usa no trabalho por escolha): pele cuidada, sobrancelha alinhada, unhas limpas e lisas, cabelo cuidado, postura e voz, perfume neutro, roupa que veste bem o corpo — ex.: hidratante Nivea/Payot + lápis Vult pra sobrancelha",
       "Nível 2 (lê como 'cuidada/alternativa'): corte mais comprido, base ou brilho incolor na unha, peças unissex mais ajustadas, bálsamo labial com leve cor (ex.: Vult Lip Oil, Quem Disse Berenice bálsamo rosado, Payot Rosé), acessório discreto — para detalhes de aplicação: rotina 'Natural · diário' em Maquiagem",
       "Nível 3 (andrógino/fluido, em espaços mais abertos): calça de corte feminino neutro, blusa com caimento, rímel discreto (ex.: Vult Volume Max, Maybelline Sky High), esmalte nude (ex.: Colorama Nudes, Bruna Tavares nude rosado), brinco pequeno — para detalhes de aplicação: rotina 'Trabalho · profissional' em Maquiagem",
       "Nível 4 (ousado, só em espaço seguro — casa, com a amada, ambientes queer): maquiagem completa, cor nas unhas, silhueta feminina marcada, vestido/saia, lingerie",
@@ -30,11 +30,11 @@ export const ESTILO_DISCRETO: GuideSection[] = [
   {
     id: "curingas",
     title: "Peças-curinga andróginas",
-    intro: "O que comprar primeiro: passa batido, mas já trabalha a favor da silhueta-alvo.",
+    intro: "O que comprar primeiro: já trabalha a favor da silhueta-alvo, sem pedir exceção no dia a dia.",
     tips: [
       "Calça de corte reto ou leve flare, cintura alta: afina a cintura e alonga — neutra, mas feminiliza",
       "Blusa/camiseta de caimento (malha que abraça sem marcar demais): sugere curvas sem exposição",
-      "Cardigã ou peça oversized: suaviza e disfarça a largura dos ombros, cria camadas",
+      "Cardigã ou peça oversized: cria camadas e volume solto no tronco, e a cintura aparece por contraste quando você fecha ou marca",
       "Blazer ou jaqueta jeans neutra: estrutura unissex que combina com tudo e marca a cintura quando fechada",
       "Bralette leve por baixo: conforto, e a sugestão de busto sob roupa justa (sobe um nível quando quiser)",
       "Lenço/echarpe + acessórios pequenos: o jeito mais barato e discreto de feminilizar um look básico",

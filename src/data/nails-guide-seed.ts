@@ -44,7 +44,7 @@ export const NAILS_GUIDE: GuideSection[] = [
   {
     id: "esmalte",
     title: "Esmalte: discreto x ousado",
-    intro: "Dá pra ser cuidada e passar batido — e ousar quando o ambiente é seguro.",
+    intro: "Dá pra ser cuidada no modo discreto — e ousar quando o ambiente é seguro.",
     tips: [
       "Discreto (trabalho/atenção): base, brilho incolor ou nude/rosado translúcido — 'suas unhas, melhores'",
       "Ousado (em casa/com a amada): cor, vinho, francesinha — quando o ambiente é seguro",

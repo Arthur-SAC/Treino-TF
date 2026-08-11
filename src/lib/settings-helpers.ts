@@ -1,4 +1,12 @@
 import { db } from "./db";
+import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 } from "./objetivo";
+
+// Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
+// objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
+// de teste que amarra o resto do app: mudar a fase 2 em objetivo.ts não movia
+// nada aqui, e as telas continuavam citando um número que já tinha ficado
+// pra trás.
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
 export interface Settings {
   onboarded: boolean;
@@ -42,7 +50,11 @@ export interface Settings {
   voicePitchTargetHighHz: number;
 }
 
-const DEFAULTS: Settings = {
+// Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
+// objeto de defaults (que existiu em useSetting.ts até o fix round 3 da
+// Task 7) diverge em silêncio — walkGoalMin ficou em 75 lá enquanto subiu
+// pra 120 aqui, e ninguém percebeu porque nada comparava as duas cópias.
+export const DEFAULTS: Settings = {
   onboarded: false,
   seeded: false,
   beautySeeded: false,
@@ -73,12 +85,24 @@ const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   entradaMigration: 0,
-  walkGoalMin: 75,
+  // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
+  // a rotina real de dia útil (ver `caminhada-trabalho` e `caes` em
+  // today-routine.ts) — os dois têm `control: "walk"` e cada um credita 60
+  // min fixos via `creditarPasseio`. A meta existe pra avisar quando um dos
+  // dois NÃO aconteceu; se ficasse em 75, batia sozinha antes de ela chegar
+  // em casa e o medidor "X / Y min" parava de informar qualquer coisa. No
+  // fim de semana só há o passeio, então o medidor mostra 60/120 — verdade,
+  // não falha: o fim de semana é mesmo mais parado.
+  walkGoalMin: 120,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,
-  targetWhr: 0.72,
-  targetShoulderHipRatio: 1.0,
+  // whrExcelente da fase 2 (execução muito boa) — ver o comentário acima do
+  // import.
+  targetWhr: FASE_2.whrExcelente!,
+  // Projeção de ombro÷quadril ao fim da fase 2, não meta cobrável — ver
+  // PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 em objetivo.ts.
+  targetShoulderHipRatio: PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
   voicePitchTargetLowHz: 165,
   voicePitchTargetHighHz: 220,
 };

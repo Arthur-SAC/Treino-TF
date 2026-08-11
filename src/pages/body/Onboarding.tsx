@@ -4,16 +4,21 @@ import { db, type Measurement, type ProgressPhoto } from "../../lib/db";
 import { MeasurementForm } from "../../components/MeasurementForm";
 import { compressImage } from "../../lib/image-compress";
 import { hojeISO } from "../../lib/today-date";
+import { MEDIDAS_PARTIDA } from "../../lib/objetivo";
 
+// Derivado da fonte única. Antebraço e panturrilha não existem em
+// MEDIDAS_PARTIDA — são campos que só este formulário pede, então continuam
+// declarados aqui, e não há divergência com o módulo em nenhum campo comum.
 const PRESET_MEASUREMENT: Partial<Measurement> = {
-  neckCm: 40,
-  shouldersCm: 120.5,
-  chestCm: 106.5,
-  waistCm: 99,
-  hipCm: 114,
-  thighLeftCm: 82.5,
-  thighRightCm: 82.5,
-  armCm: 34,
+  weightKg: MEDIDAS_PARTIDA.pesoKg,
+  neckCm: MEDIDAS_PARTIDA.pescocoCm,
+  shouldersCm: MEDIDAS_PARTIDA.ombrosCm,
+  chestCm: MEDIDAS_PARTIDA.bustoCm,
+  waistCm: MEDIDAS_PARTIDA.cinturaCm,
+  hipCm: MEDIDAS_PARTIDA.quadrilCm,
+  thighLeftCm: MEDIDAS_PARTIDA.coxaCm,
+  thighRightCm: MEDIDAS_PARTIDA.coxaCm,
+  armCm: MEDIDAS_PARTIDA.bracoCm,
   forearmCm: 27.5,
   calfCm: 42,
 };

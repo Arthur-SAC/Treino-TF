@@ -87,7 +87,7 @@ export const OUTFITS: Omit<Outfit, "id">[] = [
       "Conjunto sutiã + tanga (vinho)",
       "Meia 7/8",
     ],
-    whyItWorks: "Ritual de autoimagem em casa, na paleta amazona, sem peso de 'passar despercebido'.",
+    whyItWorks: "Ritual de autoimagem em casa, na paleta amazona — o modo mais ousado, escolhido pra esse espaço.",
     silhouetteNote: "O cinto do robe marca a cintura; as peças na cor vinho reforçam a feminilidade do conjunto.",
     status: "ideia",
   },

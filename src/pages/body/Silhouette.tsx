@@ -9,10 +9,15 @@ import { estimateBodyFatNavy, classifyBodyFat } from "../../lib/body-composition
 import {
   shoulderHipRatio,
   whrGap,
-  shoulderHipGap,
   leverGuidance,
   waistGuard,
 } from "../../lib/silhouette";
+import {
+  DISTRIBUICAO_GORDURA_ATUAL,
+  FASES,
+  MEDIDAS_PARTIDA,
+  PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
+} from "../../lib/objetivo";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
 const BAND_LABEL: Record<string, string> = {
@@ -23,36 +28,49 @@ const BAND_LABEL: Record<string, string> = {
   alta: "faixa alta",
 };
 
+// As medidas-alvo são lidas do módulo, não redigitadas: esta tela AFIRMA
+// números que outras telas também afirmam, e todas precisam mudar juntas.
+const FASE_1 = FASES.find((f) => f.id === "fase-1")!;
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
+
+// Fronteira conservadora de "faixa feminina" para ombro÷quadril: homem cis
+// típico fica entre 1,15 e 1,25 (ver objetivo.ts). 1,10 deixa margem para não
+// declarar feminina uma razão que já está subindo em direção à faixa masculina.
+const SHR_FAIXA_FEMININA = 1.1;
+
 const GUIDE_SILHUETA: GuideSection[] = [
   {
     id: "ler-whr",
-    title: "Como ler o WHR e qual meta é realista",
+    title: "Como ler o WHR e onde ele chega",
     intro:
       "WHR é a razão cintura ÷ quadril. Quanto menor o número, mais afunilada (ampulheta) é a silhueta — porque a cintura é estreita em relação ao quadril.",
     tips: [
       "Faixas de referência femininas: ~0,80 ou menos lê como bem ampulheta; ~0,80–0,85 é uma silhueta feminina equilibrada; acima de ~0,85 a cintura está marcada demais em relação ao quadril.",
-      "Sem TRH, o teto realista com treino fica em torno de 0,83–0,85: dá pra afinar a cintura e crescer o quadril, mas a redistribuição de gordura que deixa o WHR mais baixo depende de hormônio.",
-      "Não é uma promessa nem um teto definitivo — é o que treino, dieta e transverso conseguem entregar agora. Com TRH ou cirurgia o horizonte muda. Veja a tela «Até onde dá pra chegar» no Treino.",
+      `Você parte de 0,87. Com treino e dieta o destino é 0,75–0,78 no fim da fase 2 — 0,72–0,74 se a execução for muito boa. Quem entrega isso é a cintura saindo de ${MEDIDAS_PARTIDA.cinturaCm} para ${FASE_1.cinturaCm} e o glúteo crescendo por baixo.`,
+      "O que treino nenhum faz é mudar PARA ONDE a gordura vai: sem estrogênio ela fica na barriga e não migra pro quadril e pra coxa. Isso é impossível, não difícil. A razão cai do mesmo jeito — mas por cintura seca e glúteo grande, que é outro material, não outro esforço. Veja a tela «Até onde dá pra chegar» no Treino.",
     ],
   },
   {
     id: "ombro-quadril",
-    title: "Ombro ÷ quadril: por que importa",
+    title: "Ombro ÷ quadril: por que ele não é o seu gargalo",
     intro:
-      "Essa razão compara a largura dos ombros com a do quadril. Abaixo de 1,0 significa que o quadril é igual ou mais largo que os ombros — e é isso que o olho lê como silhueta feminina.",
+      "Essa razão compara a largura dos ombros com a do quadril. Homem cis típico fica entre 1,15 e 1,25; você está em 1,06, que já é faixa feminina. O ombro nunca foi o problema — a cintura é.",
     tips: [
-      "Treinar ombro pesado (desenvolvimento, elevações com carga alta) alarga a parte de cima e sobe a razão — o oposto do que você quer. Por isso o ombro entra leve, só pra postura.",
-      "Crescer glúteo e quadril baixa a razão e é a alavanca a priorizar. A estrutura óssea do ombro não muda; o que dá pra mexer é o volume de quadril.",
+      "A razão anda pelas duas pontas, não só pela de baixo: a medida do ombro inclui gordura e cai junto no emagrecimento. Por isso não existe uma dívida de centímetros de quadril pendurada em você.",
+      `Na fase 1 esse número pode até subir um pouco: o quadril sai na frente porque tem mais gordura nele (${MEDIDAS_PARTIDA.quadrilCm} → ${FASE_1.quadrilCm} cm). Não é regressão, é a ordem em que a gordura sai.`,
+      `Na fase 2 o quadril volta aos ${FASE_2.quadrilCm} cm de hoje feito de músculo, sobre um tronco já seco — é aí que a razão fecha perto de ${PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2.toFixed(2)}, sem nenhum treino de ombro pra isso.`,
+      "Treinar ombro pesado (desenvolvimento, elevações com carga alta) alarga a parte de cima e sobe a razão. Por isso o ombro entra leve, só pra postura — não porque ele seja largo demais.",
     ],
   },
   {
     id: "bf-faixas",
-    title: "Gordura corporal: faixas e o contexto sem TRH",
+    title: "Gordura corporal: faixas e pra onde ela vai em você",
     intro:
-      "A % de gordura é uma estimativa por circunferências (fórmula Navy: pescoço, cintura, quadril e altura) — não é exata, mas é consistente pra acompanhar tendência.",
+      "A % de gordura é uma estimativa por circunferências (fórmula Navy: pescoço, cintura e altura) — não é exata, mas é consistente pra acompanhar tendência.",
     tips: [
+      "A conta usa a régua calibrada pra gordura abdominal, que é o padrão que o seu corpo tem hoje. A outra régua da mesma fórmula supõe gordura em quadril e coxa e devolveria mais de 15 pontos a mais — número errado pra cima, não número mais gentil. Se um dia entrar estrogênio e a gordura migrar, a régua muda junto.",
       "Faixas femininas aproximadas: essencial ~10–13% (muito baixo), atleta ~14–20%, fitness ~21–24%, média ~25–31%, alta acima disso.",
-      "Sem TRH, mesmo com uma % «ok», a gordura tende a se distribuir de forma androide — acumula mais na barriga e menos no quadril/coxa. Por isso uma cintura que sobe pesa mais na sua silhueta do que o número de %BF sugere.",
+      "A sua gordura se distribui de forma androide: acumula na barriga, não no quadril e na coxa. É assim que um corpo sem estrogênio guarda gordura, e treino nenhum inverte isso. Por isso uma cintura que sobe pesa mais na sua silhueta do que o número de %BF sugere — e por isso a alavanca é tirar barriga, não esperar a gordura ir pra outro lugar.",
       "Use a tendência ao longo das semanas, não o valor de uma medida. A direção (descendo, estável, subindo) diz mais que o número absoluto.",
     ],
   },
@@ -64,7 +82,7 @@ const GUIDE_SILHUETA: GuideSection[] = [
     tips: [
       "Mudança visível de silhueta costuma levar de algumas semanas a alguns meses — não dias. Medidas a cada 2–4 semanas capturam isso melhor que se pesar/medir todo dia.",
       "Oscilações diárias de 1–2 cm na cintura ou de alguns centésimos no WHR são água, sono, sal e intestino — não ganho ou perda real.",
-      "Só com treino e dieta, sem TRH, dá pra afinar cintura, crescer glúteo/quadril e baixar %BF. O que não dá pra forçar é a redistribuição hormonal de gordura — isso é o que TRH acrescenta por cima do seu trabalho.",
+      "Treino e dieta afinam a cintura, crescem glúteo e quadril e baixam a %BF — isso é seu e acontece agora. O que eles não fazem é redistribuir gordura, e isso não é questão de tempo nem de esforço: a barriga é a frente onde o seu trabalho rende.",
     ],
   },
 ];
@@ -99,10 +117,6 @@ export function Silhouette() {
     latest?.shouldersCm && latest?.hipCm
       ? shoulderHipRatio(latest.shouldersCm, latest.hipCm)
       : null;
-  const shrG =
-    shr !== null && latest?.shouldersCm && latest?.hipCm
-      ? shoulderHipGap(shr, targetShr, latest.shouldersCm, latest.hipCm)
-      : null;
 
   const bf = latest
     ? estimateBodyFatNavy({
@@ -110,6 +124,7 @@ export function Silhouette() {
         neckCm: latest.neckCm,
         waistCm: latest.waistCm,
         hipCm: latest.hipCm,
+        distribuicao: DISTRIBUICAO_GORDURA_ATUAL,
       })
     : null;
 
@@ -156,16 +171,21 @@ export function Silhouette() {
           <p className="text-nude text-lg">
             WHR {whr.toFixed(2)} <span className="text-muted text-sm">· alvo {targetWhr.toFixed(2)}</span>
           </p>
-          {whrG && (whrG.waistDeltaCm > 0 || whrG.hipDeltaCm > 0) ? (
+          {/* Só a rota da cintura. `whrGap` também devolve quantos centímetros de
+              quadril fechariam a conta sozinhos, mas oferecer isso como alternativa
+              equivalente seria mentira: são dezenas de centímetros que glúteo nenhum
+              entrega, e o quadril do plano volta ao número de hoje — não maior. */}
+          {whrG && whrG.waistDeltaCm > 0 ? (
             <p className="text-muted text-sm">
-              Pra chegar no alvo: −{whrG.waistDeltaCm} cm de cintura <strong>ou</strong> +
-              {whrG.hipDeltaCm} cm de quadril.
+              Pra chegar no alvo: −{whrG.waistDeltaCm} cm de cintura. É a cintura que faz
+              esse número, não o quadril: ele cai na fase 1 (gordura saindo) e volta aos{" "}
+              {FASE_2.quadrilCm} cm na fase 2, feito de músculo.
             </p>
           ) : (
             <p className="text-nude text-sm">No alvo. ✓</p>
           )}
           <p className="text-muted text-xs">
-            Menor = mais ampulheta. Sem TRH, o teto realista com treino fica perto de 0,83–0,85.
+            Menor = mais ampulheta. O destino do plano é 0,75–0,78 no fim da fase 2 — 0,72–0,74 com execução muito boa.
           </p>
         </div>
       )}
@@ -175,15 +195,30 @@ export function Silhouette() {
         <div className="card space-y-1">
           <h2 className="text-nude-warm font-medium">Ombro / Quadril</h2>
           <p className="text-nude text-lg">
-            {shr.toFixed(2)} <span className="text-muted text-sm">· alvo {targetShr.toFixed(2)}</span>
+            {shr.toFixed(2)}{" "}
+            <span className="text-muted text-sm">
+              · projeção fase 2 {targetShr.toFixed(2)}
+            </span>
           </p>
-          {shrG && shrG.hipDeltaCm > 0 ? (
-            <p className="text-muted text-sm">
-              Pra silhueta mais feminina: +{shrG.hipDeltaCm} cm de quadril (não treine ombro pesado).
+          {/* "Projeção", não "alvo": ela já está em faixa feminina hoje (1,06).
+              Rotular como meta pendente reintroduziria em texto a dívida de
+              quadril que esta branch removeu em número — ver
+              PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 em objetivo.ts. */}
+          {shr <= SHR_FAIXA_FEMININA ? (
+            <p className="text-nude text-sm">
+              Já é faixa feminina — homem cis típico fica entre 1,15 e 1,25. ✓
             </p>
           ) : (
-            <p className="text-nude text-sm">Ombro não passa do quadril. ✓</p>
+            <p className="text-muted text-sm">
+              Subiu para fora da faixa feminina (1,15–1,25 é a masculina típica). Confira se o
+              ombro está pegando carga pesada demais.
+            </p>
           )}
+          <p className="text-muted text-xs">
+            Esta razão melhora pelas duas pontas: a medida do ombro tem gordura e cai com o
+            emagrecimento, e o quadril volta aos {FASE_2.quadrilCm} cm na fase 2 feito de músculo.
+            Você não deve centímetros de quadril a ninguém — o ombro nunca foi o gargalo, a cintura é.
+          </p>
         </div>
       )}
 
@@ -191,8 +226,22 @@ export function Silhouette() {
       {bf !== null ? (
         <div className="card space-y-1">
           <h2 className="text-nude-warm font-medium">Gordura corporal estimada</h2>
-          <p className="text-nude text-lg">~{bf}% <span className="text-muted text-sm">· {BAND_LABEL[classifyBodyFat(bf)]}</span></p>
-          <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + quadril + altura. Use a tendência, não o número absoluto.</p>
+          <p className="text-nude text-lg">
+            ~{bf}%{" "}
+            <span className="text-muted text-sm">
+              · {BAND_LABEL[classifyBodyFat(bf)]} (referência feminina)
+            </span>
+          </p>
+          <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + altura. Use a tendência, não o número absoluto.</p>
+          {/* Nomear a régua na tela não é preciosismo: a outra fórmula Navy devolve
+              mais de 15 pontos a mais com estas mesmas medidas. Sem dizer qual está
+              rodando, um número visto em outro app ou num exame vira contradição
+              sem explicação. A condição que troca a régua fica dita junto. */}
+          <p className="text-muted text-xs">
+            Estimativa pela régua calibrada pra gordura abdominal — o padrão que o seu corpo tem
+            hoje. Se um dia entrar estrogênio e a gordura migrar pro quadril e pra coxa, a régua
+            muda junto.
+          </p>
         </div>
       ) : (
         heightCm === 0 && (
@@ -209,8 +258,9 @@ export function Silhouette() {
         <div className="card border-red-900 bg-red-900/20 space-y-1">
           <h2 className="text-red-200 font-medium">Trava de cintura</h2>
           <p className="text-red-200 text-sm">
-            Sua cintura subiu {guard.deltaCm} cm desde a última medida durante o superávit. Sem
-            TRH, isso é gordura na barriga. Considere segurar o superávit ou voltar à manutenção.
+            Sua cintura subiu {guard.deltaCm} cm desde a última medida durante o superávit. No seu
+            corpo isso é gordura na barriga, não glúteo. Considere segurar o superávit ou voltar à
+            manutenção.
           </p>
           <p className="text-red-200/80 text-xs">
             Meta prática: tolere até ~1–1,5 cm de cintura no superávit <strong>se</strong> o quadril

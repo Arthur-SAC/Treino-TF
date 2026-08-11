@@ -72,28 +72,41 @@ const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label
 
 type TipoDeDia = "semana" | "sabado" | "domingo";
 
-/** O lanche das 16h existe nos sete dias, mas o motivo dele muda: em dia de
- *  semana é a janela pré-treino comida ainda no trabalho; no sábado é antes da
- *  dança; no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
+/** O lanche existe nos sete dias, mas horário e motivo mudam: em dia de semana
+ *  é às 15:30, a janela pré-treino comida ainda no trabalho, meia hora antes
+ *  da caminhada das 16h; no fim de semana é às 16h — no sábado é antes da
+ *  dança, no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
 function lanche(dia: TipoDeDia): RoutineItem {
-  const base = { id: "lanche-saida", block: "tarde", control: "recipe", mealType: "lanche", defaultTime: "16:00" } as const;
+  const base = {
+    id: "lanche-saida",
+    block: "tarde",
+    control: "recipe",
+    mealType: "lanche",
+    // Na semana o lanche antecede a caminhada de 5 km das 16h — comido na
+    // mesa, meia hora antes, pra não sair de casa 4h em jejum e prestes a
+    // andar. Fim de semana não tem essa pressa, então mantém as 16h.
+    defaultTime: dia === "semana" ? "15:30" : "16:00",
+  } as const;
   if (dia === "sabado") {
     return { ...base, label: "Lanche pré-dança", subtitle: "Toque pra ver a receita · come antes de sair, pra não dançar nem passear em jejum" };
   }
   if (dia === "domingo") {
     return { ...base, label: "Lanche da tarde", subtitle: "Toque pra ver a receita · segura a fome até o jantar, mesmo num dia parado" };
   }
-  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino" };
+  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes da caminhada de 5 km — depois vêm os cães e o treino" };
 }
 
 /** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
  *  é o movimento do dia inteiro, já que não há treino. `control: "walk"` dá o
- *  botão de +10 min, então a meta de 75 min é alcançável mesmo quando o
- *  passeio (60 min) sozinho não fecha a conta.
+ *  botão de +10 min, pra ela creditar movimento avulso que não veio de nenhum
+ *  item da lista (ex.: uma volta extra, um mandado a pé). Com a meta em 120
+ *  min (ver settings-helpers.ts), o passeio de 60 min sozinho NÃO fecha a
+ *  conta — e não fechar é o ponto: no fim de semana o medidor mostrar 60/120
+ *  é informação verdadeira sobre um dia mais parado, não falha.
  *
  *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
- *  propósito: o passeio de semana é às 16:40, mas no sábado precisa ser às
+ *  propósito: o passeio de semana é às 17:15, mas no sábado precisa ser às
  *  18:15 (depois da dança das 17:30, pra não colidir com ela). Com um id só
  *  pros sete dias, a tela /hoje/horarios deduplicava e mostrava uma linha
  *  única — ajustar aquele horário reescrevia o override pros sete dias,
@@ -105,7 +118,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  Domingo passa a usar `caes-fds` também, no mesmo 18:15 do sábado: como os
  *  dois compartilham id (e portanto o mesmo ajuste em /hoje/horarios), dar a
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
- *  enquanto o domingo de verdade ainda usasse 16:40 — não há dança no domingo
+ *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
 function caes(dia: TipoDeDia): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
@@ -114,7 +127,7 @@ function caes(dia: TipoDeDia): RoutineItem {
     block: "tarde",
     label: fimDeSemana ? "Passear com os cães · 1h (fim de semana)" : "Passear com os cães · 1h",
     control: "walk",
-    defaultTime: fimDeSemana ? "18:15" : "16:40",
+    defaultTime: fimDeSemana ? "18:15" : "17:15",
   } as const;
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
@@ -122,18 +135,34 @@ function caes(dia: TipoDeDia): RoutineItem {
   if (dia === "domingo") {
     return { ...base, subtitle: "NEAT — eles não sabem que é domingo; hoje é daqui que vem quase todo o seu movimento" };
   }
-  return { ...base, subtitle: "NEAT — lento, com paradas; não substitui os 15–20 min contínuos de zona 2 no fim do treino" };
+  return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
 }
+
+/** A caminhada de 5 km do trabalho para casa, todos os dias úteis. São ~370
+ *  kcal/dia que o app não contava, e é ela que empurra todo o resto da tarde.
+ *  `to` aponta para o exercício de zona 2 porque a prescrição (tempo, ritmo,
+ *  teste da conversa) saiu do fim do treino e passou a valer aqui — ver o
+ *  comentário no topo de cycles-seed.ts. */
+const CAMINHADA_TRABALHO: RoutineItem = {
+  id: "caminhada-trabalho",
+  block: "tarde",
+  label: "Caminhada do trabalho para casa · 5 km",
+  subtitle: "~1h em ritmo de zona 2 — ofegante, mas ainda dá pra conversar em frases curtas",
+  control: "walk",
+  to: "/treino/exercicio/cardio-zona2",
+  defaultTime: "16:00",
+};
 
 function tardeSemana(): RoutineItem[] {
   return [
+    CAMINHADA_TRABALHO,
     caes("semana"),
-    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "+ cardio zona 2 no fim", to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:45" },
+    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "Sem cardio no fim — a caminhada das 16h já cobriu", to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
   ];
 }
 
 const NOITE: RoutineItem[] = [
-  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "jantar", defaultTime: "19:00" },
+  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
@@ -164,11 +193,18 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
           lanche("domingo"),
           caes("domingo"),
           // Sem control:"walk" de propósito: o passeio logo acima já mostra o
-          // contador de movimento do dia, e dois itens repetindo "X / 75 min"
-          // fariam parecer que o domingo pede duas caminhadas.
+          // contador de movimento do dia, e dois itens repetindo "X / 120 min"
+          // fariam parecer que o domingo pede duas caminhadas — não pede, só
+          // há o passeio.
+          //
+          // Em dia de semana é o INVERSO: `tardeSemana()` dá control:"walk" a
+          // DOIS itens de propósito (`caminhada-trabalho` e `caes`), porque
+          // ali são duas caminhadas reais e distintas (5 km do trabalho +
+          // passeio com os cães) e as duas devem creditar — daí a meta padrão
+          // de `walkGoalMin` ter subido para 120 (ver settings-helpers.ts).
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana()] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ASSOALHO, ALMOCO, AGUA] }

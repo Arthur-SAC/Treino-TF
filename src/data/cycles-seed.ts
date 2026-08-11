@@ -3,14 +3,15 @@ import type { WorkoutTemplate } from "../lib/db";
 // ═══════════════════════════════════════════════════════════════════════════
 // Todos os ciclos mantêm glúteo como PRIORIDADE Nº 1 (4 estímulos/semana) e
 // vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
-// refinamento (alta rep/densidade) → manutenção (segura a forma; fase ideal
-// pra alinhar com o início da TRH).
+// refinamento (alta rep/densidade) → manutenção (segura a forma quando o
+// objetivo do momento é consolidar, não crescer).
 // Regras fixas: dias de força (seg/ter/qui/sex) começam com cardio + articular;
 // quarta começa com articular e tem o circuito de glúteo médio (ponte + abdução).
-// ZONA 2: fecha os dias de inferior — os que têm hip thrust, agachamento,
-// stiff ou good-morning — e só eles. Dá 3 dias por semana em todo ciclo, que é
-// a dose que o guia da tela de sessão promete (3-4x/semana). Cardio no fim,
-// nunca antes: antes rouba a energia do glúteo.
+// ZONA 2 NÃO ENTRA AQUI: ela caminha 5 km do trabalho para casa todo dia, o
+// que já é zona 2 e em dose melhor (diária, não 3x/semana). Prescrever de novo
+// no fim do treino alongava a sessão em 20 min e empurrava o jantar para as
+// 20h — que é exatamente quando o jantar sai do controle. O aquecimento leve
+// na esteira continua: aquecer não é a mesma coisa que dosar cardio.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Ciclo 2 — VARIAÇÃO — mesmos objetivos, exercícios variados
@@ -19,7 +20,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-seg-gluteo-unilateral",
     name: "◆Glúteo A · Força (variação)",
     dayOfWeek: 1,
-    durationMin: 60,
+    durationMin: 42,
     cycle: "variacao",
     purpose: "Glúteo pesado com exercícios novos — mesmo objetivo de volume, estímulo diferente pra não estagnar.",
     exercises: [
@@ -30,7 +31,6 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "agachamento-sumo", sets: 4, repsTarget: "10-12", restSec: 75, notes: "Glúteo + coxa interna" },
       { exerciseId: "stiff", sets: 3, repsTarget: "10", restSec: 75 },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 60 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -75,7 +75,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-qui-gluteo-stiff",
     name: "◆Glúteo B · Posterior (variação)",
     dayOfWeek: 4,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "variacao",
     purpose: "Foco no posterior e no glúteo pela dobradiça de quadril — bumbum e parte de trás da coxa.",
     exercises: [
@@ -87,14 +87,13 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "kettlebell-swing", sets: 3, repsTarget: "15", restSec: 60, notes: "Mesma dobradiça do stiff, agora com velocidade. Começa no kettlebell de 8 kg" },
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
     id: "v-sex-peitoral-postura",
     name: "◆Glúteo C · Volume (variação)",
     dayOfWeek: 5,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "variacao",
     purpose: "Volume de glúteo em alta repetição — bomba de sangue que enche o músculo.",
     exercises: [
@@ -105,7 +104,6 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "ponte-gluteo-bola", sets: 3, repsTarget: "15", restSec: 45, notes: "Instabilidade recruta mais glúteo + core" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -116,7 +114,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     id: "h-seg-gluteo-volume",
     name: "◆Glúteo A · Volume alto",
     dayOfWeek: 1,
-    durationMin: 65,
+    durationMin: 47,
     cycle: "hipertrofia",
     purpose: "Fase de ouro do glúteo: empurra a carga, é agora que ele cresce de verdade.",
     exercises: [
@@ -127,7 +125,6 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 4, repsTarget: "10-12", restSec: 90 },
       { exerciseId: "agachamento-livre", sets: 3, repsTarget: "10", restSec: 90 },
       { exerciseId: "abdutor-maquina", sets: 4, repsTarget: "12-15", restSec: 60 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -169,7 +166,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     id: "h-qui-gluteo-posterior",
     name: "◆Glúteo B · Posterior + Coxa (volume)",
     dayOfWeek: 4,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "hipertrofia",
     purpose: "Glúteo e posterior pesados — coxa cheia e bumbum projetado.",
     exercises: [
@@ -180,14 +177,13 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "stiff", sets: 4, repsTarget: "10-12", restSec: 75 },
       { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
     id: "h-sex-peitoral-postura",
     name: "◆Glúteo C · Volume + Coxa",
     dayOfWeek: 5,
-    durationMin: 55,
+    durationMin: 37,
     cycle: "hipertrofia",
     purpose: "Mais volume de glúteo e coxa — aproveita a fase de crescimento ao máximo.",
     exercises: [
@@ -199,7 +195,6 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -210,7 +205,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     id: "r-seg-gluteo-densidade",
     name: "◆Glúteo densidade (alta rep)",
     dayOfWeek: 1,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Densidade do glúteo: muita repetição pra deixar o músculo durinho e desenhado.",
     exercises: [
@@ -221,7 +216,6 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 3, repsTarget: "15", restSec: 60 },
       { exerciseId: "kickback", sets: 4, repsTarget: "20 cada", restSec: 30, notes: "Densidade — caneleira, alta repetição" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -265,7 +259,7 @@ const REFINEMENT: WorkoutTemplate[] = [
     id: "r-qui-gluteo-simetria",
     name: "◆Glúteo simetria (unilateral)",
     dayOfWeek: 4,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Glúteo um lado de cada vez — corrige diferença entre os lados pra ficar simétrico.",
     exercises: [
@@ -276,14 +270,13 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "15 cada (leve)", restSec: 45 },
       { exerciseId: "stiff-unilateral", sets: 3, repsTarget: "15 cada (leve)", restSec: 45 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "20", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
     id: "r-sex-peitoral-refinamento",
     name: "◆Glúteo densidade + Core",
     dayOfWeek: 5,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "refinamento",
     purpose: "Densidade de glúteo + core — acabamento da forma.",
     exercises: [
@@ -294,22 +287,21 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
       { exerciseId: "ponte-gluteo-bola", sets: 3, repsTarget: "15", restSec: 30, notes: "Instabilidade recruta mais glúteo + core" },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "45s cada", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
 
-// Ciclo 5 — MANUTENÇÃO — segura a forma com volume reduzido. Fase ideal pra
-// alinhar com o início da TRH: o estrogênio arredonda e amacia por cima da base
-// muscular já construída.
+// Ciclo 5 — MANUTENÇÃO — segura a forma com volume reduzido. Serve para
+// consolidar depois de uma fase de crescimento, ou para atravessar um período
+// em que a vida não comporta volume alto. Não é sala de espera de nada.
 const MAINTENANCE: WorkoutTemplate[] = [
   {
     id: "m-seg-gluteo",
     name: "◆Glúteo · Manutenção (força leve)",
     dayOfWeek: 1,
-    durationMin: 50,
+    durationMin: 32,
     cycle: "manutencao",
-    purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — base pronta pra TRH arredondar.",
+    purpose: "Manutenção do glúteo: segura o que você construiu sem forçar — volume menor, carga mantida.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
@@ -317,7 +309,6 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 75 },
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60 },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
@@ -359,7 +350,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
     id: "m-qui-gluteo",
     name: "◆Glúteo · Manutenção (unilateral)",
     dayOfWeek: 4,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "manutencao",
     purpose: "Manutenção do glúteo unilateral — preserva simetria e coxa.",
     exercises: [
@@ -368,14 +359,13 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "12 cada", restSec: 60 },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
   {
     id: "m-sex-gluteo",
     name: "◆Glúteo · Manutenção (bombeamento)",
     dayOfWeek: 5,
-    durationMin: 45,
+    durationMin: 27,
     cycle: "manutencao",
     purpose: "Bombeamento leve de glúteo — mantém o músculo ativo e cheio.",
     exercises: [
@@ -385,7 +375,6 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
       { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
-      { exerciseId: "cardio-zona2", sets: 1, repsTarget: "15-20min", restSec: 0 },
     ],
   },
 ];
@@ -405,7 +394,7 @@ export const CYCLES = [
   { id: "variacao", name: "Variação", description: "Mesmo objetivo de glúteo, exercícios variados pra estímulo novo.", threshold: 60 },
   { id: "hipertrofia", name: "Hipertrofia", description: "Fase de ouro: volume alto, foco máximo em crescimento de glúteo.", threshold: 60 },
   { id: "refinamento", name: "Refinamento", description: "Cargas leves, reps altas, simetria e densidade do glúteo.", threshold: 60 },
-  { id: "manutencao", name: "Manutenção", description: "Segura a forma com volume reduzido. Fase ideal pra alinhar com o início da TRH.", threshold: 120 },
+  { id: "manutencao", name: "Manutenção", description: "Segura a forma com volume reduzido. Para consolidar depois de crescer, ou atravessar um período apertado.", threshold: 120 },
 ] as const;
 
 export type CycleId = typeof CYCLES[number]["id"];

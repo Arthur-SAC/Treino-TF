@@ -1,52 +1,54 @@
 import type { GuideSection } from "../components/GuideAccordion";
 
-// Horizontes realistas de resultado corporal. Honesto pra não iludir, encorajador
-// pra motivar. Os números de WHR (cintura/quadril) são estimativas, não promessas.
+// Onde dá pra chegar, dito sem adoçante. A TRH não tem data — então este
+// arquivo NÃO é uma escada esperando por ela. São duas trilhas simultâneas,
+// uma com teto e outra favorecida pela configuração de hoje.
 export const HORIZONTES: GuideSection[] = [
   {
-    id: "sem-trh",
-    title: "Etapa 1 — agora, sem TRH",
-    intro: "O que dá pra conquistar só com treino e dieta, antes da hormonização.",
+    id: "trilha-vestida",
+    title: "Trilha 1 — o corpo vestida",
+    intro: "O que treino e dieta constroem, e onde está o teto.",
     tips: [
-      "Corpo mais atlético, cintura mais marcada que hoje e glúteo maior — porém firme (sem estrogênio a gordura não migra pro quadril).",
-      "Maior ganho imediato: perder a barriga. Só isso já faz a cintura aparecer.",
-      "Estimativa de WHR (cintura÷quadril): de ~0,90 hoje pra ~0,83-0,85.",
-      "A seu favor: ombros de largura moderada e 1,73 m ajudam muito na proporção.",
-      "Tudo que você construir de glúteo agora vira a base pras próximas etapas — não é trabalho perdido, é investimento.",
+      "Vem: cintura de 99 para 84, glúteo grande e denso, e a razão cintura÷quadril saindo de 0,87 para 0,75-0,78 — 0,72-0,74 se a execução for muito boa.",
+      "Seu ombro nunca foi o problema: ombro÷quadril já está em 1,06, que é faixa feminina (homem cis típico fica entre 1,15 e 1,25). A cintura é o problema inteiro.",
+      "NÃO vem sem hormônio: gordura macia no quadril e na coxa, mama, pele mais fina, menos pelo no corpo, mudança na gordura do rosto. Isso é impossível, não difícil — nenhum treino do mundo entrega.",
+      "Então o contorno que você constrói é ampulheta ATLÉTICA: cintura seca sobre glúteo grande, em esqueleto estreito. Não é a mesma linha das referências que você guardou — o degrau de quadril delas é gordura estrogênica na lateral do quadril, e glúteo cresce para trás e para cima, não para o lado. É outro material, não outro esforço.",
+      "Seu quadril termina nos mesmos 114 cm de hoje, feito de outra coisa. Mesmo número, corpo irreconhecível — por isso a fita sozinha engana e a foto lado a lado não.",
     ],
   },
   {
-    id: "com-trh",
-    title: "Etapa 2 — depois, com TRH",
-    intro: "Quando a hormonização entrar, o corpo muda de verdade.",
+    id: "trilha-cama",
+    title: "Trilha 2 — o corpo na cama",
+    intro: "A parte que a configuração de hoje favorece.",
     tips: [
-      "O estrogênio redistribui a gordura: sai do abdômen e vai pro quadril, coxa, glúteo e peito; a pele afina e amacia.",
-      "O glúteo treinado agora vira a estrutura — a gordura macia se deposita por cima e o resultado fica natural e bonito.",
-      "Estimativa de WHR: ~0,75-0,78, melhor ainda com a massa muscular que você já tiver.",
-      "A mama desenvolve tecido glandular (modesto e variável, mas real).",
+      "Força para levantar sua noiva, ganho de músculo rápido, libido, ereção, firmeza e controle: tudo isso depende de testosterona.",
+      "Hormonizar custaria esses. Então não é uma espera — é um conflito real entre dois objetivos seus, e conflito se decide, não se aguarda.",
+      "Flexibilidade de quadril para as posições que você quer: 3 a 6 meses de trabalho diário resolvem praticamente tudo. É a coisa mais rápida da sua lista, e espacate não é necessário para nada disso.",
+      "Assoalho pélvico treinado nos DOIS sentidos — contrair e relaxar — é o que sustenta firmeza, controle e conforto ao receber. Frequência importa mais que duração.",
+      "A barriga também está aqui: gordura abdominal converte testosterona em estrogênio. Ela é ao mesmo tempo o problema da silhueta e parte do problema da firmeza. Uma frente só, não duas.",
     ],
   },
   {
-    id: "bbl-mama",
-    title: "Etapa 3 — com BBL + prótese de mama",
-    intro: "O teto estético, se quiser ir por cirurgia.",
+    id: "cirurgia",
+    title: "Se um dia quiser cirurgia",
+    intro: "BBL é a única alavanca que dá volume de gordura macia no quadril sem hormônio.",
     tips: [
-      "BBL enxerta gordura no glúteo (volume, projeção, maciez) e costuma vir com lipo de cintura junto.",
-      "Sobre glúteo já treinado, o cirurgião tem mais com o que trabalhar — resultado mais natural e durável.",
-      "Prótese define o busto no tamanho que você escolher.",
-      "Aí sim ampulheta plena: estimativa de WHR ~0,65-0,70.",
+      "Precisa de gordura corporal para colher — não dá para fazer no auge da secura.",
+      "É historicamente a cirurgia estética com maior mortalidade, por embolia gordurosa. A técnica subfascial reduziu muito esse risco, mas ele não é zero. Isso entra na conta.",
+      "Feita sobre glúteo já treinado, rende muito mais: o cirurgião tem estrutura para trabalhar e o resultado dura.",
+      "A ordem certa é a que você já está seguindo: treino agora, cirurgia depois dos 30 se ainda quiser. Treinar não atrasa — prepara.",
     ],
   },
   {
     id: "linha-do-tempo",
-    title: "Linha do tempo (você tem 27)",
-    intro: "Estimativa de quando cada etapa acontece — o que define o ritmo é a sequência (fertilidade → TRH → cirurgia), não a idade.",
+    title: "Linha do tempo",
+    intro: "Prazos contados a partir da medição de 13/05/2026. O que define o ritmo é adesão, não idade.",
     tips: [
-      "Agora (27): treino + perder barriga + construir base de glúteo; organizar o congelamento de gametas.",
-      "~28: depois de congelar os gametas, começa a TRH — o treino continua firme.",
-      "28-30: a TRH faz a maior parte da mudança (gordura redistribui, mama começa, pele afina).",
-      "~30-31: janela ideal das cirurgias — o padrão é esperar ~2 anos de TRH antes de BBL + prótese.",
-      "30 e poucos é idade ótima pra essas cirurgias: corpo maduro = resultado mais durável. Não existe tarde demais.",
+      "Semana 8-10: a primeira mudança que aparece em foto.",
+      "Mês 3-4: cintura em 88. É a trava que destrava o superávit no app.",
+      "Mês 6-8: cintura em 84, peso por volta de 81 kg. É aqui que a silhueta vira.",
+      "Mês 8-30: fase 2. A balança SOBE de propósito, até 85-88 kg, e o quadril volta aos mesmos 114 cm de hoje, agora feitos de músculo. Ver 85 kg nessa fase é o sinal de que deu certo, não de que falhou.",
+      "Destreinada com gordura na faixa de 25-30% é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha.",
     ],
   },
 ];

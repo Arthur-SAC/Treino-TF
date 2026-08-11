@@ -16,7 +16,7 @@ const STEP = 2;
  *  disparam os lembretes: da hora de início à de fim do expediente, uma a cada
  *  `intervaloMin`. Com os padrões (9h→18h, 90 min) dá 6. Existe porque o
  *  contador na tela Hoje mostrava só "3 hoje", sem alvo — enquanto água mostra
- *  "X de Y ml" e o passeio "X / 75 min". Nunca devolve menos que 1: uma
+ *  "X de Y ml" e o passeio "X / 120 min". Nunca devolve menos que 1: uma
  *  configuração torta não pode zerar o alvo e sugerir que já acabou. */
 export function metaDePausas(horaInicio: number, horaFim: number, intervaloMin: number): number {
   if (intervaloMin <= 0) return 1;

@@ -47,6 +47,24 @@ describe("leverGuidance", () => {
   });
 });
 
+describe("leverGuidance não trata a ausência de TRH como provisório", () => {
+  // Cobre a sigla e a raiz "horm" — não "hormon", que não bate com
+  // "hormônio" (o "ô" acentuado escapa de /i, que não normaliza acento).
+  const MENCAO_HORMONIO = /TRH|horm/i;
+
+  it("o conselho de superávit explica a vigilância da cintura sem prometer hormônio", () => {
+    const g = leverGuidance("superavit");
+    expect(g.why).not.toMatch(MENCAO_HORMONIO);
+    expect(g.why).toMatch(/cintura/i);
+  });
+
+  it("nenhum dos três conselhos cita TRH ou variações de hormônio", () => {
+    for (const meta of ["deficit", "manutencao", "superavit"] as const) {
+      expect(leverGuidance(meta).why).not.toMatch(MENCAO_HORMONIO);
+    }
+  });
+});
+
 describe("waistGuard", () => {
   it("dispara no superávit quando cintura subiu >= 1,5cm", () => {
     expect(waistGuard({ cycleGoal: "superavit", waistStartCm: 75, waistNowCm: 77 }))

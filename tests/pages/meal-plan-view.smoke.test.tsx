@@ -13,7 +13,7 @@ describe("MealPlanView", () => {
 
   it("mostra macros, variantes e botão de exportar", async () => {
     render(<MemoryRouter><MealPlanView /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText("2200")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("2300")).toBeInTheDocument());
     expect(screen.getByText(/Caf[eé]/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /exportar dieta/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /salvar pdf/i })).toBeInTheDocument();

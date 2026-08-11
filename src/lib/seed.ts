@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
+import { MEDIDAS_PARTIDA } from "./objetivo";
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -48,7 +49,10 @@ export async function seedDatabase(): Promise<void> {
   // mudanças no conteúdo dos exercícios (nome, equipamento, descrição) só chegam
   // em contas existentes via este bloco. Bumpar EXERCISE_SEED_VERSION força um
   // put() de todos os exercícios — idempotente, não duplica (mesmo id sobrescreve).
-  const EXERCISE_SEED_VERSION = 7;
+  // v8: "Cardio zona 2" deixou de ser um item do fim do treino e passou a
+  // descrever a caminhada de 5 km do trabalho para casa — nome, descrição, erros
+  // comuns e dicas mudaram junto, e nada disso chega ao aparelho dela sem o bump.
+  const EXERCISE_SEED_VERSION = 8;
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
@@ -68,7 +72,9 @@ export async function seedDatabase(): Promise<void> {
   // glúteo-prioritário, novo ciclo de manutenção), bumpar TEMPLATE_SEED_VERSION
   // re-grava todos os templates. put() sobrescreve os de mesmo id e adiciona os
   // novos (manutenção). Idempotente.
-  const TEMPLATE_SEED_VERSION = 9;
+  // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
+  // virou a caminhada do trabalho) e as orientações foram reescritas.
+  const TEMPLATE_SEED_VERSION = 10;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {
@@ -92,4 +98,51 @@ export async function seedDatabase(): Promise<void> {
     }
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
   }
+
+  await seedMedidasPartida();
+}
+
+/** Medição real de 13/05/2026, trazida de fora do app. Sem ao menos uma
+ *  medição com cintura, `resolveGoal` cai em manutenção para sempre e nenhum
+ *  marco de cintura dispara — o app fica inerte por falta de dado. Só semeia
+ *  se ela ainda não tiver registrado nada: medição dela sempre vence.
+ *
+ *  A guarda de fato é a contagem de `db.measurements` (mais forte: cobre até
+ *  medição que ela insira manualmente antes deste bloco rodar). A chave
+ *  `medidasPartidaSeeded` abaixo não decide nada — é só o registro de
+ *  execução, no mesmo estilo dos blocos vizinhos em `seedDatabase`. Ela é
+ *  gravada nos dois caminhos (semeou ou não): "este bloco já rodou" é
+ *  verdadeiro tanto quando a semeadura aconteceu quanto quando saiu cedo por
+ *  já haver medição real — os dois são o mesmo fato para quem só quer saber
+ *  se essa migração pontual já foi executada. */
+export async function seedMedidasPartida(): Promise<void> {
+  // A altura é dado dela igual ao resto, mas não mora em `measurements` — mora
+  // em settings. Por isso ela é gravada ANTES da guarda de medição: quem já
+  // tinha registrado alguma medida sairia cedo e continuaria com altura 0, e
+  // com altura 0 `estimateBodyFatNavy` devolve null enquanto marcos e
+  // horizontes afirmam uma % de gordura. "Dado dela sempre vence" continua
+  // valendo — o que já estiver gravado não é tocado.
+  const altura = await db.settings.get("heightCm");
+  if (!altura?.value) {
+    await db.settings.put({ key: "heightCm", value: Math.round(MEDIDAS_PARTIDA.alturaM * 100) });
+  }
+
+  const jaTem = await db.measurements.count();
+  if (jaTem > 0) {
+    await db.settings.put({ key: "medidasPartidaSeeded", value: true });
+    return;
+  }
+  await db.measurements.add({
+    date: MEDIDAS_PARTIDA.data,
+    neckCm: MEDIDAS_PARTIDA.pescocoCm,
+    shouldersCm: MEDIDAS_PARTIDA.ombrosCm,
+    chestCm: MEDIDAS_PARTIDA.bustoCm,
+    waistCm: MEDIDAS_PARTIDA.cinturaCm,
+    hipCm: MEDIDAS_PARTIDA.quadrilCm,
+    thighLeftCm: MEDIDAS_PARTIDA.coxaCm,
+    thighRightCm: MEDIDAS_PARTIDA.coxaCm,
+    armCm: MEDIDAS_PARTIDA.bracoCm,
+    weightKg: MEDIDAS_PARTIDA.pesoKg,
+  });
+  await db.settings.put({ key: "medidasPartidaSeeded", value: true });
 }

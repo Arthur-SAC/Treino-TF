@@ -150,8 +150,8 @@ export function SessionDetail() {
             title: "Ao terminar",
             intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
-              "Cardio zona 2 (3-4x/semana): 15-20 min contínuos. Esteira em inclinação 6-10% e ~4,5-5,5 km/h (caminhada inclinada = mais glúteo, poupa o joelho), ou bike reclinada numa resistência que te deixe ofegante mas ainda conversando. Começa com 15 min e sobe.",
-              "O passeio lento com os cães é movimento bônus (bom pra saúde), mas NÃO substitui esse cardio contínuo.",
+              "Sem cardio de zona 2 aqui no fim — a caminhada de 5 km do trabalho para casa, às 16h, já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
+              "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
               "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
