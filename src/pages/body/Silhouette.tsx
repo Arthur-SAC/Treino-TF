@@ -212,6 +212,16 @@ export function Silhouette() {
           <h2 className="text-nude-warm font-medium">Gordura corporal estimada</h2>
           <p className="text-nude text-lg">~{bf}% <span className="text-muted text-sm">· {BAND_LABEL[classifyBodyFat(bf)]}</span></p>
           <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + quadril + altura. Use a tendência, não o número absoluto.</p>
+          {/* A conta aqui é a fórmula Navy FEMININA (a que usa o quadril). Ela lê
+              bem acima da fórmula masculina para as mesmas medidas, e é dessa
+              segunda conta que saem os "~28%" citados nos marcos e nos horizontes.
+              Sem esta linha, a usuária abre a tela e encontra dois números
+              distantes sem explicação nenhuma. */}
+          <p className="text-muted text-xs">
+            Esta conta é a fórmula feminina, que inclui o quadril. Ela dá bem mais que os ~28% citados
+            nos marcos, que saem da fórmula masculina com as mesmas medidas. A diferença é de fórmula,
+            não do seu corpo — por isso o que vale é a direção ao longo das semanas, não o valor.
+          </p>
         </div>
       ) : (
         heightCm === 0 && (

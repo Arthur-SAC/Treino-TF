@@ -8,7 +8,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "trabalho"],
     whyItWorks: "Alonga o pescoço verticalmente e quebra a linha horizontal dos ombros. Cria ponto focal no centro do peito, atraindo o olhar pra baixo dos ombros.",
-    cautions: "Evite com gola alta sem decote — gola alta junto com ombros largos vira look masculino.",
+    cautions: "O ganho está na vertical do decote: gola alta fechada devolve a linha horizontal e achata o colo, então o efeito some.",
     discretion: "livre",
   },
   {

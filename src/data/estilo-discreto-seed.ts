@@ -34,7 +34,7 @@ export const ESTILO_DISCRETO: GuideSection[] = [
     tips: [
       "Calça de corte reto ou leve flare, cintura alta: afina a cintura e alonga — neutra, mas feminiliza",
       "Blusa/camiseta de caimento (malha que abraça sem marcar demais): sugere curvas sem exposição",
-      "Cardigã ou peça oversized: suaviza e disfarça a largura dos ombros, cria camadas",
+      "Cardigã ou peça oversized: cria camadas e volume solto no tronco, e a cintura aparece por contraste quando você fecha ou marca",
       "Blazer ou jaqueta jeans neutra: estrutura unissex que combina com tudo e marca a cintura quando fechada",
       "Bralette leve por baixo: conforto, e a sugestão de busto sob roupa justa (sobe um nível quando quiser)",
       "Lenço/echarpe + acessórios pequenos: o jeito mais barato e discreto de feminilizar um look básico",

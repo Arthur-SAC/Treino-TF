@@ -2,10 +2,12 @@ import type { WorkoutTemplate } from "./db";
 
 type TplEx = WorkoutTemplate["exercises"][number];
 
-/** Ordena os exercícios da sessão respeitando as âncoras. Aquecimento sempre
- *  abre e o cardio final sempre fecha, na ordem autorada; só os blocos do
+/** Ordena os exercícios da sessão respeitando as âncoras. O aquecimento sempre
+ *  abre e o bloco `final` sempre fecha, na ordem autorada; só os blocos do
  *  miolo (máquina e solo) trocam de lugar, para quando a academia está
- *  ocupada.
+ *  ocupada. Nenhum template usa `final` hoje — a zona 2 que fechava as sessões
+ *  saiu em 2026-08-10 —, mas a âncora continua valendo para qualquer exercício
+ *  que precise ser o último.
  *
  *  A ordem PADRÃO do miolo (soloPrimeiro = false) não é fixa — ela segue a
  *  ordem em que os blocos aparecem no array autorado (o bloco cujo primeiro

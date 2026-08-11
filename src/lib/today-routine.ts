@@ -93,7 +93,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
   if (dia === "domingo") {
     return { ...base, label: "Lanche da tarde", subtitle: "Toque pra ver a receita · segura a fome até o jantar, mesmo num dia parado" };
   }
-  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, pra aguentar os cães e o treino" };
+  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes da caminhada de 5 km — depois vêm os cães e o treino" };
 }
 
 /** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
@@ -105,7 +105,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  é informação verdadeira sobre um dia mais parado, não falha.
  *
  *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
- *  propósito: o passeio de semana é às 16:40, mas no sábado precisa ser às
+ *  propósito: o passeio de semana é às 17:15, mas no sábado precisa ser às
  *  18:15 (depois da dança das 17:30, pra não colidir com ela). Com um id só
  *  pros sete dias, a tela /hoje/horarios deduplicava e mostrava uma linha
  *  única — ajustar aquele horário reescrevia o override pros sete dias,
@@ -117,7 +117,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  Domingo passa a usar `caes-fds` também, no mesmo 18:15 do sábado: como os
  *  dois compartilham id (e portanto o mesmo ajuste em /hoje/horarios), dar a
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
- *  enquanto o domingo de verdade ainda usasse 16:40 — não há dança no domingo
+ *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
 function caes(dia: TipoDeDia): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
@@ -203,7 +203,7 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
           // de `walkGoalMin` ter subido para 120 (ver settings-helpers.ts).
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 16h", items: [lanche("semana"), ...tardeSemana()] };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana()] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ASSOALHO, ALMOCO, AGUA] }

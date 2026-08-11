@@ -95,12 +95,4 @@ describe("correções de programação (Bloco B da spec 2026-07-27)", () => {
     const aindaComZona2 = ENTRADA_TEMPLATES.filter((t) => ehInferior(t) && temZona2(t)).map((t) => t.id);
     expect(aindaComZona2).toEqual([]);
   });
-
-  it("o cardio é sempre o ÚLTIMO exercício da sessão da Entrada, nunca no meio", () => {
-    const foraDoFim = ENTRADA_TEMPLATES.filter((t) => {
-      const i = t.exercises.findIndex((e) => e.exerciseId === "cardio-zona2");
-      return i >= 0 && i !== t.exercises.length - 1;
-    }).map((t) => t.id);
-    expect(foraDoFim).toEqual([]);
-  });
 });

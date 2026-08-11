@@ -21,10 +21,12 @@ import type { WorkoutTemplate } from "../lib/db";
 //   `final`       — fecha a sessão, quando algum item usar. Nenhum template
 //                   da Entrada usa hoje: a zona 2 saiu daqui em 2026-08-10
 //                   (a caminhada de 5 km do trabalho pra casa já entrega a
-//                   dose todo dia útil). O bloco continua existindo no tipo
-//                   e em `ordenarPorBloco`/`itensDeAquecimento` porque a
-//                   prescrição migra pra caminhada — com este mesmo bloco —
-//                   numa task futura.
+//                   dose todo dia útil, e a prescrição foi para o item
+//                   `caminhada-trabalho` da rotina, não para outro template).
+//                   O bloco continua existindo no tipo e em
+//                   `ordenarPorBloco`/`itensDeAquecimento` porque ele é a
+//                   âncora de fim de sessão — vale para qualquer exercício
+//                   que precise fechar, não só para cardio.
 // Só o MIOLO troca de ordem (`src/lib/session-order.ts`) — a sessão nunca
 // depende de a área livre estar vazia. Por isso o miolo é escrito em blocos
 // contíguos; a ordem em que máquina e solo aparecem AQUI é a ordem padrão da

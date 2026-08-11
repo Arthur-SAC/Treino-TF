@@ -17,11 +17,11 @@ const GUIDE: GuideSection[] = [
   {
     id: "perguntas-medico",
     title: "Perguntas pra levar ao médico",
-    intro: "Endócrino, urologista ou ambulatório trans. Leva essa lista.",
+    intro: "Endócrino, urologista ou ambulatório trans. Leva essa lista — as perguntas sobre hormônio são pra você conhecer o terreno, não porque exista algo marcado.",
     tips: [
       "Minha fertilidade está boa hoje? Vale fazer um espermograma pra ter a base?",
       "Tem uma janela de tempo ideal pra tentar engravidar minha parceira, ou posso ir no meu ritmo?",
-      "Quando eu começar a TRH, o que esperar (efeitos e tempo)? Dá pra pausar depois pra fertilidade, se precisar?",
+      "Se um dia eu escolher hormonizar, o que esperar (efeitos e tempo)? Dá pra pausar depois pra fertilidade, se precisar?",
       "Vale a pena congelar sêmen como seguro antes de qualquer coisa?",
       "Que exames de base fazer antes de começar a TRH (hormônios, saúde geral)?",
       "Como funciona iniciar TRH pelo SUS (processo transexualizador) ou pelo plano?",
