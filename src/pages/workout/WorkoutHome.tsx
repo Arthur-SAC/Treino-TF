@@ -6,7 +6,7 @@ export function WorkoutHome() {
       <h1 className="font-serif text-2xl text-nude mb-2">Treino</h1>
       <Link to="/treino/horizontes" className="card block hover:border-nude/40 transition border-nude/40">
         <h3 className="text-nude-warm font-medium">Até onde dá pra chegar ✦</h3>
-        <p className="text-muted text-sm mt-1">Seus horizontes: agora, com TRH e com cirurgia — honesto e motivador</p>
+        <p className="text-muted text-sm mt-1">Duas trilhas ao mesmo tempo — o corpo vestida e o corpo na cama, com os números reais e o teto dito</p>
       </Link>
       <Link to="/treino/plano" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Plano semanal</h3>

@@ -30,7 +30,7 @@ export const ESTILO_DISCRETO: GuideSection[] = [
   {
     id: "curingas",
     title: "Peças-curinga andróginas",
-    intro: "O que comprar primeiro: passa batido, mas já trabalha a favor da silhueta-alvo.",
+    intro: "O que comprar primeiro: já trabalha a favor da silhueta-alvo, sem pedir exceção no dia a dia.",
     tips: [
       "Calça de corte reto ou leve flare, cintura alta: afina a cintura e alonga — neutra, mas feminiliza",
       "Blusa/camiseta de caimento (malha que abraça sem marcar demais): sugere curvas sem exposição",
