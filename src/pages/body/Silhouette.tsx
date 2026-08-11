@@ -12,7 +12,7 @@ import {
   leverGuidance,
   waistGuard,
 } from "../../lib/silhouette";
-import { FASES } from "../../lib/objetivo";
+import { FASES, MEDIDAS_PARTIDA } from "../../lib/objetivo";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
 const BAND_LABEL: Record<string, string> = {
@@ -23,8 +23,9 @@ const BAND_LABEL: Record<string, string> = {
   alta: "faixa alta",
 };
 
-// O quadril de destino é lido do módulo, não redigitado: esta tela AFIRMA um
-// número que outra tela também afirma, e as duas precisam mudar juntas.
+// As medidas-alvo são lidas do módulo, não redigitadas: esta tela AFIRMA
+// números que outras telas também afirmam, e todas precisam mudar juntas.
+const FASE_1 = FASES.find((f) => f.id === "fase-1")!;
 const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
 // Fronteira conservadora de "faixa feminina" para ombro÷quadril: homem cis
@@ -40,7 +41,7 @@ const GUIDE_SILHUETA: GuideSection[] = [
       "WHR é a razão cintura ÷ quadril. Quanto menor o número, mais afunilada (ampulheta) é a silhueta — porque a cintura é estreita em relação ao quadril.",
     tips: [
       "Faixas de referência femininas: ~0,80 ou menos lê como bem ampulheta; ~0,80–0,85 é uma silhueta feminina equilibrada; acima de ~0,85 a cintura está marcada demais em relação ao quadril.",
-      "Você parte de 0,87. Com treino e dieta o destino é 0,75–0,78 no fim da fase 2 — 0,72–0,74 se a execução for muito boa. Quem entrega isso é a cintura saindo de 99 para 84 e o glúteo crescendo por baixo.",
+      `Você parte de 0,87. Com treino e dieta o destino é 0,75–0,78 no fim da fase 2 — 0,72–0,74 se a execução for muito boa. Quem entrega isso é a cintura saindo de ${MEDIDAS_PARTIDA.cinturaCm} para ${FASE_1.cinturaCm} e o glúteo crescendo por baixo.`,
       "O que treino nenhum faz é mudar PARA ONDE a gordura vai: sem estrogênio ela fica na barriga e não migra pro quadril e pra coxa. Isso é impossível, não difícil. A razão cai do mesmo jeito — mas por cintura seca e glúteo grande, que é outro material, não outro esforço. Veja a tela «Até onde dá pra chegar» no Treino.",
     ],
   },
@@ -51,7 +52,8 @@ const GUIDE_SILHUETA: GuideSection[] = [
       "Essa razão compara a largura dos ombros com a do quadril. Homem cis típico fica entre 1,15 e 1,25; você está em 1,06, que já é faixa feminina. O ombro nunca foi o problema — a cintura é.",
     tips: [
       "A razão anda pelas duas pontas, não só pela de baixo: a medida do ombro inclui gordura e cai junto no emagrecimento. Por isso não existe uma dívida de centímetros de quadril pendurada em você.",
-      "Na fase 2 o quadril volta aos 114 cm de hoje feito de músculo, sobre um tronco já seco — é aí que a razão fecha perto de 1,00, sem nenhum treino de ombro pra isso.",
+      `Na fase 1 esse número pode até subir um pouco: o quadril sai na frente porque tem mais gordura nele (${MEDIDAS_PARTIDA.quadrilCm} → ${FASE_1.quadrilCm} cm). Não é regressão, é a ordem em que a gordura sai.`,
+      `Na fase 2 o quadril volta aos ${FASE_2.quadrilCm} cm de hoje feito de músculo, sobre um tronco já seco — é aí que a razão fecha perto de 1,00, sem nenhum treino de ombro pra isso.`,
       "Treinar ombro pesado (desenvolvimento, elevações com carga alta) alarga a parte de cima e sobe a razão. Por isso o ombro entra leve, só pra postura — não porque ele seja largo demais.",
     ],
   },

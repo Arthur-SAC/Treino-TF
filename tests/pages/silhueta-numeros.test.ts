@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { FASES, MEDIDAS_PARTIDA, razaoOmbroQuadril } from "../../src/lib/objetivo";
+import {
+  FASES,
+  MEDIDAS_PARTIDA,
+  razaoCinturaQuadril,
+  razaoOmbroQuadril,
+} from "../../src/lib/objetivo";
 
 // A Silhueta é a tela que mais AFIRMA números sobre o objetivo. Ela é lida como
 // texto porque o que precisa ser travado é a copy: o teto de 0,83–0,85 que ficou
@@ -30,6 +35,11 @@ describe("os números da Silhueta batem com objetivo.ts", () => {
     expect(FASE_2.whrProvavel).toBeLessThanOrEqual(provMax);
     expect(FASE_2.whrExcelente!).toBeGreaterThanOrEqual(excMin);
     expect(FASE_2.whrExcelente!).toBeLessThanOrEqual(excMax);
+  });
+
+  it("o ponto de partida citado (0,87) é a razão real da medição de 13/05", () => {
+    expect(razaoCinturaQuadril(MEDIDAS_PARTIDA.cinturaCm, MEDIDAS_PARTIDA.quadrilCm)).toBe(0.87);
+    expect(FONTE).toContain("0,87");
   });
 
   it("não sobrou o teto antigo de 0,83–0,85, que era o número da branch escrito ao contrário", () => {
