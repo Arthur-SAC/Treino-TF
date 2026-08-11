@@ -65,6 +65,16 @@ describe("cardio: aquecimento e zona 2 não se confundem", () => {
     expect(texto).not.toMatch(/fim do treino/);
   });
 
+  // Fix round 2: só a ficha de cardio-zona2 tinha essa checagem, e as fichas
+  // vizinhas (aquecimento na esteira, bike reclinada) continuaram citando "o
+  // cardio do fim do treino" sem que nenhum teste percebesse — foi essa
+  // lacuna de cobertura que deixou o resquício passar. Agora os TRÊS itens de
+  // cardio (não só a zona 2) são cobertos pela mesma checagem negativa.
+  it("nenhum item de cardio promete mais cardio no fim do treino", () => {
+    const comFimDoTreino = cardio.filter((ex) => /fim do treino/i.test(textoDe(ex))).map((e) => e.id);
+    expect(comFimDoTreino).toEqual([]);
+  });
+
   it("o aquecimento não carrega mais o explicador inteiro da zona 2 — ela virou item próprio", () => {
     // O bloco antigo em cardio-leve-esteira repetia toda a prescrição da zona 2
     // nas proTips. Agora que cardio-zona2 existe como item da sessão, isso é

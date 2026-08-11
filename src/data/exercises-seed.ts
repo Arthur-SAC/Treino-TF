@@ -610,15 +610,15 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: [
       "Começar muito intenso",
       "Pular essa fase",
-      "Esticar pra 15-20 min e chegar cansada no glúteo — o cardio longo é o do FIM do treino, item separado",
+      "Esticar pra 15-20 min aqui — o cardio contínuo é a caminhada das 16h, não o aquecimento; esticar rouba energia do glúteo",
     ],
     easierVariation: "Inclinação 0% e 4 km/h, mesmos 5 min",
     harderVariation: "Inclinação 2-3% e 5 km/h, mantendo a conversa tranquila",
     exposureLevel: 1,
     successCue: "Fez certo se terminou os 5 min respirando um pouco mais forte, mas SEM cansar e falando normal.",
     proTips: [
-      "Teste da conversa: aqui no aquecimento você fala tranquila. No cardio do fim do treino você fala em frases curtas, ofegante. Se você já está ofegante nos 5 min, baixou a inclinação ou a velocidade",
-      "Não confunda com o cardio do fim: esse aqui abre a sessão em 5 min leves; o outro fecha em 15-20 min mais forte, e são itens diferentes na sua lista",
+      "Teste da conversa: aqui no aquecimento você fala tranquila. Na caminhada das 16h você fala em frases curtas, ofegante. Se você já está ofegante nos 5 min, baixou a inclinação ou a velocidade",
+      "Não confunda com a caminhada do trabalho: esse aqui abre a sessão em 5 min leves; a caminhada das 16h dura ~1h num ritmo mais forte, e são coisas diferentes do seu dia",
       "A bike reclinada é ótima pra poupar os joelhos e é mais discreta que a esteira",
     ],
   },
@@ -1136,7 +1136,7 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: [
       "Banco perto demais — joelho dobra muito e sobrecarrega a frente da coxa",
       "Resistência tão alta que vira treino de perna em vez de cardio",
-      "Confundir o aquecimento (5 min, nível 2-3) com o cardio do fim (15-20 min, nível 5-6)",
+      "Confundir o aquecimento (5 min, nível 2-3) com o ritmo da caminhada das 16h (nível 5-6, se precisar trocar a caminhada pela bike)",
     ],
     easierVariation: "Nível 1-2, mesmos 5 min",
     harderVariation: "Nível 3-4, mantendo a conversa tranquila",
@@ -1144,7 +1144,7 @@ export const EXERCISES: Exercise[] = [
     successCue: "Fez certo se terminou os 5 min respirando um pouco mais forte, mas SEM cansar e falando normal.",
     proTips: [
       "É o cardio mais confortável que você tem: sentada, com apoio nas costas e sem impacto no joelho",
-      "Referência de nível: 2-3 é aquecimento (conversa tranquila) · 5-6 é zona 2 do fim do treino (ofegante, frases curtas). Se a sua bike tiver mais de 8 níveis, use a proporção",
+      "Referência de nível: 2-3 é aquecimento (conversa tranquila) · 5-6 é o ritmo da zona 2 da caminhada das 16h (ofegante, frases curtas) — útil se um dia de chuva trocar a caminhada pela bike. Se a sua bike tiver mais de 8 níveis, use a proporção",
       "Se em 5 min você não esquentou, sobe um nível — não aumenta o tempo, pra não roubar energia do glúteo",
     ],
   },

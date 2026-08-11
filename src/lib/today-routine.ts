@@ -98,8 +98,11 @@ function lanche(dia: TipoDeDia): RoutineItem {
 
 /** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
  *  é o movimento do dia inteiro, já que não há treino. `control: "walk"` dá o
- *  botão de +10 min, então a meta de 75 min é alcançável mesmo quando o
- *  passeio (60 min) sozinho não fecha a conta.
+ *  botão de +10 min, pra ela creditar movimento avulso que não veio de nenhum
+ *  item da lista (ex.: uma volta extra, um mandado a pé). Com a meta em 120
+ *  min (ver settings-helpers.ts), o passeio de 60 min sozinho NÃO fecha a
+ *  conta — e não fechar é o ponto: no fim de semana o medidor mostrar 60/120
+ *  é informação verdadeira sobre um dia mais parado, não falha.
  *
  *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
  *  propósito: o passeio de semana é às 16:40, mas no sábado precisa ser às
