@@ -10,7 +10,13 @@ const texto = JSON.stringify(VITALIDADE_GUIA);
 // por string exata (`suplemento de volume`) não pega isso; posologia (número
 // + unidade) e nome de substância pegam a família inteira do problema, não
 // só a frase específica que este arquivo já evita hoje.
-const PADRAO_POSOLOGIA = /\d+([.,]\d+)?\s*(mg|mcg|UI|g)\b/i;
+// A unidade `g` sozinha era falso positivo plantado: "30 g de castanha de
+// caju" é quantidade de COMIDA, e comida é exatamente o que este guia deve
+// recomendar (o zinco entra pelo lanche, não por cápsula). O padrão mira
+// rótulo de suplemento — mg/mcg/µg/UI só aparecem lá — e só aceita grama
+// quando ela vem colada ao nome de uma substância suplementada.
+const PADRAO_POSOLOGIA =
+  /\d+([.,]\d+)?\s*(mg|mcg|µg|UI)\b|\d+([.,]\d+)?\s*g\s+(de\s+)?(zinco|arginina|citrulina|creatina|magn[ée]sio|sel[êe]nio|maca|tribulus|ginseng)/i;
 const SUBSTANCIAS_DE_VOLUME = [
   /[óo]xido n[íi]trico/i,
   /l-?arginina/i,
@@ -33,11 +39,22 @@ describe("guia de firmeza, controle e volume", () => {
     expect(texto.toLowerCase()).toMatch(/sem evid[êe]ncia/);
   });
 
-  it("não prescreve posologia (número + mg/mcg/UI/g) — a família toda de 'tome X', não só a frase específica", () => {
+  it("não prescreve posologia de suplemento — a família toda de 'tome X', não só a frase específica", () => {
     // Confirmado sem falso positivo contra o texto atual: os únicos números
-    // com unidade no guia são volume (mL) e medida corporal (cm) — nenhum
-    // dos dois bate em mg/mcg/UI/g.
+    // com unidade no guia são volume (mL) e medida corporal (cm).
     expect(texto).not.toMatch(PADRAO_POSOLOGIA);
+  });
+
+  // O padrão precisa da própria rede: escrito com `g` solto, ele barraria
+  // "30 g de castanha de caju" — a recomendação que o guia DEVE fazer — e a
+  // suíte ficaria verde só porque essa frase ainda não foi escrita.
+  it("o padrão de posologia mira suplemento, não comida", () => {
+    for (const comida of ["30 g de castanha de caju", "uma porção de 30 g", "150 g de peixe", "~1,5 a 5 mL", "88 cm de cintura"]) {
+      expect({ comida, barrada: PADRAO_POSOLOGIA.test(comida) }).toEqual({ comida, barrada: false });
+    }
+    for (const posologia of ["tome 50 mg de zinco por dia", "10.000 UI de vitamina D", "200 mcg de selênio", "3 g de creatina"]) {
+      expect({ posologia, barrada: PADRAO_POSOLOGIA.test(posologia) }).toEqual({ posologia, barrada: true });
+    }
   });
 
   it("não cita nome de substância vendida como 'aumenta o volume' sem evidência boa", () => {

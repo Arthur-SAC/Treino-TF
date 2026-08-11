@@ -1,5 +1,8 @@
 // src/lib/vitalidade.ts
-// Cálculo do streak de dias sem gasto automático. Módulo puro — sem I/O, sem Date.
+// Cálculo do streak de dias sem gasto automático. Módulo puro — sem I/O, sem
+// `db` e sem `new Date()`: quem chama injeta o dia de hoje e o dia de início.
+// `Date.parse` sobre esses parâmetros é permitido e é o que a função faz —
+// é aritmética sobre o que foi recebido, não leitura do relógio.
 //
 // A usuária escolheu protocolo com contagem, na forma de streak, com a ressalva
 // de risco registrada: contador que zera pode virar vergonha. Por isso o RECORDE
@@ -26,9 +29,11 @@ function diasEntre(a: string, b: string): number {
 
 /**
  * `diasComGasto` — dias marcados como gasto automático, em qualquer ordem.
- * `inicioISO` — primeiro dia de acompanhamento. Sem ele não dá pra saber se
- * "nenhum gasto" significa sequência longa ou ausência de registro, e inventar
- * um recorde que ela não fez seria a mesma mentira que este app existe pra tirar.
+ * `inicioISO` — primeiro dia de acompanhamento, isto é, o dia em que ela
+ * ADERIU ao protocolo (ver `vitalidade-adesao.ts`), nunca uma data derivada de
+ * registro que já existia antes. Sem ele não dá pra saber se "nenhum gasto"
+ * significa sequência longa ou ausência de registro, e inventar um recorde que
+ * ela não fez seria a mesma mentira que este app existe pra tirar.
  */
 export function calcularStreak(
   diasComGasto: string[],

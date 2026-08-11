@@ -96,7 +96,11 @@ export function Vitalidade() {
       </div>
 
       <div className="grid grid-cols-2 gap-2 my-3">
-        <StreakCard label="Atual" count={streak.atual} unit="dias limpos" />
+        {/* "dias", não "dias limpos": três centímetros abaixo desta linha a
+            tela diz "não é abstinência", e "limpo" implica que o resto é
+            sujo. O risco assumido nesta decisão é justamente vergonha — o
+            vocabulário de pureza é o que a alimenta. */}
+        <StreakCard label="Atual" count={streak.atual} unit="dias" />
         <StreakCard label="Recorde" count={streak.recorde} unit="dias" />
       </div>
 

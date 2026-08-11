@@ -227,19 +227,22 @@ describe("resolverAlvoSono — o alvo é o mesmo em qualquer tela que o pede", (
     expect(domingo).toBe(segunda);
   });
 
-  it("simula as duas telas chamando a função com os mesmos dados — o resultado bate", () => {
-    // Today.tsx monta `routine` a partir de (dayOfWeek, diaDoAno); Vitalidade
-    // faz a mesma coisa pro dia de hoje. Reproduz os dois call sites com o
-    // mesmo dia e o mesmo override, e prova que produzem o mesmo alvo — é
-    // exatamente essa igualdade que impede o streak de sono divergir entre
-    // as duas telas outra vez.
-    const dayOfWeek = 3;
-    const dayOfYear = 200;
+  // Havia aqui um teste "simula as duas telas": ele chamava a MESMA função com
+  // os MESMOS argumentos e afirmava que os dois resultados eram iguais — não
+  // tinha como falhar, nem se as telas divergissem. A rede que vale contra
+  // essa regressão é o smoke test da Vitalidade, que renderiza a página com
+  // `routineTimes: { dormir: "23:15" }` e exige "Sono no alvo (23:15)" na
+  // tela; o dia do ano varia sozinho ali, porque é o dia real de execução.
+
+  it("o dia do ano não muda o alvo — a barba entra e sai da rotina, o item 'dormir' não", () => {
+    // Dia do ano par acrescenta a barba ao bloco da manhã (ver isBarbaDay).
+    // Se a resolução dependesse da POSIÇÃO do item em vez do id, um bloco a
+    // mais deslocaria o resultado — este teste é o que pegaria isso.
     const overrides: RoutineTimeOverrides = { dormir: "22:45" };
-    const alvoDaTelaHoje = resolverAlvoSono(buildDayRoutine(dayOfWeek, dayOfYear).blocks, overrides);
-    const alvoDaVitalidade = resolverAlvoSono(buildDayRoutine(dayOfWeek, dayOfYear).blocks, overrides);
-    expect(alvoDaTelaHoje).toBe(alvoDaVitalidade);
-    expect(alvoDaTelaHoje).toBe("22:45");
+    const comBarba = resolverAlvoSono(buildDayRoutine(3, 200).blocks, overrides);
+    const semBarba = resolverAlvoSono(buildDayRoutine(3, 201).blocks, overrides);
+    expect(comBarba).toBe("22:45");
+    expect(semBarba).toBe(comBarba);
   });
 });
 
