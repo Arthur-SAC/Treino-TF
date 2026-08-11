@@ -5,12 +5,12 @@ import { GuideAccordion, type GuideSection } from "../../components/GuideAccordi
 const GUIDE: GuideSection[] = [
   {
     id: "por-que-adiar",
-    title: "Por que adiar a TRH pela fertilidade",
+    title: "Fertilidade e hormônio — as duas escolhas",
     intro: "É uma escolha sua, informada — não uma limitação.",
     tips: [
       "A TRH (estrogênio + bloqueio de testosterona) reduz a produção de espermatozoides, e com o tempo essa fertilidade pode ficar reduzida ou não voltar. Por isso, quem quer filhos biológicos costuma OU ter os filhos antes de começar, OU congelar sêmen antes.",
       "Você escolheu a via de TER OS FILHOS antes, com sua amada — mantendo a fertilidade natural. Perfeitamente válido.",
-      "Enquanto a TRH não começa, sua feminização não para: ela vem do treino (glúteo/cintura), pele, cabelo, voz, movimento e estilo — tudo que o app já cuida.",
+      "Sua feminização não depende de hormônio para acontecer: ela vem do treino (glúteo e cintura), da pele, do cabelo, da voz, do movimento e do estilo — tudo que o app já cuida, hoje, sem data marcada para nada.",
       "Ideia de segurança (só se quiser): um espermograma agora mostra sua fertilidade de base, e congelar sêmen pode ser um 'seguro' caso mude de ideia sobre o momento. Opcional — não é obrigatório pro seu plano.",
     ],
   },
@@ -29,22 +29,22 @@ const GUIDE: GuideSection[] = [
   },
   {
     id: "o-que-esperar",
-    title: "O que esperar da TRH quando começar",
+    title: "O que o hormônio faria, se um dia você quiser",
     intro: "Pra você já ir sabendo — e ver que não começa do zero.",
     tips: [
       "Efeitos (graduais, meses a anos): gordura migra pro quadril/coxa, pele mais macia, pelo corporal mais fino, mamas em desenvolvimento, humor mais estável.",
-      "A TRH é a maior alavanca da forma — mas ela PEGA O QUE VOCÊ JÁ CONSTRUIU. O glúteo e o músculo que você treinou hoje viram a base que o estrogênio arredonda e amacia. Você começa na frente.",
+      "Hormonizar tem um custo que ninguém te conta: reduz ereção, firmeza, libido e a velocidade de ganho muscular. Metade do que você quer — durar, ficar dura, penetrar sua noiva, ter força para levantar ela — depende da testosterona que você tem hoje. Não é uma espera: é uma escolha entre dois conjuntos de coisas que você quer.",
       "Não é instantâneo: pense em anos de mudança gradual, como uma segunda puberdade. Constância vence.",
     ],
   },
   {
     id: "gatilho-manutencao",
-    title: "O gatilho: fase de Manutenção",
-    intro: "O sinal que VOCÊ escolheu pra revisitar a TRH.",
+    title: "Quando (e se) você quiser revisitar",
+    intro: "Sem gatilho, sem fase que dispara a conversa — só quando fizer sentido pra você.",
     tips: [
-      "Você decidiu revisitar a TRH quando o treino chegar na fase de MANUTENÇÃO — quando a base de músculo/glúteo está pronta e você passa a só manter.",
-      "Faz todo sentido: é exatamente a fase ideal pra alinhar com o início da TRH (o estrogênio arredonda por cima da base construída).",
-      "O app te mostra o ciclo atual do treino em Treino › Ciclos. Quando chegar em Manutenção, é o seu lembrete pra conversar com o médico — depois de você e sua amada terem os filhos de vocês.",
+      "Não existe fase do treino que 'libere' a conversa sobre hormônio. Se um dia você quiser revisitar, o momento é o que você escolher — não uma etapa que o app marca por você.",
+      "Prático, se ajudar: quando o treino entrar na fase de Manutenção, a base de músculo/glúteo já está construída e sobra mais espaço mental pra decisões grandes como essa. É só um dado a mais, não uma data.",
+      "Quando (e se) você quiser conversar com o médico, é depois de você e sua amada terem os filhos de vocês — sem outro pré-requisito.",
     ],
   },
 ];
@@ -62,9 +62,8 @@ export function FertilityTRH() {
       <div className="card my-3 !bg-wine/20 !border-wine-light">
         <h2 className="text-nude font-medium mb-1">Meu plano</h2>
         <p className="text-sm text-nude-warm">
-          Manter a fertilidade natural (sem TRH por enquanto) até você e sua amada terem os
-          filhos de vocês. Só então iniciar a TRH. O gatilho pra revisitar: <span className="text-nude">chegar na fase de Manutenção do treino</span> —
-          a base de músculo pronta pro estrogênio arredondar por cima.
+          Manter a fertilidade natural até você e sua amada terem os filhos de vocês — essa é a
+          escolha de hoje, não uma espera. Hormonizar continua sendo uma opção sua, <span className="text-nude">sem data marcada e sem fase do treino que a libere</span>.
         </p>
       </div>
 

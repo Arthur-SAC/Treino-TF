@@ -23,7 +23,7 @@ const GUIDE: GuideSection[] = [
     tips: [
       "Você não é 'menos mulher' por estar no começo. A trajetória já começou, e cada passo conta.",
       "O espelho de hoje não é o destino. Corpo, voz e pele estão mudando com o seu trabalho.",
-      "Passar despercebida no ambiente pesado é sobrevivência, não fracasso. Sua feminilidade existe mesmo quando discreta.",
+      "Usar o modo masculino no ambiente pesado é uma escolha sua pra esse contexto, não fracasso. Sua feminilidade existe em qualquer modo que você escolhe usar.",
       "Sua amada te vê. Você é amada exatamente por quem você é.",
       "Disforia é um sentimento, não um fato sobre o seu valor.",
     ],

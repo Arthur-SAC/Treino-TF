@@ -5,7 +5,7 @@ import { FertilityTRH } from "../../src/pages/path/FertilityTRH";
 import { Support } from "../../src/pages/path/Support";
 
 describe("Fertilidade & TRH", () => {
-  it("mostra o plano dela e o gatilho da fase de Manutenção", () => {
+  it("mostra o plano dela e a menção à fase de Manutenção do treino", () => {
     render(<MemoryRouter><FertilityTRH /></MemoryRouter>);
     expect(screen.getByText("Meu plano")).toBeInTheDocument();
     expect(screen.getAllByText(/Manuten/i).length).toBeGreaterThan(0);
