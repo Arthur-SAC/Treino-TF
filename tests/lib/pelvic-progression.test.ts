@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pelvicDoDia, PELVIC_ORDEM } from "../../src/lib/pelvic-progression";
+import { pelvicDoDia, PELVIC_ORDEM, ROTACAO, ATE_ROTACAO } from "../../src/lib/pelvic-progression";
 import { SEQUENCES } from "../../src/data/sequences-seed";
 
 // A usuária cumpre o papel masculino na relação e quer vigor, dureza e
@@ -92,6 +92,16 @@ describe("a soltura entra na fase 2, antes das variações", () => {
     for (let n = 17; n < 60; n++) ids.add(pelvicDoDia(n).sequenceId);
     expect(ids.has("pelvic-start-stop")).toBe(true);
     expect(ids.has("pelvic-receber-preparo")).toBe(true);
+  });
+
+  it("todas as sequências da rotação são alcançáveis — id duplicado engoliria uma e ninguém veria", () => {
+    const inicio = ATE_ROTACAO;
+    const ids = new Set<string>();
+    for (let n = inicio; n < inicio + ROTACAO.length; n++) {
+      ids.add(pelvicDoDia(n).sequenceId);
+    }
+    expect(ids).toEqual(new Set(ROTACAO));
+    expect(ids.size).toBe(ROTACAO.length);
   });
 
   it("a rotação nunca volta pra identificação — base não se refaz", () => {

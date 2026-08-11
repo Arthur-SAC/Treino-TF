@@ -33,13 +33,15 @@ export const PELVIC_ORDEM = [
 
 const ATE_SOLTURA = 5;
 const ATE_FASE_3 = 10;
-const ATE_ROTACAO = 17;
+export const ATE_ROTACAO = 17;
 
 /** Fase 3 alterna força e coordenação em dias consecutivos. */
 const FASE_3 = ["pelvic-kegel-classico", "pelvic-alternancia"] as const;
 
-/** Fase 4 — tudo que não é base. Inclui start-stop e preparo pra receber. */
-const ROTACAO = [
+/** Fase 4 — tudo que não é base. Inclui start-stop e preparo pra receber.
+ *  Exportada pra teste: a fonte da verdade do alcance da rotação é este
+ *  array, nunca uma lista copiada à mão no teste. */
+export const ROTACAO = [
   "pelvic-kegel-rapido",
   "pelvic-sustentacao-longa",
   "pelvic-escala-cinco-niveis",
