@@ -146,7 +146,7 @@ const CAMINHADA_TRABALHO: RoutineItem = {
   id: "caminhada-trabalho",
   block: "tarde",
   label: "Caminhada do trabalho para casa · 5 km",
-  subtitle: "~1h em zona 2 — é ela que substitui o cardio do fim do treino",
+  subtitle: "~1h em ritmo de zona 2 — ofegante, mas ainda dá pra conversar em frases curtas",
   control: "walk",
   to: "/treino/exercicio/cardio-zona2",
   defaultTime: "16:00",

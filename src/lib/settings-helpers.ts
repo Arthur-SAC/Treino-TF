@@ -42,7 +42,11 @@ export interface Settings {
   voicePitchTargetHighHz: number;
 }
 
-const DEFAULTS: Settings = {
+// Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
+// objeto de defaults (que existiu em useSetting.ts até o fix round 3 da
+// Task 7) diverge em silêncio — walkGoalMin ficou em 75 lá enquanto subiu
+// pra 120 aqui, e ninguém percebeu porque nada comparava as duas cópias.
+export const DEFAULTS: Settings = {
   onboarded: false,
   seeded: false,
   beautySeeded: false,

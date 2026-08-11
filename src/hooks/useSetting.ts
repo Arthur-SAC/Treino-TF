@@ -1,48 +1,14 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
-import type { Settings } from "../lib/settings-helpers";
+import { DEFAULTS, type Settings } from "../lib/settings-helpers";
 
-const DEFAULTS: Settings = {
-  onboarded: false,
-  seeded: false,
-  beautySeeded: false,
-  styleSeeded: false,
-  pathSeeded: false,
-  movementSeeded: false,
-  movementVersion: 1,
-  makeupSeeded: false,
-  voiceSeeded: false,
-  morningReminderTime: "08:00",
-  eveningReminderTime: "22:00",
-  workoutReminderTime: "18:00",
-  activeBreakIntervalMin: 90,
-  activeBreakStartHour: 9,
-  activeBreakEndHour: 18,
-  hydrationIntervalMin: 60,
-  hydrationGoalMl: 2000,
-  quietHours: { from: "22:00", to: "08:00" },
-  routineTimes: {},
-  focusModeUntil: null,
-  notificationsEnabled: true,
-  lastActiveBreakAt: 0,
-  lastHydrationAt: 0,
-  lastSkincareMorningAt: "",
-  lastSkincareEveningAt: "",
-  mealPlanVersion: 1,
-  activeCycle: "entrada-1",
-  cycleStartSessionCount: 0,
-  cyclesSeeded: false,
-  entradaMigration: 0,
-  walkGoalMin: 75,
-  presencaReminderTime: "21:00",
-  lastPresencaReminderAt: "",
-  heightCm: 0,
-  targetWhr: 0.72,
-  targetShoulderHipRatio: 1.0,
-  voicePitchTargetLowHz: 165,
-  voicePitchTargetHighHz: 220,
-};
-
+// Os padrões vêm de settings-helpers.ts — este hook não tem (e não deve
+// voltar a ter) a própria cópia. Até o fix round 3 da Task 7 ele tinha: as
+// duas cópias divergiram em silêncio (walkGoalMin ficou em 75 aqui enquanto
+// settings-helpers.ts já tinha subido pra 120), e como a tela Hoje lê pelo
+// caminho SÍNCRONO deste hook — não pelo `getSetting` assíncrono —, o valor
+// velho continuou na tela mesmo depois do fix "corrigido". Uma única fonte
+// de verdade fecha essa classe de bug.
 export function useSetting<K extends keyof Settings>(key: K): Settings[K] {
   const row = useLiveQuery(() => db.settings.get(key), [key]);
   if (row === undefined) return DEFAULTS[key];
