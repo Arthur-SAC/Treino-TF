@@ -20,6 +20,18 @@ export const MEDIDAS_PARTIDA = {
   bracoCm: 34,
 } as const;
 
+/** Como a gordura dela se distribui hoje — e, por consequência, qual régua de
+ *  %BF diz a verdade sobre este corpo (ver `estimateBodyFatNavy`).
+ *
+ *  Mora aqui, e não na tela, porque é afirmação sobre o corpo dela, do mesmo
+ *  tipo que as medidas acima: a Silhueta, os marcos e os horizontes já dizem em
+ *  prosa que a gordura é androide, e a conta precisa dizer o mesmo.
+ *
+ *  A condição que troca este valor é única: se um dia entrar estrogênio e a
+ *  gordura migrar para quadril e coxa, "ginoide" passa a ser a régua correta —
+ *  e mudar esta linha basta para o app inteiro acompanhar. */
+export const DISTRIBUICAO_GORDURA_ATUAL = "androide" as const;
+
 const arredonda2 = (n: number) => Math.round(n * 100) / 100;
 
 /** Cintura ÷ quadril. Abaixo de ~0,85 é faixa feminina. */

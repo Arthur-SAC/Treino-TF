@@ -12,7 +12,7 @@ import {
   leverGuidance,
   waistGuard,
 } from "../../lib/silhouette";
-import { FASES, MEDIDAS_PARTIDA } from "../../lib/objetivo";
+import { DISTRIBUICAO_GORDURA_ATUAL, FASES, MEDIDAS_PARTIDA } from "../../lib/objetivo";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
 const BAND_LABEL: Record<string, string> = {
@@ -61,8 +61,9 @@ const GUIDE_SILHUETA: GuideSection[] = [
     id: "bf-faixas",
     title: "Gordura corporal: faixas e pra onde ela vai em você",
     intro:
-      "A % de gordura é uma estimativa por circunferências (fórmula Navy: pescoço, cintura, quadril e altura) — não é exata, mas é consistente pra acompanhar tendência.",
+      "A % de gordura é uma estimativa por circunferências (fórmula Navy: pescoço, cintura e altura) — não é exata, mas é consistente pra acompanhar tendência.",
     tips: [
+      "A conta usa a régua calibrada pra gordura abdominal, que é o padrão que o seu corpo tem hoje. A outra régua da mesma fórmula supõe gordura em quadril e coxa e devolveria mais de 15 pontos a mais — número errado pra cima, não número mais gentil. Se um dia entrar estrogênio e a gordura migrar, a régua muda junto.",
       "Faixas femininas aproximadas: essencial ~10–13% (muito baixo), atleta ~14–20%, fitness ~21–24%, média ~25–31%, alta acima disso.",
       "A sua gordura se distribui de forma androide: acumula na barriga, não no quadril e na coxa. É assim que um corpo sem estrogênio guarda gordura, e treino nenhum inverte isso. Por isso uma cintura que sobe pesa mais na sua silhueta do que o número de %BF sugere — e por isso a alavanca é tirar barriga, não esperar a gordura ir pra outro lugar.",
       "Use a tendência ao longo das semanas, não o valor de uma medida. A direção (descendo, estável, subindo) diz mais que o número absoluto.",
@@ -118,6 +119,7 @@ export function Silhouette() {
         neckCm: latest.neckCm,
         waistCm: latest.waistCm,
         hipCm: latest.hipCm,
+        distribuicao: DISTRIBUICAO_GORDURA_ATUAL,
       })
     : null;
 
@@ -213,16 +215,15 @@ export function Silhouette() {
         <div className="card space-y-1">
           <h2 className="text-nude-warm font-medium">Gordura corporal estimada</h2>
           <p className="text-nude text-lg">~{bf}% <span className="text-muted text-sm">· {BAND_LABEL[classifyBodyFat(bf)]}</span></p>
-          <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + quadril + altura. Use a tendência, não o número absoluto.</p>
-          {/* A conta aqui é a fórmula Navy FEMININA (a que usa o quadril). Ela lê
-              bem acima da fórmula masculina para as mesmas medidas, e é dessa
-              segunda conta que saem os "~28%" citados nos marcos e nos horizontes.
-              Sem esta linha, a usuária abre a tela e encontra dois números
-              distantes sem explicação nenhuma. */}
+          <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + altura. Use a tendência, não o número absoluto.</p>
+          {/* Nomear a régua na tela não é preciosismo: a outra fórmula Navy devolve
+              mais de 15 pontos a mais com estas mesmas medidas. Sem dizer qual está
+              rodando, um número visto em outro app ou num exame vira contradição
+              sem explicação. A condição que troca a régua fica dita junto. */}
           <p className="text-muted text-xs">
-            Esta conta é a fórmula feminina, que inclui o quadril. Ela dá bem mais que os ~28% citados
-            nos marcos, que saem da fórmula masculina com as mesmas medidas. A diferença é de fórmula,
-            não do seu corpo — por isso o que vale é a direção ao longo das semanas, não o valor.
+            Estimativa pela régua calibrada pra gordura abdominal — o padrão que o seu corpo tem
+            hoje. Se um dia entrar estrogênio e a gordura migrar pro quadril e pra coxa, a régua
+            muda junto.
           </p>
         </div>
       ) : (

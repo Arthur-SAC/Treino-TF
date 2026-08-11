@@ -59,6 +59,15 @@ describe("os números da Silhueta batem com objetivo.ts", () => {
     expect(FONTE).not.toMatch(/Abaixo de 1,0/);
   });
 
+  it("nomeia a régua de %BF e a condição que a trocaria", () => {
+    expect(FONTE).toContain("gordura abdominal");
+    expect(FONTE).toMatch(/estrogênio.+migrar/s);
+    // O texto anterior explicava a diferença entre as duas fórmulas porque a tela
+    // rodava a errada. Agora ela roda a certa e não precisa se desculpar.
+    expect(FONTE).not.toMatch(/fórmula feminina/i);
+    expect(FONTE).not.toContain("~28%");
+  });
+
   it("não exibe dívida de quadril: a razão melhora pelas duas pontas", () => {
     expect(FONTE).not.toContain("shoulderHipGap");
     expect(FONTE).toContain("duas pontas");

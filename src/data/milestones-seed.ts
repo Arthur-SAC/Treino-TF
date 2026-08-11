@@ -53,7 +53,7 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
     datePlanned: isoFromMonthsFromNow(0),
     title: "◆Fase 1 — Tirar a barriga (início)",
     category: "fisico",
-    notes: "2.300 kcal, 150-160 g de proteína e treino glúteo-prioritário. A cintura é o problema inteiro: hoje ela é o ponto mais largo do seu tronco. Destreinada com ~28% de gordura é a configuração que responde mais rápido que existe — dá para perder gordura e ganhar músculo ao mesmo tempo, e essa janela fecha.",
+    notes: "2.300 kcal, 150-160 g de proteína e treino glúteo-prioritário. A cintura é o problema inteiro: hoje ela é o ponto mais largo do seu tronco. Destreinada com 25-30% de gordura é a configuração que responde mais rápido que existe — dá para perder gordura e ganhar músculo ao mesmo tempo, e essa janela fecha.",
   },
   {
     datePlanned: isoFromMonthsFromNow(0),
