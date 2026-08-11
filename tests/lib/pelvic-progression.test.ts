@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { pelvicDoDia, PELVIC_ORDEM, ROTACAO, ATE_ROTACAO } from "../../src/lib/pelvic-progression";
+import {
+  pelvicDoDia,
+  ofertasDaVitalidade,
+  PELVIC_ORDEM,
+  ROTACAO,
+  ATE_ROTACAO,
+  OFERTA_VITALIDADE,
+} from "../../src/lib/pelvic-progression";
 import { SEQUENCES } from "../../src/data/sequences-seed";
 
 // A usuária cumpre o papel masculino na relação e quer vigor, dureza e
@@ -87,11 +94,17 @@ describe("a soltura entra na fase 2, antes das variações", () => {
     expect(new Set(ids)).toEqual(new Set(["pelvic-kegel-classico", "pelvic-alternancia"]));
   });
 
-  it("a rotação da fase 4 inclui start-stop e preparo pra receber", () => {
-    const ids = new Set<string>();
-    for (let n = 17; n < 60; n++) ids.add(pelvicDoDia(n).sequenceId);
-    expect(ids.has("pelvic-start-stop")).toBe(true);
-    expect(ids.has("pelvic-receber-preparo")).toBe(true);
+  // O item diário do Hoje diz "Assoalho pélvico · 5 min · invisível, dá pra
+  // fazer sentada" e cai às 10h, no trabalho. `pelvic-start-stop` (15 min,
+  // masturbação, lubrificante) e `pelvic-receber-preparo` (10 min, entrada de
+  // dedo) não cabem nessa promessa — servi-los por trás dela é mentira em cima
+  // de exposição. Os dois saem pela página Vitalidade.
+  it("a rotação do Hoje nunca serve start-stop nem preparo pra receber", () => {
+    for (let n = 0; n < 200; n++) {
+      const id = pelvicDoDia(n).sequenceId;
+      expect({ n, id: OFERTA_VITALIDADE.includes(id as (typeof OFERTA_VITALIDADE)[number]) })
+        .toEqual({ n, id: false });
+    }
   });
 
   it("todas as sequências da rotação são alcançáveis — id duplicado engoliria uma e ninguém veria", () => {
@@ -115,5 +128,72 @@ describe("a soltura entra na fase 2, antes das variações", () => {
     for (const n of [0, 6, 12, 20]) {
       expect(pelvicDoDia(n).etapa.length).toBeGreaterThan(10);
     }
+  });
+});
+
+// Fecha o círculo que o teste do catálogo abria pela metade: ele provava que
+// `PELVIC_ORDEM` cobre toda sequência `pelvic` do catálogo, e o teste da
+// rotação provava que tudo em `ROTACAO` é alcançável — mas nada provava que
+// tudo em `PELVIC_ORDEM` está em ALGUMA rota. Uma sequência nova entraria na
+// ordem (o catálogo cobra), contaria em `contarPraticasPelvicas` movendo as
+// fases, e nunca seria servida a ninguém.
+describe("toda sequência tem um caminho até ela", () => {
+  it("a união das duas rotas (Hoje + Vitalidade) é exatamente PELVIC_ORDEM", () => {
+    const servidas = new Set<string>();
+    // Uma volta inteira da rotação depois da fase 4 cobre todas as fases.
+    for (let n = 0; n < ATE_ROTACAO + ROTACAO.length; n++) {
+      servidas.add(pelvicDoDia(n).sequenceId);
+    }
+    for (const oferta of ofertasDaVitalidade(999, 0)) servidas.add(oferta.sequenceId);
+
+    expect([...servidas].sort()).toEqual([...PELVIC_ORDEM].sort());
+  });
+
+  it("as duas rotas não se sobrepõem — nada é servido pelos dois caminhos", () => {
+    const doHoje = new Set<string>();
+    for (let n = 0; n < ATE_ROTACAO + ROTACAO.length; n++) doHoje.add(pelvicDoDia(n).sequenceId);
+    for (const id of OFERTA_VITALIDADE) expect(doHoje.has(id)).toBe(false);
+  });
+
+  it("a oferta da Vitalidade é exatamente OFERTA_VITALIDADE — sem sequência escondida", () => {
+    expect(ofertasDaVitalidade(999, 0).map((o) => o.sequenceId)).toEqual([...OFERTA_VITALIDADE]);
+  });
+});
+
+// O alvo que a tela declara desde o primeiro dia é "2 a 3 vezes por semana,
+// com pelo menos uma sendo start-stop". Na rotação da fase 4, o start-stop só
+// aparecia na 18ª prática e depois 1 vez a cada 9 dias — a promessa era
+// inalcançável por uns quatro meses. Oferecido por aqui, ele existe desde o
+// dia 1 e a tela mostra se a semana já teve a dele.
+describe("ofertasDaVitalidade", () => {
+  it("start-stop está disponível desde a primeira prática — o alvo vale desde o dia 1", () => {
+    const [startStop] = ofertasDaVitalidade(0, 0);
+    expect(startStop.sequenceId).toBe("pelvic-start-stop");
+    expect(startStop.disponivel).toBe(true);
+  });
+
+  it("diz que a semana ainda não teve sessão, e que ela não quebra o streak", () => {
+    const [startStop] = ofertasDaVitalidade(30, 0);
+    expect(startStop.nota).toMatch(/nenhuma nos últimos 7 dias/i);
+    expect(startStop.nota).toMatch(/não quebra o streak/i);
+  });
+
+  it("conta as sessões da semana em vez de repetir o alvo no vazio", () => {
+    expect(ofertasDaVitalidade(30, 1)[0].nota).toMatch(/1 sessão nos últimos 7 dias/i);
+    expect(ofertasDaVitalidade(30, 2)[0].nota).toMatch(/2 sessões nos últimos 7 dias/i);
+  });
+
+  it("preparo pra receber só abre depois da fase 2 — soltar é o pré-requisito clínico", () => {
+    const antes = ofertasDaVitalidade(9, 0)[1];
+    const depois = ofertasDaVitalidade(10, 0)[1];
+    expect(antes.sequenceId).toBe("pelvic-receber-preparo");
+    expect(antes.disponivel).toBe(false);
+    expect(antes.nota).toMatch(/9\/10/);
+    expect(depois.disponivel).toBe(true);
+  });
+
+  it("contagem negativa ou absurda não quebra", () => {
+    expect(ofertasDaVitalidade(-3, -1)[0].disponivel).toBe(true);
+    expect(ofertasDaVitalidade(Number.NaN, Number.NaN)[1].disponivel).toBe(false);
   });
 });

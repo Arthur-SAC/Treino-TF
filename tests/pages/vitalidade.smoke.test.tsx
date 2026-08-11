@@ -162,6 +162,41 @@ describe("Vitalidade smoke", () => {
     expect(screen.queryByText(/Sono no alvo \(22:30\)/)).not.toBeInTheDocument();
   });
 
+  // Start-stop e preparo pra receber saem por esta tela, não pelo item de
+  // 5 min do Hoje — que toca às 10h no trabalho prometendo algo invisível.
+  it("oferece o start-stop desde o primeiro dia, com a contagem da semana", async () => {
+    renderPage();
+    const link = await screen.findByRole("link", { name: /start-stop/i });
+    expect(link).toHaveAttribute("href", "/treino/movimento/pelvic-start-stop");
+    expect(screen.getByText(/nenhuma nos últimos 7 dias/i)).toBeInTheDocument();
+  });
+
+  it("conta a sessão de start-stop já feita nos últimos 7 dias", async () => {
+    await db.practiceLogs.add({
+      date: hojeISO(new Date()),
+      sequenceId: "pelvic-start-stop",
+      completed: true,
+    });
+    renderPage();
+    expect(await screen.findByText(/1 sessão nos últimos 7 dias/i)).toBeInTheDocument();
+  });
+
+  it("o preparo pra receber fica fechado até a fase 2 estar construída", async () => {
+    renderPage();
+    await screen.findByText(/preparo pra receber/i);
+    expect(screen.queryByRole("link", { name: /preparo pra receber/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/abre quando a fase 2 estiver construída \(0\/10/i)).toBeInTheDocument();
+  });
+
+  it("com a fase 2 construída, o preparo pra receber vira link", async () => {
+    for (let i = 0; i < 10; i++) {
+      await db.practiceLogs.add({ date: hojeISO(new Date()), sequenceId: "pelvic-identificacao", completed: true });
+    }
+    renderPage();
+    const link = await screen.findByRole("link", { name: /preparo pra receber/i });
+    expect(link).toHaveAttribute("href", "/treino/movimento/pelvic-receber-preparo");
+  });
+
   it("não usa a palavra pornografia no rótulo do atalho nem no título da página", async () => {
     render(
       <MemoryRouter>

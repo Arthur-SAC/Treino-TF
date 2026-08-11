@@ -66,7 +66,16 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 // Assoalho pélvico como micro-dose diária, no bloco do dia (existe nos 7 dias).
 // É invisível — dá pra fazer sentada na mesa — e o que constrói é frequência,
 // não duração. O `to` é resolvido em Today.tsx pela progressão (ver
-// `pelvic-progression.ts`): identificação -> Kegel clássico -> variações.
+// `pelvic-progression.ts`), que tem QUATRO fases: identificar a contração ->
+// achar a soltura -> Kegel clássico alternado com contrair↔soltar -> rotação
+// de variações.
+//
+// A rotação servida aqui só contém o que cabe nesta promessa. Start-stop
+// (15 min, masturbação) e preparo pra receber (10 min, entrada de dedo) NÃO
+// entram: este item cai às 10h, no trabalho, e diz "5 min, invisível" — abrir
+// qualquer um dos dois por trás desse rótulo seria mentira em cima de
+// exposição. Os dois são oferecidos pela página Vitalidade
+// (`ofertasDaVitalidade`), com cadência própria.
 const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "trabalho", label: "Assoalho pélvico · 5 min", subtitle: "Invisível, dá pra fazer sentada — firmeza e controle", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "10:00" };
 const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
 

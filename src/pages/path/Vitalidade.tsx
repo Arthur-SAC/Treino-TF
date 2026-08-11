@@ -9,8 +9,8 @@ import { registrarGastoAutomatico } from "../../lib/daily-log-helpers";
 import { garantirInicioDoAcompanhamento } from "../../lib/vitalidade-adesao";
 import { useStreakSono } from "../../hooks/useStreakSono";
 import { useStreakVitalidade } from "../../hooks/useStreakVitalidade";
-import { pelvicDoDia } from "../../lib/pelvic-progression";
-import { contarPraticasPelvicas } from "../../lib/practice-log-helpers";
+import { pelvicDoDia, ofertasDaVitalidade } from "../../lib/pelvic-progression";
+import { contarPraticasPelvicas, contarPraticasRecentes } from "../../lib/practice-log-helpers";
 import { hojeISO, diaDoAno } from "../../lib/today-date";
 import { buildDayRoutine } from "../../lib/today-routine";
 import { resolverAlvoSono } from "../../lib/routine-times";
@@ -60,6 +60,17 @@ export function Vitalidade() {
   // precisam do mesmo critério — duplicado, ele diverge em silêncio.
   const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
+
+  // Start-stop e preparo pra receber saem POR AQUI, não pelo item de 5 min do
+  // Hoje: um pede 15 min e masturbação, o outro 10 min e privacidade, e o item
+  // do Hoje toca às 10h no trabalho prometendo algo invisível. A contagem da
+  // semana existe pro alvo declarado no topo desta tela ("pelo menos uma
+  // sessão de start-stop") ser medido contra o registro real.
+  const startStopNaSemana = useLiveQuery(
+    () => contarPraticasRecentes("pelvic-start-stop", todayISO),
+    [todayISO],
+  );
+  const ofertas = ofertasDaVitalidade(pelvicFeitas ?? 0, startStopNaSemana ?? 0);
 
   const streak = useStreakVitalidade(todayISO);
   const marcadoHoje = dailyLog?.gastoAutomatico ?? false;
@@ -113,6 +124,30 @@ export function Vitalidade() {
         <Link to={`/treino/movimento/${pelvicHoje.sequenceId}`} className="text-xs text-nude mt-2 inline-block">
           Ver sequência de hoje →
         </Link>
+      </div>
+
+      {/* As duas sequências que pedem tempo e privacidade. Ficam aqui, e não
+          na rotina do Hoje, porque o item de lá promete 5 min invisíveis às
+          10h — no trabalho. */}
+      <div className="card my-3">
+        <h2 className="text-nude font-medium mb-1">Sessões desta tela</h2>
+        <p className="text-muted text-xs mb-2">
+          Precisam de tempo e privacidade — por isso não entram no item de 5 min do Hoje.
+        </p>
+        <ul className="space-y-3">
+          {ofertas.map((oferta) => (
+            <li key={oferta.sequenceId}>
+              {oferta.disponivel ? (
+                <Link to={`/treino/movimento/${oferta.sequenceId}`} className="text-sm text-nude-warm font-medium">
+                  {oferta.titulo} →
+                </Link>
+              ) : (
+                <p className="text-sm text-muted">{oferta.titulo}</p>
+              )}
+              <p className="text-muted text-xs mt-1">{oferta.nota}</p>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="card my-3">

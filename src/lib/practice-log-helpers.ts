@@ -9,6 +9,7 @@
 // Vitalidade passam a mostrar fases diferentes do mesmo treino.
 import { db } from "./db";
 import { PELVIC_ORDEM } from "./pelvic-progression";
+import { ultimosDiasISO } from "./today-date";
 
 /** Quantas práticas de assoalho pélvico ela concluiu. Move a progressão de
  *  fases, e é lida por duas telas — por isso mora aqui e não inline em cada
@@ -17,4 +18,18 @@ import { PELVIC_ORDEM } from "./pelvic-progression";
 export async function contarPraticasPelvicas(): Promise<number> {
   const logs = await db.practiceLogs.toArray();
   return logs.filter((l) => l.completed && (PELVIC_ORDEM as readonly string[]).includes(l.sequenceId)).length;
+}
+
+/** Quantas vezes uma sequência específica foi concluída nos últimos `dias`
+ *  dias terminando em `hoje`. Existe pro alvo declarado da Vitalidade ("pelo
+ *  menos uma sessão de start-stop por semana") ser medido contra o registro
+ *  real, e não virar frase que a tela repete sem saber se aconteceu. */
+export async function contarPraticasRecentes(
+  sequenceId: string,
+  hoje: string,
+  dias = 7,
+): Promise<number> {
+  const datas = ultimosDiasISO(hoje, dias);
+  const logs = await db.practiceLogs.where("date").anyOf(datas).toArray();
+  return logs.filter((l) => l.completed && l.sequenceId === sequenceId).length;
 }
