@@ -8,34 +8,48 @@
 //
 // A ORDEM importa mais que a variedade: quem não identificou o pubococcígeo
 // primeiro passa meses contraindo glúteo e abdômen achando que treina assoalho
-// pélvico. Por isso as primeiras práticas insistem na identificação, depois
-// consolidam o Kegel clássico, e só então abrem para as variações.
-
-// As cinco de soltura (Task 3) entraram aqui só pra restaurar a invariante de
-// cobertura — toda sequência 'pelvic' do catálogo precisa estar nesta lista,
-// senão a rotina diária nunca alcança ela. A ordenação por fase (onde essas
-// cinco encaixam didaticamente) é da Task 4, que reescreve pelvicDoDia.
+// pélvico. Mas soltar é MAIS difícil que contrair, e treinar só contração
+// fortalece um músculo que já vive tenso — um assoalho hipertônico dispara
+// ANTES, piorando a precocidade em vez de tratá-la. Por isso a soltura entra
+// logo na fase 2, antes até do Kegel clássico: sem saber soltar, "treinar
+// mais" só ensina o corpo a travar mais cedo.
 
 /** As sequências de assoalho pélvico em ordem didática, não por dificuldade isolada. */
 export const PELVIC_ORDEM = [
   "pelvic-identificacao",
+  "pelvic-soltura-identificacao",
   "pelvic-kegel-classico",
+  "pelvic-alternancia",
   "pelvic-kegel-rapido",
   "pelvic-sustentacao-longa",
   "pelvic-escala-cinco-niveis",
   "pelvic-respiracao-conexao",
-  "pelvic-dance-integration",
-  "pelvic-pre-prazer",
-  "pelvic-soltura-identificacao",
   "pelvic-soltura-sustentada",
-  "pelvic-alternancia",
   "pelvic-start-stop",
   "pelvic-receber-preparo",
+  "pelvic-dance-integration",
+  "pelvic-pre-prazer",
 ] as const;
 
-/** Quantas práticas cada fase de base exige antes de liberar a próxima. */
-const PRATICAS_ATE_KEGEL = 5;
-const PRATICAS_ATE_VARIAR = 12;
+const ATE_SOLTURA = 5;
+const ATE_FASE_3 = 10;
+const ATE_ROTACAO = 17;
+
+/** Fase 3 alterna força e coordenação em dias consecutivos. */
+const FASE_3 = ["pelvic-kegel-classico", "pelvic-alternancia"] as const;
+
+/** Fase 4 — tudo que não é base. Inclui start-stop e preparo pra receber. */
+const ROTACAO = [
+  "pelvic-kegel-rapido",
+  "pelvic-sustentacao-longa",
+  "pelvic-escala-cinco-niveis",
+  "pelvic-respiracao-conexao",
+  "pelvic-soltura-sustentada",
+  "pelvic-start-stop",
+  "pelvic-receber-preparo",
+  "pelvic-dance-integration",
+  "pelvic-pre-prazer",
+] as const;
 
 export interface PelvicDoDia {
   sequenceId: string;
@@ -46,22 +60,29 @@ export interface PelvicDoDia {
 export function pelvicDoDia(praticasFeitas: number): PelvicDoDia {
   const n = Number.isFinite(praticasFeitas) && praticasFeitas > 0 ? Math.floor(praticasFeitas) : 0;
 
-  if (n < PRATICAS_ATE_KEGEL) {
+  if (n < ATE_SOLTURA) {
     return {
       sequenceId: "pelvic-identificacao",
-      etapa: `Fase 1 · achar o músculo (${n}/${PRATICAS_ATE_KEGEL}) — sem isso o resto é glúteo disfarçado`,
+      etapa: `Fase 1 · achar o músculo (${n}/${ATE_SOLTURA}) — sem isso o resto é glúteo disfarçado`,
     };
   }
 
-  if (n < PRATICAS_ATE_VARIAR) {
+  if (n < ATE_FASE_3) {
     return {
-      sequenceId: "pelvic-kegel-classico",
-      etapa: `Fase 2 · firmar a contração (${n - PRATICAS_ATE_KEGEL + 1}/${PRATICAS_ATE_VARIAR - PRATICAS_ATE_KEGEL})`,
+      sequenceId: "pelvic-soltura-identificacao",
+      etapa: `Fase 2 · achar a soltura (${n - ATE_SOLTURA + 1}/${ATE_FASE_3 - ATE_SOLTURA}) — é ela que trata a precocidade`,
     };
   }
 
-  // Base pronta: roda as 6 variações, sem voltar pra identificação.
-  const variacoes = PELVIC_ORDEM.slice(2);
-  const i = (n - PRATICAS_ATE_VARIAR) % variacoes.length;
-  return { sequenceId: variacoes[i], etapa: "Fase 3 · controle fino e integração" };
+  if (n < ATE_ROTACAO) {
+    return {
+      sequenceId: FASE_3[(n - ATE_FASE_3) % FASE_3.length],
+      etapa: `Fase 3 · força e coordenação (${n - ATE_FASE_3 + 1}/${ATE_ROTACAO - ATE_FASE_3})`,
+    };
+  }
+
+  return {
+    sequenceId: ROTACAO[(n - ATE_ROTACAO) % ROTACAO.length],
+    etapa: "Fase 4 · controle fino, start-stop e preparo",
+  };
 }

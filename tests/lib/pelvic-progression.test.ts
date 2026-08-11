@@ -34,11 +34,9 @@ describe("pelvicDoDia", () => {
     }
   });
 
-  it("depois de achar o músculo, passa pro Kegel clássico e fica ali um tempo", () => {
-    for (const n of [5, 8, 11]) {
-      expect(pelvicDoDia(n).sequenceId).toBe("pelvic-kegel-classico");
-    }
-  });
+  // A antiga regra "depois da identificação, fica um tempo no Kegel clássico"
+  // foi substituída pela fase 2 de soltura — ver "a soltura entra na fase 2,
+  // antes das variações", abaixo, que cobre esses mesmos índices.
 
   it("com base construída, roda as variações avançadas", () => {
     const avancadas = new Set<string>();
@@ -67,5 +65,45 @@ describe("pelvicDoDia", () => {
   it("contagem negativa ou absurda não quebra", () => {
     expect(pelvicDoDia(-1).sequenceId).toBe("pelvic-identificacao");
     expect(pelvicDoDia(99999).sequenceId).toBeTruthy();
+  });
+});
+
+describe("a soltura entra na fase 2, antes das variações", () => {
+  it("as 5 primeiras práticas são identificação da contração", () => {
+    for (let n = 0; n < 5; n++) {
+      expect(pelvicDoDia(n).sequenceId).toBe("pelvic-identificacao");
+    }
+  });
+
+  it("da 6ª à 10ª, treina achar a soltura", () => {
+    for (let n = 5; n < 10; n++) {
+      expect(pelvicDoDia(n).sequenceId).toBe("pelvic-soltura-identificacao");
+    }
+  });
+
+  it("a fase 3 alterna Kegel clássico e alternância", () => {
+    const ids = [];
+    for (let n = 10; n < 17; n++) ids.push(pelvicDoDia(n).sequenceId);
+    expect(new Set(ids)).toEqual(new Set(["pelvic-kegel-classico", "pelvic-alternancia"]));
+  });
+
+  it("a rotação da fase 4 inclui start-stop e preparo pra receber", () => {
+    const ids = new Set<string>();
+    for (let n = 17; n < 60; n++) ids.add(pelvicDoDia(n).sequenceId);
+    expect(ids.has("pelvic-start-stop")).toBe(true);
+    expect(ids.has("pelvic-receber-preparo")).toBe(true);
+  });
+
+  it("a rotação nunca volta pra identificação — base não se refaz", () => {
+    for (let n = 17; n < 60; n++) {
+      expect(pelvicDoDia(n).sequenceId).not.toBe("pelvic-identificacao");
+      expect(pelvicDoDia(n).sequenceId).not.toBe("pelvic-soltura-identificacao");
+    }
+  });
+
+  it("cada fase se anuncia — exercício cego não constrói nada", () => {
+    for (const n of [0, 6, 12, 20]) {
+      expect(pelvicDoDia(n).etapa.length).toBeGreaterThan(10);
+    }
   });
 });
