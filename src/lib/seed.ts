@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
+import { MEDIDAS_PARTIDA } from "./objetivo";
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -110,21 +111,33 @@ export async function seedDatabase(): Promise<void> {
  *  já haver medição real — os dois são o mesmo fato para quem só quer saber
  *  se essa migração pontual já foi executada. */
 export async function seedMedidasPartida(): Promise<void> {
+  // A altura é dado dela igual ao resto, mas não mora em `measurements` — mora
+  // em settings. Por isso ela é gravada ANTES da guarda de medição: quem já
+  // tinha registrado alguma medida sairia cedo e continuaria com altura 0, e
+  // com altura 0 `estimateBodyFatNavy` devolve null enquanto marcos e
+  // horizontes afirmam uma % de gordura. "Dado dela sempre vence" continua
+  // valendo — o que já estiver gravado não é tocado.
+  const altura = await db.settings.get("heightCm");
+  if (!altura?.value) {
+    await db.settings.put({ key: "heightCm", value: Math.round(MEDIDAS_PARTIDA.alturaM * 100) });
+  }
+
   const jaTem = await db.measurements.count();
   if (jaTem > 0) {
     await db.settings.put({ key: "medidasPartidaSeeded", value: true });
     return;
   }
   await db.measurements.add({
-    date: "2026-05-13",
-    neckCm: 40,
-    shouldersCm: 120.5,
-    waistCm: 99,
-    hipCm: 114,
-    thighLeftCm: 82.5,
-    thighRightCm: 82.5,
-    armCm: 34,
-    weightKg: 96,
+    date: MEDIDAS_PARTIDA.data,
+    neckCm: MEDIDAS_PARTIDA.pescocoCm,
+    shouldersCm: MEDIDAS_PARTIDA.ombrosCm,
+    chestCm: MEDIDAS_PARTIDA.bustoCm,
+    waistCm: MEDIDAS_PARTIDA.cinturaCm,
+    hipCm: MEDIDAS_PARTIDA.quadrilCm,
+    thighLeftCm: MEDIDAS_PARTIDA.coxaCm,
+    thighRightCm: MEDIDAS_PARTIDA.coxaCm,
+    armCm: MEDIDAS_PARTIDA.bracoCm,
+    weightKg: MEDIDAS_PARTIDA.pesoKg,
   });
   await db.settings.put({ key: "medidasPartidaSeeded", value: true });
 }

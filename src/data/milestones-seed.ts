@@ -7,6 +7,12 @@ function isoFromMonthsFromNow(months: number): string {
   return hojeISO(d);
 }
 
+// Marcos da trilha. Tudo aqui é DATADO: a tela ordena por `datePlanned` e mostra
+// a data em cada cartão. Por isso não existe marco de fertilidade/hormônio nesta
+// lista — uma conversa que a prosa diz não ter data não pode entrar numa linha do
+// tempo agendada; o app estaria marcando na estrutura o que nega no texto. Esse
+// conteúdo (espermograma, congelar sêmen, o que perguntar ao médico) vive inteiro
+// em `src/pages/path/FertilityTRH.tsx`, que é onde ele não vira etapa de plano.
 export const MILESTONES: Omit<Milestone, "id">[] = [
   {
     datePlanned: isoFromMonthsFromNow(0),
@@ -30,25 +36,13 @@ export const MILESTONES: Omit<Milestone, "id">[] = [
     datePlanned: isoFromMonthsFromNow(3),
     title: "Re-avaliar relação cintura/quadril (WHR)",
     category: "fisico",
-    notes: "Meta: cintura reduzir 1-2cm + quadril aumentar 1-2cm com treino de glúteo.",
+    notes: "Medir de novo e comparar a RAZÃO, não os centímetros soltos. Partida: 0,87 (cintura 99 / quadril 114). Nesta altura a cintura deve estar chegando nos 88 cm — e o quadril também cai, porque tem gordura nele: isso é esperado, não perda de glúteo. Ele volta aos 114 cm na fase 2, feito de músculo. Quem manda no número é a cintura.",
   },
   {
     datePlanned: isoFromMonthsFromNow(6),
     title: "✂ Cabelo na fase de transição — manter forma e saúde crescendo",
     category: "fisico",
     notes: "Com cronograma consistente + retenção (cetim, baixa manipulação, aparar só pontas), o cabelo deve estar visivelmente mais comprido e saudável. Fase do meio-termo: dar forma com camadas longas sem encurtar, disfarçar formatos esquisitos com acessórios. Rumo a um pouco abaixo dos ombros.",
-  },
-  {
-    datePlanned: isoFromMonthsFromNow(9),
-    title: "Conversa com endocrinologista sobre planejamento de TRH",
-    category: "fertilidade",
-    notes: "Sem data marcada — é conversa para ter quando você quiser ter, não etapa do plano. Vale saber o caminho (preservação de fertilidade primeiro, depois hormônio) e o que cada escolha custa. Ginecologista/urologista pode entrar antes do endócrino.",
-  },
-  {
-    datePlanned: isoFromMonthsFromNow(12),
-    title: "Avaliar congelamento de gametas (criopreservação)",
-    category: "fertilidade",
-    notes: "Procedimento que preserva fertilidade ANTES de iniciar TRH. Você e namorada planejam ter filhos primeiro — esse marco pode adiantar isso.",
   },
 ];
 
@@ -99,14 +93,14 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
   },
 ];
 
-// Marco honesto sobre o busto sem TH: expectativa realista + quando faz sentido
-// começar a usar bralette. (Migração: versão 3 dos marcos.)
+// Marco honesto sobre o busto sem hormônio: expectativa realista + quando faz
+// sentido começar a usar bralette. (Migração: versão 3 dos marcos.)
 export const BUST_MILESTONES: Omit<Milestone, "id">[] = [
   {
     datePlanned: isoFromMonthsFromNow(4),
-    title: "♡ Busto sem TH — avaliar começar a usar bralette",
+    title: "♡ Busto sem hormônio — avaliar começar a usar bralette",
     category: "fisico",
-    notes: "Sem TH não cresce glândula mamária. O que dá: fullness de GORDURA no peito + prateleira do peitoral (supino inclinado + voador/crucifixo na polia) + postura (face pull, retração escapular). Teto realista: peito macio com linha de colo discreta, bem mais levantado que hoje, sobretudo vestida. Pode chegar num ponto de marcar o suficiente pra um bralette leve ficar confortável e evitar marcar o mamilo. E dá pra usar bralette com bojo fino DESDE JÁ por estilo/euforia — cria a sugestão de busto sob roupa justa, e combina com 'começar discreto'. Salto de tamanho e formato de verdade vem com a TH. Sinal pra mostrar ao médico (sem pânico): caroço firme e dolorido sob o mamilo (ginecomastia glandular, comum e tratável).",
+    notes: "Sem hormônio não cresce glândula mamária — isso é impossível, não difícil. O que dá: fullness de GORDURA no peito + prateleira do peitoral (supino inclinado + voador/crucifixo na polia) + postura (face pull, retração escapular). Teto realista: peito macio com linha de colo discreta, bem mais levantado que hoje, sobretudo vestida. Pode chegar num ponto de marcar o suficiente pra um bralette leve ficar confortável e evitar marcar o mamilo. E dá pra usar bralette com bojo fino DESDE JÁ por estilo/euforia — cria a sugestão de busto sob roupa justa, e combina com 'começar discreto'. A glândula é a única parte desta lista que não depende de você; todo o resto é trabalho seu e começa hoje. Sinal pra mostrar ao médico (sem pânico): caroço firme e dolorido sob o mamilo (ginecomastia glandular, comum e tratável).",
   },
 ];
 
