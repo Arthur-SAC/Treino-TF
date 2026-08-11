@@ -61,11 +61,10 @@ export function Vitalidade() {
   const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
 
-  // Start-stop e preparo pra receber saem POR AQUI, não pelo item de 5 min do
-  // Hoje: um pede 15 min e masturbação, o outro 10 min e privacidade, e o item
-  // do Hoje toca às 10h no trabalho prometendo algo invisível. A contagem da
-  // semana existe pro alvo declarado no topo desta tela ("pelo menos uma
-  // sessão de start-stop") ser medido contra o registro real.
+  // As três sequências sexuais explícitas ou pré-íntimas saem POR AQUI, não
+  // pela rotina do Hoje, que toca às 10h no trabalho. A contagem da semana
+  // existe pro alvo declarado no topo desta tela ("pelo menos uma sessão de
+  // start-stop") ser medido contra o registro real.
   const startStopNaSemana = useLiveQuery(
     () => contarPraticasRecentes("pelvic-start-stop", todayISO),
     [todayISO],
@@ -130,13 +129,12 @@ export function Vitalidade() {
         </Link>
       </div>
 
-      {/* As duas sequências que pedem tempo e privacidade. Ficam aqui, e não
-          na rotina do Hoje, porque o item de lá promete 5 min invisíveis às
-          10h — no trabalho. */}
+      {/* As três sequências que precisam de privacidade. Ficam aqui, e não na
+          rotina do Hoje, porque aquele item cai às 10h — no trabalho. */}
       <div className="card my-3">
         <h2 className="text-nude font-medium mb-1">Sessões desta tela</h2>
         <p className="text-muted text-xs mb-2">
-          Precisam de tempo e privacidade — por isso não entram no item de 5 min do Hoje.
+          Precisam de privacidade — por isso não entram na rotina do Hoje, que cai no meio do expediente.
         </p>
         <ul className="space-y-3">
           {ofertas.map((oferta) => (

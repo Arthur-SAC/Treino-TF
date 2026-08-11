@@ -14,12 +14,17 @@
 // logo na fase 2, antes até do Kegel clássico: sem saber soltar, "treinar
 // mais" só ensina o corpo a travar mais cedo.
 //
-// Duas rotas, não uma: `pelvicDoDia` é o que o item diário do Hoje serve, e
-// ele só pode conter o que cabe na promessa daquele item (curto, discreto,
-// executável sentada, às 10h no trabalho). O que exige tempo e privacidade
-// — start-stop e preparo pra receber — sai por `ofertasDaVitalidade`, na tela
-// que ela abre de propósito. Toda sequência de `PELVIC_ORDEM` tem que estar
-// em uma das duas rotas; o teste do módulo cobra essa união.
+// Duas rotas, não uma: `pelvicDoDia` é o que o item diário do Hoje serve, e o
+// critério de corte é O QUE PODE ABRIR NUMA TELA ÀS 10H NO TRABALHO. O que é
+// sexual explícito ou pré-íntimo — start-stop, preparo pra receber e a
+// sequência pré-prazer — sai por `ofertasDaVitalidade`, na tela que ela abre
+// de propósito. Duração e postura NÃO são critério de corte: a integração com
+// o quadril é longa e em pé, mas não expõe nada — o problema dela era o
+// rótulo fixo, resolvido por `rotuloPelvicoDoDia`.
+//
+// Toda sequência de `PELVIC_ORDEM` tem que estar em uma das duas rotas; o
+// teste do módulo cobra essa união.
+import { SEQUENCES } from "../data/sequences-seed";
 
 /** As sequências de assoalho pélvico em ordem didática, não por dificuldade isolada. */
 export const PELVIC_ORDEM = [
@@ -49,8 +54,9 @@ const FASE_3 = ["pelvic-kegel-classico", "pelvic-alternancia"] as const;
  *  fonte da verdade do alcance da rotação é este array, nunca uma lista
  *  copiada à mão no teste.
  *
- *  Não contém `pelvic-start-stop` nem `pelvic-receber-preparo` de propósito:
- *  ver `OFERTA_VITALIDADE` abaixo. */
+ *  Não contém nenhuma das três de `OFERTA_VITALIDADE`, de propósito. Contém a
+ *  integração com o quadril, que é longa e em pé: ela não expõe nada, e o que
+ *  precisava mudar era o rótulo do item, não o lugar da sequência. */
 export const ROTACAO = [
   "pelvic-kegel-rapido",
   "pelvic-sustentacao-longa",
@@ -58,20 +64,81 @@ export const ROTACAO = [
   "pelvic-respiracao-conexao",
   "pelvic-soltura-sustentada",
   "pelvic-dance-integration",
+] as const;
+
+/** As três sequências que a página Vitalidade oferece, e que o Hoje NUNCA
+ *  serve.
+ *
+ *  O critério é exposição, não duração: o item diário cai às 10h, no
+ *  trabalho, e abrir ali `pelvic-start-stop` (masturbação, lubrificante),
+ *  `pelvic-receber-preparo` (entrada de dedo) ou `pelvic-pre-prazer`
+ *  (massagem inguinal, explicitamente pré-íntima) é expor na tela o que ela
+ *  não escolheu abrir naquele lugar. As três continuam no plano, com cadência
+ *  própria, na tela que ela abre de propósito. */
+export const OFERTA_VITALIDADE = [
+  "pelvic-start-stop",
+  "pelvic-receber-preparo",
   "pelvic-pre-prazer",
 ] as const;
 
-/** As duas sequências que a página Vitalidade oferece, e que o Hoje NUNCA
- *  serve.
+/** Onde cada sequência dá pra ser feita, em uma frase. Existe porque o item
+ *  do Hoje trazia "Invisível, dá pra fazer sentada" FIXO no código, e isso é
+ *  falso para a identificação (deitada), para a soltura sustentada (chão) e
+ *  para a integração com o quadril (em pé). Frase por sequência é a única
+ *  forma de a linha continuar verdadeira quando a rotação vira.
  *
- *  O item diário do Hoje se anuncia como "Assoalho pélvico · 5 min ·
- *  invisível, dá pra fazer sentada", e cai às 10h — no trabalho. Servir
- *  `pelvic-start-stop` (15 min, masturbação, lubrificante) ou
- *  `pelvic-receber-preparo` (10 min, entrada de dedo) por trás desse rótulo é
- *  mentira em cima de exposição: ela toca esperando cinco minutos discretos.
- *  As duas continuam no plano, com cadência própria, na tela que ela abre de
- *  propósito. */
-export const OFERTA_VITALIDADE = ["pelvic-start-stop", "pelvic-receber-preparo"] as const;
+ *  Toda sequência de `PELVIC_ORDEM` precisa de uma entrada aqui — o teste do
+ *  módulo cobra, pelo mesmo motivo que cobra a união das rotas: conteúdo novo
+ *  não pode entrar mudo. */
+const ONDE: Record<string, string> = {
+  "pelvic-identificacao": "Deitada, precisa de chão",
+  "pelvic-soltura-identificacao": "Deitada, precisa de chão",
+  "pelvic-kegel-classico": "Discreta, dá pra fazer sentada",
+  "pelvic-alternancia": "Discreta, dá pra fazer sentada",
+  "pelvic-kegel-rapido": "Discreta, dá pra fazer sentada",
+  "pelvic-sustentacao-longa": "Discreta, dá pra fazer sentada",
+  "pelvic-escala-cinco-niveis": "Discreta, dá pra fazer sentada",
+  "pelvic-respiracao-conexao": "Sentada, com a mão na barriga",
+  "pelvic-soltura-sustentada": "Termina no chão, em borboleta ou happy baby",
+  "pelvic-dance-integration": "Em pé, precisa de espaço",
+  "pelvic-start-stop": "Sozinha, sem tela, com privacidade",
+  "pelvic-receber-preparo": "Com privacidade e sem pressa",
+  "pelvic-pre-prazer": "Com privacidade, antes de um momento íntimo",
+};
+
+function doCatalogo(sequenceId: string) {
+  return SEQUENCES.find((s) => s.id === sequenceId);
+}
+
+/** Onde a sequência dá pra ser feita. Exportada porque a página Vitalidade
+ *  mostra a mesma informação nas ofertas dela. */
+export function ondeFazer(sequenceId: string): string | undefined {
+  return ONDE[sequenceId];
+}
+
+export interface RotuloPelvico {
+  label: string;
+  subtitle: string;
+}
+
+/** Rótulo e subtítulo do item diário do Hoje, derivados da SEQUÊNCIA do dia.
+ *
+ *  Os dois eram fixos em `today-routine.ts` ("Assoalho pélvico · 5 min" e
+ *  "Invisível, dá pra fazer sentada") e falsos na maioria dos dias: a rotina
+ *  tem sequências de 3, 5, 6 e 7 minutos, e nem todas dão pra fazer sentada.
+ *  É a mesma classe de defeito que o alvo de sono fixo em "22:30" — texto
+ *  cravado afirmando o que o dado ao lado contradiz.
+ *
+ *  Mora aqui, e não em `today-routine.ts`, porque aquele módulo é puro e não
+ *  conhece o catálogo. Quem aplica é Today.tsx, na mesma camada em que já
+ *  reescreve o `to` deste item. */
+export function rotuloPelvicoDoDia(doDia: PelvicDoDia): RotuloPelvico {
+  const seq = doCatalogo(doDia.sequenceId);
+  return {
+    label: seq ? `Assoalho pélvico · ${seq.durationMin} min` : "Assoalho pélvico",
+    subtitle: [ondeFazer(doDia.sequenceId), doDia.etapa].filter(Boolean).join(" · "),
+  };
+}
 
 export interface OfertaPelvica {
   sequenceId: string;
@@ -94,6 +161,9 @@ export interface OfertaPelvica {
  * `pelvic-receber-preparo` é o único com pré-requisito, e é clínico, não
  * disciplinar: ele é relaxamento voluntário sob pressão, e a habilidade que o
  * sustenta é a soltura da fase 2. Antes disso o corpo fecha e dói.
+ *
+ * `pelvic-pre-prazer` não tem cadência nenhuma — é preparo pra usar na hora
+ * que serve, não treino a cumprir.
  */
 export function ofertasDaVitalidade(
   praticasFeitas: number,
@@ -108,7 +178,7 @@ export function ofertasDaVitalidade(
   return [
     {
       sequenceId: "pelvic-start-stop",
-      titulo: "Start-stop · 15 min, sozinha e sem tela",
+      titulo: tituloDaOferta("pelvic-start-stop"),
       disponivel: true,
       nota: feitas > 0
         ? `${feitas} ${feitas === 1 ? "sessão" : "sessões"} nos últimos 7 dias — o alvo pede pelo menos uma. Não quebra o streak: é o tratamento.`
@@ -116,13 +186,30 @@ export function ofertasDaVitalidade(
     },
     {
       sequenceId: "pelvic-receber-preparo",
-      titulo: "Preparo pra receber · 10 min, com privacidade",
+      titulo: tituloDaOferta("pelvic-receber-preparo"),
       disponivel: solturaAprendida,
       nota: solturaAprendida
         ? "No seu ritmo, não numa frequência fixa. A progressão é de meses: só sobe de estágio depois de duas sessões confortáveis."
         : `Abre quando a fase 2 estiver construída (${n}/${ATE_FASE_3} práticas). Sem saber soltar, o corpo fecha — e aí dói em vez de treinar.`,
     },
+    {
+      sequenceId: "pelvic-pre-prazer",
+      titulo: tituloDaOferta("pelvic-pre-prazer"),
+      disponivel: true,
+      nota: "Sem cadência: é preparo pra fazer pouco antes, quando serve. Saiu da rotina do Hoje porque é massagem pré-íntima e não abre no meio do expediente.",
+    },
   ];
+}
+
+/** Nome, duração e lugar SEMPRE do catálogo — mesma regra do rótulo do Hoje.
+ *  Escrever "· 15 min" à mão aqui era repetir o defeito do outro lado. */
+function tituloDaOferta(sequenceId: string): string {
+  const seq = doCatalogo(sequenceId);
+  const partes = [seq?.name ?? sequenceId];
+  if (seq) partes.push(`${seq.durationMin} min`);
+  const onde = ondeFazer(sequenceId);
+  if (onde) partes.push(onde.toLowerCase());
+  return partes.join(" · ");
 }
 
 export interface PelvicDoDia {

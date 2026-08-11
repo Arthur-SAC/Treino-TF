@@ -64,19 +64,24 @@ function manhaItems(dayOfYear: number): RoutineItem[] {
 const ALMOCO: RoutineItem = { id: "almoco", block: "trabalho", label: "Almoço", subtitle: "Toque pra ver a receita", control: "recipe", mealType: "almoco", defaultTime: "12:00" };
 const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", control: "water" };
 // Assoalho pélvico como micro-dose diária, no bloco do dia (existe nos 7 dias).
-// É invisível — dá pra fazer sentada na mesa — e o que constrói é frequência,
-// não duração. O `to` é resolvido em Today.tsx pela progressão (ver
-// `pelvic-progression.ts`), que tem QUATRO fases: identificar a contração ->
-// achar a soltura -> Kegel clássico alternado com contrair↔soltar -> rotação
-// de variações.
+// O que constrói é frequência, não duração. `to`, `label` e `subtitle` são
+// resolvidos em Today.tsx pela progressão (ver `pelvic-progression.ts`), que
+// tem QUATRO fases: identificar a contração -> achar a soltura -> Kegel
+// clássico alternado com contrair↔soltar -> rotação de variações.
 //
-// A rotação servida aqui só contém o que cabe nesta promessa. Start-stop
-// (15 min, masturbação) e preparo pra receber (10 min, entrada de dedo) NÃO
-// entram: este item cai às 10h, no trabalho, e diz "5 min, invisível" — abrir
-// qualquer um dos dois por trás desse rótulo seria mentira em cima de
-// exposição. Os dois são oferecidos pela página Vitalidade
-// (`ofertasDaVitalidade`), com cadência própria.
-const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "trabalho", label: "Assoalho pélvico · 5 min", subtitle: "Invisível, dá pra fazer sentada — firmeza e controle", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "10:00" };
+// O label e o subtitle daqui são só o fallback de quem lista o item fora do
+// Hoje (a tela de ajuste de horários). Eram "Assoalho pélvico · 5 min" e
+// "Invisível, dá pra fazer sentada" fixos — falsos na maioria dos dias, já
+// que a rotina tem sequências de 3 a 7 minutos e nem todas dão pra fazer
+// sentada. Este módulo é puro e não conhece o catálogo, então quem deriva a
+// verdade é `rotuloPelvicoDoDia`, aplicado por Today.tsx.
+//
+// A rotação servida aqui também não contém nada sexual explícito ou
+// pré-íntimo: start-stop, preparo pra receber e a sequência pré-prazer são
+// oferecidos pela página Vitalidade (`ofertasDaVitalidade`). Este item cai às
+// 10h, no trabalho — abrir qualquer um dos três aqui é expor na tela o que
+// ela não escolheu abrir naquele lugar.
+const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "trabalho", label: "Assoalho pélvico", subtitle: "Firmeza e controle — a sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "10:00" };
 const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
 
 type TipoDeDia = "semana" | "sabado" | "domingo";

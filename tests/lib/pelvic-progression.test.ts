@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   pelvicDoDia,
   ofertasDaVitalidade,
+  rotuloPelvicoDoDia,
+  ondeFazer,
   PELVIC_ORDEM,
   ROTACAO,
   ATE_ROTACAO,
@@ -94,12 +96,12 @@ describe("a soltura entra na fase 2, antes das variações", () => {
     expect(new Set(ids)).toEqual(new Set(["pelvic-kegel-classico", "pelvic-alternancia"]));
   });
 
-  // O item diário do Hoje diz "Assoalho pélvico · 5 min · invisível, dá pra
-  // fazer sentada" e cai às 10h, no trabalho. `pelvic-start-stop` (15 min,
-  // masturbação, lubrificante) e `pelvic-receber-preparo` (10 min, entrada de
-  // dedo) não cabem nessa promessa — servi-los por trás dela é mentira em cima
-  // de exposição. Os dois saem pela página Vitalidade.
-  it("a rotação do Hoje nunca serve start-stop nem preparo pra receber", () => {
+  // O item diário do Hoje cai às 10h, no trabalho. O critério de corte é
+  // EXPOSIÇÃO: start-stop (masturbação, lubrificante), preparo pra receber
+  // (entrada de dedo) e a sequência pré-prazer (massagem inguinal, pré-íntima)
+  // não podem abrir ali. As três saem pela página Vitalidade. Duração e
+  // postura não entram nesse corte — quem cuida disso é o rótulo derivado.
+  it("a rotação do Hoje nunca serve nenhuma sequência de OFERTA_VITALIDADE", () => {
     for (let n = 0; n < 200; n++) {
       const id = pelvicDoDia(n).sequenceId;
       expect({ n, id: OFERTA_VITALIDADE.includes(id as (typeof OFERTA_VITALIDADE)[number]) })
@@ -192,8 +194,68 @@ describe("ofertasDaVitalidade", () => {
     expect(depois.disponivel).toBe(true);
   });
 
+  it("a sequência pré-prazer é oferta sem cadência — preparo, não treino a cumprir", () => {
+    const prePrazer = ofertasDaVitalidade(0, 0)[2];
+    expect(prePrazer.sequenceId).toBe("pelvic-pre-prazer");
+    expect(prePrazer.disponivel).toBe(true);
+    expect(prePrazer.nota).toMatch(/sem cadência/i);
+  });
+
+  it("o título de cada oferta sai do catálogo — nome, duração e lugar, sem número à mão", () => {
+    for (const oferta of ofertasDaVitalidade(30, 0)) {
+      const seq = SEQUENCES.find((s) => s.id === oferta.sequenceId)!;
+      expect(oferta.titulo).toContain(seq.name);
+      expect(oferta.titulo).toContain(`${seq.durationMin} min`);
+    }
+  });
+
   it("contagem negativa ou absurda não quebra", () => {
     expect(ofertasDaVitalidade(-3, -1)[0].disponivel).toBe(true);
     expect(ofertasDaVitalidade(Number.NaN, Number.NaN)[1].disponivel).toBe(false);
+  });
+});
+
+// O item do Hoje trazia "Assoalho pélvico · 5 min" e "Invisível, dá pra fazer
+// sentada" CRAVADOS em today-routine.ts. Com sequências de 3, 5, 6 e 7 min na
+// rotina, e com identificação deitada e integração de quadril em pé, os dois
+// textos eram falsos na maioria dos dias — a mesma classe de defeito do alvo
+// de sono fixo em "22:30": texto afirmando o que o dado ao lado contradiz.
+describe("rótulo do item diário", () => {
+  it("a duração exibida é a da sequência do dia, em todas as fases", () => {
+    // Uma prática de cada fase: identificação (5 min), soltura (5), Kegel
+    // clássico (5), e a rotação inteira da fase 4, que é onde as durações
+    // divergem mais (kegel rápido tem 3 min, respiração+PC tem 7).
+    const amostra = [0, 6, 11, ...Array.from({ length: ROTACAO.length }, (_, i) => ATE_ROTACAO + i)];
+    const duracoesVistas = new Set<number>();
+
+    for (const n of amostra) {
+      const doDia = pelvicDoDia(n);
+      const seq = SEQUENCES.find((s) => s.id === doDia.sequenceId)!;
+      duracoesVistas.add(seq.durationMin);
+      expect({ n, label: rotuloPelvicoDoDia(doDia).label })
+        .toEqual({ n, label: `Assoalho pélvico · ${seq.durationMin} min` });
+    }
+
+    // Se a rotina tivesse uma duração só, o teste acima passaria com o texto
+    // fixo de antes — é a variedade que prova que ele deriva de verdade.
+    expect(duracoesVistas.size).toBeGreaterThanOrEqual(2);
+  });
+
+  it("o subtítulo diz onde dá pra fazer, e a etapa da fase junto", () => {
+    const sentada = rotuloPelvicoDoDia(pelvicDoDia(11)); // fase 3, Kegel/alternância
+    expect(sentada.subtitle).toMatch(/sentada/i);
+    expect(sentada.subtitle).toContain(pelvicDoDia(11).etapa);
+
+    // A integração com o quadril é em pé — o item não pode continuar dizendo
+    // "dá pra fazer sentada" no dia dela.
+    const emPe = rotuloPelvicoDoDia({ sequenceId: "pelvic-dance-integration", etapa: "Fase 4" });
+    expect(emPe.subtitle).toMatch(/em pé/i);
+    expect(emPe.subtitle).not.toMatch(/sentada/i);
+  });
+
+  it("toda sequência de PELVIC_ORDEM diz onde dá pra ser feita — conteúdo novo não entra mudo", () => {
+    for (const id of PELVIC_ORDEM) {
+      expect({ id, onde: ondeFazer(id) ?? null }).not.toEqual({ id, onde: null });
+    }
   });
 });

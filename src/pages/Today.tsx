@@ -5,7 +5,7 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
-import { pelvicDoDia } from "../lib/pelvic-progression";
+import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { contarPraticasPelvicas } from "../lib/practice-log-helpers";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
@@ -68,6 +68,12 @@ export function Today() {
   // silêncio e as duas telas passariam a mostrar fases diferentes.
   const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
+  // Duração e lugar vêm da sequência do dia, não de texto fixo no item: a
+  // rotina tem sequências de 3 a 7 min, e "dá pra fazer sentada" é falso na
+  // identificação (deitada) e na integração com o quadril (em pé).
+  // `today-routine.ts` é puro e não conhece o catálogo — quem aplica é esta
+  // camada, a mesma que já reescreve o `to` deste item.
+  const pelvicRotulo = rotuloPelvicoDoDia(pelvicHoje);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -247,7 +253,7 @@ export function Today() {
   };
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
-    if (item.linkKey === "pelvic") return `${item.subtitle} · ${pelvicHoje.etapa}`;
+    if (item.linkKey === "pelvic") return pelvicRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -312,6 +318,10 @@ export function Today() {
               item={{
                 ...item,
                 subtitle: subtitleFor(item),
+                // O rótulo do item pélvico traz a duração da sequência do dia
+                // (3 a 7 min conforme a fase), em vez do "· 5 min" que era
+                // fixo e falso na maioria dos dias.
+                label: item.linkKey === "pelvic" ? pelvicRotulo.label : item.label,
                 // O item de treino leva direto pra sessão do dia (não pra aba Treino)
                 to:
                   item.linkKey === "workout" && todayTemplate
