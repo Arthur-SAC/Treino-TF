@@ -20,11 +20,9 @@ import {
   addWalk,
   creditarPasseio,
   registrarSono,
-  noitesNoAlvo,
-  diasComGasto,
-  inicioDoAcompanhamento,
 } from "../lib/daily-log-helpers";
-import { calcularStreak } from "../lib/vitalidade";
+import { useStreakSono } from "../hooks/useStreakSono";
+import { useStreakVitalidade } from "../hooks/useStreakVitalidade";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
@@ -134,31 +132,13 @@ export function Today() {
 
   // Conta noites dos últimos 7 dias em que ela deitou até o alvo — sono é a
   // alavanca que ela mais subestima, e o card só existe pra tornar a melhora
-  // (ou piora) visível semana a semana.
-  const last7DaysSleep = useLiveQuery(async () => {
-    const dates: string[] = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      dates.push(hojeISO(d));
-    }
-    const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
-    return noitesNoAlvo(logs, alvoSono);
-  }, [alvoSono]);
+  // (ou piora) visível semana a semana. A janela e a consulta moram no hook
+  // porque a Vitalidade mostra este mesmo número (ver useStreakSono).
+  const last7DaysSleep = useStreakSono(alvoSono, todayISO);
 
-  // Streak de Vitalidade — mesmo cálculo que a página Vitalidade usa
-  // (`calcularStreak` sobre `diasComGasto`/`inicioDoAcompanhamento`), pra não
-  // abrir uma segunda fonte de verdade pro mesmo número. `inicio` fica
-  // `undefined` enquanto carrega e `null` com o banco vazio; nos dois casos
-  // cair em `todayISO` faz o streak nascer em "hoje é o primeiro dia" em vez
-  // de quebrar a conta com uma data inexistente.
-  const inicioVitalidade = useLiveQuery(() => inicioDoAcompanhamento(), []);
-  const diasGastoVitalidade = useLiveQuery(() => diasComGasto(), []);
-  const streakVitalidade = calcularStreak(
-    diasGastoVitalidade ?? [],
-    todayISO,
-    inicioVitalidade ?? todayISO,
-  );
+  // Streak de Vitalidade — mesmo hook que a página Vitalidade usa, pra não
+  // abrir uma segunda fonte de verdade pro mesmo número.
+  const streakVitalidade = useStreakVitalidade(todayISO);
 
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
@@ -304,7 +284,7 @@ export function Today() {
       <div className="grid grid-cols-2 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
-        <StreakCard label="Sono" count={last7DaysSleep ?? 0} total={7} />
+        <StreakCard label="Sono" count={last7DaysSleep} total={7} />
         {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele
             conta. Ela escolheu o streak visível nesta tela, que fica aberta
             em ambiente não receptivo; a mitigação combinada é exatamente

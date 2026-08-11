@@ -4,8 +4,9 @@ import { db } from "../../lib/db";
 import { StreakCard } from "../../components/StreakCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { VITALIDADE_GUIA } from "../../data/vitalidade-guide-seed";
-import { calcularStreak } from "../../lib/vitalidade";
-import { diasComGasto, inicioDoAcompanhamento, noitesNoAlvo, registrarGastoAutomatico } from "../../lib/daily-log-helpers";
+import { registrarGastoAutomatico } from "../../lib/daily-log-helpers";
+import { useStreakSono } from "../../hooks/useStreakSono";
+import { useStreakVitalidade } from "../../hooks/useStreakVitalidade";
 import { pelvicDoDia } from "../../lib/pelvic-progression";
 import { contarPraticasPelvicas } from "../../lib/practice-log-helpers";
 import { hojeISO, diaDoAno } from "../../lib/today-date";
@@ -17,8 +18,6 @@ export function Vitalidade() {
   const today = new Date();
   const todayISO = hojeISO(today);
 
-  const inicio = useLiveQuery(() => inicioDoAcompanhamento(), []);
-  const marcados = useLiveQuery(() => diasComGasto(), []);
   const dailyLog = useLiveQuery(() => db.dailyLog.get(todayISO), [todayISO]);
   const goalMl = useSetting("hydrationGoalMl");
 
@@ -40,18 +39,9 @@ export function Vitalidade() {
   const routineTimes = useSetting("routineTimes");
   const alvoSono = resolverAlvoSono(buildDayRoutine(today.getDay(), diaDoAno(today)).blocks, routineTimes);
 
-  // Streak de sono dos últimos 7 dias contra o alvo acima — mesma conta que a
-  // tela Hoje faz com `noitesNoAlvo`.
-  const streakSono = useLiveQuery(async () => {
-    const dates: string[] = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      dates.push(hojeISO(d));
-    }
-    const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
-    return noitesNoAlvo(logs, alvoSono);
-  }, [alvoSono]);
+  // Streak de sono dos últimos 7 dias contra o alvo acima — mesmo hook que a
+  // tela Hoje usa, janela e consulta incluídas.
+  const streakSono = useStreakSono(alvoSono, todayISO);
 
   // Quantas práticas de assoalho pélvico ela já concluiu — mesmo helper que o
   // Hoje usa pra decidir a fase (identificar o músculo -> soltura -> Kegel ->
@@ -60,11 +50,7 @@ export function Vitalidade() {
   const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
 
-  // `inicio` fica `undefined` enquanto a consulta carrega e `null` quando o
-  // banco não tem nenhum registro diário ainda (Dexie vazio). Nos dois casos,
-  // caindo em `todayISO` o streak nasce em "hoje é o primeiro dia" — 1 dia
-  // limpo — em vez de quebrar a conta com uma data inexistente ou mostrar NaN.
-  const streak = calcularStreak(marcados ?? [], todayISO, inicio ?? todayISO);
+  const streak = useStreakVitalidade(todayISO);
   const marcadoHoje = dailyLog?.gastoAutomatico ?? false;
 
   async function toggleHoje() {
@@ -127,7 +113,7 @@ export function Vitalidade() {
         </p>
         <ul className="text-xs text-muted mt-2 space-y-1">
           <li>Água hoje: {dailyLog?.waterMl ?? 0} ml de {goalMl} ml</li>
-          <li>Sono no alvo ({alvoSono}): {streakSono ?? 0} de 7 noites</li>
+          <li>Sono no alvo ({alvoSono}): {streakSono} de 7 noites</li>
           <li>
             Cintura na última medição: {cinturaRecente !== undefined ? `${cinturaRecente} cm` : "ainda sem medida registrada"}
           </li>
