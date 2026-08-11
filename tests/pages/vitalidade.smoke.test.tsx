@@ -32,17 +32,23 @@ function diasAtras(n: number): string {
   return hojeISO(d);
 }
 
+/** Adesão ao protocolo há `n` dias. É o marco zero do streak — e é setting,
+ *  não `dailyLog`: linha de registro diário existe desde antes desta frente e
+ *  não significa acompanhamento nenhum. */
+async function aderiuHaDias(n: number): Promise<void> {
+  await db.settings.put({ key: "vitalidadeDesde", value: diasAtras(n) });
+}
+
 describe("Vitalidade smoke", () => {
   it("mostra o streak atual e o recorde", async () => {
     const hoje = hojeISO(new Date());
-    const inicio = diasAtras(15);
     const gasto = diasAtras(3);
-    await db.dailyLog.put({ date: inicio, waterMl: 0, activeBreakCount: 0 });
+    await aderiuHaDias(15);
     await db.dailyLog.put({ date: gasto, waterMl: 0, activeBreakCount: 0, gastoAutomatico: true });
 
     renderPage();
 
-    // corrida inicial de `inicio` até o dia anterior ao gasto = 12 (recorde);
+    // corrida inicial da adesão até o dia anterior ao gasto = 12 (recorde);
     // do gasto até hoje = 3 (atual). Números diferentes de propósito, pra
     // não bater os dois no mesmo getByText.
     await waitFor(() => {
@@ -53,9 +59,8 @@ describe("Vitalidade smoke", () => {
   });
 
   it("marcar o dia zera o atual sem apagar o recorde", async () => {
-    const inicio = diasAtras(15);
     const gasto = diasAtras(3);
-    await db.dailyLog.put({ date: inicio, waterMl: 0, activeBreakCount: 0 });
+    await aderiuHaDias(15);
     await db.dailyLog.put({ date: gasto, waterMl: 0, activeBreakCount: 0, gastoAutomatico: true });
 
     renderPage();
@@ -72,7 +77,7 @@ describe("Vitalidade smoke", () => {
   });
 
   it("com o banco totalmente vazio, mostra atual 1 e recorde 1 — hoje já é um dia limpo", async () => {
-    // Sem nenhum dailyLog, `inicioDoAcompanhamento()` resolve `null`. Se a
+    // Sem adesão gravada, `inicioDoAcompanhamento()` resolve `null`. Se a
     // página não tratasse isso, o streak quebraria com NaN ou undefined na
     // tela — este teste é o que acusaria.
     renderPage();
@@ -80,6 +85,41 @@ describe("Vitalidade smoke", () => {
       const uns = screen.getAllByText("1");
       expect(uns.length).toBeGreaterThanOrEqual(2);
     });
+  });
+
+  // O primeiro uso REAL: o dailyLog dela existe desde maio e recebe linha todo
+  // dia por água, caminhada, cães e sono. Quando o início do acompanhamento
+  // era o dia mais antigo desse log, a tela abria em "Vitalidade · 79" e
+  // "Recorde 79" — número inventado, sobre justamente o período em que havia
+  // consumo, e recorde inatingível contra o qual a primeira marcação honesta
+  // zerava. O acompanhamento começa quando ela abre a página, nunca antes.
+  it("dailyLog de meses atrás e nenhuma adesão não vira streak retroativo", async () => {
+    for (const n of [77, 45, 12, 1]) {
+      await db.dailyLog.put({ date: diasAtras(n), waterMl: 800, activeBreakCount: 2 });
+    }
+
+    renderPage();
+
+    await waitFor(() => {
+      const uns = screen.getAllByText("1");
+      expect(uns.length).toBeGreaterThanOrEqual(2);
+    });
+    expect(screen.queryByText("78")).not.toBeInTheDocument();
+  });
+
+  it("abrir a página grava a adesão uma vez — e reabrir no dia seguinte não reinicia", async () => {
+    renderPage();
+    await waitFor(async () => {
+      expect(await db.settings.get("vitalidadeDesde")).toBeDefined();
+    });
+    expect((await db.settings.get("vitalidadeDesde"))?.value).toBe(hojeISO(new Date()));
+
+    // Simula a adesão tendo acontecido dias antes: reabrir hoje tem que
+    // preservar o marco antigo, senão o streak volta a 1 a cada visita.
+    await db.settings.put({ key: "vitalidadeDesde", value: diasAtras(9) });
+    renderPage();
+    await waitFor(() => expect(screen.getAllByText("10").length).toBeGreaterThanOrEqual(1));
+    expect((await db.settings.get("vitalidadeDesde"))?.value).toBe(diasAtras(9));
   });
 
   it("desmarcar o dia volta a contar como limpo, e o controle reflete o estado", async () => {

@@ -48,6 +48,11 @@ export interface Settings {
   targetShoulderHipRatio: number; // meta ombro/quadril
   voicePitchTargetLowHz: number;
   voicePitchTargetHighHz: number;
+  /** Dia em que ela ADERIU ao protocolo de Vitalidade, "yyyy-mm-dd". Vazio =
+   *  ainda não aderiu. É o marco zero do streak de dias sem gasto automático
+   *  — ver `vitalidade-adesao.ts` para o porquê de não ser derivado do
+   *  `dailyLog`. */
+  vitalidadeDesde: string;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -105,6 +110,10 @@ export const DEFAULTS: Settings = {
   targetShoulderHipRatio: PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
   voicePitchTargetLowHz: 165,
   voicePitchTargetHighHz: 220,
+  // Vazio de propósito: enquanto ela não abrir a Vitalidade, não existe
+  // acompanhamento nenhum — e um padrão com data faria o app contar dias que
+  // ninguém acompanhou.
+  vitalidadeDesde: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

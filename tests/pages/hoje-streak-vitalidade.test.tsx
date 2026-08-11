@@ -60,13 +60,12 @@ describe("Hoje: streak de Vitalidade", () => {
   });
 
   it("o número mostrado é o streak atual, não o recorde", async () => {
-    // início do acompanhamento há 15 dias, gasto marcado ontem: recorde é a
+    // Adesão ao protocolo há 15 dias, gasto marcado ontem: recorde é a
     // corrida inicial (14), atual é só 1 (de ontem até hoje). Números
     // deliberadamente diferentes — se o card mostrasse o recorde por engano,
     // este teste veria 14 em vez de 1.
-    const inicio = diasAtras(15);
     const gasto = diasAtras(1);
-    await db.dailyLog.put({ date: inicio, waterMl: 0, activeBreakCount: 0 });
+    await db.settings.put({ key: "vitalidadeDesde", value: diasAtras(15) });
     await db.dailyLog.put({ date: gasto, waterMl: 0, activeBreakCount: 0, gastoAutomatico: true });
 
     render(<MemoryRouter><Today /></MemoryRouter>);
@@ -75,5 +74,23 @@ describe("Hoje: streak de Vitalidade", () => {
     const card = streakLabelVitalidade().closest("div");
     expect(card?.textContent).toContain("1");
     expect(card?.textContent).not.toContain("14");
+  });
+
+  // O Hoje NÃO adere ao protocolo por ela — quem grava a data de adesão é a
+  // página Vitalidade, ao ser aberta. Enquanto isso não acontecer, o card
+  // parte de hoje: um dailyLog de meses (água, cães, sono) não pode virar
+  // "Vitalidade · 79" numa tela que ela nem abriu.
+  it("com dailyLog antigo e sem adesão, o card parte de hoje — e o Hoje não adere sozinho", async () => {
+    for (const n of [77, 40, 5]) {
+      await db.dailyLog.put({ date: diasAtras(n), waterMl: 800, activeBreakCount: 2 });
+    }
+
+    render(<MemoryRouter><Today /></MemoryRouter>);
+
+    await screen.findAllByText("Vitalidade");
+    const card = streakLabelVitalidade().closest("div");
+    expect(card?.textContent).toContain("1");
+    expect(card?.textContent).not.toContain("78");
+    expect(await db.settings.get("vitalidadeDesde")).toBeUndefined();
   });
 });

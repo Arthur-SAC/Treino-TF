@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { diasComGasto, inicioDoAcompanhamento } from "../lib/daily-log-helpers";
+import { diasComGasto } from "../lib/daily-log-helpers";
+import { inicioDoAcompanhamento } from "../lib/vitalidade-adesao";
 import { calcularStreak, type StreakVitalidade } from "../lib/vitalidade";
 
 // O streak de dias sem gasto automático, montado num lugar só. Hoje e

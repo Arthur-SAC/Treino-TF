@@ -100,11 +100,8 @@ export async function diasComGasto(): Promise<string[]> {
   return logs.filter((l) => l.gastoAutomatico).map((l) => l.date);
 }
 
-/** Dia mais antigo com registro diário — serve de início do acompanhamento pro
- *  streak. Sem isso, "nenhum gasto" seria indistinguível de "nunca registrou",
- *  e o app inventaria um recorde que ela não fez. `date` é a chave primária de
- *  `dailyLog`, então `orderBy` usa o índice dela sem precisar de índice extra. */
-export async function inicioDoAcompanhamento(): Promise<string | null> {
-  const logs = await db.dailyLog.orderBy("date").limit(1).toArray();
-  return logs[0]?.date ?? null;
-}
+// O início do acompanhamento NÃO mora mais aqui: ele era o dia mais antigo do
+// `dailyLog`, e o `dailyLog` ganha uma linha todo dia por água, caminhada,
+// cães e sono desde muito antes desta frente existir — o streak nascia
+// contando meses que ninguém acompanhou. Agora é a data de adesão gravada em
+// `settings`, ver `vitalidade-adesao.ts`.

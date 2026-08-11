@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
@@ -5,6 +6,7 @@ import { StreakCard } from "../../components/StreakCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { VITALIDADE_GUIA } from "../../data/vitalidade-guide-seed";
 import { registrarGastoAutomatico } from "../../lib/daily-log-helpers";
+import { garantirInicioDoAcompanhamento } from "../../lib/vitalidade-adesao";
 import { useStreakSono } from "../../hooks/useStreakSono";
 import { useStreakVitalidade } from "../../hooks/useStreakVitalidade";
 import { pelvicDoDia } from "../../lib/pelvic-progression";
@@ -17,6 +19,15 @@ import { useSetting } from "../../hooks/useSetting";
 export function Vitalidade() {
   const today = new Date();
   const todayISO = hojeISO(today);
+
+  // Abrir esta página é a adesão ao protocolo, e é ela que marca o dia zero do
+  // streak. Antes o marco era o dia mais antigo do `dailyLog` — que existe
+  // desde muito antes desta frente —, então o app abria mostrando um recorde
+  // de meses que ela nunca fez. Grava uma vez só (ver
+  // `garantirInicioDoAcompanhamento`); reabrir a tela não reinicia nada.
+  useEffect(() => {
+    void garantirInicioDoAcompanhamento(todayISO);
+  }, [todayISO]);
 
   const dailyLog = useLiveQuery(() => db.dailyLog.get(todayISO), [todayISO]);
   const goalMl = useSetting("hydrationGoalMl");
