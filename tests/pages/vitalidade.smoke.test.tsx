@@ -70,6 +70,34 @@ describe("Vitalidade smoke", () => {
     });
   });
 
+  it("com o banco totalmente vazio, mostra atual 1 e recorde 1 — hoje já é um dia limpo", async () => {
+    // Sem nenhum dailyLog, `inicioDoAcompanhamento()` resolve `null`. Se a
+    // página não tratasse isso, o streak quebraria com NaN ou undefined na
+    // tela — este teste é o que acusaria.
+    renderPage();
+    await waitFor(() => {
+      const uns = screen.getAllByText("1");
+      expect(uns.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("desmarcar o dia volta a contar como limpo, e o controle reflete o estado", async () => {
+    renderPage();
+    const user = userEvent.setup();
+    const checkbox = await screen.findByRole("checkbox", { name: /marcar hoje/i });
+
+    await user.click(checkbox); // marca: toque errado ou de verdade, tanto faz
+    await waitFor(() => expect(checkbox).toHaveAttribute("aria-checked", "true"));
+
+    await user.click(checkbox); // desmarca: corrige o toque
+    await waitFor(() => {
+      expect(checkbox).toHaveAttribute("aria-checked", "false");
+      // hoje volta a contar como dia limpo — atual e recorde voltam a 1.
+      const uns = screen.getAllByText("1");
+      expect(uns.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
   it("mostra a fase atual do assoalho pélvico", async () => {
     renderPage();
     await waitFor(() => {

@@ -5,7 +5,8 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
-import { pelvicDoDia, PELVIC_ORDEM } from "../lib/pelvic-progression";
+import { pelvicDoDia } from "../lib/pelvic-progression";
+import { contarPraticasPelvicas } from "../lib/practice-log-helpers";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -63,10 +64,9 @@ export function Today() {
 
   // Quantas práticas de assoalho pélvico ela já concluiu — define em que fase
   // da progressão ela está (identificar o músculo -> Kegel -> variações).
-  const pelvicFeitas = useLiveQuery(async () => {
-    const logs = await db.practiceLogs.toArray();
-    return logs.filter((l) => l.completed && (PELVIC_ORDEM as readonly string[]).includes(l.sequenceId)).length;
-  }, []);
+  // Mesmo helper que a Vitalidade usa: critério duplicado divergiria em
+  // silêncio e as duas telas passariam a mostrar fases diferentes.
+  const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
 
   const walkGoalMin = useSetting("walkGoalMin");

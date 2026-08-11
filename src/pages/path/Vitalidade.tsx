@@ -4,7 +4,8 @@ import { db } from "../../lib/db";
 import { StreakCard } from "../../components/StreakCard";
 import { calcularStreak } from "../../lib/vitalidade";
 import { diasComGasto, inicioDoAcompanhamento, registrarGastoAutomatico } from "../../lib/daily-log-helpers";
-import { pelvicDoDia, PELVIC_ORDEM } from "../../lib/pelvic-progression";
+import { pelvicDoDia } from "../../lib/pelvic-progression";
+import { contarPraticasPelvicas } from "../../lib/practice-log-helpers";
 import { hojeISO } from "../../lib/today-date";
 
 export function Vitalidade() {
@@ -14,14 +15,11 @@ export function Vitalidade() {
   const marcados = useLiveQuery(() => diasComGasto(), []);
   const dailyLog = useLiveQuery(() => db.dailyLog.get(todayISO), [todayISO]);
 
-  // Quantas práticas de assoalho pélvico ela já concluiu — mesma consulta que
-  // o Hoje usa pra decidir a fase (identificar o músculo -> soltura -> Kegel
-  // -> variações). Repetida aqui, e não extraída, porque a única outra chamada
-  // vive em Today.tsx e as duas telas evoluem por tarefas separadas do plano.
-  const pelvicFeitas = useLiveQuery(async () => {
-    const logs = await db.practiceLogs.toArray();
-    return logs.filter((l) => l.completed && (PELVIC_ORDEM as readonly string[]).includes(l.sequenceId)).length;
-  }, []);
+  // Quantas práticas de assoalho pélvico ela já concluiu — mesmo helper que o
+  // Hoje usa pra decidir a fase (identificar o músculo -> soltura -> Kegel ->
+  // variações). Extraído pra `practice-log-helpers.ts` porque as duas telas
+  // precisam do mesmo critério — duplicado, ele diverge em silêncio.
+  const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
 
   // `inicio` fica `undefined` enquanto a consulta carrega e `null` quando o
