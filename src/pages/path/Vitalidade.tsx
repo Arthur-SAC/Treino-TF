@@ -8,11 +8,14 @@ import { calcularStreak } from "../../lib/vitalidade";
 import { diasComGasto, inicioDoAcompanhamento, noitesNoAlvo, registrarGastoAutomatico } from "../../lib/daily-log-helpers";
 import { pelvicDoDia } from "../../lib/pelvic-progression";
 import { contarPraticasPelvicas } from "../../lib/practice-log-helpers";
-import { hojeISO } from "../../lib/today-date";
+import { hojeISO, diaDoAno } from "../../lib/today-date";
+import { buildDayRoutine } from "../../lib/today-routine";
+import { resolverAlvoSono } from "../../lib/routine-times";
 import { useSetting } from "../../hooks/useSetting";
 
 export function Vitalidade() {
-  const todayISO = hojeISO(new Date());
+  const today = new Date();
+  const todayISO = hojeISO(today);
 
   const inicio = useLiveQuery(() => inicioDoAcompanhamento(), []);
   const marcados = useLiveQuery(() => diasComGasto(), []);
@@ -28,10 +31,17 @@ export function Vitalidade() {
   );
   const cinturaRecente = medidaRecente?.[0]?.waistCm;
 
-  // Streak de sono dos últimos 7 dias contra o alvo fixo de 22:30 declarado
-  // pela rotina — mesma conta que a tela Hoje faz com `noitesNoAlvo`. Não
-  // duplica o alvo dinâmico de horários daqui: aqui é só o painel de
-  // vitalidade citando o mesmo critério, não a rotina do dia.
+  // Alvo de sono = o horário do item "dormir" da rotina de hoje, com o ajuste
+  // que ela fez em /hoje/horarios — MESMO cálculo que a tela Hoje usa
+  // (`resolverAlvoSono`, em routine-times.ts). Antes esta tela tinha uma
+  // segunda cópia fixa em "22:30": no dia em que ela mudasse o horário de
+  // dormir, Hoje e Vitalidade passariam a contar streaks diferentes para a
+  // mesma noite. Reusar o helper fecha essa divergência nas duas pontas.
+  const routineTimes = useSetting("routineTimes");
+  const alvoSono = resolverAlvoSono(buildDayRoutine(today.getDay(), diaDoAno(today)).blocks, routineTimes);
+
+  // Streak de sono dos últimos 7 dias contra o alvo acima — mesma conta que a
+  // tela Hoje faz com `noitesNoAlvo`.
   const streakSono = useLiveQuery(async () => {
     const dates: string[] = [];
     for (let i = 0; i < 7; i++) {
@@ -40,8 +50,8 @@ export function Vitalidade() {
       dates.push(hojeISO(d));
     }
     const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
-    return noitesNoAlvo(logs, "22:30");
-  }, []);
+    return noitesNoAlvo(logs, alvoSono);
+  }, [alvoSono]);
 
   // Quantas práticas de assoalho pélvico ela já concluiu — mesmo helper que o
   // Hoje usa pra decidir a fase (identificar o músculo -> soltura -> Kegel ->
@@ -117,7 +127,7 @@ export function Vitalidade() {
         </p>
         <ul className="text-xs text-muted mt-2 space-y-1">
           <li>Água hoje: {dailyLog?.waterMl ?? 0} ml de {goalMl} ml</li>
-          <li>Sono no alvo (22:30): {streakSono ?? 0} de 7 noites</li>
+          <li>Sono no alvo ({alvoSono}): {streakSono ?? 0} de 7 noites</li>
           <li>
             Cintura na última medição: {cinturaRecente !== undefined ? `${cinturaRecente} cm` : "ainda sem medida registrada"}
           </li>

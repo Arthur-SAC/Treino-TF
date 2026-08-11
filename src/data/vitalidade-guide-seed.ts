@@ -1,4 +1,5 @@
 import type { GuideSection } from "../components/GuideAccordion";
+import { MEDIDAS_PARTIDA, FASES } from "../lib/objetivo";
 
 // Ela pediu explicitamente para aumentar o volume de ejaculação. A resposta
 // honesta é que quase toda alavanca real já estava no plano — e a maior
@@ -6,6 +7,15 @@ import type { GuideSection } from "../components/GuideAccordion";
 // em Vitalidade.tsx. Este arquivo existe pra dizer isso com teto declarado,
 // sem prometer o que a fisiologia não entrega e sem empurrar suplemento sem
 // evidência.
+
+// A cintura de partida e o alvo da fase 1 vêm de objetivo.ts — fonte única
+// dos números do plano. A seção "sono e gordura abdominal" citava "a mesma
+// barriga da Fase de Entrada" em prosa solta, sem número: se objetivo.ts
+// mudar esses valores um dia, este arquivo tinha como divergir em silêncio,
+// que é exatamente a classe de bug que aquele módulo existe pra fechar.
+const CINTURA_PARTIDA_CM = MEDIDAS_PARTIDA.cinturaCm;
+const CINTURA_ALVO_FASE1_CM = FASES.find((f) => f.id === "fase-1")!.cinturaCm;
+
 export const VITALIDADE_GUIA: GuideSection[] = [
   {
     id: "teto",
@@ -51,7 +61,7 @@ export const VITALIDADE_GUIA: GuideSection[] = [
     intro: "As duas mexem em testosterona, que controla a produção de sêmen.",
     tips: [
       "Sono ruim derruba testosterona em dias, não meses — é a alavanca mais rápida de estragar, e a mais rápida de recuperar.",
-      "Gordura abdominal converte testosterona em estrogênio. É a mesma barriga que a Fase de Entrada já está tirando por causa da cintura — aqui ela também é frente de volume, não uma frente nova.",
+      `Gordura abdominal converte testosterona em estrogênio. É a mesma barriga que a Fase de Entrada já está tirando: cintura de ${CINTURA_PARTIDA_CM} cm de partida para ${CINTURA_ALVO_FASE1_CM} cm no fim da fase 1 — aqui ela também é frente de volume, não uma frente nova.`,
     ],
   },
   {

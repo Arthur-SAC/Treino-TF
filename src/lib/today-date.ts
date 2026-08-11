@@ -20,3 +20,14 @@ export function hojeISO(d: Date = new Date()): string {
   const dia = String(d.getDate()).padStart(2, "0");
   return `${ano}-${mes}-${dia}`;
 }
+
+/** Dia do ano (1–366) no fuso LOCAL. `buildDayRoutine` usa isso pra decidir
+ *  itens em dias alternados (ex.: barba) e continua puro — o `new Date()`
+ *  fica sempre em quem chama. Morava só em Today.tsx; a Vitalidade também
+ *  passou a precisar montar a rotina do dia (pra resolver o alvo de sono), e
+ *  uma segunda cópia deste cálculo era o mesmo risco de divergência que já
+ *  levou este arquivo a existir para `hojeISO`. */
+export function diaDoAno(date: Date): number {
+  const inicioDoAno = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
+}

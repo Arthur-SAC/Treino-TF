@@ -11,6 +11,7 @@ import { hojeISO } from "../../src/lib/today-date";
 beforeEach(async () => {
   await db.dailyLog.clear();
   await db.practiceLogs.clear();
+  await db.settings.clear();
 });
 
 function renderPage() {
@@ -100,9 +101,25 @@ describe("Vitalidade smoke", () => {
 
   it("mostra a fase atual do assoalho pélvico", async () => {
     renderPage();
+    // Não usa /fase 1/i sozinho: o painel de firmeza/controle/volume também
+    // cita "fase 1" (a fase de objetivo.ts, na frase sobre cintura), então a
+    // regex genérica passou a bater em dois elementos. "achar o músculo" é o
+    // texto específico da etapa da progressão pélvica, sem essa colisão.
     await waitFor(() => {
-      expect(screen.getByText(/fase 1/i)).toBeInTheDocument();
+      expect(screen.getByText(/fase 1.*achar o m[úu]sculo/i)).toBeInTheDocument();
     });
+  });
+
+  // O painel de firmeza/controle/volume já teve o alvo de sono FIXO em
+  // "22:30" no código — o mesmo bug que Today.tsx corrigiu antes (ver
+  // Today.test.tsx). Este teste trava que a Vitalidade acompanha o horário
+  // real do item "dormir", igual a Hoje: se alguém reintroduzir um valor
+  // fixo aqui, este teste quebra.
+  it("o alvo de sono do painel acompanha o horário ajustado do item Dormir, igual à tela Hoje", async () => {
+    await db.settings.put({ key: "routineTimes", value: { dormir: "23:15" } });
+    renderPage();
+    expect(await screen.findByText(/Sono no alvo \(23:15\)/)).toBeInTheDocument();
+    expect(screen.queryByText(/Sono no alvo \(22:30\)/)).not.toBeInTheDocument();
   });
 
   it("não usa a palavra pornografia no rótulo do atalho nem no título da página", async () => {

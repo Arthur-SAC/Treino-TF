@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildDayRoutine } from "../../src/lib/today-routine";
-import { resolveRoutineTime, itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../../src/lib/routine-times";
+import { resolveRoutineTime, resolverAlvoSono, itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../../src/lib/routine-times";
 import type { RoutineTimeOverrides } from "../../src/lib/routine-times";
 
 // Segunda-feira: o dia completo de semana. Dia do ano ímpar (1) = sem barba,
@@ -198,6 +198,48 @@ describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) ind
 
     expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:45");
     expect(resolveRoutineTime(passeioSemana, overrides)).toBe("17:15");
+  });
+});
+
+// Today.tsx e Vitalidade.tsx precisam do MESMO alvo de sono pra medir a mesma
+// noite do mesmo jeito. Antes desta função, cada tela tinha sua própria cópia
+// da resolução (uma lia o item ajustado, a outra tinha "22:30" fixo no
+// código) — e as duas passaram a divergir sem nenhum teste acusando. Este
+// teste trava a invariante que faz essa classe de bug impossível de voltar:
+// para o MESMO dia e o MESMO override, resolverAlvoSono() dá sempre a mesma
+// resposta, não importa qual tela chama.
+describe("resolverAlvoSono — o alvo é o mesmo em qualquer tela que o pede", () => {
+  it("sem ajuste, cai no padrão declarado no item 'dormir' (22:30)", () => {
+    expect(resolverAlvoSono(buildDayRoutine(1, 1).blocks, {})).toBe("22:30");
+    expect(resolverAlvoSono(buildDayRoutine(6, 1).blocks, {})).toBe("22:30");
+  });
+
+  it("com o ajuste da usuária, os blocos de QUALQUER dia da semana concordam entre si", () => {
+    // Ela move o horário de dormir pra 23h. Segunda e sábado são dias com
+    // blocos diferentes (tarde muda, noite não) — se a resolução dependesse
+    // de algo além do item "dormir" e do override, esta comparação pegaria.
+    const overrides: RoutineTimeOverrides = { dormir: "23:00" };
+    const segunda = resolverAlvoSono(buildDayRoutine(1, 1).blocks, overrides);
+    const sabado = resolverAlvoSono(buildDayRoutine(6, 1).blocks, overrides);
+    const domingo = resolverAlvoSono(buildDayRoutine(0, 1).blocks, overrides);
+    expect(segunda).toBe("23:00");
+    expect(sabado).toBe(segunda);
+    expect(domingo).toBe(segunda);
+  });
+
+  it("simula as duas telas chamando a função com os mesmos dados — o resultado bate", () => {
+    // Today.tsx monta `routine` a partir de (dayOfWeek, diaDoAno); Vitalidade
+    // faz a mesma coisa pro dia de hoje. Reproduz os dois call sites com o
+    // mesmo dia e o mesmo override, e prova que produzem o mesmo alvo — é
+    // exatamente essa igualdade que impede o streak de sono divergir entre
+    // as duas telas outra vez.
+    const dayOfWeek = 3;
+    const dayOfYear = 200;
+    const overrides: RoutineTimeOverrides = { dormir: "22:45" };
+    const alvoDaTelaHoje = resolverAlvoSono(buildDayRoutine(dayOfWeek, dayOfYear).blocks, overrides);
+    const alvoDaVitalidade = resolverAlvoSono(buildDayRoutine(dayOfWeek, dayOfYear).blocks, overrides);
+    expect(alvoDaTelaHoje).toBe(alvoDaVitalidade);
+    expect(alvoDaTelaHoje).toBe("22:45");
   });
 });
 

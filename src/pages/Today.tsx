@@ -13,7 +13,7 @@ import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
-import { resolveRoutineTime, formatHora } from "../lib/routine-times";
+import { resolveRoutineTime, resolverAlvoSono, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import { addWater, addWalk, creditarPasseio, registrarSono, noitesNoAlvo } from "../lib/daily-log-helpers";
 import { RoutineRow } from "../components/RoutineRow";
@@ -21,15 +21,8 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
-import { hojeISO } from "../lib/today-date";
+import { hojeISO, diaDoAno } from "../lib/today-date";
 import { metaDePausas } from "../lib/micro-pausas";
-
-/** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
- *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
-function dayOfYear(date: Date): number {
-  const inicioDoAno = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
-}
 
 export function Today() {
   const today = new Date();
@@ -118,15 +111,17 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
+  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today));
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
   // fez em /hoje/horarios. Era uma constante "22:30" aqui: se ela mudasse o
   // item pra 23h, a linha mostrava 23h, o subtítulo continuava dizendo "alvo
   // 22:30" e o streak media contra 22:30 — três respostas pra mesma pergunta.
-  const itemDormir = routine.blocks.flatMap((b) => b.items).find((i) => i.id === "dormir");
-  const alvoSono = (itemDormir ? resolveRoutineTime(itemDormir, routineTimes) : undefined) ?? "22:30";
+  // `resolverAlvoSono` mora em routine-times.ts porque a Vitalidade também
+  // precisa deste número (streak de sono do painel de volume) — cálculo
+  // duplicado nas duas telas é exatamente o mesmo bug, agora entre telas.
+  const alvoSono = resolverAlvoSono(routine.blocks, routineTimes);
 
   // Conta noites dos últimos 7 dias em que ela deitou até o alvo — sono é a
   // alavanca que ela mais subestima, e o card só existe pra tornar a melhora
