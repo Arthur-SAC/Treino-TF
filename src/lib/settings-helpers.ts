@@ -1,4 +1,12 @@
 import { db } from "./db";
+import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 } from "./objetivo";
+
+// Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
+// objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
+// de teste que amarra o resto do app: mudar a fase 2 em objetivo.ts não movia
+// nada aqui, e as telas continuavam citando um número que já tinha ficado
+// pra trás.
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
 export interface Settings {
   onboarded: boolean;
@@ -89,8 +97,12 @@ export const DEFAULTS: Settings = {
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,
-  targetWhr: 0.72,
-  targetShoulderHipRatio: 1.0,
+  // whrExcelente da fase 2 (execução muito boa) — ver o comentário acima do
+  // import.
+  targetWhr: FASE_2.whrExcelente!,
+  // Projeção de ombro÷quadril ao fim da fase 2, não meta cobrável — ver
+  // PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 em objetivo.ts.
+  targetShoulderHipRatio: PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
   voicePitchTargetLowHz: 165,
   voicePitchTargetHighHz: 220,
 };

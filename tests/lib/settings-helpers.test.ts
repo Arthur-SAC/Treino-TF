@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { getSetting, setSetting } from "../../src/lib/settings-helpers";
+import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 } from "../../src/lib/objetivo";
+
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
 describe("settings helpers", () => {
   it("setSetting + getSetting round-trip", async () => {
@@ -20,8 +23,12 @@ describe("settings helpers", () => {
 describe("settings de silhueta", () => {
   it("tem defaults de altura e metas", async () => {
     expect(await getSetting("heightCm")).toBe(0);
-    expect(await getSetting("targetWhr")).toBe(0.72);
-    expect(await getSetting("targetShoulderHipRatio")).toBe(1.0);
+    // Ambos derivam de objetivo.ts (fonte única) — não são mais literais soltos
+    // aqui. targetWhr é o whrExcelente da fase 2; targetShoulderHipRatio é a
+    // projeção de ombro÷quadril da fase 2 (não uma meta cobrável).
+    expect(await getSetting("targetWhr")).toBe(FASE_2.whrExcelente);
+    expect(await getSetting("targetWhr")).toBe(0.73);
+    expect(await getSetting("targetShoulderHipRatio")).toBe(PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2);
   });
   it("persiste altura", async () => {
     await setSetting("heightCm", 165);

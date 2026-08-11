@@ -54,11 +54,18 @@ const RENOMEADOS_V7: ReadonlyArray<readonly [string, string]> = [
  *  copiar o título antigo para cá devolveria ao código-fonte exatamente a frase
  *  que esta branch removeu do app — e a varredura de
  *  tests/data/sem-trh-agendada.test.ts acusaria, com razão. O prefixo identifica
- *  a linha sem repetir a promessa. */
-const REMOVIDOS_V7: readonly string[] = [
-  "Conversa com endocrinologista sobre planejamento",
-  "Avaliar congelamento de gametas (criopreservação)",
-  "◆Fase 5 — Manutenção",
+ *  a linha sem repetir a promessa.
+ *
+ *  Prefixo sozinho é largo demais: ela cria marcos livremente pela tela de
+ *  Novo Marco, e um marco dela que por acaso começasse com as mesmas palavras
+ *  — "Conversa com endocrinologista sobre..." é uma frase plausível de
+ *  aparecer de novo, sobre outro assunto — seria apagado em silêncio. Por
+ *  isso a `category` do marco de seed que está saindo entra na comparação:
+ *  só casa (e só apaga) quem tem o mesmo prefixo E a mesma categoria. */
+const REMOVIDOS_V7: ReadonlyArray<{ prefixo: string; category: Milestone["category"] }> = [
+  { prefixo: "Conversa com endocrinologista sobre planejamento", category: "fertilidade" },
+  { prefixo: "Avaliar congelamento de gametas (criopreservação)", category: "fertilidade" },
+  { prefixo: "◆Fase 5 — Manutenção", category: "fisico" },
 ];
 
 /** Marcos que nascem na v7. A lista existe para a migração distinguir "ela apagou
@@ -95,10 +102,11 @@ async function regravaMarcosV7(): Promise<void> {
     }
   }
 
-  for (const prefixo of REMOVIDOS_V7) {
+  for (const { prefixo, category } of REMOVIDOS_V7) {
     const p = chaveMarco(prefixo);
     for (const [k, linha] of [...porChave]) {
-      if (!k.startsWith(p) || linha.id === undefined || linha.dateCompleted) continue;
+      if (!k.startsWith(p) || linha.category !== category) continue;
+      if (linha.id === undefined || linha.dateCompleted) continue;
       await db.milestones.delete(linha.id);
       porChave.delete(k);
     }
@@ -118,7 +126,12 @@ async function regravaMarcosV7(): Promise<void> {
           : {}),
       });
     } else if (novos.has(k)) {
-      await db.milestones.add(m as never);
+      // Cópia, não `m` direto: Dexie grava o `id` gerado de volta no objeto que
+      // recebe. `m` vem de TODOS_OS_MARCOS, uma constante de módulo — sem a
+      // cópia, o PRIMEIRO id atribuído fica preso ao objeto pro resto da vida
+      // do processo, e uma chamada futura de `add` com esse `id` já carimbado
+      // tenta gravar numa chave que pode estar ocupada por outra linha.
+      await db.milestones.add({ ...m } as never);
     }
   }
 }

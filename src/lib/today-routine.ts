@@ -72,9 +72,10 @@ const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label
 
 type TipoDeDia = "semana" | "sabado" | "domingo";
 
-/** O lanche das 16h existe nos sete dias, mas o motivo dele muda: em dia de
- *  semana é a janela pré-treino comida ainda no trabalho; no sábado é antes da
- *  dança; no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
+/** O lanche existe nos sete dias, mas horário e motivo mudam: em dia de semana
+ *  é às 15:30, a janela pré-treino comida ainda no trabalho, meia hora antes
+ *  da caminhada das 16h; no fim de semana é às 16h — no sábado é antes da
+ *  dança, no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
 function lanche(dia: TipoDeDia): RoutineItem {
   const base = {

@@ -105,6 +105,27 @@ export const FASES: readonly FaseObjetivo[] = [
  *  encolhe: abaixo disso não existe, por mais déficit que se faça. */
 export const CINTURA_PISO_CM = 80;
 
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
+
+/** Ombro projetado ao fim da fase 1: cai para perto de 114 cm junto com a
+ *  gordura que sai da cintura e do quadril, porque a circunferência do ombro
+ *  também carrega gordura (ver o comentário de `shoulderHipGap` em
+ *  silhouette.ts). Não é medida que o treino persegue — ninguém treina ombro
+ *  pra chegar nela, ela é consequência do mesmo déficit que tira a barriga. */
+const PROJECAO_OMBRO_FASE1_CM = 114;
+
+/** Ombro÷quadril projetado para o fim da fase 2: ombro já reduzido da fase 1
+ *  (114) sobre o quadril reconstruído da fase 2 (114) ⇒ ~1,00. É PROJEÇÃO, não
+ *  meta cobrável — ela já está em faixa feminina hoje (1,06); este número só
+ *  descreve pra onde a razão tende sozinha, sem nenhum treino de ombro. Antes
+ *  este 1,00 vivia solto em settings-helpers.ts, sem fonte nem teste; a tela
+ *  o rotulava "alvo", o que reintroduzia em texto a dívida de quadril que esta
+ *  branch removeu em número (ver `shoulderHipGap`). */
+export const PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 = razaoOmbroQuadril(
+  PROJECAO_OMBRO_FASE1_CM,
+  FASE_2.quadrilCm,
+);
+
 export const CONSUMO = {
   /** Mifflin-St Jeor + 5 km a pé por dia + 1h de cães + força 4-5x/semana. */
   gastoEstimadoKcalMin: 2900,

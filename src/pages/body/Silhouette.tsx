@@ -12,7 +12,12 @@ import {
   leverGuidance,
   waistGuard,
 } from "../../lib/silhouette";
-import { DISTRIBUICAO_GORDURA_ATUAL, FASES, MEDIDAS_PARTIDA } from "../../lib/objetivo";
+import {
+  DISTRIBUICAO_GORDURA_ATUAL,
+  FASES,
+  MEDIDAS_PARTIDA,
+  PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
+} from "../../lib/objetivo";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
 const BAND_LABEL: Record<string, string> = {
@@ -53,7 +58,7 @@ const GUIDE_SILHUETA: GuideSection[] = [
     tips: [
       "A razão anda pelas duas pontas, não só pela de baixo: a medida do ombro inclui gordura e cai junto no emagrecimento. Por isso não existe uma dívida de centímetros de quadril pendurada em você.",
       `Na fase 1 esse número pode até subir um pouco: o quadril sai na frente porque tem mais gordura nele (${MEDIDAS_PARTIDA.quadrilCm} → ${FASE_1.quadrilCm} cm). Não é regressão, é a ordem em que a gordura sai.`,
-      `Na fase 2 o quadril volta aos ${FASE_2.quadrilCm} cm de hoje feito de músculo, sobre um tronco já seco — é aí que a razão fecha perto de 1,00, sem nenhum treino de ombro pra isso.`,
+      `Na fase 2 o quadril volta aos ${FASE_2.quadrilCm} cm de hoje feito de músculo, sobre um tronco já seco — é aí que a razão fecha perto de ${PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2.toFixed(2)}, sem nenhum treino de ombro pra isso.`,
       "Treinar ombro pesado (desenvolvimento, elevações com carga alta) alarga a parte de cima e sobe a razão. Por isso o ombro entra leve, só pra postura — não porque ele seja largo demais.",
     ],
   },
@@ -190,8 +195,15 @@ export function Silhouette() {
         <div className="card space-y-1">
           <h2 className="text-nude-warm font-medium">Ombro / Quadril</h2>
           <p className="text-nude text-lg">
-            {shr.toFixed(2)} <span className="text-muted text-sm">· alvo {targetShr.toFixed(2)}</span>
+            {shr.toFixed(2)}{" "}
+            <span className="text-muted text-sm">
+              · projeção fase 2 {targetShr.toFixed(2)}
+            </span>
           </p>
+          {/* "Projeção", não "alvo": ela já está em faixa feminina hoje (1,06).
+              Rotular como meta pendente reintroduziria em texto a dívida de
+              quadril que esta branch removeu em número — ver
+              PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 em objetivo.ts. */}
           {shr <= SHR_FAIXA_FEMININA ? (
             <p className="text-nude text-sm">
               Já é faixa feminina — homem cis típico fica entre 1,15 e 1,25. ✓
@@ -214,7 +226,12 @@ export function Silhouette() {
       {bf !== null ? (
         <div className="card space-y-1">
           <h2 className="text-nude-warm font-medium">Gordura corporal estimada</h2>
-          <p className="text-nude text-lg">~{bf}% <span className="text-muted text-sm">· {BAND_LABEL[classifyBodyFat(bf)]}</span></p>
+          <p className="text-nude text-lg">
+            ~{bf}%{" "}
+            <span className="text-muted text-sm">
+              · {BAND_LABEL[classifyBodyFat(bf)]} (referência feminina)
+            </span>
+          </p>
           <p className="text-muted text-xs">Estimativa por fita (Navy): pescoço + cintura + altura. Use a tendência, não o número absoluto.</p>
           {/* Nomear a régua na tela não é preciosismo: a outra fórmula Navy devolve
               mais de 15 pontos a mais com estas mesmas medidas. Sem dizer qual está

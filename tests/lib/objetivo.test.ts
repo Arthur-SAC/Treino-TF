@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   MEDIDAS_PARTIDA, FASES, CONSUMO, MARCOS_CINTURA, CINTURA_PISO_CM,
-  razaoCinturaQuadril, razaoOmbroQuadril,
+  razaoCinturaQuadril, razaoOmbroQuadril, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
 } from "../../src/lib/objetivo";
 
 describe("derivadas das medidas de partida", () => {
@@ -54,6 +54,15 @@ describe("fases", () => {
       expect({ fase: f.id, razao: razaoCinturaQuadril(f.cinturaCm, f.quadrilCm) })
         .toEqual({ fase: f.id, razao: esperado });
     }
+  });
+});
+
+describe("projeção de ombro÷quadril (fase 2)", () => {
+  const fase2 = FASES.find((f) => f.id === "fase-2")!;
+
+  it("é ~1,00 — ombro projetado (~114) sobre o quadril reconstruído da fase 2 (114)", () => {
+    expect(PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2).toBe(razaoOmbroQuadril(114, fase2.quadrilCm));
+    expect(PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2).toBeCloseTo(1.0, 2);
   });
 });
 

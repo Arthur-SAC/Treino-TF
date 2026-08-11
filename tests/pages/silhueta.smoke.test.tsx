@@ -27,13 +27,17 @@ describe("Silhouette smoke", () => {
       date: "2026-06-10",
       neckCm: 33,
       shouldersCm: 105,
-      waistCm: 80,
+      waistCm: 78,
       hipCm: 110,
     });
     renderPage();
     await waitFor(() => {
       expect(screen.getAllByText(/WHR/).length).toBeGreaterThan(0);
-      expect(screen.getByText(/0[.,]73/)).toBeInTheDocument(); // 80/110 = 0,727
+      // 78/110 = 0,709. Evita 80/110 (~0,73) de propósito: 0,73 é agora o
+      // próprio targetWhr default (whrExcelente da fase 2, ver
+      // settings-helpers.ts), e coincidir os dois faria "WHR 0,73" e
+      // "alvo 0,73" baterem no mesmo getByText.
+      expect(screen.getByText(/0[.,]71/)).toBeInTheDocument();
     });
   });
 

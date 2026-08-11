@@ -147,6 +147,25 @@ describe("migração v7 dos marcos", () => {
     expect(whr!.notes).not.toContain("quadril aumentar 1-2cm");
   });
 
+  it("marco criado por ela com prefixo parecido mas categoria diferente sobrevive à migração", async () => {
+    await bancoNaV6();
+    // Ela poderia genuinamente criar um marco assim pela tela de Novo Marco —
+    // mesmo começo de frase do marco de fertilidade que a v7 remove, mas sobre
+    // outro assunto (categoria "medico"). Casar só por prefixo apagaria isso
+    // em silêncio; a categoria precisa bater também.
+    await db.milestones.add({
+      datePlanned: "2026-06-01",
+      title: "Conversa com endocrinologista sobre planejamento de exame de rotina",
+      category: "medico",
+    } as never);
+
+    await seedPath();
+
+    const dela = await acheTitulo("planejamento de exame de rotina");
+    expect(dela).toBeDefined();
+    expect(dela!.category).toBe("medico");
+  });
+
   it("marco que ela apagou não volta do túmulo", async () => {
     const semNutri = MARCOS_V6.filter((m) => !m.title.includes("nutricionista"));
     await bancoNaV6(semNutri);
