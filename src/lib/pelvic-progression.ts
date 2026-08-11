@@ -11,7 +11,12 @@
 // pélvico. Por isso as primeiras práticas insistem na identificação, depois
 // consolidam o Kegel clássico, e só então abrem para as variações.
 
-/** As 8 sequências em ordem didática, não por dificuldade isolada. */
+// As cinco de soltura (Task 3) entraram aqui só pra restaurar a invariante de
+// cobertura — toda sequência 'pelvic' do catálogo precisa estar nesta lista,
+// senão a rotina diária nunca alcança ela. A ordenação por fase (onde essas
+// cinco encaixam didaticamente) é da Task 4, que reescreve pelvicDoDia.
+
+/** As sequências de assoalho pélvico em ordem didática, não por dificuldade isolada. */
 export const PELVIC_ORDEM = [
   "pelvic-identificacao",
   "pelvic-kegel-classico",
@@ -21,6 +26,11 @@ export const PELVIC_ORDEM = [
   "pelvic-respiracao-conexao",
   "pelvic-dance-integration",
   "pelvic-pre-prazer",
+  "pelvic-soltura-identificacao",
+  "pelvic-soltura-sustentada",
+  "pelvic-alternancia",
+  "pelvic-start-stop",
+  "pelvic-receber-preparo",
 ] as const;
 
 /** Quantas práticas cada fase de base exige antes de liberar a próxima. */

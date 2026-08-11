@@ -11,7 +11,7 @@ import { SEQUENCES } from "../../src/data/sequences-seed";
 // contração de glúteo e abdômen achando que é assoalho pélvico.
 
 describe("PELVIC_ORDEM", () => {
-  it("cobre as 8 sequências de assoalho pélvico do catálogo", () => {
+  it("cobre todas as sequências de assoalho pélvico do catálogo", () => {
     const doCatalogo = SEQUENCES.filter((s) => s.category === "pelvic").map((s) => s.id).sort();
     expect([...PELVIC_ORDEM].sort()).toEqual(doCatalogo);
   });
