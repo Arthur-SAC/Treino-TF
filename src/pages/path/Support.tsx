@@ -23,7 +23,11 @@ const GUIDE: GuideSection[] = [
     tips: [
       "Você não é 'menos mulher' por estar no começo. A trajetória já começou, e cada passo conta.",
       "O espelho de hoje não é o destino. Corpo, voz e pele estão mudando com o seu trabalho.",
-      "Usar o modo masculino no ambiente pesado é uma escolha sua pra esse contexto, não fracasso. Sua feminilidade existe em qualquer modo que você escolhe usar.",
+      // Decisão da usuária, não simplificação nossa: chamar isso só de "escolha"
+      // apaga a pressão real do ambiente hostil; chamar só de "sobrevivência"
+      // apaga a agência dela. As duas são verdade ao mesmo tempo — por isso a
+      // frase nomeia as duas, em vez de escolher o lado mais confortável.
+      "É escolha sua — feita num ambiente que não te dá muitas. Isso é estratégia, não fracasso.",
       "Sua amada te vê. Você é amada exatamente por quem você é.",
       "Disforia é um sentimento, não um fato sobre o seu valor.",
     ],
