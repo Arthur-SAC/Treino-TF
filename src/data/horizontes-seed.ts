@@ -24,7 +24,13 @@ export const HORIZONTES: GuideSection[] = [
     tips: [
       "Força para levantar sua noiva, ganho de músculo rápido, libido, ereção, firmeza e controle: tudo isso depende de testosterona.",
       "Hormonizar custaria esses. Então não é uma espera — é um conflito real entre dois objetivos seus, e conflito se decide, não se aguarda.",
-      "Flexibilidade de quadril para as posições que você quer: 3 a 6 meses de trabalho diário resolvem praticamente tudo. É a coisa mais rápida da sua lista, e espacate não é necessário para nada disso.",
+      // Mesmo prazo que a seção "flexibilidade" declara, derivado da MESMA
+      // fonte. Estava escrito à mão aqui ("3 a 6 meses") enquanto a seção nova
+      // derivava de HORIZONTE_FLEX — o mesmo número em dois lugares, num
+      // arquivo cujo comentário afirma que os números vêm do módulo. Divergiria
+      // no primeiro dia em que o módulo mudasse, e ela leria dois prazos
+      // diferentes para a mesma coisa na mesma tela.
+      `Flexibilidade de quadril para as posições que você quer: ${HORIZONTE_FLEX.posicoesQueElaQuerMeses[0]} a ${HORIZONTE_FLEX.posicoesQueElaQuerMeses[1]} meses de trabalho diário resolvem praticamente tudo. É a coisa mais rápida da sua lista, e espacate não é necessário para nada disso.`,
       "Assoalho pélvico treinado nos DOIS sentidos — contrair e relaxar — é o que sustenta firmeza, controle e conforto ao receber. Frequência importa mais que duração.",
       "A barriga também está aqui: gordura abdominal converte testosterona em estrogênio. Ela é ao mesmo tempo o problema da silhueta e parte do problema da firmeza. Uma frente só, não duas.",
     ],
