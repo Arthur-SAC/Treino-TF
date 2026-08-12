@@ -80,7 +80,10 @@ export async function seedDatabase(): Promise<void> {
   // v11: o padrão de levantar (agachamento-goblet, carregamento-frontal,
   // prancha-antirrotacao) entrou nos ciclos de variação/hipertrofia/
   // refinamento/manutenção — por troca, não por soma, pra sessão não crescer.
-  const TEMPLATE_SEED_VERSION = 11;
+  // v12: o mesmo padrão entrou na ADAPTAÇÃO, que ela alcança em ~3 semanas —
+  // sem isso o padrão de levantar só chegaria nela daqui a ~48 sessões. A Fase
+  // de Entrada continua de fora de propósito (rampa de exposição).
+  const TEMPLATE_SEED_VERSION = 12;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {

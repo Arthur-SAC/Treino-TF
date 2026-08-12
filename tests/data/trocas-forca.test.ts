@@ -4,8 +4,20 @@ import { EXERCISES } from "../../src/data/exercises-seed";
 
 /** Contagem e duração por template ANTES desta task. Congelado de propósito:
  *  a decisão da usuária é que a sessão não cresce, e um número escrito aqui é
- *  o que impede alguém de "só acrescentar um exercício" depois. */
+ *  o que impede alguém de "só acrescentar um exercício" depois.
+ *
+ *  Os cinco templates de ADAPTAÇÃO entraram na revisão final, quando as trocas
+ *  passaram a valer também pro ciclo que ela alcança em ~3 semanas. Os valores
+ *  foram lidos do código e congelados ANTES de qualquer edição do seed — é o
+ *  que dá sentido à palavra "antes" no nome desta tabela. */
 const ANTES: Record<string, { ex: number; min: number }> = {
+  // adaptação (ciclo 1 depois da entrada)
+  "seg-gluteo-mobilidade": { ex: 6, min: 27 },
+  "ter-cintura-costas": { ex: 7, min: 36 },
+  "qua-mobilidade-danca": { ex: 8, min: 40 },
+  "qui-gluteo-coxa": { ex: 7, min: 27 },
+  "sex-peitoral-postura": { ex: 6, min: 22 },
+  // variação em diante
   "v-seg-gluteo-unilateral": { ex: 7, min: 42 },
   "v-ter-cintura-costas": { ex: 8, min: 52 },
   "v-qua-mobilidade-danca": { ex: 10, min: 54 },
