@@ -915,97 +915,114 @@ function boostSlots(slots: MealSlot[], boostByMeal: Partial<Record<MealSlot["mea
   });
 }
 
-// Manutenção: +150 kcal (refinamento e fase final). Era +250 (almoço 65 +
-// lanche 100 + jantar 85) até o café e o almoço da BASE (SLOTS, compartilhada
-// pelos 3 planos) subirem 50 kcal cada na Task 9 fix round 1 — o que também
-// empurrou os alvos de manutenção pra 2550, 100 acima do kcalDaily fixo
-// (2450). Fix round 2: removido o boost do lanche (que já valia exatamente
-// 100 kcal) em vez de coar a diferença em vários itens — soma volta a bater
-// exato (2300 de base + 150 de boost = 2450) sem tocar em kcalDaily.
+// Manutenção: +700 kcal sobre a base de 2300, fechando 3000. O número anterior
+// (+150, fechando 2450) foi calculado contra um gasto estimado de ~2700 — antes
+// de CONSUMO.gastoEstimadoKcalMin/Max (objetivo.ts) contar a caminhada de 5 km
+// do trabalho pra casa. Com ela contada, o gasto real é 2900-3100, e o plano
+// que se chamava "manutenção" era um déficit de ~550 kcal/dia. Ela troca pra
+// este plano quando a cintura chegar a 88 (mês 3-4), que é exatamente a fase de
+// construir glúteo: construir em déficit sem saber é o pior desfecho possível.
+//
+// A soma dos quatro acréscimos tem que dar 700 EXATOS — boostSlots soma o mesmo
+// valor ao targetKcal do slot e a cada variante dele, e a invariante testada é
+// que a soma dos alvos seja o kcalDaily declarado.
 const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
+  cafe: {
+    foods: [{ name: "Castanha de caju da fase (27g, um punhado cheio)", qtyG: 27, kcal: 150, proteinG: 5, carbG: 8, fatG: 12, preparation: "Ao natural, junto do café — sem preparo." }],
+    ingredients: [{ item: "Castanha de caju", qty: 27, unit: "g", category: "mercearia" }],
+  },
   almoco: {
-    foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Mais ~1 colher e meia de arroz no almoço — a fase pede um pouco mais de energia." }],
-    ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
+    foods: [{ name: "Arroz & feijão de corda extra da fase (+90g arroz, +100g feijão)", qtyG: 190, kcal: 200, proteinG: 9, carbG: 39, fatG: 1, preparation: "Porção maior dos dois — os dois já saem prontos do lote de domingo." }],
+    ingredients: [
+      { item: "Arroz", qty: 48, unit: "g", category: "carboidrato" },
+      { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
+    ],
+  },
+  lanche: {
+    // Carboidrato puro, gordura ZERO — e isso não é estilo. A base do lanche já
+    // usa 3-4g dos 5g de teto (ela caminha 5 km e treina logo depois), então
+    // qualquer gordura aqui estoura o teto em toda variante de uma vez.
+    foods: [{ name: "Macaxeira cozida do lote (120g)", qtyG: 120, kcal: 150, proteinG: 1, carbG: 36, fatG: 0, preparation: "Cozida no domingo, comida fria mesmo — ou 40s no micro-ondas do trabalho." }],
+    ingredients: [{ item: "Macaxeira (aipim)", qty: 120, unit: "g", category: "carboidrato" }],
   },
   jantar: {
-    foods: [{ name: "Carboidrato extra da fase (+60g arroz/batata)", qtyG: 60, kcal: 85, proteinG: 2, carbG: 18, fatG: 0, preparation: "Aumenta a porção de carbo do jantar." }],
-    ingredients: [{ item: "Arroz branco", qty: 30, unit: "g", category: "carboidrato" }],
+    foods: [{ name: "Arroz extra da fase (+92g cozido) & azeite (1 cs)", qtyG: 104, kcal: 200, proteinG: 2, carbG: 22, fatG: 11, preparation: "Mais arroz e um fio generoso de azeite por cima do prato." }],
+    ingredients: [
+      { item: "Arroz", qty: 49, unit: "g", category: "carboidrato" },
+      { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
+    ],
   },
 };
 
-// Superávit leve: +400 kcal (hipertrofia — fase de crescer o glúteo). Era
-// +479 (já 21 kcal alto antes da Task 9). Fix round 2: cortados 79 kcal do
-// almoço, do mel do lanche e da batata doce do jantar — não do café (o
-// scoop de whey inteiro é o que o teste de phase-nutrition espera em toda
-// variante) — pra soma dos alvos bater exato com kcalDaily (2300 de base +
-// 400 de boost = 2700) sem tocar no número declarado.
+// Superávit leve: +1000 kcal sobre a base de 2300, fechando 3300 — acima do teto
+// do gasto estimado (3100), que é o que faz a palavra "superávit" ser verdade.
+// Mesma dívida do bloco acima: o número anterior (+400, fechando 2700) ficava
+// ABAIXO do gasto real, ou seja, o plano de crescer glúteo era um déficit.
+//
+// O whey do café não é enfeite nem pode ser trocado por outra fonte: o nome
+// precisa casar com /whey extra da fase/i em TODA variante do café — é o que
+// tests/lib/phase-nutrition.test.ts cobra. Soma dos acréscimos: 1000 exatos.
 const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
   cafe: {
-    foods: [{ name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." }],
-    ingredients: [{ item: "Whey protein", qty: 30, unit: "g", category: "laticinio" }],
-  },
-  lanche: {
-    // Sem pasta de amendoim aqui de propósito: mesmo na fase de crescer o
-    // glúteo, o lanche continua sendo o pré-treino (caminhada + treino logo
-    // depois) — o acréscimo de energia vem de carboidrato, não de gordura.
     foods: [
-      { name: "Fruta extra da fase (1 banana)", qtyG: 120, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Come junto com o lanche." },
-      // Era 20g/61kcal (1 colher de sopa) — reduzido na Task 9 fix round 2
-      // pra ajudar a fechar a soma dos alvos em 2700 (ver comentário de
-      // SURPLUS_BOOST acima).
-      { name: "Mel (2 colheres de chá)", qtyG: 13, kcal: 40, proteinG: 0, carbG: 11, fatG: 0, preparation: "Regado no iogurte, no pão ou no cuscuz — extra da fase." },
+      { name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." },
+      { name: "Castanha de caju da fase (32g)", qtyG: 32, kcal: 180, proteinG: 6, carbG: 10, fatG: 14, preparation: "Ao natural, junto do café." },
     ],
     ingredients: [
-      { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-      { item: "Mel", qty: 13, unit: "g", category: "mercearia" },
+      { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
+      { item: "Castanha de caju", qty: 32, unit: "g", category: "mercearia" },
     ],
   },
   almoco: {
-    // Era 75g/98kcal — reduzido pra 50g na Task 9 fix round 2 (mesma
-    // quantidade do arroz extra de manutenção) pra ajudar a fechar a soma
-    // dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
-    foods: [{ name: "Arroz extra da fase (+50g cozido)", qtyG: 50, kcal: 65, proteinG: 1, carbG: 14, fatG: 0, preparation: "Porção maior de arroz pra sustentar o ganho de glúteo." }],
-    ingredients: [{ item: "Arroz integral", qty: 25, unit: "g", category: "carboidrato" }],
+    foods: [{ name: "Arroz & feijão de corda extra da fase (+110g arroz, +130g feijão)", qtyG: 240, kcal: 250, proteinG: 11, carbG: 49, fatG: 1, preparation: "Porção maior dos dois pra sustentar o ganho de glúteo." }],
+    ingredients: [
+      { item: "Arroz", qty: 59, unit: "g", category: "carboidrato" },
+      { item: "Feijão de corda (macassar)", qty: 65, unit: "g", category: "carboidrato" },
+    ],
+  },
+  lanche: {
+    // Sem gordura aqui de propósito, mesmo na fase de crescer o glúteo: o
+    // lanche continua sendo o pré-treino (5 km a pé + 1h de cães + treino logo
+    // depois), e o teto de 5g de gordura do slot não relaxa por causa da fase.
+    foods: [{ name: "Macaxeira cozida do lote (160g)", qtyG: 160, kcal: 200, proteinG: 1, carbG: 48, fatG: 0, preparation: "Cozida no domingo, comida fria — ou 40s no micro-ondas do trabalho." }],
+    ingredients: [{ item: "Macaxeira (aipim)", qty: 160, unit: "g", category: "carboidrato" }],
   },
   jantar: {
-    // Era 70g/100kcal — reduzido pra 52g na Task 9 fix round 2 pra ajudar a
-    // fechar a soma dos alvos em 2700 (ver comentário de SURPLUS_BOOST acima).
-    foods: [{ name: "Batata doce extra da fase (+52g)", qtyG: 52, kcal: 75, proteinG: 1, carbG: 17, fatG: 0, preparation: "Cozida ou no vapor, junto com o jantar." }],
-    ingredients: [{ item: "Batata doce", qty: 52, unit: "g", category: "carboidrato" }],
+    foods: [{ name: "Batata doce extra da fase (105g) & azeite (1 cs)", qtyG: 117, kcal: 250, proteinG: 2, carbG: 35, fatG: 11, preparation: "Cozida ou no vapor, junto com o jantar, com um fio generoso de azeite." }],
+    ingredients: [
+      { item: "Batata doce", qty: 105, unit: "g", category: "carboidrato" },
+      { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
+    ],
   },
 };
 
 const MAINTENANCE_SLOTS = boostSlots(SLOTS, MAINTENANCE_BOOST);
 const SURPLUS_SLOTS = boostSlots(SLOTS, SURPLUS_BOOST);
 
-// DÍVIDA REGISTRADA (2026-08): manutenção (2450) e superávit (2700) foram
-// calculados contra um gasto estimado de ~2700kcal — antes de CONSUMO.gastoEstimadoKcalMin/Max
-// (objetivo.ts) contar a caminhada de 5km/dia. Com ela contada, o gasto real
-// é 2900-3100kcal, e "manutenção" a 2450 é na verdade um déficit de ~550kcal,
-// não manutenção. Não recalibrado aqui de propósito: ela só troca pra estes
-// planos depois da cintura chegar a 88 (mês 3-4, ver MARCOS_CINTURA em
-// objetivo.ts), e a reforma de cardápio da frente 5 vai reconstruir as
-// refeições de qualquer jeito — recalibrar os números agora seria trabalho
-// que a frente 5 descarta. Mas o número errado precisa ficar escrito: dívida
-// silenciosa vira mentira.
 export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano · manutenção (2450 kcal)",
+  name: "Plano · manutenção (3000 kcal)",
   goal: "manutencao",
-  kcalDaily: 2450,
-  proteinG: 185,
-  carbG: 266,
-  fatG: 70,
+  kcalDaily: 3000,
+  // Soma real da variante 0 com o boost: 3035 kcal, 220g proteína, 365g carbo,
+  // 77g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
+  // derruba testosterona, e é a testosterona que sustenta metade dos objetivos
+  // desta fase (ver a frente 2).
+  proteinG: 220,
+  carbG: 365,
+  fatG: 77,
   slots: MAINTENANCE_SLOTS,
   defaultMeals: deriveDefaultMeals(MAINTENANCE_SLOTS),
 };
 
 export const SURPLUS_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano · superávit leve (2700 kcal)",
+  name: "Plano · superávit leve (3300 kcal)",
   goal: "superavit",
-  kcalDaily: 2700,
-  proteinG: 213,
-  carbG: 284,
-  fatG: 79,
+  kcalDaily: 3300,
+  // Soma real da variante 0 com o boost: 3335 kcal, 247g proteína, 405g carbo,
+  // 80g gordura.
+  proteinG: 247,
+  carbG: 405,
+  fatG: 80,
   slots: SURPLUS_SLOTS,
   defaultMeals: deriveDefaultMeals(SURPLUS_SLOTS),
 };

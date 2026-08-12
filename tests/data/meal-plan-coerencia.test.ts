@@ -82,3 +82,31 @@ describe("todo plano de ALL_MEAL_PLANS bate consigo mesmo (kcal do dia, alvo por
     expect(violacoes).toEqual([]);
   });
 });
+
+// A dívida que a frente 1 registrou e esta frente paga: manutenção (2450) e
+// superávit (2700) foram calculados contra um gasto estimado de ~2700 kcal,
+// antes de CONSUMO.gastoEstimadoKcalMin/Max contar a caminhada de 5 km. Com ela
+// contada, o gasto real é 2900-3100 — e o plano chamado "manutenção" era um
+// déficit de ~550 kcal. Ela troca pra ele quando a cintura chegar a 88 (mês
+// 3-4), e construiria glúteo em déficit sem saber.
+describe("manutenção e superávit são calibrados contra o gasto real", () => {
+  const gastoMedio = (CONSUMO.gastoEstimadoKcalMin + CONSUMO.gastoEstimadoKcalMax) / 2;
+
+  it("manutenção fica dentro de 5% do gasto real — é isso que a palavra significa", () => {
+    const m = ALL_MEAL_PLANS.find((p) => p.goal === "manutencao")!;
+    const desvio = Math.abs(m.kcalDaily - gastoMedio) / gastoMedio;
+    expect({ kcalDaily: m.kcalDaily, dentroDe5pct: desvio <= 0.05 })
+      .toEqual({ kcalDaily: m.kcalDaily, dentroDe5pct: true });
+  });
+
+  it("superávit fica acima do gasto real — senão não é superávit", () => {
+    const s = ALL_MEAL_PLANS.find((p) => p.goal === "superavit")!;
+    expect(s.kcalDaily).toBeGreaterThan(CONSUMO.gastoEstimadoKcalMax);
+  });
+
+  it("o nome de cada plano diz o mesmo número que o plano carrega", () => {
+    const mentem = ALL_MEAL_PLANS.filter((p) => !p.name.includes(String(p.kcalDaily)))
+      .map((p) => ({ nome: p.name, kcalDaily: p.kcalDaily }));
+    expect(mentem).toEqual([]);
+  });
+});
