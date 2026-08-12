@@ -29,6 +29,7 @@ import { LooksView } from "./pages/beauty/style/LooksView";
 import { LookNew } from "./pages/beauty/style/LookNew";
 import { WishlistView } from "./pages/beauty/style/WishlistView";
 import { IntimateView } from "./pages/beauty/style/IntimateView";
+import { HomeModeView } from "./pages/beauty/style/HomeModeView";
 import { CombosView } from "./pages/beauty/style/CombosView";
 import { ComboNew } from "./pages/beauty/style/ComboNew";
 import { ComboDetail } from "./pages/beauty/style/ComboDetail";
@@ -118,6 +119,10 @@ const router = createBrowserRouter(
         { path: "beleza/estilo/looks/novo", element: <LookNew /> },
         { path: "beleza/estilo/wishlist", element: <WishlistView /> },
         { path: "beleza/estilo/intimo", element: <IntimateView /> },
+        { path: "beleza/estilo/publico", element: <DiscreetView /> },
+        { path: "beleza/estilo/casa", element: <HomeModeView /> },
+        // Rota antiga mantida: quem tiver o app aberto num link salvo continua
+        // chegando na tela certa em vez de num 404.
         { path: "beleza/estilo/discreto", element: <DiscreetView /> },
         { path: "beleza/maquiagem", element: <MakeupHome /> },
         { path: "beleza/maquiagem/:id", element: <MakeupDetail /> },

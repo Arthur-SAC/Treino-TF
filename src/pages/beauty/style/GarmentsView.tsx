@@ -14,22 +14,24 @@ const CATEGORIES: Array<{ value: Garment["category"] | "all"; label: string }> =
   { value: "outerwear", label: "Casacos" },
 ];
 
-const DISCRETIONS: Array<{ value: Garment["discretion"] | "all"; label: string }> = [
-  { value: "all", label: "Todas" },
-  { value: "discreto", label: "Discreto" },
-  { value: "livre", label: "Casa/Livre" },
+// Íntimo não entra neste filtro de propósito: peça íntima tem tela própria, com
+// a divisão de ver × usar que não faz sentido nas outras.
+const MODES: Array<{ value: Garment["mode"] | "all"; label: string }> = [
+  { value: "all", label: "Todos" },
+  { value: "publico", label: "Público" },
+  { value: "casa", label: "Casa" },
 ];
 
 export function GarmentsView() {
   const [filter, setFilter] = useState<Garment["category"] | "all">("all");
-  const [discretion, setDiscretion] = useState<Garment["discretion"] | "all">("all");
+  const [mode, setMode] = useState<Garment["mode"] | "all">("all");
   const garments = useLiveQuery(async () => {
     const all = await db.garments.toArray();
     return all
-      .filter((g) => g.category !== "intimate") // íntimas só na aba Íntimo
+      .filter((g) => g.category !== "intimate") // íntimas só na tela Íntimo
       .filter((g) => filter === "all" || g.category === filter)
-      .filter((g) => discretion === "all" || g.discretion === discretion);
-  }, [filter, discretion]);
+      .filter((g) => mode === "all" || g.mode === mode);
+  }, [filter, mode]);
 
   return (
     <div className="p-4 pb-24">
@@ -59,16 +61,16 @@ export function GarmentsView() {
 
       <div className="overflow-x-auto -mx-4 px-4 mb-4">
         <div className="flex gap-2 w-max">
-          {DISCRETIONS.map((d) => (
+          {MODES.map((m) => (
             <button
-              key={d.value}
+              key={m.value}
               type="button"
-              onClick={() => setDiscretion(d.value)}
+              onClick={() => setMode(m.value)}
               className={`px-3 py-1.5 rounded-pill text-xs whitespace-nowrap ${
-                discretion === d.value ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
+                mode === m.value ? "bg-wine-light text-nude-warm" : "bg-bg-deep text-muted border border-bg-border"
               }`}
             >
-              {d.label}
+              {m.label}
             </button>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { db, type WishlistItem } from "../../../lib/db";
 import { BeautyTabs } from "../../../components/BeautyTabs";
 import { StyleTabs } from "../../../components/StyleTabs";
+import { GUIA_TAMANHOS } from "../../../data/tamanhos-seed";
 
 export function WishlistView() {
   const items = useLiveQuery(() => db.wishlist.toArray(), []);
@@ -39,6 +40,19 @@ export function WishlistView() {
       </div>
       <BeautyTabs />
       <StyleTabs />
+
+      {/* Antes da lista de desejo, não depois: estas quatro coisas decidem se a
+          peça que ela comprar vai servir daqui a três meses. Ficar embaixo da
+          wishlist significaria ler depois de já ter escolhido. */}
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Antes de comprar</h2>
+      <div className="space-y-2 mb-4">
+        {GUIA_TAMANHOS.map((g) => (
+          <div key={g.id} className="card">
+            <h3 className="text-nude-warm font-medium text-sm mb-1">{g.titulo}</h3>
+            <p className="text-muted text-xs leading-relaxed">{g.corpo}</p>
+          </div>
+        ))}
+      </div>
 
       <form onSubmit={handleAdd} className="card mb-4 space-y-2">
         <h2 className="text-nude-warm font-medium">Adicionar</h2>

@@ -10,12 +10,12 @@ export function DiscreetView() {
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
         <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
-        <h1 className="font-serif text-2xl text-nude flex-1">Estilo · Discreto</h1>
+        <h1 className="font-serif text-2xl text-nude flex-1">Estilo · Público</h1>
       </div>
       <BeautyTabs />
       <StyleTabs />
 
-      <DisclaimerCard text="Vá no seu ritmo — sua segurança vem primeiro. Deixe o ousado pros espaços seguros (casa, com a amada, ambientes queer). Não é corrida: dá pra ficar em cada nível o tempo que quiser." />
+      <DisclaimerCard text="Andrógino, com o teto que o ambiente comporta — e o teto é do ambiente, não seu. A escada abaixo é o calibrador do dia: sobe e desce de degrau conforme onde você vai estar. Ficar num degrau o tempo que quiser não é atraso." />
 
       <GuideAccordion sections={ESTILO_DISCRETO} className="mt-3" />
     </div>

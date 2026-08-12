@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { seedDatabase, EXERCISE_SEED_VERSION, TEMPLATE_SEED_VERSION } from "../../src/lib/seed";
 import { seedPath, MEAL_PLAN_VERSION } from "../../src/lib/path-seed";
-import { seedStyle } from "../../src/lib/style-seed";
+import { seedStyle, STYLE_SEED_VERSION } from "../../src/lib/style-seed";
 import { seedMovement } from "../../src/lib/movement-seed";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
 
@@ -72,6 +72,13 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
   it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
     expect(MEAL_PLAN_VERSION).toBe(9);
+  });
+
+  // A versão do estilo também vivia privada dentro do módulo — era o último
+  // seed grande sem pino. Com ela exportada, os três grandes (exercícios,
+  // templates, plano alimentar) e o estilo têm a mesma rede.
+  it("STYLE_SEED_VERSION é a versão revisada nesta rodada", () => {
+    expect(STYLE_SEED_VERSION).toBe(4);
   });
 });
 
@@ -233,6 +240,39 @@ describe("estilo", () => {
     const antes = await db.outfits.count();
     await seedStyle();
     expect(await db.outfits.count()).toBe(antes);
+  });
+
+  it("os três modos alcançam quem estava no par discreto/livre", async () => {
+    // Reconstrói o banco dela: peças já semeadas na versão anterior, com o
+    // campo antigo — e uma peça que é dela, que o seed não conhece e nunca
+    // reescreveria. É essa que prova a migração: nas peças do seed, o put
+    // logo depois traz o modo já escrito no arquivo.
+    await db.garments.put({
+      id: "peca-dela-999",
+      name: "Blusa que eu comprei",
+      category: "intimate",
+      occasion: ["intimo"],
+      whyItWorks: "anotação dela",
+      discretion: "livre",
+    } as never);
+    await db.settings.put({ key: "styleSeeded", value: true });
+    await db.settings.put({ key: "styleSeededV2", value: true });
+    await db.settings.put({ key: "styleSeedVersion", value: STYLE_SEED_VERSION - 1 });
+
+    await seedStyle();
+
+    const dela = await db.garments.get("peca-dela-999");
+    expect({ nome: dela?.name, modo: dela?.mode, texto: dela?.whyItWorks })
+      .toEqual({ nome: "Blusa que eu comprei", modo: "intimo", texto: "anotação dela" });
+
+    // Nenhuma peça pode sobrar com o campo velho ao lado do novo.
+    const comCampoAntigo = (await db.garments.toArray()).filter((g) => "discretion" in g);
+    expect(comCampoAntigo.map((g) => g.id)).toEqual([]);
+
+    // E as peças de usar, que não existiam na versão anterior, chegam.
+    expect((await db.garments.get("boxer-microfibra-liso"))?.intimateUse).toBe("usar");
+    // Junto com a etiqueta de efeito das peças de casa.
+    expect((await db.garments.get("saia-rodada"))?.homeEffect).toBe("contraste");
   });
 });
 
