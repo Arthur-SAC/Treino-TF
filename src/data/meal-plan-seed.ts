@@ -98,12 +98,27 @@ const SLOTS: MealSlot[] = [
             fatG: 0,
             preparation: "Coa normal, sem açúcar.",
           },
+          {
+            // A opção 2 somava 472 kcal contra um alvo de 550 — 14,2% de
+            // desvio, o pior do cardápio: escolher tapioca em vez de cuscuz
+            // custava 78 kcal do dia sem nada avisar. O caju fecha a conta e é
+            // produto de Sergipe, barato na feira. É uma fonte de zinco entre as
+            // que já estão no plano (carne, ovo, peixe) — não substitui nenhuma.
+            name: "Castanha de caju (15g, um punhado pequeno)",
+            qtyG: 15,
+            kcal: 83,
+            proteinG: 3,
+            carbG: 5,
+            fatG: 7,
+            preparation: "Ao natural, do lado do café — sem preparo nenhum.",
+          },
         ],
         ingredients: [
           { item: "Goma de tapioca", qty: 70, unit: "g", category: "carboidrato" },
           { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
           { item: "Queijo coalho", qty: 30, unit: "g", category: "laticinio" },
           { item: "Café", qty: 10, unit: "g", category: "mercearia" },
+          { item: "Castanha de caju", qty: 15, unit: "g", category: "mercearia" },
         ],
       },
       {
@@ -150,12 +165,25 @@ const SLOTS: MealSlot[] = [
             preparation:
               "Base da vitamina. Bate tudo no liquidificador com gelo — pronto em 30s.",
           },
+          {
+            // Fecha os 72 kcal que faltavam pro alvo do slot (a opção somava
+            // 478 contra 550). Batida junto, ainda engrossa a vitamina.
+            name: "Castanha de caju (15g, um punhado pequeno)",
+            qtyG: 15,
+            kcal: 83,
+            proteinG: 3,
+            carbG: 5,
+            fatG: 7,
+            preparation:
+              "Bate junto com o resto — deixa a vitamina mais cremosa — ou come do lado, se preferir a textura.",
+          },
         ],
         ingredients: [
           { item: "Aveia em flocos", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Leite", qty: 200, unit: "ml", category: "laticinio" },
+          { item: "Castanha de caju", qty: 15, unit: "g", category: "mercearia" },
         ],
       },
       // Opções 4 e 5 migraram do lanche das 16h: eram leves demais em gordura
@@ -207,11 +235,23 @@ const SLOTS: MealSlot[] = [
             fatG: 1,
             preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
           },
+          {
+            // 10g em vez de 15: esta opção estava a 53 kcal do alvo, menos
+            // desviada que a 2 e a 3.
+            name: "Castanha de caju (10g)",
+            qtyG: 10,
+            kcal: 56,
+            proteinG: 2,
+            carbG: 3,
+            fatG: 4,
+            preparation: "Ao natural — nada pra preparar.",
+          },
         ],
         ingredients: [
           { item: "Banana", qty: 2, unit: "un", category: "hortifruti" },
           { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
           { item: "Pão de forma", qty: 1, unit: "fatia", category: "carboidrato" },
+          { item: "Castanha de caju", qty: 10, unit: "g", category: "mercearia" },
         ],
       },
       {
@@ -390,9 +430,22 @@ const SLOTS: MealSlot[] = [
             fatG: 11,
             preparation: "Rega a salada e o jerimum.",
           },
+          {
+            // O feijão de corda é o carboidrato mais barato e mais local do
+            // cardápio, e sai da mesma panela de pressão do domingo. Aqui ele
+            // fecha os 53 kcal que faltavam pro alvo do slot.
+            name: "Feijão de corda / macassar (meia concha, 50g)",
+            qtyG: 50,
+            kcal: 48,
+            proteinG: 4,
+            carbG: 8,
+            fatG: 0,
+            preparation: "Do lote de domingo — esquenta junto com o resto do prato.",
+          },
         ],
         ingredients: [
           { item: "Carne moída patinho", qty: 150, unit: "g", category: "proteina" },
+          { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Macaxeira (aipim)", qty: 170, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
@@ -446,10 +499,23 @@ const SLOTS: MealSlot[] = [
             fatG: 6,
             preparation: "Finaliza o quiabo e o peixe.",
           },
+          {
+            // Esta opção somava 603 kcal contra o alvo de 700 — 13,9% de
+            // desvio. Uma concha de feijão de corda fecha quase exato, e é o
+            // acompanhamento que já vem pronto do lote de domingo.
+            name: "Feijão de corda / macassar (1 concha, 100g)",
+            qtyG: 100,
+            kcal: 95,
+            proteinG: 7,
+            carbG: 16,
+            fatG: 1,
+            preparation: "Do lote de domingo — esquenta junto com o arroz.",
+          },
         ],
         ingredients: [
           { item: "Tainha ou sardinha", qty: 200, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 80, unit: "g", category: "carboidrato" },
+          { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Quiabo", qty: 150, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
           { item: "Azeite", qty: 6, unit: "ml", category: "gordura" },
@@ -783,10 +849,20 @@ const SLOTS: MealSlot[] = [
             preparation:
               "Folhas lavadas regadas com azeite e suco de limão.",
           },
+          {
+            name: "Feijão de corda / macassar (meia concha, 50g)",
+            qtyG: 50,
+            kcal: 48,
+            proteinG: 4,
+            carbG: 8,
+            fatG: 0,
+            preparation: "Do lote de domingo — esquenta junto.",
+          },
         ],
         ingredients: [
           { item: "Tainha ou sardinha", qty: 220, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 64, unit: "g", category: "carboidrato" },
+          { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Azeite", qty: 10, unit: "ml", category: "gordura" },
