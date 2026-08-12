@@ -146,4 +146,26 @@ describe("sequências de movimento", () => {
       expect(s?.category).toBe("pelvic");
     }
   });
+
+  it("as quatro sequências de flexibilidade (fases 2 e 3) alcançam quem estava na versão anterior (8)", async () => {
+    // Reconstrói o banco de quem já usava o app antes desta task: seed antigo
+    // já rodou, mas parado na versão 8 — sem as quatro sequências que servem
+    // a progressão de manhã/noite (flex-progression.ts).
+    await db.settings.put({ key: "movementSeeded", value: true });
+    await db.settings.put({ key: "movementVersion", value: 8 });
+
+    await seedMovement();
+
+    const ids = [
+      "flex-manha-amplitude",
+      "flex-manha-sustentacao",
+      "flex-noite-amplitude",
+      "flex-noite-sustentacao",
+    ];
+    for (const id of ids) {
+      const s = await db.danceSequences.get(id);
+      expect(s).toBeDefined();
+      expect(s?.category).toBe("mobilidade");
+    }
+  });
 });
