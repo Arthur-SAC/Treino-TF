@@ -14,19 +14,30 @@ describe("progressão de flexibilidade", () => {
 
   it("manhã e noite têm trilhas próprias e nunca se cruzam", () => {
     for (let n = 0; n < 200; n += 7) {
-      const manha = flexDoDia("manha", n).sequenceId;
-      const noite = flexDoDia("noite", n).sequenceId;
-      expect(SEQUENCIAS_FLEX.manha).toContain(manha);
-      expect(SEQUENCIAS_FLEX.noite).toContain(noite);
-      expect(manha).not.toBe(noite);
+      const doDiaManha = flexDoDia("manha", n);
+      const doDiaNoite = flexDoDia("noite", n);
+
+      // Prova que o momento decide de verdade: mesma contagem, trilhas distintas
+      const indiceManha = SEQUENCIAS_FLEX.manha.indexOf(doDiaManha.sequenceId);
+      const indiceNoite = SEQUENCIAS_FLEX.noite.indexOf(doDiaNoite.sequenceId);
+
+      expect(indiceManha).toBe(indiceNoite);
+      expect(doDiaManha.sequenceId).toBe(SEQUENCIAS_FLEX.manha[indiceManha]);
+      expect(doDiaNoite.sequenceId).toBe(SEQUENCIAS_FLEX.noite[indiceNoite]);
+      expect(doDiaManha.sequenceId).not.toBe(doDiaNoite.sequenceId);
     }
   });
 
   it("toda sequência de cada trilha é alcançável — nenhuma fica órfã", () => {
     for (const momento of ["manha", "noite"] as const) {
+      const trilha = SEQUENCIAS_FLEX[momento];
+
+      // Nenhuma trilha tem id duplicado
+      expect(new Set(trilha).size).toBe(trilha.length);
+
       const vistas = new Set<string>();
       for (let n = 0; n < 400; n++) vistas.add(flexDoDia(momento, n).sequenceId);
-      expect(vistas).toEqual(new Set(SEQUENCIAS_FLEX[momento]));
+      expect(vistas).toEqual(new Set(trilha));
     }
   });
 
@@ -38,8 +49,20 @@ describe("progressão de flexibilidade", () => {
   });
 
   it("cada fase se anuncia — exercício cego não constrói nada", () => {
-    for (const n of [0, ATE_FASE_2, ATE_FASE_3]) {
-      expect(flexDoDia("manha", n).etapa.length).toBeGreaterThan(10);
+    for (const momento of ["manha", "noite"] as const) {
+      const etapas = [
+        flexDoDia(momento, 0).etapa,
+        flexDoDia(momento, ATE_FASE_2).etapa,
+        flexDoDia(momento, ATE_FASE_3).etapa,
+      ];
+
+      // Cada etapa tem conteúdo
+      for (const etapa of etapas) {
+        expect(etapa.length).toBeGreaterThan(10);
+      }
+
+      // As três etapas são distintas — não repetem a mesma frase
+      expect(new Set(etapas).size).toBe(3);
     }
   });
 
