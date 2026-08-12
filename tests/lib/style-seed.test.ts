@@ -9,11 +9,11 @@ describe("seedStyle", () => {
     expect((await db.stylePalette.toArray()).length).toBe(1);
   });
 
-  it("toda peça tem discretion válida e whyItWorks", async () => {
+  it("toda peça tem um dos três modos e whyItWorks", async () => {
     await seedStyle();
     for (const g of await db.garments.toArray()) {
       expect(g.whyItWorks).toBeTruthy();
-      expect(["discreto", "livre"]).toContain(g.discretion);
+      expect(["publico", "casa", "intimo"]).toContain(g.mode);
     }
   });
 

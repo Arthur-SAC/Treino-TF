@@ -9,7 +9,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "trabalho"],
     whyItWorks: "Alonga o pescoço verticalmente e quebra a linha horizontal dos ombros. Cria ponto focal no centro do peito, atraindo o olhar pra baixo dos ombros.",
     cautions: "O ganho está na vertical do decote: gola alta fechada devolve a linha horizontal e achata o colo, então o efeito some.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "decote-coracao",
@@ -17,7 +17,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "sair"],
     whyItWorks: "Suaviza linha dos ombros e enquadra o busto, criando ilusão de mais volume.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "cinto-largo-cintura",
@@ -26,7 +26,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Cria ponto focal forte na cintura e enfatiza a diferença cintura-quadril. Sozinho transforma silhueta.",
     cautions: "Use SEMPRE acima do quadril, na linha natural da cintura (umbigo).",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "saia-rodada",
@@ -34,7 +34,7 @@ export const GARMENTS: Garment[] = [
     category: "bottom",
     occasion: ["casual", "sair", "trabalho"],
     whyItWorks: "Volume na parte de baixo amplifica visual do quadril e cria proporção ampulheta instantânea com qualquer top justo.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "saia-lapis",
@@ -43,7 +43,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["trabalho", "sair"],
     whyItWorks: "Marca cintura e quadril, alongando pernas. Ideal pra silhueta ampulheta.",
     cautions: "Escolha cintura ALTA — cintura baixa empurra silhueta pra estilo masculino.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "calca-cintura-alta",
@@ -51,7 +51,7 @@ export const GARMENTS: Garment[] = [
     category: "bottom",
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Eleva o ponto da cintura, alonga torso visualmente e marca quadril. Funciona com qualquer top.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Quanto mais alta a cintura, mais a barriga fica contida e a perna alonga. Prefira tecido firme com leve elastano.",
   },
   {
@@ -60,7 +60,7 @@ export const GARMENTS: Garment[] = [
     category: "dress",
     occasion: ["trabalho", "sair"],
     whyItWorks: "O peplum (saiote acima do quadril) dá volume aparente ao quadril, enfatizando cintura. Trabalha mesmo em corpos com quadril estreito.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "vestido-saia-rodada",
@@ -68,7 +68,7 @@ export const GARMENTS: Garment[] = [
     category: "dress",
     occasion: ["casual", "sair", "festa"],
     whyItWorks: "Top justo + saia rodada = ampulheta automática. Caimento clássico da silhueta feminina.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "blusa-com-franzido",
@@ -76,7 +76,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "sair"],
     whyItWorks: "O franzido na frente cria volume aparente no busto sem postiço.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "macacao-cintura-marcada",
@@ -84,7 +84,7 @@ export const GARMENTS: Garment[] = [
     category: "dress",
     occasion: ["casual", "sair"],
     whyItWorks: "Cria silhueta vertical com ponto focal forte na cintura. Versátil.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "casaco-trench",
@@ -93,7 +93,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Cinto na cintura faz casaco abrir feito saia, mantendo silhueta feminina mesmo no inverno.",
     cautions: "Evite casacos quadrados e largos — eles esfumam a silhueta.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Use o cinto frouxo ou só apoiado — marca a cintura sem gritar feminino.",
   },
   {
@@ -102,7 +102,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "sair"],
     whyItWorks: "Tecidos com caimento abraçam o quadril e marcam curvas — funcionam contra estofamento rígido (alfaiataria pesada).",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Malha/viscose que desliza sobre a barriga em vez de colar. Um número que não aperte no meio.",
   },
   {
@@ -111,7 +111,7 @@ export const GARMENTS: Garment[] = [
     category: "dress",
     occasion: ["trabalho", "sair"],
     whyItWorks: "Decote V + cintura amarrada + saia que abre. Combina TODOS os truques de ampulheta numa peça só.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "blusa-pescoco-aberto",
@@ -120,7 +120,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair"],
     whyItWorks: "Mostra mais pele do pescoço e clavícula sem revelar trapézio quando ombros não são pendentes pra trás.",
     cautions: "Combine com retração escapular boa — se ombros estão pra frente, gola boat acentua isso.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "salto-medio",
@@ -128,7 +128,7 @@ export const GARMENTS: Garment[] = [
     category: "outerwear",
     occasion: ["trabalho", "sair", "festa"],
     whyItWorks: "Mudança sutil na postura projeta quadril e empina glúteo. Não precisa salto agulha — médio já transforma.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "leggin-cintura-alta",
@@ -136,7 +136,7 @@ export const GARMENTS: Garment[] = [
     category: "bottom",
     occasion: ["casual", "treino"],
     whyItWorks: "Compressão da cintura + abraço no quadril. Versão casual da ampulheta diária.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Cintura alta e tecido encorpado (não fino) contêm a barriga; combine com top que cubra o quadril.",
   },
   {
@@ -145,7 +145,7 @@ export const GARMENTS: Garment[] = [
     category: "outerwear",
     occasion: ["casual", "trabalho"],
     whyItWorks: "Pára na cintura, mantendo o ponto focal alto sem cobrir o quadril.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Comprimento que pare na linha da cintura. Em malha mais encorpada, abre reto e cria camada vertical sobre a barriga.",
   },
   {
@@ -154,7 +154,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "sair"],
     whyItWorks: "Revela clavícula e pescoço, suaviza linha dos ombros visualmente porque o tecido cai abaixo da articulação.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "vestido-bodycon",
@@ -163,7 +163,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["sair", "festa"],
     whyItWorks: "Quando seu quadril/coxa estiverem mais desenvolvidos, vestido justo revela toda a silhueta.",
     cautions: "Espera resultado de 6+ meses de treino de glúteo antes — em corpo com quadril menor, marca o que não quer marcar.",
-    discretion: "livre",
+    mode: "casa",
   },
   {
     id: "saia-godê-midi",
@@ -171,17 +171,17 @@ export const GARMENTS: Garment[] = [
     category: "bottom",
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Mais discreta que rodada curta mas mantém o efeito ampulheta. Combina com qualquer top justo.",
-    discretion: "livre",
+    mode: "casa",
   },
 
-  // === MODO PÚBLICO (dia a dia, discretion: "discreto", pró-barriga) ===
+  // === MODO PÚBLICO (dia a dia, andrógino com o teto que o ambiente comporta, pró-barriga) ===
   {
     id: "calca-alfaiataria-alta",
     name: "Calça de alfaiataria de cintura alta",
     category: "bottom",
     occasion: ["trabalho", "casual", "sair"],
     whyItWorks: "Corte unissex que alonga e marca a cintura sem parecer 'roupa feminina'. Cai reto sobre a barriga.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Cintura alta + caimento reto/leve flare. Tecido com estrutura (não fino) esconde o ventre; barra na altura do sapato alonga.",
   },
   {
@@ -190,7 +190,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["trabalho", "casual"],
     whyItWorks: "Estrutura no ombro + leve curva na cintura criam a base do V invertido feminino, em peça totalmente unissex.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Escolha com pences/recorte na cintura, mas folgada na barriga. Use por fora com a frente meio aberta sobre uma camiseta pra fazer linha vertical.",
   },
   {
@@ -199,7 +199,7 @@ export const GARMENTS: Garment[] = [
     category: "outerwear",
     occasion: ["trabalho", "sair"],
     whyItWorks: "Ombro marcado + entalhe na cintura desenham a ampulheta por cima de qualquer base, sem expor o corpo.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Aberto, vira duas linhas verticais que afinam e somem com a barriga. Comprimento que pare na virilha, não no quadril largo.",
   },
   {
@@ -208,7 +208,7 @@ export const GARMENTS: Garment[] = [
     category: "top",
     occasion: ["casual", "trabalho"],
     whyItWorks: "Sugere as curvas sem expor: o tecido encorpado abraça os ombros e a cintura mas desliza sobre o ventre.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Tecido grosso/pesado (não camiseta fininha que cola). Um número que marque ombro e cintura mas não aperte na barriga.",
   },
   {
@@ -217,7 +217,7 @@ export const GARMENTS: Garment[] = [
     category: "outerwear",
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Cria uma coluna vertical contínua que afina o corpo todo e disfarça a barriga — o truque mais discreto que existe.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Sempre aberto, descendo reto. Por cima de top e calça em tom escuro pra reforçar a linha do centro.",
   },
   {
@@ -226,7 +226,7 @@ export const GARMENTS: Garment[] = [
     category: "outerwear",
     occasion: ["casual", "sair"],
     whyItWorks: "Pára exatamente na cintura, mantendo o ponto focal alto e empurrando o olhar pra parte mais fina.",
-    discretion: "discreto",
+    mode: "publico",
     fitTip: "Comprimento na linha do umbigo. Fechada marca a cintura; aberta sobre camiseta de caimento sugere curva sem expor.",
   },
 
@@ -237,7 +237,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "diario"],
     whyItWorks: "Bojo cria busto aparente e mantém forma redonda sem postiço removível.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "conjunto-tanga-sutia",
@@ -245,7 +245,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "diario"],
     whyItWorks: "Combinar peças cria sensação de ritual. Cor importa — vinho profundo e nude quente são suas tonalidades.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "body-de-renda",
@@ -253,7 +253,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo"],
     whyItWorks: "Acentua cintura e quadril porque corta o corpo na cintura. Renda traz texture e feminilidade.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "camisola-transparente",
@@ -261,7 +261,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "dormir"],
     whyItWorks: "Cai do busto pro quadril mostrando silhueta. Pode usar com calcinha visível por baixo (intencional).",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "babydoll",
@@ -269,7 +269,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo"],
     whyItWorks: "Peplum-like em vestido íntimo. Sustenta busto, abre na cintura, esconde nada importante mas insinua tudo.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "robe-curto-cetim",
@@ -277,7 +277,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "dormir"],
     whyItWorks: "Mostra perna, marca cintura quando amarra o cinto. Vibe burlesca clássica.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "cinta-liga-meia",
@@ -286,7 +286,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo"],
     whyItWorks: "Alonga perna, divide visualmente coxa. Fetiche clássico — funciona se usado com confiança.",
     cautions: "Combine com calcinha que pegue bem na cintura, não na linha do quadril.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "calcinha-fio-dental",
@@ -294,7 +294,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "diario"],
     whyItWorks: "Cintura alta da fio dental marca o quadril visualmente. Sem marca embaixo de roupa.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "sutia-balconet",
@@ -302,7 +302,7 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "diario"],
     whyItWorks: "Empurra busto pra cima e pra fora, criando decote profundo. Excelente sob decote V ou coração.",
-    discretion: "livre",
+    mode: "intimo",
   },
   {
     id: "espartilho-cintura",
@@ -311,6 +311,6 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "sair"],
     whyItWorks: "Comprime cintura temporariamente, exagera ampulheta. Use moderadamente — não substitui treino.",
     cautions: "Não use o dia todo. Tipo discreto debaixo da roupa pra ocasiões especiais.",
-    discretion: "livre",
+    mode: "intimo",
   },
 ];

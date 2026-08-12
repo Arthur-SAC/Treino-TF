@@ -181,6 +181,11 @@ export interface StylePalette {
   reanalyzed: boolean;
 }
 
+/** Contexto em que a peça é usada. Substitui o par discreto/livre, que não
+ *  cobria o que ela descreveu: são três contextos, não dois — e o antigo
+ *  "livre" agrupava casa e íntimo como se fossem a mesma coisa. */
+export type StyleMode = "publico" | "casa" | "intimo";
+
 export interface Garment {
   id: string;
   name: string;
@@ -189,8 +194,19 @@ export interface Garment {
   whyItWorks: string;
   cautions?: string;
   imagePath?: string;
-  discretion: "discreto" | "livre";   // "discreto" = modo que ela escolhe usar em público × "livre" = modo de casa/com a noiva
+  mode: StyleMode;
   fitTip?: string;                     // dica de corte/caimento/tamanho
+  /** Só no modo Casa. Ela nomeou as duas técnicas sem perceber que eram duas:
+   *  "justas ou folgadas mas que marquem bem". Justa marca por CONTATO;
+   *  folgada marca por CONTRASTE (ombro solto sobre cintura marcada faz o
+   *  quadril parecer maior). Servem à mesma meta por mecanismos opostos, e
+   *  saber qual é qual é o que deixa ela escolher pelo efeito. */
+  homeEffect?: "contato" | "contraste";
+  /** Só no modo Íntimo. "De ver" é para ela olhar; "de usar" é para grinding e
+   *  sexo. A peça mais funcional é a menos glamourosa — renda rala em 15-25 min
+   *  de atrito contínuo e machuca a noiva —, e o app precisa dizer isso em vez
+   *  de deixar ela descobrir doendo. */
+  intimateUse?: "ver" | "usar";
 }
 
 export interface Look {
