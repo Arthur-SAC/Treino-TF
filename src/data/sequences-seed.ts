@@ -716,7 +716,7 @@ export const SEQUENCES: DanceSequence[] = [
     category: "intimidade",
     level: "intermediario",
     durationMin: 11,
-    focus: "Aguentar e controlar a posição de montaria por cima: sentar com as pernas dobradas, mover o quadril pelo glúteo+core (não pela lombar) e cansar menos. HONESTIDADE: cavalgar PENETRANDO ela depende também de manter a ereção nessa compressão e do alinhamento com a posição dela — nem sempre dá. O 'descer e esfregar' (grinding) é o plano mais garantido e tá na sequência ao lado. Joelhos sentem a montaria ajoelhada — pose de treino, não horas seguidas.",
+    focus: "Aguentar e controlar a posição de montaria por cima: sentar com as pernas dobradas, mover o quadril pelo glúteo+core (não pela lombar) e cansar menos. HONESTIDADE: cavalgar PENETRANDO ela depende de manter a ereção nessa compressão e do alinhamento com a posição dela — nem sempre dá, e isso não é falha sua. O 'descer e esfregar' (grinding) é o plano mais garantido e tá na sequência ao lado; e quando o que ela quer é penetrar você, a via é mão e dedos (sequência 'Receber por mão e dedos'). Joelhos sentem a montaria ajoelhada — pose de treino, não horas seguidas.",
     videoUrl: "https://www.youtube.com/results?search_query=hip+internal+rotation+mobility+pelvic+tilt",
     moves: [
       { name: "Aquecimento de quadril e joelho", description: "Círculos de quadril 8x + mobilidade de tornozelo e joelho (você vai apoiar peso dobrada). 90/90 sentada 30s cada lado pra acordar a rotação interna.", durationSec: 90 },
@@ -730,20 +730,265 @@ export const SEQUENCES: DanceSequence[] = [
   },
   {
     id: "intimidade-grinding",
-    name: "Grinding pélvico",
+    name: "Grinding pélvico · por cima",
     category: "intimidade",
     level: "intermediario",
-    durationMin: 9,
-    focus: "Pega o rebolado, a figura 8 e a onda corporal que você já treina na dança e transforma em atrito controlado — região contra região. É o plano mais garantido e o mais sensual: ritmo lento, pélvis 'pra baixo e pra frente', peso dosado. Comunica com ela o que tá bom; pressão e ritmo ajustam pelo retorno dela.",
+    durationMin: 12,
+    focus:
+      "Treino do atrito que faz ela gozar com você por cima — que é a sua configuração, sempre. Quatro coisas decidem o resultado, e três delas são contraintuitivas: o movimento é FRENTE-E-TRÁS (estocada serve para penetração e não faz nada pelo clitóris); o contato NUNCA se rompe; quando a respiração dela mudar, você CONGELA as variáveis em vez de acelerar; e o tempo real é de 15 a 25 minutos contínuos, não 5. Grinding falha quase sempre por ser tratado como preliminar e interrompido no meio. Aqui você treina o movimento e a resistência dele sozinha, pra na hora não ser o seu quadril que desiste primeiro.",
     videoUrl: "https://www.youtube.com/results?search_query=body+roll+hip+roll+tutorial+slow",
     moves: [
-      { name: "Aquecimento (onda corporal)", description: "Em pé, joelhos suaves. Onda corporal lenta: cabeça → peito → quadril descendo, depois subindo. 1 min pra entrar no ritmo lento.", durationSec: 60 },
-      { name: "Rolê pélvico pra baixo e pra frente", description: "Em pé ou de quatro, foca o movimento da pélvis indo pra baixo e pra frente (como pressionar e deslizar), depois recolhe. É a base do grinding. Lento, contínuo. 1 min.", durationSec: 60, repeat: 16 },
-      { name: "Figura 8 deitada de lado", description: "Deitada de lado apoiada no cotovelo, desenha o '8' com o quadril, pernas livres pra flexionar. Treina o atrito lateral e a continuidade do movimento. 30s cada lado.", durationSec: 60, repeat: 2 },
-      { name: "Grinding sentada por cima (no ar)", description: "Sentada como se estivesse por cima dela (joelhos ao lado, peso nas pernas). Faz o rolê pélvico pra frente e pra baixo, comandando pelo core. Sem pressa. 1-2 min.", durationSec: 120 },
-      { name: "Grinding deitada por cima (no ar)", description: "Em prancha apoiada nos antebraços/joelhos (imagina ela embaixo). Move só a pélvis num rolê pra frente-baixo, mantendo o tronco estável. Trabalha o atrito na horizontal. 1 min.", durationSec: 60 },
-      { name: "De quatro com rolê", description: "De quatro, faz o gato-vaca virar rolê contínuo: empina (anteversão) → arredonda (retroversão) levando a pélvis pra trás e pra frente. Posição versátil pros dois lados. 1 min.", durationSec: 60 },
-      { name: "Cooldown", description: "Criança + respiração lenta pra soltar lombar e pélvis. 1 min.", durationSec: 60 },
+      {
+        name: "Aquecimento — onda corporal lenta",
+        description:
+          "Em pé, joelhos suaves. Onda lenta: cabeça → peito → quadril descendo, depois subindo. 1 min. Entra no ritmo lento de propósito — a velocidade do grinding é menor do que a intuição pede.",
+        durationSec: 60,
+      },
+      {
+        name: "Frente-e-trás com contato constante",
+        description:
+          "De quatro ou em pé, desliza a pélvis PARA FRENTE e para trás num plano só, como quem esfrega — não para baixo e para cima. Estocada é movimento de penetração e não estimula o clitóris; o que estimula é o seu púbis deslizando contra o dela sem nunca perder o contato. Se o contato se rompe a cada repetição, o estímulo dela reinicia do zero. 2 min contínuos.",
+        durationSec: 120,
+      },
+      {
+        name: "Posição: o pinto vai pra cima, preso contra a barriga",
+        description:
+          "Antes de começar, ajeita pra cima, por dentro do cós da cueca. Três motivos verdadeiros ao mesmo tempo: o seu púbis (o osso) é a superfície que faz a pressão nela, e precisa estar livre; assim ele não é dobrado a cada movimento; e a glande sai da linha de frente do atrito, o que melhora o SEU controle e adia o seu orgasmo. Cueca justa segura, cueca larga deixa escapar. Isto NÃO é tuck — tuck é para aparência com roupa e é incompatível com ereção.",
+        durationSec: 30,
+      },
+      {
+        name: "Sentada por cima (no ar) — 3 min contínuos",
+        description:
+          "Sentada como se estivesse sobre ela, joelhos ao lado do quadril dela, peso nas suas pernas. Rolê pélvico para frente e para baixo, comandado pelo core, sem pressa. Segura 3 min sem parar. Se o flexor de quadril ou a lombar reclamarem antes do tempo, ali está o seu limite real — e é ele que a trilha de resistência do rebolado constrói.",
+        durationSec: 180,
+      },
+      {
+        name: "Deitada por cima (no ar) — o formato do carro",
+        description:
+          "Apoiada nos antebraços e joelhos, tronco estável, move só a pélvis num rolê para frente e para baixo. É este o formato que serve em espaço apertado — com ela reclinada no banco do passageiro você não tem altura para nada vertical. 2 min.",
+        durationSec: 120,
+      },
+      {
+        name: "Congelar as variáveis",
+        description:
+          "A regra que decide o resultado. Quando a respiração dela mudar — mais curta, mais alta, presa —, você NÃO acelera e NÃO aumenta a pressão. Mantém a mesma velocidade, a mesma pressão e o mesmo ângulo até o fim. Acelerar quando a pessoa responde é o erro quase universal, e ele reinicia a subida dela. Vai ficar monótono pra você muito antes de ficar pra ela; aguentar essa monotonia é a habilidade inteira. Treina aqui: escolhe um ritmo, põe 2 min no relógio e não muda nada.",
+        durationSec: 120,
+      },
+      {
+        name: "As mãos dela na bunda são o canal de comando",
+        description:
+          "Você não cede o controle da posição, mas as mãos dela já ficam exatamente onde o comando mora: puxar para baixo = mais pressão; segurar parado = mantém assim; empurrar = alivia. Combina isso com ela uma vez, fora da hora, e depois não precisa mais falar nada — resolve a calibragem sem quebrar o ritmo.",
+        durationSec: 30,
+      },
+      {
+        name: "Cooldown",
+        description: "Criança + respiração lenta pra soltar lombar e flexor de quadril. 1 min.",
+        durationSec: 60,
+      },
+    ],
+  },
+  {
+    id: "intimidade-esfregar-roupa",
+    name: "Esfregar com roupa",
+    category: "intimidade",
+    level: "iniciante",
+    durationMin: 10,
+    focus:
+      "Vocês já fazem isso, e dá pra terminar em orgasmo — mas o fator que decide não é o corpo, é o TECIDO. É por isso que isto é uma sequência separada do grinding. Duas coisas quebram a maioria das tentativas: a costura frontal do jeans (grossa, rígida, e cai exatamente sobre o clitóris dela — nenhuma roupa de baixo compensa) e o atrito seco, que assa a pele depois de uns 15 minutos. Bônus real pra você: é a melhor situação que existe pra treinar o seu próprio controle, porque tem excitação alta com estímulo indireto e sem o gatilho da penetração.",
+    videoUrl: "",
+    moves: [
+      {
+        name: "Escolha do tecido — antes de qualquer coisa",
+        description:
+          "Jeans está fora, nos dois corpos: a costura frontal central é uma crista grossa e rígida que cai em cima do clitóris dela e concentra todo o atrito numa linha só. Nenhuma calcinha por baixo compensa isso. O que serve: malha, moletom fino, legging — qualquer coisa lisa, sem costura grossa na frente. Passa a mão na costura antes; se você sente a crista com o dedo, ela vai sentir multiplicado em 20 minutos.",
+        durationSec: 30,
+      },
+      {
+        name: "A escada de camadas — meia hora",
+        description:
+          "Começa com as duas completamente vestidas e vai tirando uma camada de cada vez ao longo de ~30 min. A barreira é o que faz o mecanismo funcionar: ela transforma pressão direta em pressão difusa e sustentada, que é o que constrói. Tirar roupa cedo demais destrói isso — vira estímulo direto, que sobe rápido e satura. Regra prática: só sai camada quando as duas já estão bem, nunca pra apressar.",
+        durationSec: 60,
+      },
+      {
+        name: "O movimento — frente-e-trás, contato constante",
+        description:
+          "Mesmo movimento do grinding: pélvis deslizando para frente e para trás num plano só, contato que não se rompe. Com roupa o atrito é maior, então a velocidade cai ainda mais. Treina 2 min contínuos aqui, no seco, pra medir o seu fôlego.",
+        durationSec: 120,
+      },
+      {
+        name: "Abrasão: o limite é físico, e não é falta de tesão",
+        description:
+          "Depois de uns 15 min de atrito seco a pele dela assa — e a dela é mais fina ali que a sua. Se ela ficar desconfortável ou pedir pra mudar nesse ponto, isso é ABRASÃO, não desinteresse, e ler como desinteresse é erro seu, não sinal dela. Duas saídas: trocar o ângulo pra mudar o ponto de contato, ou reduzir uma camada (o tecido de baixo desliza mais que o de cima).",
+        durationSec: 30,
+      },
+      {
+        name: "Uso pra treinar o seu controle — start-stop a dois",
+        description:
+          "Esta é a melhor situação que existe pra você treinar controle: excitação alta, estímulo indireto pela roupa e sem o gatilho da penetração. Aplica o start-stop que você já treina sozinha (trilha de assoalho pélvico): quando chegar perto do ponto de não-retorno, para o movimento do quadril e mantém o contato parado, respirando, até a onda baixar. Retoma. Três paradas numa sessão é treino melhor que qualquer série sozinha.",
+        durationSec: 120,
+      },
+      {
+        name: "Resistência específica — 3 min sem parar",
+        description:
+          "Fecha com 3 min contínuos do movimento, sem pausa, medindo onde o seu quadril cansa. Lombar, flexor de quadril e glúteo são o que falha primeiro — e é exatamente isso que a trilha de resistência do rebolado constrói.",
+        durationSec: 180,
+      },
+      {
+        name: "Cooldown",
+        description: "Criança e respiração lenta pra soltar lombar e flexor. 1 min.",
+        durationSec: 60,
+      },
+    ],
+  },
+  {
+    id: "intimidade-receber-maos",
+    name: "Receber por mão e dedos",
+    category: "intimidade",
+    level: "intermediario",
+    durationMin: 14,
+    focus:
+      "A via que ela quer e aceita. Ela quer te penetrar e recusou usar um objeto pra isso — e a razão dela é boa: com mão e dedos há carne dos dois lados, as duas sentem, e nenhum equipamento entrega isso. O que sustenta esta via inteira não é tolerância a dor: é o relaxamento VOLUNTÁRIO do assoalho pélvico, que é a fase 2 da sua trilha de assoalho (sequência pelvic-soltura-sustentada). Sem isso treinado o corpo fecha por reflexo e dói; com isso treinado, a progressão anda sozinha. A escala aqui é de MESES, e apressar é o único jeito garantido de atrasar.",
+    videoUrl: "",
+    moves: [
+      {
+        name: "Pré-requisito, não sugestão: soltura treinada",
+        description:
+          "Antes de qualquer progressão aqui, você precisa conseguir soltar o assoalho pélvico por vontade, não por sorte — é o que a sequência pelvic-soltura-sustentada constrói, e é a fase 2 da sua trilha. O teste é simples: deitada, você consegue relaxar a região e MANTER relaxada por 30 segundos, respirando, sem ela voltar a fechar sozinha. Se ainda não, o trabalho é lá, não aqui.",
+        durationSec: 60,
+      },
+      {
+        name: "Lubrificante — a quantidade certa parece exagero",
+        description:
+          "Muito mais do que parece necessário, e reaplicado durante, não só no começo. Não é conforto: é a diferença entre deslizar e arrastar, e arrastar é o que causa fissura. Base de água combina com tudo e reidrata com um pouco de água; base de silicone dura mais tempo sem reaplicar. Se em algum momento você sentir agarrar, é sinal de reaplicar, não de forçar.",
+        durationSec: 30,
+      },
+      {
+        name: "Preparo externo — 5 min antes de qualquer entrada",
+        description:
+          "Ela trabalha só a região externa com a mão lubrificada: pressão circular lenta, sem entrar. O objetivo aqui é o esfíncter externo relaxar por conta, com você respirando. Cinco minutos disso mudam completamente o que acontece depois. Você respira devagar e solta na expiração — mesma coisa que treina na soltura.",
+        durationSec: 300,
+      },
+      {
+        name: "Um dedo — semanas, não minutos",
+        description:
+          "Ela entra com UM dedo, lubrificado, devagar, e para assim que entrar. Não move. Você respira e solta ao redor dele — é aqui que a soltura treinada aparece. Só depois de você estar confortável parada é que vem movimento lento. Este estágio dura semanas de repetições, e a pressa aqui é o que produz a dor que ensina o corpo a fechar.",
+        durationSec: 180,
+      },
+      {
+        name: "A escada",
+        description:
+          "Externo → um dedo parado → um dedo com movimento → dois dedos → dois com movimento. Cada degrau só sobe quando o anterior está confortável em pelo menos três encontros diferentes, não um. A escala honesta desta progressão inteira é de MESES. Retroceder um degrau num dia ruim é parte do processo, não recaída.",
+        durationSec: 60,
+      },
+      {
+        name: "Sensação mútua — a razão de ser desta via",
+        description:
+          "É isto que o objeto não faz: ela sente com os dedos ao mesmo tempo que você sente, e as duas ajustam pelo retorno da outra em tempo real. A mão livre dela pode estar em você ao mesmo tempo. Se a conversa voltar a seria mais fácil com um treco, a resposta já está dada — o que ela quer é sentir junto, e é isso que esta via entrega.",
+        durationSec: 60,
+      },
+      {
+        name: "Grinding coxa a coxa — o sentir junto sem nada disso",
+        description:
+          "A resposta direta ao que ela já elogia: você monta a coxa dela, ela monta a sua, e as duas esfregam ao mesmo tempo. Prazer simultâneo, zero equipamento, zero preparo. Vale como sessão inteira, não só como aquecimento — e é a opção pros dias em que a progressão acima não é o que vocês querem.",
+        durationSec: 120,
+      },
+      {
+        name: "Onde isso vai dar, com honestidade",
+        description:
+          "Fisting é o horizonte distante desta via — anos, se um dia. Está nomeado aqui só pra você saber que a escada continua, e não pra ser perseguido: não é o próximo passo e nem deve ser tratado como meta. O próximo passo é sempre o degrau imediatamente acima do que já está confortável.",
+        durationSec: 30,
+      },
+      {
+        name: "Cooldown",
+        description:
+          "Respiração diafragmática lenta, 2 min, deixando a região solta. Fecha a sessão relaxada — o corpo grava o estado em que a coisa terminou.",
+        durationSec: 120,
+      },
+    ],
+  },
+
+  // === REBOLADO · resistência (aguentar o tempo que a coisa dura) ===
+  // Quatro fases, servidas por rebolado-progression.ts. O que muda entre elas é
+  // só o tamanho do bloco contínuo — o movimento é o mesmo desde a fase 1.
+  // Categoria "danca" de propósito: ela já tem entrada no filtro da biblioteca,
+  // e categoria nova sem entrada no filtro é conteúdo invisível.
+  {
+    id: "rebolado-resistencia-1",
+    name: "Rebolado · resistência 1 (3 × 1 min)",
+    category: "danca",
+    level: "iniciante",
+    durationMin: 8,
+    focus:
+      "Fase 1 de quatro. Aqui o alvo ainda é o movimento certo: pélvis isolada, tronco parado, comando vindo do core e do glúteo — não da lombar. Blocos de 1 min com pausa. Se a lombar arde, o movimento subiu pra coluna: diminui a amplitude e volta pra pélvis.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x cada sentido + cat-cow 8x. Lombar e quadril mornos antes de qualquer bloco contínuo.", durationSec: 90 },
+      { name: "Bloco contínuo 1", description: "Rebolado frente-e-trás, ritmo lento e constante, 1 min sem parar. Tronco parado, abdômen ativo.", durationSec: 60 },
+      { name: "Pausa", description: "30s parada, respirando. A pausa faz parte do treino nesta fase.", durationSec: 30 },
+      { name: "Bloco contínuo 2", description: "Mais 1 min contínuo, no mesmo ritmo do primeiro. Não acelera pra compensar cansaço.", durationSec: 60 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 3", description: "Último minuto contínuo. Se o ritmo caiu, terminou certo — é o limite de hoje.", durationSec: 60 },
+      { name: "Extensão isométrica de lombar", description: "Deitada de bruços, levanta peito e pernas alguns centímetros e SEGURA 20s. 3x. É a lombar que falha primeiro no tempo real, e ela cansa por resistência, não por força.", durationSec: 120, repeat: 3 },
+      { name: "Cooldown", description: "Criança + alongamento de flexor de quadril, 30s cada lado.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-2",
+    name: "Rebolado · resistência 2 (3 × 2 min)",
+    category: "danca",
+    level: "iniciante",
+    durationMin: 11,
+    focus:
+      "Fase 2 de quatro. O movimento você já tem; agora o alvo é continuidade. Três blocos de 2 min contínuos, com 30s de pausa entre eles. O ponto em que o ritmo cai é a informação que interessa — repara em qual minuto foi, e é esse minuto que a fase persegue.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x cada sentido + cat-cow 8x.", durationSec: 90 },
+      { name: "Bloco contínuo 1", description: "2 min de rebolado frente-e-trás sem parar. Ritmo constante do primeiro ao último segundo.", durationSec: 120 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 2", description: "Mais 2 min. Aqui o cansaço já aparece — mantém a amplitude em vez de encolher o movimento.", durationSec: 120 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 3", description: "Últimos 2 min. Se precisar reduzir, reduz a amplitude e mantém o ritmo — nunca o contrário.", durationSec: 120 },
+      { name: "Extensão isométrica de lombar", description: "Deitada de bruços, levanta peito e pernas e SEGURA 25s. 3x. A lombar é o que falha primeiro no tempo real.", durationSec: 150, repeat: 3 },
+      { name: "Flexor de quadril sob carga", description: "Deitada de costas, pernas estendidas a 20cm do chão, segura 20s. 3x. É o flexor que trava a sentada por cima.", durationSec: 120, repeat: 3 },
+      { name: "Cooldown", description: "Criança + alongamento de flexor, 30s cada lado.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-3",
+    name: "Rebolado · resistência 3 (2 × 4 min)",
+    category: "danca",
+    level: "intermediario",
+    durationMin: 13,
+    focus:
+      "Fase 3 de quatro. Dois blocos de 4 min contínuos. Aqui já é fadiga de verdade, e o erro típico aparece: acelerar quando cansa, porque rápido parece mais fácil que constante. Não é — e constante é o que serve na hora, porque o ritmo que faz ela subir é o que não muda.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x + cat-cow 8x + ponte de glúteo 10x.", durationSec: 120 },
+      { name: "Bloco contínuo 1", description: "4 min de rebolado frente-e-trás sem parar. Escolhe um ritmo que você acredita que aguenta e não muda nada.", durationSec: 240 },
+      { name: "Pausa", description: "1 min. Respira, não senta.", durationSec: 60 },
+      { name: "Bloco contínuo 2", description: "Mais 4 min. Este é o bloco que constrói — o primeiro só preparou a fadiga.", durationSec: 240 },
+      { name: "Extensão isométrica de lombar", description: "De bruços, peito e pernas elevados, SEGURA 30s. 3x.", durationSec: 180, repeat: 3 },
+      { name: "Glúteo em alta repetição", description: "Ponte de glúteo, 25 repetições lentas com pausa de 1s no topo. É resistência, não força — carga leve, muita repetição.", durationSec: 120, repeat: 25 },
+      { name: "Cooldown", description: "Criança + flexor + figura 4 pro glúteo. 90s.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-4",
+    name: "Rebolado · resistência 4 (5+ min contínuos)",
+    category: "danca",
+    level: "intermediario",
+    durationMin: 14,
+    focus:
+      "Fase 4 de quatro. Cinco minutos contínuos sem perder o ritmo, e depois mais cinco se der. O alvo real do outro lado disto é 20 min — e não se chega lá por um bloco só: chega-se por conseguir repetir este bloco quatro vezes numa noite sem o quadril desistir. Quando dois blocos de 5 min ficarem confortáveis, você está pronta pro tempo real.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x + cat-cow 8x + ponte de glúteo 10x.", durationSec: 120 },
+      { name: "Bloco contínuo 1", description: "5 min de rebolado frente-e-trás sem parar. Ritmo constante — o mesmo do primeiro ao último segundo.", durationSec: 300 },
+      { name: "Pausa", description: "1 min de pé, respirando.", durationSec: 60 },
+      { name: "Bloco contínuo 2 (se der)", description: "Mais 5 min. Não é obrigatório — é o que mede se você já está no tempo real. Se sair inteiro e no ritmo, a fase está cumprida.", durationSec: 300 },
+      { name: "Extensão isométrica de lombar", description: "De bruços, peito e pernas elevados, SEGURA 30s. 4x.", durationSec: 240, repeat: 4 },
+      { name: "Glúteo em alta repetição", description: "Ponte de glúteo, 30 repetições lentas com 1s de pausa no topo.", durationSec: 150, repeat: 30 },
+      { name: "Cooldown", description: "Criança + flexor + figura 4. 90s.", durationSec: 90 },
     ],
   },
 ];

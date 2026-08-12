@@ -17,14 +17,26 @@ Reforma do app em **seis frentes**, decidida em 2026-08-10. Três concluídas e 
 | 1 | Verdade e objetivo | ✅ no ar | `d72b0f8` |
 | 2 | Vitalidade sexual | ✅ no ar | `0f53135` |
 | 3 | Corpo & treino | ✅ no ar | `6b5fdb7` |
-| 4 | Repertório íntimo | 📄 spec pronto | — |
+| 4 | Repertório íntimo | ✅ no ar | (ver git log) |
 | 5 | Comida em Aracaju | ✅ no ar | (ver git log) |
 | 6 | Três modos de estilo | ✅ no ar | (ver git log) |
 
-**Testes:** 441 → 812. Build limpo. Tudo publicado em
+**A reforma das seis frentes está completa.**
+
+**Testes:** 441 → 845. Build limpo. Tudo publicado em
 https://arthur-sac.github.io/Treino-TF/ (deploy automático a cada `git push origin main`).
 
-**Próximo passo:** a frente 4 (repertório íntimo) é a última. Spec pronto, não refazer.
+**Próximo passo:** não há frente pendente. O que existe é a lista de dívidas da
+seção 9 e o que ela trouxer de novo. Duas conversas de 2026-08-12 ficaram sem
+virar trabalho, de propósito — ela pediu pra deixar pra depois:
+
+- **Peito sem hormônio.** O marco de busto promete "fullness de gordura no
+  peito" enquanto o plano está em déficit tirando gordura do corpo todo. Ela
+  decidiu **não** corrigir agora. Não trazer de novo sem ela pedir.
+- **TH de janela definida.** Ela levantou a ideia de hormonizar para desenvolver
+  mama (que é permanente) e depois parar para recuperar a função. O app inteiro
+  assume "TH não tem data"; esta é uma terceira via que ele não considera.
+  Ela disse que quer conversar depois.
 Os specs já estão escritos e aprovados — **não refaça o brainstorming delas.**
 
 ---
@@ -113,10 +125,19 @@ Apareceu **sete vezes** nesta reforma, em formas diferentes:
 5. Categoria `"cardio"` sem entrada no filtro da biblioteca → exercício invisível
 6. Cinco seeds parados por falta de bump — incluindo `seedStyle`, que não tinha versão
 7. Trocas aplicadas só em ciclos distantes → objetivo não alcançaria ela por 2,5 meses
+8. Rodízio indexado por dia da semana (0-6) numa lista que passou de 7 itens →
+   os índices 7+ nunca eram alcançados (`presenceSuggestionForDay`, frente 4)
 
-**Sempre pergunte: isso chega no aparelho dela?** As versões de seed agora são
-exportadas de `src/lib/seed.ts` e travadas por teste
-(`tests/lib/seeds-chegam-no-aparelho.test.ts`).
+**Sempre pergunte: isso chega no aparelho dela?** As **cinco** versões de seed
+são agora exportadas e travadas por pino em
+`tests/lib/seeds-chegam-no-aparelho.test.ts`: `EXERCISE_SEED_VERSION` e
+`TEMPLATE_SEED_VERSION` (`seed.ts`), `MEAL_PLAN_VERSION` (`path-seed.ts`),
+`STYLE_SEED_VERSION` (`style-seed.ts`) e `MOVEMENT_VERSION` (`movement-seed.ts`).
+Nenhuma sobrou privada.
+
+E a pergunta tem uma segunda metade, aprendida na frente 4: **existe caminho até
+o conteúdo?** Bump de versão põe o dado no aparelho; rodízio, filtro e ordem
+decidem se ela algum dia o vê.
 
 ### 5.2 Rede que mira a palavra em vez da afirmação
 
@@ -170,23 +191,6 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 ---
 
 ## 7. O que falta, com o essencial de cada uma
-
-### Frente 4 — Repertório íntimo
-`docs/superpowers/specs/2026-08-11-repertorio-intimo-design.md`
-
-Não cria do zero: `intimidade-grinding`, `intimidade-cavalgar` e
-`intimidade-flex-passiva` já existem e já são honestos. O que muda:
-
-- O conteúdo atual **assume que as duas se revezam**; ela fica **sempre por cima**,
-  inclusive em espaço apertado (carro, noiva no banco do passageiro).
-- **A noiva quer penetrá-la e recusou strap-on.** A via é mão e dedos — carne dos
-  dois lados. Consome a soltura da frente 2, não duplica.
-- `rebolado-basico` é 3×1 min e precisa virar resistência de 5 min contínuos: manter
-  20 min por cima é tarefa de lombar, flexor de quadril e glúteo.
-- Regras que precisam estar escritas: movimento **frente-e-trás** (não estocada);
-  **congelar as variáveis** quando a respiração dela mudar; as mãos dela na bunda são
-  o canal de comando; **pinto pra cima** preso contra a barriga; a costura frontal do
-  jeans é a vilã do esfregar com roupa.
 
 
 ---
