@@ -44,7 +44,14 @@ function VariantDetails({ v }: { v: MealVariant }) {
         <ul className="space-y-1.5 text-sm mt-2 ml-3">
           {v.foods.map((f, j) => (
             <li key={j}>
-              <span className="text-nude-warm">{f.name}</span>
+              <span className="flex justify-between gap-2">
+                <span className="text-nude-warm">{f.name}</span>
+                {/* A porção pesada, sempre — inclusive dos alimentos cujo nome
+                    não diz a grama ("Salada de folhas e tomate", "Ovo mexido").
+                    O dado sempre existiu; sem ele na tela, montar a marmita na
+                    balança no domingo virava adivinhação. */}
+                <span className="text-nude text-xs whitespace-nowrap">{f.qtyG} g</span>
+              </span>
               {f.preparation && (
                 <p className="text-muted text-xs mt-0.5 leading-relaxed">{f.preparation}</p>
               )}
