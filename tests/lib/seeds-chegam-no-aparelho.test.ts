@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
-import { seedDatabase } from "../../src/lib/seed";
+import { seedDatabase, EXERCISE_SEED_VERSION, TEMPLATE_SEED_VERSION } from "../../src/lib/seed";
 import { seedStyle } from "../../src/lib/style-seed";
 import { seedMovement } from "../../src/lib/movement-seed";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
@@ -9,23 +9,62 @@ import { ALL_TEMPLATES } from "../../src/data/all-templates";
 // corrigido no repositório nunca chega ao aparelho de quem já usa o app. Estes
 // testes reconstroem o banco parado na versão anterior e cobram a chegada.
 //
-// DUAS REGRAS, aprendidas na revisão final desta frente — os casos de exercício
-// e de template passavam sem morder nenhuma das duas:
+// QUATRO REGRAS, aprendidas em duas rodadas de revisão desta frente — os
+// casos de exercício e de template passavam sem morder nenhuma delas:
 //
 // 1. A versão plantada tem que ser a IMEDIATAMENTE ANTERIOR à atual. Plantar a
 //    versão 7 quando o código está na 9 faz o teste passar com 8 OU com 9, ou
 //    seja, ele não distingue "o bump aconteceu" de "o bump foi esquecido".
-//    Quando o código bumpar de novo, estes números sobem junto — é de propósito
-//    que dê trabalho: é o que mantém o teste ligado ao bump.
 // 2. A asserção tem que ser sobre conteúdo que só existe DEPOIS do bump. O caso
 //    de templates aferia `ALL_TEMPLATES[0].name` e a contagem total — dois
 //    valores que troca de exercício não muda. As 11 trocas da frente não fariam
 //    esse teste falhar se o bump tivesse sido esquecido.
+// 3. As versões "anteriores" (ANTERIOR_EXERCICIOS/ANTERIOR_TEMPLATES) são
+//    DERIVADAS de EXERCISE_SEED_VERSION/TEMPLATE_SEED_VERSION — exportadas de
+//    `seed.ts`, nunca digitadas de novo aqui. Um número solto (`= 9`) é só a
+//    opinião do dia em que foi escrito; nada nele impede que a versão em
+//    `seed.ts` suba sem que este arquivo acompanhe.
+// 4. MAS a derivação pura, sozinha, tem um ponto cego: como ANTERIOR_X é
+//    sempre "o que estiver em EXERCISE_SEED_VERSION, menos um", se alguém
+//    baixar a própria versão em `seed.ts` — ou, o caso real, mudar conteúdo e
+//    ESQUECER de bumpá-la — ANTERIOR_X desliza junto, o gatilho da migração
+//    (`armazenado < EXERCISE_SEED_VERSION`) continua verdadeiro e o teste de
+//    chegada passa verde mesmo sem bump nenhum. Comprovado por mutação:
+//    reverter EXERCISE_SEED_VERSION de 10 pra 9 em `seed.ts`, sem tocar em
+//    conteúdo, não derruba nenhum teste deste arquivo — ANTERIOR_EXERCICIOS
+//    acompanha para 8 e a migração roda de qualquer forma. Isso é
+//    estritamente pior que os números fixos que este arquivo tinha antes de
+//    ser derivado: `= 9` fixo, ao encontrar EXERCISE_SEED_VERSION revertida
+//    pra 9, vira `9 < 9` (falso) — migração NÃO roda, conteúdo antigo fica, e
+//    os testes de conteúdo abaixo quebram de verdade. Por isso a versão
+//    ATUAL também é fixada no bloco abaixo: é o número que fecha o ponto
+//    cego da regra 3 sem reabrir o da regra 1 — qualquer bump de
+//    EXERCISE_SEED_VERSION/TEMPLATE_SEED_VERSION sem tocar nesses dois
+//    números quebra o teste na hora (força a atualização deliberada), e
+//    ANTERIOR_X, por ser derivado, acompanha sozinho a partir daí.
 
-/** Versões imediatamente anteriores às que `seed.ts` carrega hoje. Se algum
- *  bump subir e estes números não subirem junto, o teste vira decoração. */
-const ANTERIOR_EXERCICIOS = 9;
-const ANTERIOR_TEMPLATES = 11;
+/** Versões imediatamente anteriores às que `seed.ts` carrega hoje — derivadas
+ *  das constantes exportadas, nunca digitadas de novo (regra 3). Sozinha essa
+ *  derivação tem o ponto cego da regra 4; quem fecha é o pino da versão atual
+ *  logo abaixo. */
+const ANTERIOR_EXERCICIOS = EXERCISE_SEED_VERSION - 1;
+const ANTERIOR_TEMPLATES = TEMPLATE_SEED_VERSION - 1;
+
+describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", () => {
+  // Únicos números escritos à mão neste arquivo — de propósito: são a versão
+  // revisada nesta rodada, e atualizá-los é o preço proposital de qualquer
+  // bump futuro em `seed.ts`. Comprovado por mutação: decrementar
+  // EXERCISE_SEED_VERSION/TEMPLATE_SEED_VERSION em `seed.ts` sem atualizar
+  // estes dois números faz o teste correspondente falhar na hora — e só ele:
+  // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
+  it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
+    expect(EXERCISE_SEED_VERSION).toBe(10);
+  });
+
+  it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
+    expect(TEMPLATE_SEED_VERSION).toBe(12);
+  });
+});
 
 describe("exercícios", () => {
   beforeEach(async () => {
