@@ -18,13 +18,13 @@ Reforma do app em **seis frentes**, decidida em 2026-08-10. Três concluídas e 
 | 2 | Vitalidade sexual | ✅ no ar | `0f53135` |
 | 3 | Corpo & treino | ✅ no ar | `6b5fdb7` |
 | 4 | Repertório íntimo | 📄 spec pronto | — |
-| 5 | Comida em Aracaju | 📄 spec pronto | — |
+| 5 | Comida em Aracaju | ✅ no ar | (ver git log) |
 | 6 | Três modos de estilo | 📄 spec pronto | — |
 
-**Testes:** 441 → 742. Build limpo. Tudo publicado em
+**Testes:** 441 → 780. Build limpo. Tudo publicado em
 https://arthur-sac.github.io/Treino-TF/ (deploy automático a cada `git push origin main`).
 
-**Próximo passo:** escrever o plano da frente 4, 5 ou 6 (a ordem é dela) e executar.
+**Próximo passo:** escrever o plano da frente 4 ou 6 (a ordem é dela) e executar.
 Os specs já estão escritos e aprovados — **não refaça o brainstorming delas.**
 
 ---
@@ -78,6 +78,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-11 | Público é **andrógino com calibragem de segurança**, **não masculino**. |
 | 08-12 | %BF pela régua **androide** (25,7%), não ginoide (41,6%). |
 | 08-12 | Padrão de levantar entra também na **adaptação**; **entrada fica de fora**. |
+| 08-12 | Cardápio mostra **grama de cada alimento** em toda tela, e a lista de compras fecha a **semana inteira** — nada de "multiplique conforme a semana". |
 
 ---
 
@@ -181,20 +182,6 @@ Não cria do zero: `intimidade-grinding`, `intimidade-cavalgar` e
   o canal de comando; **pinto pra cima** preso contra a barriga; a costura frontal do
   jeans é a vilã do esfregar com roupa.
 
-### Frente 5 — Comida em Aracaju
-`docs/superpowers/specs/2026-08-11-comida-aracaju-design.md`
-
-- Sai ultraprocessado (peito de peru), entra patê de atum caseiro, **castanha de caju**
-  (que é zinco, alavanca de volume da frente 2), macaxeira, jerimum, feijão de corda,
-  tapioca, queijo coalho, peixe local.
-- Domingo de ~1h30 vira **roteiro com ordem de execução**; dia útil é montar e esquentar.
-- **Paga a dívida da frente 1:** manutenção (2.450) e superávit (2.700) foram calculados
-  contra gasto de ~2.700; o real é 2.900-3.100. Hoje "manutenção" é um déficit de ~550,
-  e ela entra nele quando a cintura chegar a 88 (mês 3-4).
-- Invariantes que não podem quebrar: `kcalDaily` = `CONSUMO.metaKcal`; soma dos
-  `targetKcal` = `kcalDaily` **nos três planos**; comida real dentro de 3%; proteína ≥ piso.
-- Sete variantes estão entre 12% e 15% de desvio do alvo — dívida a pagar aqui.
-
 ### Frente 6 — Três modos de estilo
 `docs/superpowers/specs/2026-08-11-tres-modos-estilo-design.md`
 
@@ -222,14 +209,14 @@ Não cria do zero: `intimidade-grinding`, `intimidade-cavalgar` e
 | Streak de vitalidade | `src/lib/vitalidade.ts` |
 | Versões de seed (exportadas e travadas) | `src/lib/seed.ts`, `src/lib/movement-seed.ts`, `src/lib/style-seed.ts` |
 | Rotina do dia | `src/lib/today-routine.ts` |
+| Cardápio (fonte única) | `src/data/meal-plan-seed.ts` · versão em `src/lib/path-seed.ts` |
+| Roteiro de domingo · porção de cada pote | `src/data/marmita-domingo-seed.ts`, `src/lib/marmita-porcoes.ts` |
 | Fotos dela | `imagens/eu`, `imagens/objetivo` — **gitignored, nunca versionar** |
 
 ---
 
 ## 9. Dívidas registradas
 
-- Manutenção e superávit calóricos descalibrados (frente 5 paga).
-- Sete variantes de refeição entre 12% e 15% de desvio (frente 5).
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e
   `Vitalidade.tsx` — a regra foi extraída, a montagem não.
 - `session-order.test.ts` usa fixtures locais, então não pega regressão nos templates reais.
