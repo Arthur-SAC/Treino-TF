@@ -32,7 +32,7 @@
 // empurravam o item do Hoje pra fase 3 e abriam o preparo pra receber SEM UMA
 // ÚNICA sessão de soltura. Soltura não é etapa burocrática: é ela que faz
 // receber ser confortável em vez de doloroso.
-import { SEQUENCES } from "../data/sequences-seed";
+import { rotuloDaSequencia, sequenciaDoCatalogo } from "./sequence-label";
 
 /** As sequências de assoalho pélvico em ordem didática, não por dificuldade isolada. */
 export const PELVIC_ORDEM = [
@@ -136,10 +136,6 @@ const ONDE: Record<string, string> = {
   "pelvic-pre-prazer": "Com privacidade, antes de um momento íntimo",
 };
 
-function doCatalogo(sequenceId: string) {
-  return SEQUENCES.find((s) => s.id === sequenceId);
-}
-
 /** Onde a sequência dá pra ser feita. Exportada porque a página Vitalidade
  *  mostra a mesma informação nas ofertas dela. */
 export function ondeFazer(sequenceId: string): string | undefined {
@@ -161,11 +157,16 @@ export interface RotuloPelvico {
  *
  *  Mora aqui, e não em `today-routine.ts`, porque aquele módulo é puro e não
  *  conhece o catálogo. Quem aplica é Today.tsx, na mesma camada em que já
- *  reescreve o `to` deste item. */
+ *  reescreve o `to` deste item.
+ *
+ *  A montagem do rótulo em si é de `rotuloDaSequencia` (sequence-label.ts),
+ *  compartilhada com o alongamento do Hoje: a regra "duração vem do catálogo,
+ *  sem catálogo o rótulo fica nu" é a MESMA para os dois, e estava escrita
+ *  duas vezes. O que é próprio do pélvico é só o subtítulo, que junta o ONDE
+ *  com a etapa da fase. */
 export function rotuloPelvicoDoDia(doDia: PelvicDoDia): RotuloPelvico {
-  const seq = doCatalogo(doDia.sequenceId);
   return {
-    label: seq ? `Assoalho pélvico · ${seq.durationMin} min` : "Assoalho pélvico",
+    label: rotuloDaSequencia("Assoalho pélvico", doDia.sequenceId),
     subtitle: [ondeFazer(doDia.sequenceId), doDia.etapa].filter(Boolean).join(" · "),
   };
 }
@@ -256,7 +257,7 @@ export function ofertasDaVitalidade(estado: EstadoDaVitalidade): OfertaPelvica[]
 /** Nome, duração e lugar SEMPRE do catálogo — mesma regra do rótulo do Hoje.
  *  Escrever "· 15 min" à mão aqui era repetir o defeito do outro lado. */
 function tituloDaOferta(sequenceId: string): string {
-  const seq = doCatalogo(sequenceId);
+  const seq = sequenciaDoCatalogo(sequenceId);
   const partes = [seq?.name ?? sequenceId];
   if (seq) partes.push(`${seq.durationMin} min`);
   const onde = ondeFazer(sequenceId);

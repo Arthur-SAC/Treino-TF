@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { flexDoDia, SEQUENCIAS_FLEX, HORIZONTE_FLEX, ATE_FASE_2, ATE_FASE_3 } from "../../src/lib/flex-progression";
+import { flexDoDia, SEQUENCIAS_FLEX, HORIZONTE_FLEX, ATE_FLEX_FASE_2, ATE_FLEX_FASE_3 } from "../../src/lib/flex-progression";
 
 describe("progressão de flexibilidade", () => {
   it("a fase 1 é a sequência que ela já faz hoje — histórico preservado", () => {
@@ -7,9 +7,9 @@ describe("progressão de flexibilidade", () => {
     expect(flexDoDia("noite", 0).sequenceId).toBe("flexibilidade-intima");
   });
 
-  it("a fase 1 dura até a prática ATE_FASE_2", () => {
-    expect(flexDoDia("manha", ATE_FASE_2 - 1).sequenceId).toBe("mobilidade-pelvica-matinal");
-    expect(flexDoDia("manha", ATE_FASE_2).sequenceId).not.toBe("mobilidade-pelvica-matinal");
+  it("a fase 1 dura até a prática ATE_FLEX_FASE_2", () => {
+    expect(flexDoDia("manha", ATE_FLEX_FASE_2 - 1).sequenceId).toBe("mobilidade-pelvica-matinal");
+    expect(flexDoDia("manha", ATE_FLEX_FASE_2).sequenceId).not.toBe("mobilidade-pelvica-matinal");
   });
 
   it("manhã e noite têm trilhas próprias e nunca se cruzam", () => {
@@ -42,7 +42,7 @@ describe("progressão de flexibilidade", () => {
   });
 
   it("a progressão não retrocede: fase 3 nunca devolve sequência de fase 1", () => {
-    for (let n = ATE_FASE_3; n < ATE_FASE_3 + 50; n++) {
+    for (let n = ATE_FLEX_FASE_3; n < ATE_FLEX_FASE_3 + 50; n++) {
       expect(flexDoDia("manha", n).sequenceId).not.toBe("mobilidade-pelvica-matinal");
       expect(flexDoDia("noite", n).sequenceId).not.toBe("flexibilidade-intima");
     }
@@ -52,8 +52,8 @@ describe("progressão de flexibilidade", () => {
     for (const momento of ["manha", "noite"] as const) {
       const etapas = [
         flexDoDia(momento, 0).etapa,
-        flexDoDia(momento, ATE_FASE_2).etapa,
-        flexDoDia(momento, ATE_FASE_3).etapa,
+        flexDoDia(momento, ATE_FLEX_FASE_2).etapa,
+        flexDoDia(momento, ATE_FLEX_FASE_3).etapa,
       ];
 
       // Cada etapa tem conteúdo

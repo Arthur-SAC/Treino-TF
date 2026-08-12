@@ -24,10 +24,15 @@ export const SEQUENCIAS_FLEX: Record<MomentoFlex, readonly string[]> = {
   noite: ["flexibilidade-intima", "flex-noite-amplitude", "flex-noite-sustentacao"],
 };
 
+// Os nomes carregam FLEX de propósito. `pelvic-progression.ts` também exporta
+// um corte de fase 3, com o mesmo nome genérico e valor completamente
+// diferente (10 práticas contra 84) — importar do módulo errado devolveria um
+// número plausível, e um corte de fase errado não estoura: só serve a fase
+// errada, em silêncio, por semanas.
 /** ~4 semanas de prática diária. */
-export const ATE_FASE_2 = 28;
+export const ATE_FLEX_FASE_2 = 28;
 /** ~12 semanas de prática diária. */
-export const ATE_FASE_3 = 84;
+export const ATE_FLEX_FASE_3 = 84;
 
 const ETAPA: Record<MomentoFlex, [string, string, string]> = {
   manha: [
@@ -56,6 +61,6 @@ export const HORIZONTE_FLEX = {
 export function flexDoDia(momento: MomentoFlex, praticasFeitas: number): FlexDoDia {
   const n = Number.isFinite(praticasFeitas) && praticasFeitas > 0 ? Math.floor(praticasFeitas) : 0;
   const trilha = SEQUENCIAS_FLEX[momento];
-  const fase = n < ATE_FASE_2 ? 0 : n < ATE_FASE_3 ? 1 : 2;
+  const fase = n < ATE_FLEX_FASE_2 ? 0 : n < ATE_FLEX_FASE_3 ? 1 : 2;
   return { sequenceId: trilha[fase], etapa: ETAPA[momento][fase] };
 }

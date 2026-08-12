@@ -14,7 +14,7 @@ import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
-import { flexDoDia, ATE_FASE_2 } from "../../src/lib/flex-progression";
+import { flexDoDia, ATE_FLEX_FASE_2 } from "../../src/lib/flex-progression";
 
 beforeEach(async () => {
   await db.routineChecks.clear();
@@ -52,10 +52,10 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
   });
 
   it("depois de 28 práticas de manhã, aponta pra fase 2", async () => {
-    await comPraticas(ATE_FASE_2, "mobilidade-pelvica-matinal");
+    await comPraticas(ATE_FLEX_FASE_2, "mobilidade-pelvica-matinal");
     render(<MemoryRouter><Today /></MemoryRouter>);
 
-    const esperado = flexDoDia("manha", ATE_FASE_2);
+    const esperado = flexDoDia("manha", ATE_FLEX_FASE_2);
     expect(esperado.sequenceId).toBe("flex-manha-amplitude");
     await screen.findByText(esperado.etapa);
 
@@ -64,12 +64,12 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
   });
 
   it("práticas da manhã não avançam a trilha da noite", async () => {
-    await comPraticas(ATE_FASE_2, "mobilidade-pelvica-matinal");
+    await comPraticas(ATE_FLEX_FASE_2, "mobilidade-pelvica-matinal");
     render(<MemoryRouter><Today /></MemoryRouter>);
 
     // Espera a MANHÃ liquidar em fase 2 primeiro — sinal de que os
     // useLiveQuery das duas trilhas já resolveram, não só o primeiro paint.
-    await screen.findByText(flexDoDia("manha", ATE_FASE_2).etapa);
+    await screen.findByText(flexDoDia("manha", ATE_FLEX_FASE_2).etapa);
 
     const noiteEsperada = flexDoDia("noite", 0);
     expect(noiteEsperada.sequenceId).toBe("flexibilidade-intima");
@@ -87,9 +87,9 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
     expect(await screen.findByText("Alongamento manhã · 10 min")).toBeInTheDocument();
     primeiraMontagem.unmount();
 
-    await comPraticas(ATE_FASE_2, "mobilidade-pelvica-matinal");
+    await comPraticas(ATE_FLEX_FASE_2, "mobilidade-pelvica-matinal");
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText(flexDoDia("manha", ATE_FASE_2).etapa);
+    await screen.findByText(flexDoDia("manha", ATE_FLEX_FASE_2).etapa);
     // Fase 2 (flex-manha-amplitude) dura 15 min — outro número, e o rótulo
     // acompanha porque agora vem do catálogo, não de texto fixo no item.
     expect(await screen.findByText("Alongamento manhã · 15 min")).toBeInTheDocument();

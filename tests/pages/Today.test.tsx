@@ -127,7 +127,10 @@ describe("Today: o item de assoalho pélvico não promete o que a sequência nã
   // a varredura antiga gastava só na fase 4. Tudo derivado das constantes
   // exportadas, nunca escrito à mão — se o tamanho das fases ou da rotação
   // mudar, a amostra acompanha.
-  const ateSoltura = ATE_FASE_3 - SESSOES_DE_SOLTURA; // fim da fase 1 (identificação)
+  // O corte onde a soltura começa: é o PRIMEIRO valor da fase 2, não o último
+  // da fase 1 (a fase 1 vai até `ateSoltura - 1`). O array abaixo sempre usou
+  // as duas coisas certas — quem estava errado era o comentário daqui.
+  const ateSoltura = ATE_FASE_3 - SESSOES_DE_SOLTURA;
   const AMOSTRAS_DE_FRONTEIRA = [
     0, ateSoltura - 1, // primeiro e último da fase 1
     ateSoltura, ATE_FASE_3 - 1, // primeiro e último da fase 2 (soltura)

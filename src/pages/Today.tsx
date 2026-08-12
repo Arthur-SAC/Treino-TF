@@ -8,7 +8,7 @@ import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex } from "../lib/practice-log-helpers";
-import { SEQUENCES } from "../data/sequences-seed";
+import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -33,17 +33,15 @@ import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
 import { metaDePausas } from "../lib/micro-pausas";
 
-/** Rótulo e subtítulo do alongamento do dia, mesma forma que
- *  `rotuloPelvicoDoDia` (pelvic-progression.ts) já estabeleceu pro item
- *  pélvico: a duração vem sempre do catálogo, nunca de um número cravado no
- *  item, e o subtítulo é a etapa da fase, pra não virar exercício cego. Mora
- *  aqui, e não em `flex-progression.ts`, pela mesma razão de
- *  `rotuloPelvicoDoDia` não morar em `today-routine.ts`: aquele módulo é puro
- *  e não conhece o catálogo. */
+/** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
+ *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
+ *  a duração sai sempre do catálogo, nunca de um número cravado no item, e sem
+ *  sequência o rótulo fica nu. Era uma cópia — duas escritas da mesma regra em
+ *  camadas diferentes, que é como ela diverge em silêncio. O que sobra aqui é
+ *  só o subtítulo, que para o alongamento é a etapa da fase. */
 function rotuloFlexDoDia(baseLabel: string, doDia: FlexDoDia): { label: string; subtitle: string } {
-  const seq = SEQUENCES.find((s) => s.id === doDia.sequenceId);
   return {
-    label: seq ? `${baseLabel} · ${seq.durationMin} min` : baseLabel,
+    label: rotuloDaSequencia(baseLabel, doDia.sequenceId),
     subtitle: doDia.etapa,
   };
 }
