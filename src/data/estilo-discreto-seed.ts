@@ -6,12 +6,12 @@ export const ESTILO_DISCRETO: GuideSection[] = [
   {
     id: "escada",
     title: "Escada de níveis",
-    intro: "Três modos, três contextos, todos escolhidos por você: masculina em público, feminina em casa, safada na intimidade. Sobe e desce de degrau quando quiser — nenhum deles é derrota nem estação de passagem.",
+    intro: "Três modos, três contextos, todos escolhidos por você: andrógino em público (com o teto que o ambiente comporta), você mesma em casa, safada na intimidade. Público não é ponto fixo — é uma faixa, e você sobe e desce de degrau conforme o dia e o lugar. Nenhum degrau é derrota nem estação de passagem.",
     tips: [
       "Nível 1 (leitura neutra — o que você usa no trabalho por escolha): pele cuidada, sobrancelha alinhada, unhas limpas e lisas, cabelo cuidado, postura e voz, perfume neutro, roupa que veste bem o corpo — ex.: hidratante Nivea/Payot + lápis Vult pra sobrancelha",
       "Nível 2 (lê como 'cuidada/alternativa'): corte mais comprido, base ou brilho incolor na unha, peças unissex mais ajustadas, bálsamo labial com leve cor (ex.: Vult Lip Oil, Quem Disse Berenice bálsamo rosado, Payot Rosé), acessório discreto — para detalhes de aplicação: rotina 'Natural · diário' em Maquiagem",
       "Nível 3 (andrógino/fluido, em espaços mais abertos): calça de corte feminino neutro, blusa com caimento, rímel discreto (ex.: Vult Volume Max, Maybelline Sky High), esmalte nude (ex.: Colorama Nudes, Bruna Tavares nude rosado), brinco pequeno — para detalhes de aplicação: rotina 'Trabalho · profissional' em Maquiagem",
-      "Nível 4 (ousado, só em espaço seguro — casa, com a amada, ambientes queer): maquiagem completa, cor nas unhas, silhueta feminina marcada, vestido/saia, lingerie",
+      "Nível 4 (ousado, só em espaço seguro — casa, com a amada, ambientes queer): maquiagem completa, cor nas unhas, silhueta feminina marcada, vestido/saia, lingerie. Este nível fica fora do público por causa do ambiente onde você mora, não porque seja demais pra você",
     ],
   },
   {
