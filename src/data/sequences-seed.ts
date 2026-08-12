@@ -787,4 +787,123 @@ export const SEQUENCES: DanceSequence[] = [
       },
     ],
   },
+  {
+    id: "intimidade-esfregar-roupa",
+    name: "Esfregar com roupa",
+    category: "intimidade",
+    level: "iniciante",
+    durationMin: 10,
+    focus:
+      "Vocês já fazem isso, e dá pra terminar em orgasmo — mas o fator que decide não é o corpo, é o TECIDO. É por isso que isto é uma sequência separada do grinding. Duas coisas quebram a maioria das tentativas: a costura frontal do jeans (grossa, rígida, e cai exatamente sobre o clitóris dela — nenhuma roupa de baixo compensa) e o atrito seco, que assa a pele depois de uns 15 minutos. Bônus real pra você: é a melhor situação que existe pra treinar o seu próprio controle, porque tem excitação alta com estímulo indireto e sem o gatilho da penetração.",
+    videoUrl: "",
+    moves: [
+      {
+        name: "Escolha do tecido — antes de qualquer coisa",
+        description:
+          "Jeans está fora, nos dois corpos: a costura frontal central é uma crista grossa e rígida que cai em cima do clitóris dela e concentra todo o atrito numa linha só. Nenhuma calcinha por baixo compensa isso. O que serve: malha, moletom fino, legging — qualquer coisa lisa, sem costura grossa na frente. Passa a mão na costura antes; se você sente a crista com o dedo, ela vai sentir multiplicado em 20 minutos.",
+        durationSec: 30,
+      },
+      {
+        name: "A escada de camadas — meia hora",
+        description:
+          "Começa com as duas completamente vestidas e vai tirando uma camada de cada vez ao longo de ~30 min. A barreira é o que faz o mecanismo funcionar: ela transforma pressão direta em pressão difusa e sustentada, que é o que constrói. Tirar roupa cedo demais destrói isso — vira estímulo direto, que sobe rápido e satura. Regra prática: só sai camada quando as duas já estão bem, nunca pra apressar.",
+        durationSec: 60,
+      },
+      {
+        name: "O movimento — frente-e-trás, contato constante",
+        description:
+          "Mesmo movimento do grinding: pélvis deslizando para frente e para trás num plano só, contato que não se rompe. Com roupa o atrito é maior, então a velocidade cai ainda mais. Treina 2 min contínuos aqui, no seco, pra medir o seu fôlego.",
+        durationSec: 120,
+      },
+      {
+        name: "Abrasão: o limite é físico, e não é falta de tesão",
+        description:
+          "Depois de uns 15 min de atrito seco a pele dela assa — e a dela é mais fina ali que a sua. Se ela ficar desconfortável ou pedir pra mudar nesse ponto, isso é ABRASÃO, não desinteresse, e ler como desinteresse é erro seu, não sinal dela. Duas saídas: trocar o ângulo pra mudar o ponto de contato, ou reduzir uma camada (o tecido de baixo desliza mais que o de cima).",
+        durationSec: 30,
+      },
+      {
+        name: "Uso pra treinar o seu controle — start-stop a dois",
+        description:
+          "Esta é a melhor situação que existe pra você treinar controle: excitação alta, estímulo indireto pela roupa e sem o gatilho da penetração. Aplica o start-stop que você já treina sozinha (trilha de assoalho pélvico): quando chegar perto do ponto de não-retorno, para o movimento do quadril e mantém o contato parado, respirando, até a onda baixar. Retoma. Três paradas numa sessão é treino melhor que qualquer série sozinha.",
+        durationSec: 120,
+      },
+      {
+        name: "Resistência específica — 3 min sem parar",
+        description:
+          "Fecha com 3 min contínuos do movimento, sem pausa, medindo onde o seu quadril cansa. Lombar, flexor de quadril e glúteo são o que falha primeiro — e é exatamente isso que a trilha de resistência do rebolado constrói.",
+        durationSec: 180,
+      },
+      {
+        name: "Cooldown",
+        description: "Criança e respiração lenta pra soltar lombar e flexor. 1 min.",
+        durationSec: 60,
+      },
+    ],
+  },
+  {
+    id: "intimidade-receber-maos",
+    name: "Receber por mão e dedos",
+    category: "intimidade",
+    level: "intermediario",
+    durationMin: 14,
+    focus:
+      "A via que ela quer e aceita. Ela quer te penetrar e recusou usar um objeto pra isso — e a razão dela é boa: com mão e dedos há carne dos dois lados, as duas sentem, e nenhum equipamento entrega isso. O que sustenta esta via inteira não é tolerância a dor: é o relaxamento VOLUNTÁRIO do assoalho pélvico, que é a fase 2 da sua trilha de assoalho (sequência pelvic-soltura-sustentada). Sem isso treinado o corpo fecha por reflexo e dói; com isso treinado, a progressão anda sozinha. A escala aqui é de MESES, e apressar é o único jeito garantido de atrasar.",
+    videoUrl: "",
+    moves: [
+      {
+        name: "Pré-requisito, não sugestão: soltura treinada",
+        description:
+          "Antes de qualquer progressão aqui, você precisa conseguir soltar o assoalho pélvico por vontade, não por sorte — é o que a sequência pelvic-soltura-sustentada constrói, e é a fase 2 da sua trilha. O teste é simples: deitada, você consegue relaxar a região e MANTER relaxada por 30 segundos, respirando, sem ela voltar a fechar sozinha. Se ainda não, o trabalho é lá, não aqui.",
+        durationSec: 60,
+      },
+      {
+        name: "Lubrificante — a quantidade certa parece exagero",
+        description:
+          "Muito mais do que parece necessário, e reaplicado durante, não só no começo. Não é conforto: é a diferença entre deslizar e arrastar, e arrastar é o que causa fissura. Base de água combina com tudo e reidrata com um pouco de água; base de silicone dura mais tempo sem reaplicar. Se em algum momento você sentir agarrar, é sinal de reaplicar, não de forçar.",
+        durationSec: 30,
+      },
+      {
+        name: "Preparo externo — 5 min antes de qualquer entrada",
+        description:
+          "Ela trabalha só a região externa com a mão lubrificada: pressão circular lenta, sem entrar. O objetivo aqui é o esfíncter externo relaxar por conta, com você respirando. Cinco minutos disso mudam completamente o que acontece depois. Você respira devagar e solta na expiração — mesma coisa que treina na soltura.",
+        durationSec: 300,
+      },
+      {
+        name: "Um dedo — semanas, não minutos",
+        description:
+          "Ela entra com UM dedo, lubrificado, devagar, e para assim que entrar. Não move. Você respira e solta ao redor dele — é aqui que a soltura treinada aparece. Só depois de você estar confortável parada é que vem movimento lento. Este estágio dura semanas de repetições, e a pressa aqui é o que produz a dor que ensina o corpo a fechar.",
+        durationSec: 180,
+      },
+      {
+        name: "A escada",
+        description:
+          "Externo → um dedo parado → um dedo com movimento → dois dedos → dois com movimento. Cada degrau só sobe quando o anterior está confortável em pelo menos três encontros diferentes, não um. A escala honesta desta progressão inteira é de MESES. Retroceder um degrau num dia ruim é parte do processo, não recaída.",
+        durationSec: 60,
+      },
+      {
+        name: "Sensação mútua — a razão de ser desta via",
+        description:
+          "É isto que o objeto não faz: ela sente com os dedos ao mesmo tempo que você sente, e as duas ajustam pelo retorno da outra em tempo real. A mão livre dela pode estar em você ao mesmo tempo. Se a conversa voltar a seria mais fácil com um treco, a resposta já está dada — o que ela quer é sentir junto, e é isso que esta via entrega.",
+        durationSec: 60,
+      },
+      {
+        name: "Grinding coxa a coxa — o sentir junto sem nada disso",
+        description:
+          "A resposta direta ao que ela já elogia: você monta a coxa dela, ela monta a sua, e as duas esfregam ao mesmo tempo. Prazer simultâneo, zero equipamento, zero preparo. Vale como sessão inteira, não só como aquecimento — e é a opção pros dias em que a progressão acima não é o que vocês querem.",
+        durationSec: 120,
+      },
+      {
+        name: "Onde isso vai dar, com honestidade",
+        description:
+          "Fisting é o horizonte distante desta via — anos, se um dia. Está nomeado aqui só pra você saber que a escada continua, e não pra ser perseguido: não é o próximo passo e nem deve ser tratado como meta. O próximo passo é sempre o degrau imediatamente acima do que já está confortável.",
+        durationSec: 30,
+      },
+      {
+        name: "Cooldown",
+        description:
+          "Respiração diafragmática lenta, 2 min, deixando a região solta. Fecha a sessão relaxada — o corpo grava o estado em que a coisa terminou.",
+        durationSec: 120,
+      },
+    ],
+  },
 ];
