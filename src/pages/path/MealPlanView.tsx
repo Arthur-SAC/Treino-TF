@@ -5,7 +5,7 @@ import type { MealVariant } from "../../lib/db";
 import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
-import { buildShoppingList } from "../../lib/shopping-list";
+import { buildWeeklyShoppingList } from "../../lib/shopping-list";
 import { renderDietMarkdown, renderDietHtml } from "../../lib/diet-export";
 
 const PERIOD_LABEL: Record<"cafe" | "almoco" | "lanche" | "jantar", string> = {
@@ -73,7 +73,7 @@ export function MealPlanView() {
 
   function exportPdf() {
     if (!plan) return;
-    const html = renderDietHtml(plan, buildShoppingList(plan));
+    const html = renderDietHtml(plan, buildWeeklyShoppingList(plan));
     const w = window.open("", "_blank");
     if (!w) { alert("Permita pop-ups pra gerar o PDF."); return; }
     w.document.write(html);
@@ -84,7 +84,7 @@ export function MealPlanView() {
 
   async function exportDiet() {
     if (!plan) return;
-    const text = renderDietMarkdown(plan, buildShoppingList(plan));
+    const text = renderDietMarkdown(plan, buildWeeklyShoppingList(plan));
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({ title: plan.name, text });

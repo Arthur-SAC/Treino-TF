@@ -72,7 +72,10 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
 
           <ul className="space-y-1 text-sm text-nude-warm mb-4">
             {foods.map((f, j) => (
-              <li key={j}>• {f.name}</li>
+              <li key={j} className="flex justify-between gap-2">
+                <span>• {f.name}</span>
+                <span className="text-nude text-xs whitespace-nowrap">{f.qtyG} g</span>
+              </li>
             ))}
           </ul>
 
@@ -139,9 +142,15 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
 
                 {isExpanded && (
                   <div className="px-3 pb-3">
+                    {/* A porção pesada ao lado de cada alimento: é aqui que ela
+                        monta o prato ou o pote, e metade dos alimentos não diz
+                        a grama no próprio nome. */}
                     <ul className="space-y-1 text-sm text-nude-warm mb-3">
                       {v.foods.map((f, j) => (
-                        <li key={j}>• {f.name}</li>
+                        <li key={j} className="flex justify-between gap-2">
+                          <span>• {f.name}</span>
+                          <span className="text-nude text-xs whitespace-nowrap">{f.qtyG} g</span>
+                        </li>
                       ))}
                     </ul>
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderDietMarkdown, renderDietHtml, assertNeutral, FORBIDDEN_TERMS } from "../../src/lib/diet-export";
-import { buildShoppingList } from "../../src/lib/shopping-list";
+import { buildShoppingList, buildWeeklyShoppingList } from "../../src/lib/shopping-list";
+import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import type { MealPlan } from "../../src/lib/db";
 
 const plan: MealPlan = {
@@ -100,5 +101,32 @@ describe("renderDietHtml", () => {
     const ampHtml = renderDietHtml(planWithAmpersand, buildShoppingList(planWithAmpersand));
     expect(ampHtml).toContain("&amp;");
     expect(ampHtml).not.toContain("& teste");
+  });
+});
+
+// A tela de compras passou a fechar a semana inteira, mas o PDF e o markdown
+// exportados continuavam levando a lista de uma rodada só — e é o PDF que ela
+// leva pro mercado. Duas quantidades diferentes pro mesmo item, saindo do mesmo
+// app, é exatamente a classe de contradição que esta reforma existe pra tirar.
+describe("o que sai exportado é o mesmo que a tela mostra", () => {
+  it("o alimento leva a porção pesada, não só o nome e as kcal", () => {
+    const md = renderDietMarkdown(
+      { ...INITIAL_PLAN, id: 1 } as MealPlan,
+      buildWeeklyShoppingList({ ...INITIAL_PLAN, id: 1 } as MealPlan),
+    );
+    const almoco1 = INITIAL_PLAN.slots.find((s) => s.mealType === "almoco")!.variants[0];
+    // O alvo é o alimento cujo NOME não diz a porção — testar pelo frango
+    // ("Frango grelhado (180g)") aprovaria a ausência da implementação.
+    const mudo = almoco1.foods.find((f) => !f.name.includes(String(f.qtyG)))!;
+    expect(md).toContain(`${mudo.name} — ${mudo.qtyG} g`);
+  });
+
+  it("a lista de compras exportada é a da semana, a mesma da tela", () => {
+    const plano = { ...INITIAL_PLAN, id: 1 } as MealPlan;
+    const semana = buildWeeklyShoppingList(plano);
+    const md = renderDietMarkdown(plano, semana);
+    for (const item of semana) {
+      expect(md).toContain(`${item.item} — ${item.qty} ${item.unit}`);
+    }
   });
 });
