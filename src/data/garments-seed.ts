@@ -238,6 +238,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "diario"],
     whyItWorks: "Bojo cria busto aparente e mantém forma redonda sem postiço removível.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "conjunto-tanga-sutia",
@@ -245,15 +246,19 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo", "diario"],
     whyItWorks: "Combinar peças cria sensação de ritual. Cor importa — vinho profundo e nude quente são suas tonalidades.",
+    cautions: "Se o conjunto for de renda, vale como peça de ver. A parte de baixo sai antes de o atrito começar.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "body-de-renda",
     name: "Body de renda",
     category: "intimate",
     occasion: ["intimo"],
-    whyItWorks: "Acentua cintura e quadril porque corta o corpo na cintura. Renda traz texture e feminilidade.",
+    whyItWorks: "Acentua cintura e quadril porque corta o corpo na cintura. Renda traz textura e feminilidade.",
+    cautions: "É peça de VER. Renda em 15-25 min de atrito contínuo rala — e não é você que sente primeiro, é ela. Pra grinding, troca por peça lisa.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "camisola-transparente",
@@ -262,6 +267,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "dormir"],
     whyItWorks: "Cai do busto pro quadril mostrando silhueta. Pode usar com calcinha visível por baixo (intencional).",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "babydoll",
@@ -270,6 +276,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo"],
     whyItWorks: "Peplum-like em vestido íntimo. Sustenta busto, abre na cintura, esconde nada importante mas insinua tudo.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "robe-curto-cetim",
@@ -278,6 +285,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "dormir"],
     whyItWorks: "Mostra perna, marca cintura quando amarra o cinto. Vibe burlesca clássica.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "cinta-liga-meia",
@@ -285,8 +293,9 @@ export const GARMENTS: Garment[] = [
     category: "intimate",
     occasion: ["intimo"],
     whyItWorks: "Alonga perna, divide visualmente coxa. Fetiche clássico — funciona se usado com confiança.",
-    cautions: "Combine com calcinha que pegue bem na cintura, não na linha do quadril.",
+    cautions: "Combine com calcinha que pegue bem na cintura, não na linha do quadril. Peça de ver: a liga atravessa a coxa e entra no caminho de qualquer coisa que envolva ela por cima.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "calcinha-fio-dental",
@@ -295,6 +304,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "diario"],
     whyItWorks: "Cintura alta da fio dental marca o quadril visualmente. Sem marca embaixo de roupa.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "sutia-balconet",
@@ -303,6 +313,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["intimo", "diario"],
     whyItWorks: "Empurra busto pra cima e pra fora, criando decote profundo. Excelente sob decote V ou coração.",
     mode: "intimo",
+    intimateUse: "ver",
   },
   {
     id: "espartilho-cintura",
@@ -312,5 +323,59 @@ export const GARMENTS: Garment[] = [
     whyItWorks: "Comprime cintura temporariamente, exagera ampulheta. Use moderadamente — não substitui treino.",
     cautions: "Não use o dia todo. Tipo discreto debaixo da roupa pra ocasiões especiais.",
     mode: "intimo",
+    intimateUse: "ver",
+  },
+
+  // === ÍNTIMO · DE USAR ===
+  // O app tinha dez peças íntimas e todas eram de OLHAR. Ela fica sempre por
+  // cima, 15-25 min de atrito contínuo, e a peça que estava recomendada era
+  // justamente a que machuca a noiva. Estas quatro são o contrário: nenhuma é
+  // bonita de perto, todas funcionam.
+  {
+    id: "boxer-microfibra-liso",
+    name: "Boxer de microfibra liso (sem costura frontal)",
+    category: "intimate",
+    occasion: ["intimo", "diario"],
+    whyItWorks:
+      "Microfibra lisa desliza em vez de ralar, e é a única superfície que aguenta 20 min de contato contínuo sem irritar a pele dela. Sem costura frontal central — a costura é uma crista fina que concentra todo o atrito numa linha só.",
+    cautions: "Confere a costura com a mão antes de comprar: muita marca põe costura frontal mesmo em peça lisa, e ela só aparece no uso.",
+    mode: "intimo",
+    intimateUse: "usar",
+    fitTip: "Compra pelo QUADRIL e pela coxa, nunca pela cintura. Apertado na coxa achata a bunda.",
+  },
+  {
+    id: "calcinha-cos-alto-compressao",
+    name: "Calcinha de cós alto com compressão firme",
+    category: "intimate",
+    occasion: ["intimo", "diario"],
+    whyItWorks:
+      "O cós alto faz três coisas de uma vez: alonga a linha da bunda, comprime a barriga (que é o teu ponto mais largo hoje) e segura tudo pra cima e preso contra o corpo, que é exatamente a posição que o grinding pede. Tecido liso, sem renda no corpo da peça.",
+    cautions: "Compressão firme, não sufocante — se marcar vinco na pele em 10 min, está pequena.",
+    mode: "intimo",
+    intimateUse: "usar",
+    fitTip: "Pelo quadril. A tabela muda por marca — confere a faixa que contém a tua medida, não o nome do tamanho.",
+  },
+  {
+    id: "short-compressao-casa",
+    name: "Short de compressão liso (por baixo de tudo)",
+    category: "intimate",
+    occasion: ["intimo", "casa", "diario"],
+    whyItWorks:
+      "Cobre a coxa inteira, então elimina o atrito pele-com-pele e o de qualquer costura de fora. Serve de camada de baixo em qualquer coisa — inclusive sob calça larga em público, sem ninguém ver.",
+    cautions: "Tecido liso, sem costura interna na virilha. Costura ali é a que mais incomoda em movimento repetido.",
+    mode: "intimo",
+    intimateUse: "usar",
+    fitTip: "Comprimento até o meio da coxa. Curto demais enrola e vira um cordão que aperta.",
+  },
+  {
+    id: "top-sem-costura",
+    name: "Top de microfibra sem costura",
+    category: "intimate",
+    occasion: ["intimo", "casa", "diario"],
+    whyItWorks:
+      "Peça de contato para quando o peito está envolvido: liso, sem aro, sem fecho nas costas pra marcar. Não cria volume — cria superfície que não machuca.",
+    cautions: "Não é peça de volume: se o que você quer é forma, essa não é a peça. Essa é a que aguenta o uso.",
+    mode: "intimo",
+    intimateUse: "usar",
   },
 ];
