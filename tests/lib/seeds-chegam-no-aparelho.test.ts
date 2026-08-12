@@ -3,7 +3,7 @@ import { db } from "../../src/lib/db";
 import { seedDatabase, EXERCISE_SEED_VERSION, TEMPLATE_SEED_VERSION } from "../../src/lib/seed";
 import { seedPath, MEAL_PLAN_VERSION } from "../../src/lib/path-seed";
 import { seedStyle, STYLE_SEED_VERSION } from "../../src/lib/style-seed";
-import { seedMovement } from "../../src/lib/movement-seed";
+import { seedMovement, MOVEMENT_VERSION } from "../../src/lib/movement-seed";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
 
 // Conteúdo de seed vive no IndexedDB, não no arquivo: sem bump de versão, texto
@@ -79,6 +79,12 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // templates, plano alimentar) e o estilo têm a mesma rede.
   it("STYLE_SEED_VERSION é a versão revisada nesta rodada", () => {
     expect(STYLE_SEED_VERSION).toBe(4);
+  });
+
+  // Com esta, as CINCO versões de seed do app têm pino: exercícios, templates,
+  // plano alimentar, estilo e movimento. Era a última que vivia privada.
+  it("MOVEMENT_VERSION é a versão revisada nesta rodada", () => {
+    expect(MOVEMENT_VERSION).toBe(10);
   });
 });
 
@@ -324,6 +330,29 @@ describe("sequências de movimento", () => {
       expect(s).toBeDefined();
       expect(s?.category).toBe("mobilidade");
     }
+  });
+
+  it("o repertório íntimo alcança quem estava na versão anterior", async () => {
+    await db.settings.put({ key: "movementSeeded", value: true });
+    await db.settings.put({ key: "movementVersion", value: MOVEMENT_VERSION - 1 });
+
+    await seedMovement();
+
+    // As sequências novas chegam…
+    for (const id of [
+      "intimidade-esfregar-roupa",
+      "intimidade-receber-maos",
+      "rebolado-resistencia-4",
+    ]) {
+      expect(await db.danceSequences.get(id)).toBeDefined();
+    }
+
+    // …e a REESCRITA do grinding também. Um teste de contagem não pegaria esta
+    // parte: o id já existia antes, só o conteúdo mudou — e conteúdo corrigido
+    // que não chega é exatamente o que este arquivo existe pra impedir.
+    const grinding = await db.danceSequences.get("intimidade-grinding");
+    expect(grinding?.focus).toMatch(/congel/i);
+    expect(grinding?.focus).toMatch(/15\s*(a|-|–)\s*25/);
   });
 });
 
