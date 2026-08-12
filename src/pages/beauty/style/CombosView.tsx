@@ -32,7 +32,7 @@ export function CombosView() {
 
       <p className="text-muted text-xs mb-3">
         Os princípios (níveis, o que passa, peças-curinga) estão na aba{" "}
-        <Link to="/beleza/estilo/discreto" className="text-nude underline">Discreto</Link>.
+        <Link to="/beleza/estilo/publico" className="text-nude underline">Público</Link>.
       </p>
 
       <div className="overflow-x-auto -mx-4 px-4 mb-4">

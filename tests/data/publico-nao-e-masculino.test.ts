@@ -1,6 +1,13 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+
+// Varre o código-fonte como TEXTO, no mesmo formato de sem-trh-agendada.test.ts
+// — pega comentário, copy de seed e JSX igual, e não depende de API de Node
+// (que o tsconfig do build não conhece).
+const FONTES = import.meta.glob("../../src/**/*.{ts,tsx}", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
 // ATENÇÃO ao formato desta rede. Cinco vezes neste projeto um teste proibiu uma
 // PALAVRA e com isso proibiu também NEGÁ-LA — e quase apagou justamente o texto
@@ -11,17 +18,7 @@ import { join } from "node:path";
 // Então a rede tem duas metades:
 //   1. proíbe a AFIRMAÇÃO (descrever o modo público como masculino);
 //   2. exige que os avisos que usam a palavra pra NEGAR continuem existindo.
-function arquivosDeTexto(dir: string): string[] {
-  const saida: string[] = [];
-  for (const nome of readdirSync(dir)) {
-    const caminho = join(dir, nome);
-    if (statSync(caminho).isDirectory()) saida.push(...arquivosDeTexto(caminho));
-    else if (/\.(ts|tsx)$/.test(nome)) saida.push(caminho);
-  }
-  return saida;
-}
-
-const fontes = arquivosDeTexto("src").map((f) => ({ f, texto: readFileSync(f, "utf8") }));
+const fontes = Object.entries(FONTES).map(([f, texto]) => ({ f, texto }));
 
 describe("o modo público é andrógino com teto de segurança, não masculino", () => {
   // A afirmação proibida, em suas formas concretas. Ela corrigiu em 2026-08-11:

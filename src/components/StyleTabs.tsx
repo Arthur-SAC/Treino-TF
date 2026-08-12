@@ -1,13 +1,18 @@
 import { NavLink } from "react-router-dom";
 
+// A ordem é a do dia dela, não a do banco: ela não se veste por tipo de peça,
+// se veste por contexto. Paleta, Peças, Combinações, Looks e Wishlist continuam
+// existindo — são ferramentas que atravessam os três modos (a mesma cor vale em
+// público e no íntimo), e por isso vêm depois, não antes.
 const ITEMS = [
+  { to: "/beleza/estilo/publico", label: "Público" },
+  { to: "/beleza/estilo/casa", label: "Casa" },
+  { to: "/beleza/estilo/intimo", label: "Íntimo" },
   { to: "/beleza/estilo", label: "Paleta", end: true },
   { to: "/beleza/estilo/pecas", label: "Peças" },
   { to: "/beleza/estilo/combinacoes", label: "Combinações" },
   { to: "/beleza/estilo/looks", label: "Looks" },
   { to: "/beleza/estilo/wishlist", label: "Wishlist" },
-  { to: "/beleza/estilo/intimo", label: "Íntimo" },
-  { to: "/beleza/estilo/discreto", label: "Discreto" },
 ];
 
 export function StyleTabs() {
