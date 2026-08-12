@@ -3,6 +3,37 @@ import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
 import { MEDIDAS_PARTIDA } from "./objetivo";
 
+// Exportadas (não apenas locais a seedDatabase) por uma razão concreta: seis
+// vezes este projeto perdeu correções porque o conteúdo mudou no seed mas a
+// versão não foi bumpada junto, e o teste de chegada (seeds-chegam-no-aparelho)
+// não tinha como conferir que a versão que ele planta é a imediatamente
+// anterior à atual — só tinha números escritos à mão, sem vínculo com o código.
+// Exportar deixa o teste derivar "anterior = atual - 1" em vez de arriscar
+// destoar do código de novo.
+//
+// v10: "Cardio zona 2" deixou de ser um item do fim do treino e passou a
+// descrever a caminhada de 5 km do trabalho para casa — nome, descrição, erros
+// comuns e dicas mudaram junto, e nada disso chega ao aparelho dela sem o bump.
+// v9 (histórico, incorporado ao comentário acima do bloco): dois exercícios
+// novos (carregamento-frontal, prancha-antirrotacao) completam o padrão de
+// força pra levantar a noiva no colo — a dobradiça de quadril já existia,
+// faltava carga à frente do corpo e core antirrotação.
+// v10: o carregamento frontal parou de sugerir carregamento unilateral na
+// variação difícil (halter pendurado na lateral = trapézio superior sob
+// carga, o oposto do objetivo), subiu de exposureLevel 2 → 3, e os dois
+// exercícios novos ganharam vídeo de demonstração.
+export const EXERCISE_SEED_VERSION = 10;
+
+// v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
+// virou a caminhada do trabalho) e as orientações foram reescritas.
+// v11: o padrão de levantar (agachamento-goblet, carregamento-frontal,
+// prancha-antirrotacao) entrou nos ciclos de variação/hipertrofia/
+// refinamento/manutenção — por troca, não por soma, pra sessão não crescer.
+// v12: o mesmo padrão entrou na ADAPTAÇÃO, que ela alcança em ~3 semanas —
+// sem isso o padrão de levantar só chegaria nela daqui a ~48 sessões. A Fase
+// de Entrada continua de fora de propósito (rampa de exposição).
+export const TEMPLATE_SEED_VERSION = 12;
+
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
   if (seeded?.value !== true) {
@@ -49,10 +80,8 @@ export async function seedDatabase(): Promise<void> {
   // mudanças no conteúdo dos exercícios (nome, equipamento, descrição) só chegam
   // em contas existentes via este bloco. Bumpar EXERCISE_SEED_VERSION força um
   // put() de todos os exercícios — idempotente, não duplica (mesmo id sobrescreve).
-  // v8: "Cardio zona 2" deixou de ser um item do fim do treino e passou a
-  // descrever a caminhada de 5 km do trabalho para casa — nome, descrição, erros
-  // comuns e dicas mudaram junto, e nada disso chega ao aparelho dela sem o bump.
-  const EXERCISE_SEED_VERSION = 8;
+  // Histórico das versões: ver o comentário junto à declaração de
+  // EXERCISE_SEED_VERSION, no topo do arquivo.
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
@@ -72,9 +101,8 @@ export async function seedDatabase(): Promise<void> {
   // glúteo-prioritário, novo ciclo de manutenção), bumpar TEMPLATE_SEED_VERSION
   // re-grava todos os templates. put() sobrescreve os de mesmo id e adiciona os
   // novos (manutenção). Idempotente.
-  // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
-  // virou a caminhada do trabalho) e as orientações foram reescritas.
-  const TEMPLATE_SEED_VERSION = 10;
+  // Histórico das versões: ver o comentário junto à declaração de
+  // TEMPLATE_SEED_VERSION, no topo do arquivo.
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {

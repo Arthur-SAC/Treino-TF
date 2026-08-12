@@ -294,6 +294,56 @@ export const EXERCISES: Exercise[] = [
       "Progrida pelo tempo de isometria (30 → 45 → 60s), não por carga",
     ],
   },
+  {
+    id: "carregamento-frontal",
+    name: "Carregamento frontal (halteres ou kettlebell)",
+    category: "cintura",
+    equipment: ["halteres"],
+    difficulty: "iniciante",
+    description: "Segura um halter pesado (ou kettlebell) contra o peito, cotovelos pra baixo, e caminha 20 a 30 metros mantendo o tronco ereto e a costela fechada. É o padrão de carregar peso à frente do corpo — exatamente o que levantar outra pessoa exige.",
+    commonMistakes: [
+      "Arquear a lombar pra compensar o peso à frente",
+      "Deixar o peso descer e afastar do peito, o que joga a carga toda na lombar",
+      "Prender a respiração — respira raso e contínuo, sem travar",
+    ],
+    easierVariation: "Distância menor com peso menor, ou parada em pé segurando por 30s",
+    harderVariation: "Mesma distância com peso maior — sempre com o peso contra o PEITO, nas duas mãos. Carregar de um lado só não entra aqui: o halter fica pendurado na lateral e o trapézio segura o percurso inteiro, engrossando exatamente o músculo que este programa protege",
+    // 3, não 2: na escala deste catálogo o nível 2 são movimentos parados num
+    // canto (prancha, vacuum) e o 3 é step-up e swing. Atravessar 20-30 m do
+    // salão carregando peso é visível de qualquer ponto da academia. E o teto
+    // de `entrada-1` é 2 — com 2 aqui, a rampa autorizaria este exercício na
+    // semana mais protegida dela.
+    exposureLevel: 3,
+    startLoadKg: 8,
+    successCue: "Fez certo se o tronco ficou ereto o percurso inteiro e você sentiu o abdômen segurando — não a lombar.",
+    proTips: [
+      "É frontal de propósito: carregar acima da cabeça engrossaria ombro e trapézio, que é o oposto do objetivo",
+      "Comece com o peso de 8 kg e só suba quando conseguir os 30 m sem perder a postura",
+      "Levantar outra pessoa é isso com o peso vivo: tronco firme, carga à frente, força vindo de perna e quadril",
+    ],
+  },
+  {
+    id: "prancha-antirrotacao",
+    name: "Prancha com apoio alternado (antirrotação)",
+    category: "cintura",
+    equipment: ["colchonete"],
+    difficulty: "intermediario",
+    description: "Prancha alta (mãos no chão), pés um pouco mais abertos que o normal. Tira uma mão do chão e toca o ombro oposto, devolve, troca. O quadril NÃO pode girar — é isso que treina.",
+    commonMistakes: [
+      "Deixar o quadril rodar quando tira a mão — é justamente o que o exercício existe pra impedir",
+      "Pés muito juntos, o que torna quase impossível não rodar",
+      "Descer o quadril e virar prancha frouxa",
+    ],
+    easierVariation: "Prancha com apoio nos joelhos, ou só tirar a mão do chão sem tocar o ombro",
+    harderVariation: "Pés mais juntos, ou tocar o ombro devagar contando 2s de ida e 2s de volta",
+    exposureLevel: 2,
+    successCue: "Fez certo se o quadril ficou parado — se alguém filmasse de cima, o tronco não gira.",
+    proTips: [
+      "Antirrotação é o que segura o tronco quando o peso que você carrega se mexe — pessoa no colo se mexe",
+      "Qualidade acima de repetição: 6 trocas sem girar valem mais que 20 girando",
+      "Trabalha o mesmo transverso do vacuum, que é a alavanca da cintura — dois objetivos no mesmo movimento",
+    ],
+  },
   // === COSTAS (cadeia posterior, postura) ===
   {
     id: "remada-curvada",
@@ -1232,6 +1282,12 @@ export const EXERCISE_VIDEOS: Record<string, string> = {
   "ponte-gluteo-bola": "https://www.youtube.com/watch?v=bpjGPzdU3Tg",
   "step-up-gluteo": "https://www.youtube.com/watch?v=9LBlAgBjDKM",
   "prancha": "https://www.youtube.com/watch?v=h9suRukNljg",
+  "prancha-antirrotacao": "https://www.youtube.com/watch?v=eXTThhm5s2Q",
+  "carregamento-frontal": "https://www.youtube.com/watch?v=MVvPCtj8en4",
+  // Lacunas antigas, achadas pelo teste catálogo → mapa que a revisão final
+  // acrescentou (o teste que existia só cobria a direção contrária).
+  "kettlebell-swing": "https://www.youtube.com/watch?v=h-A7HiTNZ5c",
+  "agachamento-assistido-espaldar": "https://www.youtube.com/watch?v=kIdXpbiuv4E",
   "dead-bug": "https://www.youtube.com/watch?v=uQfzuKBMJeE",
   "bird-dog": "https://www.youtube.com/watch?v=GcIxfCvnLW8",
   "prancha-lateral": "https://www.youtube.com/watch?v=A-kHqQFxdc0",

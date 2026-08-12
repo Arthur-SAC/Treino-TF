@@ -6,7 +6,9 @@ import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
-import { contarPraticasDaProgressao } from "../lib/practice-log-helpers";
+import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
+import { contarPraticasDaProgressao, contarPraticasFlex } from "../lib/practice-log-helpers";
+import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -30,6 +32,19 @@ import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
 import { metaDePausas } from "../lib/micro-pausas";
+
+/** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
+ *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
+ *  a duração sai sempre do catálogo, nunca de um número cravado no item, e sem
+ *  sequência o rótulo fica nu. Era uma cópia — duas escritas da mesma regra em
+ *  camadas diferentes, que é como ela diverge em silêncio. O que sobra aqui é
+ *  só o subtítulo, que para o alongamento é a etapa da fase. */
+function rotuloFlexDoDia(baseLabel: string, doDia: FlexDoDia): { label: string; subtitle: string } {
+  return {
+    label: rotuloDaSequencia(baseLabel, doDia.sequenceId),
+    subtitle: doDia.etapa,
+  };
+}
 
 export function Today() {
   const today = new Date();
@@ -76,6 +91,18 @@ export function Today() {
   // `today-routine.ts` é puro e não conhece o catálogo — quem aplica é esta
   // camada, a mesma que já reescreve o `to` deste item.
   const pelvicRotulo = rotuloPelvicoDoDia(pelvicHoje);
+
+  // Os dois alongamentos (manhã e noite) têm progressão própria, uma trilha
+  // cada — mesmo padrão do pélvico acima, com `contarPraticasFlex` no lugar
+  // de `contarPraticasDaProgressao`. As contagens são independentes de
+  // propósito: `contarPraticasFlex` só enxerga os ids da trilha pedida, então
+  // praticar de manhã não pode empurrar a fase da noite.
+  const praticasFlexManha = useLiveQuery(() => contarPraticasFlex("manha"), []);
+  const praticasFlexNoite = useLiveQuery(() => contarPraticasFlex("noite"), []);
+  const flexManhaHoje = flexDoDia("manha", praticasFlexManha ?? 0);
+  const flexNoiteHoje = flexDoDia("noite", praticasFlexNoite ?? 0);
+  const flexManhaRotulo = rotuloFlexDoDia("Alongamento manhã", flexManhaHoje);
+  const flexNoiteRotulo = rotuloFlexDoDia("Alongamento noite", flexNoiteHoje);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -256,6 +283,8 @@ export function Today() {
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
     if (item.linkKey === "pelvic") return pelvicRotulo.subtitle;
+    if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
+    if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -269,6 +298,25 @@ export function Today() {
       return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
     }
     return item.subtitle;
+  };
+
+  // Rótulo e destino dos itens com progressão (pélvico + os dois
+  // alongamentos): today-routine.ts guarda só o fallback honesto, quem sabe a
+  // sequência do dia é esta camada — mesmo motivo do subtitleFor acima.
+  const labelFor = (item: RoutineItem): string => {
+    if (item.linkKey === "pelvic") return pelvicRotulo.label;
+    if (item.linkKey === "flexManha") return flexManhaRotulo.label;
+    if (item.linkKey === "flexNoite") return flexNoiteRotulo.label;
+    return item.label;
+  };
+
+  const toFor = (item: RoutineItem): string | undefined => {
+    // O item de treino leva direto pra sessão do dia (não pra aba Treino).
+    if (item.linkKey === "workout" && todayTemplate) return `/treino/sessao/${todayTemplate.id}`;
+    if (item.linkKey === "pelvic") return `/treino/movimento/${pelvicHoje.sequenceId}`;
+    if (item.linkKey === "flexManha") return `/treino/movimento/${flexManhaHoje.sequenceId}`;
+    if (item.linkKey === "flexNoite") return `/treino/movimento/${flexNoiteHoje.sequenceId}`;
+    return item.to;
   };
 
   const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
@@ -320,17 +368,8 @@ export function Today() {
               item={{
                 ...item,
                 subtitle: subtitleFor(item),
-                // O rótulo do item pélvico traz a duração da sequência do dia
-                // (3 a 7 min conforme a fase), em vez do "· 5 min" que era
-                // fixo e falso na maioria dos dias.
-                label: item.linkKey === "pelvic" ? pelvicRotulo.label : item.label,
-                // O item de treino leva direto pra sessão do dia (não pra aba Treino)
-                to:
-                  item.linkKey === "workout" && todayTemplate
-                    ? `/treino/sessao/${todayTemplate.id}`
-                    : item.linkKey === "pelvic"
-                      ? `/treino/movimento/${pelvicHoje.sequenceId}`
-                      : item.to,
+                label: labelFor(item),
+                to: toFor(item),
               }}
               hora={horaDe(item)}
               done={isDone(item)}

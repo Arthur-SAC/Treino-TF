@@ -10,6 +10,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   mobilidade: "Mobilidade",
   danca: "Dança",
   aquecimento: "Aquecimento",
+  cardio: "Cardio",
 };
 
 const DIFFICULTY_LABEL: Record<Exercise["difficulty"], string> = {

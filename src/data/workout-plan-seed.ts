@@ -8,6 +8,20 @@ import type { WorkoutTemplate } from "../lib/db";
 // 3 séries, foco em aprender o padrão e ativar glúteo. Cintura fina = só core
 // transverso (sem oblíquo com carga). A progressão de volume vem nas fases
 // seguintes (variação/hipertrofia). Regra: força começa com cardio + articular.
+//
+// PADRÃO DE LEVANTAR (2026-08-12, revisão final): as trocas que dão a força de
+// erguer a noiva no colo entraram TAMBÉM aqui, e não só nos ciclos de
+// variação/hipertrofia/refinamento/manutenção. Motivo: ela está em `entrada-1`,
+// e variação fica a ~48 sessões — uns dois meses e meio. O segundo objetivo
+// declarado do programa não chegaria até ela neste ano de treino. A adaptação
+// ela alcança em ~3 semanas.
+// A FASE DE ENTRADA fica de fora de propósito: é rampa de exposição, e
+// atravessar o salão carregando peso na frente do corpo na semana 1 é cedo
+// demais — o que ela precisa nas três primeiras semanas é entrar na academia e
+// voltar no dia seguinte, não um padrão novo que chama atenção.
+// Mesma regra dos outros ciclos: a sessão NÃO cresce. Cada exercício que entra
+// saiu de outro do mesmo template; contagem e `durationMin` ficam idênticos
+// (congelados em `tests/data/trocas-forca.test.ts`).
 // ═══════════════════════════════════════════════════════════════════════════
 export const WORKOUT_PLAN: WorkoutTemplate[] = [
   {
@@ -23,7 +37,7 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "12 cada", restSec: 30, notes: "Ativação — sente o glúteo ligar antes de carregar" },
       { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "10-12", restSec: 90, notes: "O MAIOR construtor de glúteo. Some peso quando as reps saírem fácil" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 90, notes: "Leg press 45° com pés ALTOS e um pouco abertos = foco glúteo. Empurra pelo calcanhar. Plataforma pequena? faz unilateral (um pé por vez)" },
-      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, notes: "Glúteo médio — arredonda a lateral" },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 60, notes: "Padrão de levantar — halter contra o peito, cotovelos pra baixo. Começa leve: é o agachamento que ensina a erguer alguém no colo" },
     ],
   },
   {
@@ -37,9 +51,15 @@ export const WORKOUT_PLAN: WorkoutTemplate[] = [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Base de busto — carga leve" },
-      { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "12", restSec: 60, notes: "Postura — multiestação" },
+      // Saiu a remada baixa, não o face pull: os dois eram o MESMO padrão
+      // (puxada horizontal pra postura) e a sessão tinha os dois. O face pull
+      // fica porque é o que abre o ombro e levanta o busto, custa menos tempo
+      // (45s de intervalo contra 60s) e a redundância era do outro lado. O
+      // carregamento ocupa quase o mesmo tempo que a remada ocupava — por isso
+      // os 36 min continuam honestos.
+      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20m", restSec: 60, notes: "Padrão de levantar — peso contra o PEITO, nunca no ombro. Tronco ereto o percurso inteiro" },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
-      { exerciseId: "prancha", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Core sem engrossar a cintura" },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "6 trocas cada lado", restSec: 30, notes: "Padrão de levantar — core que resiste a rotação; pessoa no colo se mexe. Qualidade acima de repetição" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura por dentro, sem engrossar" },
     ],
   },

@@ -5,7 +5,7 @@
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
-export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic";
+export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
@@ -48,9 +48,17 @@ function isBarbaDay(dayOfYear: number): boolean {
   return dayOfYear % 2 === 0;
 }
 
+// Alongamento da manhã, com progressão: era sequência FIXA (mesma coisa no
+// dia 1 e no dia 200), e alongamento sem progressão para de render depois das
+// primeiras semanas — o tecido adapta. `to`, label e subtitle daqui são só o
+// fallback de quem lista o item fora do Hoje (a tela de ajuste de horários);
+// eram "· 15 min" fixo e a sequência de fase 1 cravada no `to`, os dois
+// falsos a partir da quarta semana. Este módulo é puro e não conhece o
+// catálogo nem a trilha (`flex-progression.ts`), então quem deriva a verdade
+// é Today.tsx, mesma camada que já resolve o item pélvico.
 function manhaItems(dayOfYear: number): RoutineItem[] {
   const items: RoutineItem[] = [
-    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã · 15 min", subtitle: "Desperta quadril e coluna", to: "/treino/movimento/mobilidade-pelvica-matinal", defaultTime: "06:00" },
+    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
   ];
   if (isBarbaDay(dayOfYear)) items.push(BARBA);
   items.push(
@@ -179,7 +187,10 @@ const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
-  { id: "alongamento-noite", block: "noite", label: "Alongamento noite · 10 min", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento/flexibilidade-intima", defaultTime: "21:30" },
+  // Mesma progressão do alongamento da manhã, trilha própria (ver
+  // flex-progression.ts): a noite trabalha flexão profunda e rotação, e
+  // misturar a contagem com a manhã faria uma trilha mascarar a outra.
+  { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "21:30" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
   // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a

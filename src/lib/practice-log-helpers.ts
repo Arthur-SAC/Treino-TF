@@ -9,6 +9,7 @@
 // Vitalidade passam a mostrar fases diferentes do mesmo treino.
 import { db } from "./db";
 import { PROGRESSAO_PELVICA } from "./pelvic-progression";
+import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
 import { ultimosDiasISO } from "./today-date";
 
 /** Quantas práticas DA PROGRESSÃO ela concluiu. Move as fases, e é lida por
@@ -25,6 +26,17 @@ import { ultimosDiasISO } from "./today-date";
 export async function contarPraticasDaProgressao(): Promise<number> {
   const logs = await db.practiceLogs.toArray();
   return logs.filter((l) => l.completed && PROGRESSAO_PELVICA.includes(l.sequenceId)).length;
+}
+
+/** Práticas concluídas de uma trilha de flexibilidade (manhã ou noite). Cada
+ *  momento tem progressão própria: `SEQUENCIAS_FLEX[momento]` só contém os
+ *  ids daquela trilha, então praticar de manhã não avança a noite, e
+ *  vice-versa — são qualidades diferentes (abertura pro dia vs. flexão
+ *  profunda e rotação) e misturar a contagem faria uma mascarar a outra. */
+export async function contarPraticasFlex(momento: MomentoFlex): Promise<number> {
+  const ids = SEQUENCIAS_FLEX[momento] as readonly string[];
+  const logs = await db.practiceLogs.toArray();
+  return logs.filter((l) => l.completed && ids.includes(l.sequenceId)).length;
 }
 
 /** Quantas vezes uma sequência foi concluída, sem janela de tempo. Existe pro

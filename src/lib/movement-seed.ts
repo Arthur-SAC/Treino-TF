@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { SEQUENCES } from "../data/sequences-seed";
 
-const MOVEMENT_VERSION = 8;
+const MOVEMENT_VERSION = 9;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

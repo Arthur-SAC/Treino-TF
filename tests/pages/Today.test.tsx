@@ -7,6 +7,8 @@ import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
 import {
   ATE_ROTACAO,
+  ATE_FASE_3,
+  SESSOES_DE_SOLTURA,
   ROTACAO,
   OFERTA_VITALIDADE,
   pelvicDoDia,
@@ -103,20 +105,57 @@ describe("Today: o item de assoalho pélvico não promete o que a sequência nã
     expect(screen.queryByText("Assoalho pélvico · 5 min")).not.toBeInTheDocument();
   });
 
+  // Antes esta varredura ia de n=0 a n=25 (26 renders completos da tela, cada
+  // um com `await`) — cara por construção, e é a causa raiz do timeout
+  // intermitente deste caso quando a suíte inteira roda em paralelo (passa
+  // isolado, falha sob contenção). A varredura EXAUSTIVA de pelvicDoDia já
+  // existe e é barata na camada de biblioteca
+  // (`tests/lib/pelvic-progression.test.ts`, "a rotação do Hoje nunca serve
+  // nenhuma sequência de OFERTA_VITALIDADE", n=0..200 sem nenhum render). O
+  // papel do teste de TELA não é repetir essa varredura — é provar que a
+  // ligação entre `pelvicDoDia` e o link renderizado está certa: que o `href`
+  // reflete a sequência resolvida em cada fase, e depois que o
+  // `useLiveQuery` liquida.
+  //
+  // Amostra as fronteiras de cada fase (onde um erro de "off-by-one" na
+  // ligação apareceria) mais UMA VOLTA INTEIRA da rotação — não só o primeiro
+  // item dela. Testado por mutação: inserir "pelvic-start-stop" no MEIO de
+  // `ROTACAO` (não na ponta) passava verde com uma amostra que só olhava o
+  // primeiro item + um valor alto — só falhou depois de cobrir a volta
+  // inteira. Uma volta é o mínimo que garante pegar uma reinserção em
+  // qualquer posição do array, e ainda assim é ~6 renders em vez dos ~20 que
+  // a varredura antiga gastava só na fase 4. Tudo derivado das constantes
+  // exportadas, nunca escrito à mão — se o tamanho das fases ou da rotação
+  // mudar, a amostra acompanha.
+  // O corte onde a soltura começa: é o PRIMEIRO valor da fase 2, não o último
+  // da fase 1 (a fase 1 vai até `ateSoltura - 1`). O array abaixo sempre usou
+  // as duas coisas certas — quem estava errado era o comentário daqui.
+  const ateSoltura = ATE_FASE_3 - SESSOES_DE_SOLTURA;
+  const AMOSTRAS_DE_FRONTEIRA = [
+    0, ateSoltura - 1, // primeiro e último da fase 1
+    ateSoltura, ATE_FASE_3 - 1, // primeiro e último da fase 2 (soltura)
+    ATE_FASE_3, ATE_ROTACAO - 1, // primeiro e último da fase 3 (Kegel/alternância)
+    // Uma volta inteira da fase 4: cobre toda posição da rotação, não só a
+    // primeira.
+    ...Array.from({ length: ROTACAO.length }, (_, i) => ATE_ROTACAO + i),
+    // Bem depois de várias voltas — prova que o módulo da rotação não quebra
+    // ao repetir.
+    ATE_ROTACAO + ROTACAO.length * 7 + 3,
+  ];
+
   it("nunca abre uma sequência de OFERTA_VITALIDADE, em nenhuma fase", async () => {
-    // Varre a rotação inteira mais uma volta: se qualquer prática levasse o
-    // item a apontar pro start-stop, pro preparo pra receber ou pra sequência
-    // pré-prazer, o link do Hoje diria isso — às 10h, no trabalho.
+    // Se qualquer prática levasse o item a apontar pro start-stop, pro
+    // preparo pra receber ou pra sequência pré-prazer, o link do Hoje diria
+    // isso — às 10h, no trabalho.
     //
     // O `await` do subtítulo NÃO é decoração. A contagem de práticas vem de um
     // `useLiveQuery`, que resolve depois do primeiro render: sem esperar, o
     // `findByRole("link")` casava no primeiro paint, quando `pelvicFeitas` é
-    // `undefined` e a tela ainda mostra a FASE 1. A varredura de 0 a 25
-    // observava vinte e seis vezes o mesmo dia 1, e passava verde mesmo com
+    // `undefined` e a tela ainda mostra a FASE 1 — e passaria verde mesmo com
     // uma sequência da Vitalidade reinserida na rotação. O subtítulo esperado
     // é o sinal de que o estado liquidou — ele difere do subtítulo da fase 1
     // em toda iteração, inclusive dentro da fase 1, porque carrega o contador.
-    for (let n = 0; n < ATE_ROTACAO + ROTACAO.length + 3; n++) {
+    for (const n of AMOSTRAS_DE_FRONTEIRA) {
       await comPraticas(n);
       const { unmount } = render(<MemoryRouter><Today /></MemoryRouter>);
 
