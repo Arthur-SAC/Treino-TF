@@ -906,4 +906,89 @@ export const SEQUENCES: DanceSequence[] = [
       },
     ],
   },
+
+  // === REBOLADO · resistência (aguentar o tempo que a coisa dura) ===
+  // Quatro fases, servidas por rebolado-progression.ts. O que muda entre elas é
+  // só o tamanho do bloco contínuo — o movimento é o mesmo desde a fase 1.
+  // Categoria "danca" de propósito: ela já tem entrada no filtro da biblioteca,
+  // e categoria nova sem entrada no filtro é conteúdo invisível.
+  {
+    id: "rebolado-resistencia-1",
+    name: "Rebolado · resistência 1 (3 × 1 min)",
+    category: "danca",
+    level: "iniciante",
+    durationMin: 8,
+    focus:
+      "Fase 1 de quatro. Aqui o alvo ainda é o movimento certo: pélvis isolada, tronco parado, comando vindo do core e do glúteo — não da lombar. Blocos de 1 min com pausa. Se a lombar arde, o movimento subiu pra coluna: diminui a amplitude e volta pra pélvis.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x cada sentido + cat-cow 8x. Lombar e quadril mornos antes de qualquer bloco contínuo.", durationSec: 90 },
+      { name: "Bloco contínuo 1", description: "Rebolado frente-e-trás, ritmo lento e constante, 1 min sem parar. Tronco parado, abdômen ativo.", durationSec: 60 },
+      { name: "Pausa", description: "30s parada, respirando. A pausa faz parte do treino nesta fase.", durationSec: 30 },
+      { name: "Bloco contínuo 2", description: "Mais 1 min contínuo, no mesmo ritmo do primeiro. Não acelera pra compensar cansaço.", durationSec: 60 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 3", description: "Último minuto contínuo. Se o ritmo caiu, terminou certo — é o limite de hoje.", durationSec: 60 },
+      { name: "Extensão isométrica de lombar", description: "Deitada de bruços, levanta peito e pernas alguns centímetros e SEGURA 20s. 3x. É a lombar que falha primeiro no tempo real, e ela cansa por resistência, não por força.", durationSec: 120, repeat: 3 },
+      { name: "Cooldown", description: "Criança + alongamento de flexor de quadril, 30s cada lado.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-2",
+    name: "Rebolado · resistência 2 (3 × 2 min)",
+    category: "danca",
+    level: "iniciante",
+    durationMin: 11,
+    focus:
+      "Fase 2 de quatro. O movimento você já tem; agora o alvo é continuidade. Três blocos de 2 min contínuos, com 30s de pausa entre eles. O ponto em que o ritmo cai é a informação que interessa — repara em qual minuto foi, e é esse minuto que a fase persegue.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x cada sentido + cat-cow 8x.", durationSec: 90 },
+      { name: "Bloco contínuo 1", description: "2 min de rebolado frente-e-trás sem parar. Ritmo constante do primeiro ao último segundo.", durationSec: 120 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 2", description: "Mais 2 min. Aqui o cansaço já aparece — mantém a amplitude em vez de encolher o movimento.", durationSec: 120 },
+      { name: "Pausa", description: "30s.", durationSec: 30 },
+      { name: "Bloco contínuo 3", description: "Últimos 2 min. Se precisar reduzir, reduz a amplitude e mantém o ritmo — nunca o contrário.", durationSec: 120 },
+      { name: "Extensão isométrica de lombar", description: "Deitada de bruços, levanta peito e pernas e SEGURA 25s. 3x. A lombar é o que falha primeiro no tempo real.", durationSec: 150, repeat: 3 },
+      { name: "Flexor de quadril sob carga", description: "Deitada de costas, pernas estendidas a 20cm do chão, segura 20s. 3x. É o flexor que trava a sentada por cima.", durationSec: 120, repeat: 3 },
+      { name: "Cooldown", description: "Criança + alongamento de flexor, 30s cada lado.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-3",
+    name: "Rebolado · resistência 3 (2 × 4 min)",
+    category: "danca",
+    level: "intermediario",
+    durationMin: 13,
+    focus:
+      "Fase 3 de quatro. Dois blocos de 4 min contínuos. Aqui já é fadiga de verdade, e o erro típico aparece: acelerar quando cansa, porque rápido parece mais fácil que constante. Não é — e constante é o que serve na hora, porque o ritmo que faz ela subir é o que não muda.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x + cat-cow 8x + ponte de glúteo 10x.", durationSec: 120 },
+      { name: "Bloco contínuo 1", description: "4 min de rebolado frente-e-trás sem parar. Escolhe um ritmo que você acredita que aguenta e não muda nada.", durationSec: 240 },
+      { name: "Pausa", description: "1 min. Respira, não senta.", durationSec: 60 },
+      { name: "Bloco contínuo 2", description: "Mais 4 min. Este é o bloco que constrói — o primeiro só preparou a fadiga.", durationSec: 240 },
+      { name: "Extensão isométrica de lombar", description: "De bruços, peito e pernas elevados, SEGURA 30s. 3x.", durationSec: 180, repeat: 3 },
+      { name: "Glúteo em alta repetição", description: "Ponte de glúteo, 25 repetições lentas com pausa de 1s no topo. É resistência, não força — carga leve, muita repetição.", durationSec: 120, repeat: 25 },
+      { name: "Cooldown", description: "Criança + flexor + figura 4 pro glúteo. 90s.", durationSec: 90 },
+    ],
+  },
+  {
+    id: "rebolado-resistencia-4",
+    name: "Rebolado · resistência 4 (5+ min contínuos)",
+    category: "danca",
+    level: "intermediario",
+    durationMin: 14,
+    focus:
+      "Fase 4 de quatro. Cinco minutos contínuos sem perder o ritmo, e depois mais cinco se der. O alvo real do outro lado disto é 20 min — e não se chega lá por um bloco só: chega-se por conseguir repetir este bloco quatro vezes numa noite sem o quadril desistir. Quando dois blocos de 5 min ficarem confortáveis, você está pronta pro tempo real.",
+    videoUrl: "https://www.youtube.com/results?search_query=hip+roll+endurance+drill",
+    moves: [
+      { name: "Aquecimento", description: "Círculos de quadril 8x + cat-cow 8x + ponte de glúteo 10x.", durationSec: 120 },
+      { name: "Bloco contínuo 1", description: "5 min de rebolado frente-e-trás sem parar. Ritmo constante — o mesmo do primeiro ao último segundo.", durationSec: 300 },
+      { name: "Pausa", description: "1 min de pé, respirando.", durationSec: 60 },
+      { name: "Bloco contínuo 2 (se der)", description: "Mais 5 min. Não é obrigatório — é o que mede se você já está no tempo real. Se sair inteiro e no ritmo, a fase está cumprida.", durationSec: 300 },
+      { name: "Extensão isométrica de lombar", description: "De bruços, peito e pernas elevados, SEGURA 30s. 4x.", durationSec: 240, repeat: 4 },
+      { name: "Glúteo em alta repetição", description: "Ponte de glúteo, 30 repetições lentas com 1s de pausa no topo.", durationSec: 150, repeat: 30 },
+      { name: "Cooldown", description: "Criança + flexor + figura 4. 90s.", durationSec: 90 },
+    ],
+  },
 ];

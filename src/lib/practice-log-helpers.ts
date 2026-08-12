@@ -10,6 +10,7 @@
 import { db } from "./db";
 import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
+import { SEQUENCIAS_REBOLADO } from "./rebolado-progression";
 import { ultimosDiasISO } from "./today-date";
 
 /** Quantas práticas DA PROGRESSÃO ela concluiu. Move as fases, e é lida por
@@ -37,6 +38,19 @@ export async function contarPraticasFlex(momento: MomentoFlex): Promise<number> 
   const ids = SEQUENCIAS_FLEX[momento] as readonly string[];
   const logs = await db.practiceLogs.toArray();
   return logs.filter((l) => l.completed && ids.includes(l.sequenceId)).length;
+}
+
+/** Práticas concluídas da trilha de resistência do rebolado. Mesmo motivo de
+ *  `contarPraticasFlex`: o critério decide fase e é lido por tela, então mora
+ *  aqui e não inline — duplicado, diverge em silêncio.
+ *
+ *  Conta só os ids da trilha de resistência. As sequências de dança e twerk
+ *  também trabalham rebolado, mas ensinam o movimento em vez de construir
+ *  fôlego: contá-las avançaria a fase sem que o tempo contínuo tivesse
+ *  crescido, que é exatamente o que esta trilha existe pra medir. */
+export async function contarPraticasRebolado(): Promise<number> {
+  const logs = await db.practiceLogs.toArray();
+  return logs.filter((l) => l.completed && SEQUENCIAS_REBOLADO.includes(l.sequenceId)).length;
 }
 
 /** Quantas vezes uma sequência foi concluída, sem janela de tempo. Existe pro

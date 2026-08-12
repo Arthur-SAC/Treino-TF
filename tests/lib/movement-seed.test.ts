@@ -35,14 +35,19 @@ describe("seedMovement", () => {
     }
   });
 
-  it("tem a seção de intimidade (3) com moves não-vazios", async () => {
+  // Cinco desde a frente 4: as duas novas cobrem as vias que faltavam — o
+  // esfregar com roupa (que elas já fazem) e o receber por mão e dedos (que é a
+  // via que a noiva aceita, depois de recusar objeto).
+  it("tem a seção de intimidade (5) com moves não-vazios", async () => {
     await seedMovement();
     const seqs = await db.danceSequences.toArray();
     const intimidade = seqs.filter((s) => s.category === "intimidade");
     expect(intimidade.map((s) => s.id).sort()).toEqual([
       "intimidade-cavalgar",
+      "intimidade-esfregar-roupa",
       "intimidade-flex-passiva",
       "intimidade-grinding",
+      "intimidade-receber-maos",
     ]);
     for (const s of intimidade) {
       expect(s.moves.length).toBeGreaterThan(0);
