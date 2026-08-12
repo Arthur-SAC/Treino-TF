@@ -59,6 +59,7 @@ import { DiaryView } from "./pages/path/DiaryView";
 import { LegalResources } from "./pages/path/LegalResources";
 import { FertilityTRH } from "./pages/path/FertilityTRH";
 import { Support } from "./pages/path/Support";
+import { Vitalidade } from "./pages/path/Vitalidade";
 import { Settings } from "./pages/Settings";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -132,6 +133,7 @@ const router = createBrowserRouter(
         { path: "trilha/diario", element: <DiaryView /> },
         { path: "trilha/fertilidade", element: <FertilityTRH /> },
         { path: "trilha/apoio", element: <Support /> },
+        { path: "trilha/vitalidade", element: <Vitalidade /> },
         { path: "trilha/direitos", element: <LegalResources /> },
         { path: "configuracoes", element: <Settings /> },
       ],

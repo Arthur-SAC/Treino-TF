@@ -18,6 +18,22 @@ export function resolveRoutineTime(
   return overrides[item.id] ?? item.defaultTime;
 }
 
+/** O alvo de sono é o horário do próprio item "dormir" da rotina, com o
+ *  ajuste que ela fez em /hoje/horarios — nunca um número fixo no código.
+ *  Já esteve fixo em "22:30" só dentro de Today.tsx, e dava três respostas
+ *  pra mesma pergunta (linha, subtítulo e streak divergindo entre si); a
+ *  Vitalidade duplicou esse mesmo fixo depois, e as duas TELAS passaram a
+ *  divergir uma da outra. Recebe os blocos já montados (não o dia bruto) pra
+ *  quem já tem `buildDayRoutine` calculado não precisar recalcular — e pra
+ *  este módulo continuar puro, sem `new Date()` escondido aqui dentro. */
+export function resolverAlvoSono(
+  blocks: RoutineBlockGroup[],
+  overrides: RoutineTimeOverrides,
+): string {
+  const itemDormir = blocks.flatMap((b) => b.items).find((i) => i.id === "dormir");
+  return (itemDormir ? resolveRoutineTime(itemDormir, overrides) : undefined) ?? "22:30";
+}
+
 /** Itens que a tela de ajuste oferece — os que têm horário padrão, sem repetir
  *  id (o mesmo item pode aparecer em mais de um dia da semana). */
 export function itensAjustaveis(blocks: RoutineBlockGroup[]): RoutineItem[] {

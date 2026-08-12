@@ -243,6 +243,12 @@ export interface DailyLog {
   /** Hora "HH:MM" em que ela deitou. Campo novo em objeto existente — o Dexie
    *  não precisa de bump de versão para isso. */
   sleepAt?: string;
+  /** Dia em que houve gasto automático — pornografia ou masturbação no
+   *  automático. Quebra o streak de Vitalidade. Sessão de `pelvic-start-stop`
+   *  NÃO marca aqui: ela é o tratamento, e é registrada em `practiceLogs` como
+   *  qualquer outra prática. Campo novo em objeto existente — o Dexie não
+   *  precisa de bump de versão para isso. */
+  gastoAutomatico?: boolean;
 }
 
 export interface Setting {

@@ -5,30 +5,31 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
-import { pelvicDoDia, PELVIC_ORDEM } from "../lib/pelvic-progression";
+import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
+import { contarPraticasDaProgressao } from "../lib/practice-log-helpers";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
 import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
-import { resolveRoutineTime, formatHora } from "../lib/routine-times";
+import { resolveRoutineTime, resolverAlvoSono, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
-import { addWater, addWalk, creditarPasseio, registrarSono, noitesNoAlvo } from "../lib/daily-log-helpers";
+import {
+  addWater,
+  addWalk,
+  creditarPasseio,
+  registrarSono,
+} from "../lib/daily-log-helpers";
+import { useStreakSono } from "../hooks/useStreakSono";
+import { useStreakVitalidade } from "../hooks/useStreakVitalidade";
 import { RoutineRow } from "../components/RoutineRow";
 import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
-import { hojeISO } from "../lib/today-date";
+import { hojeISO, diaDoAno } from "../lib/today-date";
 import { metaDePausas } from "../lib/micro-pausas";
-
-/** Dia do ano (1–366), usado só pra decidir itens em dias alternados (ex.:
- *  barba). `buildDayRoutine` continua pura — o cálculo com `Date` fica aqui. */
-function dayOfYear(date: Date): number {
-  const inicioDoAno = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
-}
 
 export function Today() {
   const today = new Date();
@@ -61,13 +62,20 @@ export function Today() {
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
 
-  // Quantas práticas de assoalho pélvico ela já concluiu — define em que fase
-  // da progressão ela está (identificar o músculo -> Kegel -> variações).
-  const pelvicFeitas = useLiveQuery(async () => {
-    const logs = await db.practiceLogs.toArray();
-    return logs.filter((l) => l.completed && (PELVIC_ORDEM as readonly string[]).includes(l.sequenceId)).length;
-  }, []);
+  // Quantas práticas DA PROGRESSÃO ela já concluiu — define em que fase ela
+  // está (identificar o músculo -> soltura -> Kegel -> variações). Mesmo
+  // helper que a Vitalidade usa: critério duplicado divergiria em silêncio e
+  // as duas telas passariam a mostrar fases diferentes. As sequências
+  // oferecidas pela página Vitalidade não entram nesta conta — elas treinam
+  // outra coisa e não podem pular fases desta escada.
+  const pelvicFeitas = useLiveQuery(() => contarPraticasDaProgressao(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
+  // Duração e lugar vêm da sequência do dia, não de texto fixo no item: a
+  // rotina tem sequências de 3 a 7 min, e "dá pra fazer sentada" é falso na
+  // identificação (deitada) e na integração com o quadril (em pé).
+  // `today-routine.ts` é puro e não conhece o catálogo — quem aplica é esta
+  // camada, a mesma que já reescreve o `to` deste item.
+  const pelvicRotulo = rotuloPelvicoDoDia(pelvicHoje);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -118,29 +126,27 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, dayOfYear(today));
+  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today));
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
   // fez em /hoje/horarios. Era uma constante "22:30" aqui: se ela mudasse o
   // item pra 23h, a linha mostrava 23h, o subtítulo continuava dizendo "alvo
   // 22:30" e o streak media contra 22:30 — três respostas pra mesma pergunta.
-  const itemDormir = routine.blocks.flatMap((b) => b.items).find((i) => i.id === "dormir");
-  const alvoSono = (itemDormir ? resolveRoutineTime(itemDormir, routineTimes) : undefined) ?? "22:30";
+  // `resolverAlvoSono` mora em routine-times.ts porque a Vitalidade também
+  // precisa deste número (streak de sono do painel de volume) — cálculo
+  // duplicado nas duas telas é exatamente o mesmo bug, agora entre telas.
+  const alvoSono = resolverAlvoSono(routine.blocks, routineTimes);
 
   // Conta noites dos últimos 7 dias em que ela deitou até o alvo — sono é a
   // alavanca que ela mais subestima, e o card só existe pra tornar a melhora
-  // (ou piora) visível semana a semana.
-  const last7DaysSleep = useLiveQuery(async () => {
-    const dates: string[] = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      dates.push(hojeISO(d));
-    }
-    const logs = await db.dailyLog.where("date").anyOf(dates).toArray();
-    return noitesNoAlvo(logs, alvoSono);
-  }, [alvoSono]);
+  // (ou piora) visível semana a semana. A janela e a consulta moram no hook
+  // porque a Vitalidade mostra este mesmo número (ver useStreakSono).
+  const last7DaysSleep = useStreakSono(alvoSono, todayISO);
+
+  // Streak de Vitalidade — mesmo hook que a página Vitalidade usa, pra não
+  // abrir uma segunda fonte de verdade pro mesmo número.
+  const streakVitalidade = useStreakVitalidade(todayISO);
 
   const morningDone = todaySkincareLogs && morningRoutines && morningRoutines.length > 0 &&
     morningRoutines.every((r) => todaySkincareLogs.some((l) => l.routineId === r.id && l.completed));
@@ -249,7 +255,7 @@ export function Today() {
   };
 
   const subtitleFor = (item: RoutineItem): string | undefined => {
-    if (item.linkKey === "pelvic") return `${item.subtitle} · ${pelvicHoje.etapa}`;
+    if (item.linkKey === "pelvic") return pelvicRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -279,10 +285,21 @@ export function Today() {
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
-      <div className="grid grid-cols-3 gap-2">
+      {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
+          `.card` com padding e borda próprios — em 4 colunas numa tela
+          estreita "Skincare" e "Vitalidade" espremem contra a borda do
+          próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
+      <div className="grid grid-cols-2 gap-2">
         <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
-        <StreakCard label="Sono" count={last7DaysSleep ?? 0} total={7} />
+        <StreakCard label="Sono" count={last7DaysSleep} total={7} />
+        {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele
+            conta. Ela escolheu o streak visível nesta tela, que fica aberta
+            em ambiente não receptivo; a mitigação combinada é exatamente
+            este rótulo neutro, não um esconderijo atrás do atalho. Sem
+            `total`: os outros três são "de 7 dias", este não tem teto — "19
+            / 7" seria absurdo. */}
+        <StreakCard label="Vitalidade" count={streakVitalidade.atual} />
       </div>
 
       <div className="flex justify-end pt-2">
@@ -303,6 +320,10 @@ export function Today() {
               item={{
                 ...item,
                 subtitle: subtitleFor(item),
+                // O rótulo do item pélvico traz a duração da sequência do dia
+                // (3 a 7 min conforme a fase), em vez do "· 5 min" que era
+                // fixo e falso na maioria dos dias.
+                label: item.linkKey === "pelvic" ? pelvicRotulo.label : item.label,
                 // O item de treino leva direto pra sessão do dia (não pra aba Treino)
                 to:
                   item.linkKey === "workout" && todayTemplate

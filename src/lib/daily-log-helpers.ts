@@ -3,6 +3,7 @@
 // jeito que Today.tsx já usava inline para água e caminhada.
 import { db } from "./db";
 import type { DailyLog } from "./db";
+import { ultimosDiasISO } from "./today-date";
 
 export async function addWater(date: string, ml: number): Promise<void> {
   const log = await db.dailyLog.get(date);
@@ -62,3 +63,45 @@ export async function registrarSono(date: string, hhmm?: string): Promise<void> 
 export function noitesNoAlvo(logs: DailyLog[], alvo: string): number {
   return logs.filter((l) => l.sleepAt !== undefined && l.sleepAt <= alvo).length;
 }
+
+/** Noites no alvo dentro da janela dos últimos `dias` dias terminando em
+ *  `hoje`. Hoje e Vitalidade mostram o MESMO streak de sono, e até aqui cada
+ *  uma montava a própria janela de 7 dias e a própria consulta ao `dailyLog`.
+ *  O alvo já tinha sido unificado (`resolverAlvoSono`); a janela ficou
+ *  duplicada, e duas telas que medem a mesma noite com código copiado
+ *  divergem em silêncio na primeira vez que uma das cópias mudar. */
+export async function noitesNoAlvoRecentes(
+  alvo: string,
+  hoje: string,
+  dias = 7,
+): Promise<number> {
+  const datas = ultimosDiasISO(hoje, dias);
+  const logs = await db.dailyLog.where("date").anyOf(datas).toArray();
+  return noitesNoAlvo(logs, alvo);
+}
+
+/** Marca (ou desmarca) o dia como gasto automático. Lê e escreve na mesma
+ *  transação pelo mesmo motivo de `creditarPasseio`: dois toques rápidos em
+ *  paralelo liam o mesmo registro e uma das escritas se perdia. */
+export async function registrarGastoAutomatico(date: string, marcado: boolean): Promise<void> {
+  await db.transaction("rw", db.dailyLog, async () => {
+    const log = await db.dailyLog.get(date);
+    if (log) {
+      await db.dailyLog.update(date, { gastoAutomatico: marcado });
+    } else {
+      await db.dailyLog.put({ date, waterMl: 0, activeBreakCount: 0, gastoAutomatico: marcado });
+    }
+  });
+}
+
+/** Dias marcados como gasto automático. */
+export async function diasComGasto(): Promise<string[]> {
+  const logs = await db.dailyLog.toArray();
+  return logs.filter((l) => l.gastoAutomatico).map((l) => l.date);
+}
+
+// O início do acompanhamento NÃO mora mais aqui: ele era o dia mais antigo do
+// `dailyLog`, e o `dailyLog` ganha uma linha todo dia por água, caminhada,
+// cães e sono desde muito antes desta frente existir — o streak nascia
+// contando meses que ninguém acompanhou. Agora é a data de adesão gravada em
+// `settings`, ver `vitalidade-adesao.ts`.
