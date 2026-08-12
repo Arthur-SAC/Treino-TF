@@ -5,7 +5,13 @@ import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
-import { ATE_ROTACAO, ROTACAO, OFERTA_VITALIDADE } from "../../src/lib/pelvic-progression";
+import {
+  ATE_ROTACAO,
+  ROTACAO,
+  OFERTA_VITALIDADE,
+  pelvicDoDia,
+  rotuloPelvicoDoDia,
+} from "../../src/lib/pelvic-progression";
 
 beforeEach(async () => {
   await db.routineChecks.clear();
@@ -101,9 +107,22 @@ describe("Today: o item de assoalho pélvico não promete o que a sequência nã
     // Varre a rotação inteira mais uma volta: se qualquer prática levasse o
     // item a apontar pro start-stop, pro preparo pra receber ou pra sequência
     // pré-prazer, o link do Hoje diria isso — às 10h, no trabalho.
+    //
+    // O `await` do subtítulo NÃO é decoração. A contagem de práticas vem de um
+    // `useLiveQuery`, que resolve depois do primeiro render: sem esperar, o
+    // `findByRole("link")` casava no primeiro paint, quando `pelvicFeitas` é
+    // `undefined` e a tela ainda mostra a FASE 1. A varredura de 0 a 25
+    // observava vinte e seis vezes o mesmo dia 1, e passava verde mesmo com
+    // uma sequência da Vitalidade reinserida na rotação. O subtítulo esperado
+    // é o sinal de que o estado liquidou — ele difere do subtítulo da fase 1
+    // em toda iteração, inclusive dentro da fase 1, porque carrega o contador.
     for (let n = 0; n < ATE_ROTACAO + ROTACAO.length + 3; n++) {
       await comPraticas(n);
       const { unmount } = render(<MemoryRouter><Today /></MemoryRouter>);
+
+      const esperado = rotuloPelvicoDoDia(pelvicDoDia(n));
+      await screen.findByText(esperado.subtitle);
+
       const link = await screen.findByRole("link", { name: /assoalho pélvico/i });
       const destino = link.getAttribute("href") ?? "";
       for (const id of OFERTA_VITALIDADE) {
