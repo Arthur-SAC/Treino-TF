@@ -6,7 +6,7 @@ import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
-import { contarPraticasPelvicas } from "../lib/practice-log-helpers";
+import { contarPraticasDaProgressao } from "../lib/practice-log-helpers";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -62,11 +62,13 @@ export function Today() {
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
 
-  // Quantas práticas de assoalho pélvico ela já concluiu — define em que fase
-  // da progressão ela está (identificar o músculo -> Kegel -> variações).
-  // Mesmo helper que a Vitalidade usa: critério duplicado divergiria em
-  // silêncio e as duas telas passariam a mostrar fases diferentes.
-  const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
+  // Quantas práticas DA PROGRESSÃO ela já concluiu — define em que fase ela
+  // está (identificar o músculo -> soltura -> Kegel -> variações). Mesmo
+  // helper que a Vitalidade usa: critério duplicado divergiria em silêncio e
+  // as duas telas passariam a mostrar fases diferentes. As sequências
+  // oferecidas pela página Vitalidade não entram nesta conta — elas treinam
+  // outra coisa e não podem pular fases desta escada.
+  const pelvicFeitas = useLiveQuery(() => contarPraticasDaProgressao(), []);
   const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
   // Duração e lugar vêm da sequência do dia, não de texto fixo no item: a
   // rotina tem sequências de 3 a 7 min, e "dá pra fazer sentada" é falso na

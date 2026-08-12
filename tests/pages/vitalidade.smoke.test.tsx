@@ -181,20 +181,56 @@ describe("Vitalidade smoke", () => {
     expect(await screen.findByText(/1 sessão nos últimos 7 dias/i)).toBeInTheDocument();
   });
 
+  /** `n` sessões concluídas de uma sequência, hoje. */
+  async function praticou(sequenceId: string, n: number): Promise<void> {
+    for (let i = 0; i < n; i++) {
+      await db.practiceLogs.add({ date: hojeISO(new Date()), sequenceId, completed: true });
+    }
+  }
+
   it("o preparo pra receber fica fechado até a fase 2 estar construída", async () => {
     renderPage();
     await screen.findByText(/preparo pra receber/i);
     expect(screen.queryByRole("link", { name: /preparo pra receber/i })).not.toBeInTheDocument();
-    expect(screen.getByText(/abre quando a fase 2 estiver construída \(0\/10/i)).toBeInTheDocument();
+    expect(screen.getByText(/abre quando a fase 2 estiver construída \(0\/5 sessões de soltura/i))
+      .toBeInTheDocument();
   });
 
-  it("com a fase 2 construída, o preparo pra receber vira link", async () => {
-    for (let i = 0; i < 10; i++) {
-      await db.practiceLogs.add({ date: hojeISO(new Date()), sequenceId: "pelvic-identificacao", completed: true });
-    }
+  it("com a fase 2 construída de verdade, o preparo pra receber vira link", async () => {
+    await praticou("pelvic-identificacao", 5);
+    await praticou("pelvic-soltura-identificacao", 5);
     renderPage();
     const link = await screen.findByRole("link", { name: /preparo pra receber/i });
     expect(link).toHaveAttribute("href", "/treino/movimento/pelvic-receber-preparo");
+  });
+
+  // O laço que esta tela fechava sozinha: ela oferece o start-stop desde o dia
+  // 1, e ele contava como prática de assoalho pélvico. Dez sessões — cinco
+  // semanas no alvo declarado logo acima — puxavam a fase pra 3 e abriam o
+  // preparo pra receber sem UMA soltura. Receber sem soltura treinada dói; a
+  // tela estaria empurrando ela pra lá com um contador que mede outra coisa.
+  it("só start-stop não avança a fase nem destranca o preparo pra receber", async () => {
+    await praticou("pelvic-start-stop", 10);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText(/fase 1.*achar o m[úu]sculo/i)).toBeInTheDocument();
+    });
+    expect(screen.queryByRole("link", { name: /preparo pra receber/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/abre quando a fase 2 estiver construída \(0\/5 sessões de soltura/i))
+      .toBeInTheDocument();
+  });
+
+  // A contagem exibida mudou de significado (só a progressão), então o rótulo
+  // ao lado dela mudou junto — senão a tela diria "sequências concluídas" e
+  // mostraria um número que exclui as sessões desta própria página.
+  it("a contagem exibida diz que é da progressão, e não soma as sessões desta tela", async () => {
+    await praticou("pelvic-identificacao", 3);
+    await praticou("pelvic-start-stop", 4);
+    renderPage();
+    expect(await screen.findByText(/3 sequências da progressão concluídas até agora/i))
+      .toBeInTheDocument();
+    expect(screen.queryByText(/7 sequências/i)).not.toBeInTheDocument();
   });
 
   it("não usa a palavra pornografia no rótulo do atalho nem no título da página", async () => {

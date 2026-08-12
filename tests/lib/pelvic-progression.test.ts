@@ -5,11 +5,27 @@ import {
   rotuloPelvicoDoDia,
   ondeFazer,
   PELVIC_ORDEM,
+  PROGRESSAO_PELVICA,
   ROTACAO,
   ATE_ROTACAO,
+  ATE_FASE_3,
   OFERTA_VITALIDADE,
+  SEQUENCIA_DE_SOLTURA,
+  SESSOES_DE_SOLTURA,
+  type EstadoDaVitalidade,
 } from "../../src/lib/pelvic-progression";
 import { SEQUENCES } from "../../src/data/sequences-seed";
+
+/** Estado de quem já venceu a fase 2 de verdade, com o que for sobrescrito.
+ *  Existe pra cada teste declarar SÓ a variável que ele está exercitando. */
+function estado(parcial: Partial<EstadoDaVitalidade> = {}): EstadoDaVitalidade {
+  return {
+    praticasDaProgressao: 30,
+    solturasFeitas: SESSOES_DE_SOLTURA,
+    startStopNaSemana: 0,
+    ...parcial,
+  };
+}
 
 // A usuária cumpre o papel masculino na relação e quer vigor, dureza e
 // resistência. O assoalho pélvico é o que MANTÉM a rigidez (comprime as veias
@@ -137,8 +153,8 @@ describe("a soltura entra na fase 2, antes das variações", () => {
 // `PELVIC_ORDEM` cobre toda sequência `pelvic` do catálogo, e o teste da
 // rotação provava que tudo em `ROTACAO` é alcançável — mas nada provava que
 // tudo em `PELVIC_ORDEM` está em ALGUMA rota. Uma sequência nova entraria na
-// ordem (o catálogo cobra), contaria em `contarPraticasPelvicas` movendo as
-// fases, e nunca seria servida a ninguém.
+// ordem (o catálogo cobra), contaria em `contarPraticasDaProgressao` movendo
+// as fases, e nunca seria servida a ninguém.
 describe("toda sequência tem um caminho até ela", () => {
   it("a união das duas rotas (Hoje + Vitalidade) é exatamente PELVIC_ORDEM", () => {
     const servidas = new Set<string>();
@@ -146,7 +162,7 @@ describe("toda sequência tem um caminho até ela", () => {
     for (let n = 0; n < ATE_ROTACAO + ROTACAO.length; n++) {
       servidas.add(pelvicDoDia(n).sequenceId);
     }
-    for (const oferta of ofertasDaVitalidade(999, 0)) servidas.add(oferta.sequenceId);
+    for (const oferta of ofertasDaVitalidade(estado())) servidas.add(oferta.sequenceId);
 
     expect([...servidas].sort()).toEqual([...PELVIC_ORDEM].sort());
   });
@@ -158,7 +174,7 @@ describe("toda sequência tem um caminho até ela", () => {
   });
 
   it("a oferta da Vitalidade é exatamente OFERTA_VITALIDADE — sem sequência escondida", () => {
-    expect(ofertasDaVitalidade(999, 0).map((o) => o.sequenceId)).toEqual([...OFERTA_VITALIDADE]);
+    expect(ofertasDaVitalidade(estado()).map((o) => o.sequenceId)).toEqual([...OFERTA_VITALIDADE]);
   });
 });
 
@@ -169,40 +185,64 @@ describe("toda sequência tem um caminho até ela", () => {
 // dia 1 e a tela mostra se a semana já teve a dele.
 describe("ofertasDaVitalidade", () => {
   it("start-stop está disponível desde a primeira prática — o alvo vale desde o dia 1", () => {
-    const [startStop] = ofertasDaVitalidade(0, 0);
+    const [startStop] = ofertasDaVitalidade(estado({ praticasDaProgressao: 0, solturasFeitas: 0 }));
     expect(startStop.sequenceId).toBe("pelvic-start-stop");
     expect(startStop.disponivel).toBe(true);
   });
 
   it("diz que a semana ainda não teve sessão, e que ela não quebra o streak", () => {
-    const [startStop] = ofertasDaVitalidade(30, 0);
+    const [startStop] = ofertasDaVitalidade(estado());
     expect(startStop.nota).toMatch(/nenhuma nos últimos 7 dias/i);
     expect(startStop.nota).toMatch(/não quebra o streak/i);
   });
 
   it("conta as sessões da semana em vez de repetir o alvo no vazio", () => {
-    expect(ofertasDaVitalidade(30, 1)[0].nota).toMatch(/1 sessão nos últimos 7 dias/i);
-    expect(ofertasDaVitalidade(30, 2)[0].nota).toMatch(/2 sessões nos últimos 7 dias/i);
+    expect(ofertasDaVitalidade(estado({ startStopNaSemana: 1 }))[0].nota).toMatch(/1 sessão nos últimos 7 dias/i);
+    expect(ofertasDaVitalidade(estado({ startStopNaSemana: 2 }))[0].nota).toMatch(/2 sessões nos últimos 7 dias/i);
   });
 
   it("preparo pra receber só abre depois da fase 2 — soltar é o pré-requisito clínico", () => {
-    const antes = ofertasDaVitalidade(9, 0)[1];
-    const depois = ofertasDaVitalidade(10, 0)[1];
+    const antes = ofertasDaVitalidade(
+      estado({ praticasDaProgressao: ATE_FASE_3 - 1, solturasFeitas: SESSOES_DE_SOLTURA - 1 }),
+    )[1];
+    const depois = ofertasDaVitalidade(
+      estado({ praticasDaProgressao: ATE_FASE_3, solturasFeitas: SESSOES_DE_SOLTURA }),
+    )[1];
     expect(antes.sequenceId).toBe("pelvic-receber-preparo");
     expect(antes.disponivel).toBe(false);
-    expect(antes.nota).toMatch(/9\/10/);
+    expect(antes.nota).toMatch(/4\/5 sessões de soltura/);
     expect(depois.disponivel).toBe(true);
   });
 
+  // O buraco que este bloco fecha: o start-stop está disponível desde o dia 1
+  // por esta mesma tela, e entrava na contagem que abria o portão. Dez sessões
+  // dele — cinco semanas no alvo declarado — destrancavam o preparo pra
+  // receber sem uma única soltura treinada. É o que dói, não o que treina.
+  it("prática da progressão sem soltura NÃO abre o preparo — o portão é soltura, não volume", () => {
+    const sohIdentificacao = ofertasDaVitalidade(
+      estado({ praticasDaProgressao: 30, solturasFeitas: 0 }),
+    )[1];
+    expect(sohIdentificacao.disponivel).toBe(false);
+    expect(sohIdentificacao.nota).toMatch(/0\/5 sessões de soltura/);
+  });
+
+  it("soltura treinada sem a fase 2 vencida na progressão também não abre", () => {
+    const soltouCedo = ofertasDaVitalidade(
+      estado({ praticasDaProgressao: SESSOES_DE_SOLTURA, solturasFeitas: SESSOES_DE_SOLTURA }),
+    )[1];
+    expect(soltouCedo.disponivel).toBe(false);
+    expect(soltouCedo.nota).toMatch(/5\/10 práticas da progressão/);
+  });
+
   it("a sequência pré-prazer é oferta sem cadência — preparo, não treino a cumprir", () => {
-    const prePrazer = ofertasDaVitalidade(0, 0)[2];
+    const prePrazer = ofertasDaVitalidade(estado({ praticasDaProgressao: 0, solturasFeitas: 0 }))[2];
     expect(prePrazer.sequenceId).toBe("pelvic-pre-prazer");
     expect(prePrazer.disponivel).toBe(true);
     expect(prePrazer.nota).toMatch(/sem cadência/i);
   });
 
   it("o título de cada oferta sai do catálogo — nome, duração e lugar, sem número à mão", () => {
-    for (const oferta of ofertasDaVitalidade(30, 0)) {
+    for (const oferta of ofertasDaVitalidade(estado())) {
       const seq = SEQUENCES.find((s) => s.id === oferta.sequenceId)!;
       expect(oferta.titulo).toContain(seq.name);
       expect(oferta.titulo).toContain(`${seq.durationMin} min`);
@@ -210,8 +250,43 @@ describe("ofertasDaVitalidade", () => {
   });
 
   it("contagem negativa ou absurda não quebra", () => {
-    expect(ofertasDaVitalidade(-3, -1)[0].disponivel).toBe(true);
-    expect(ofertasDaVitalidade(Number.NaN, Number.NaN)[1].disponivel).toBe(false);
+    const absurdo: EstadoDaVitalidade = {
+      praticasDaProgressao: -3,
+      solturasFeitas: Number.NaN,
+      startStopNaSemana: -1,
+    };
+    expect(ofertasDaVitalidade(absurdo)[0].disponivel).toBe(true);
+    expect(ofertasDaVitalidade(absurdo)[1].disponivel).toBe(false);
+    expect(ofertasDaVitalidade(absurdo)[1].nota).toMatch(/0\/5 sessões de soltura/);
+  });
+});
+
+// A contagem que move as fases tem que ver SÓ o que constrói as fases. Antes
+// ela via `PELVIC_ORDEM` inteiro, e as três sequências oferecidas pela própria
+// página Vitalidade — que existem desde o dia 1 — empurravam a progressão.
+describe("PROGRESSAO_PELVICA — o que a contagem de fases enxerga", () => {
+  it("é PELVIC_ORDEM menos as ofertas da Vitalidade, sem lista à mão", () => {
+    expect([...PROGRESSAO_PELVICA].sort())
+      .toEqual(PELVIC_ORDEM.filter((id) => !OFERTA_VITALIDADE.includes(id as never)).sort());
+  });
+
+  it("nenhuma sequência da Vitalidade conta como progressão", () => {
+    for (const id of OFERTA_VITALIDADE) {
+      expect({ id, conta: PROGRESSAO_PELVICA.includes(id) }).toEqual({ id, conta: false });
+    }
+  });
+
+  it("tudo que a rota do Hoje serve conta — senão a fase nunca avançaria", () => {
+    const servidas = new Set<string>();
+    for (let n = 0; n < ATE_ROTACAO + ROTACAO.length; n++) servidas.add(pelvicDoDia(n).sequenceId);
+    for (const id of servidas) {
+      expect({ id, conta: PROGRESSAO_PELVICA.includes(id) }).toEqual({ id, conta: true });
+    }
+  });
+
+  it("a sequência da fase 2 é a que o item do Hoje serve na fase 2", () => {
+    expect(pelvicDoDia(ATE_FASE_3 - 1).sequenceId).toBe(SEQUENCIA_DE_SOLTURA);
+    expect(SESSOES_DE_SOLTURA).toBe(5);
   });
 });
 

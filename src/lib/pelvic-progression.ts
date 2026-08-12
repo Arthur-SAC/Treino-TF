@@ -24,6 +24,14 @@
 //
 // Toda sequência de `PELVIC_ORDEM` tem que estar em uma das duas rotas; o
 // teste do módulo cobra essa união.
+//
+// E a CONTAGEM segue a mesma divisão: só o que a rota do Hoje serve
+// (`PROGRESSAO_PELVICA`) move as fases. Contar `PELVIC_ORDEM` inteiro fechava
+// um laço perverso — o start-stop está disponível desde o dia 1 pela página
+// Vitalidade, então dez sessões dele (cinco semanas no alvo declarado)
+// empurravam o item do Hoje pra fase 3 e abriam o preparo pra receber SEM UMA
+// ÚNICA sessão de soltura. Soltura não é etapa burocrática: é ela que faz
+// receber ser confortável em vez de doloroso.
 import { SEQUENCES } from "../data/sequences-seed";
 
 /** As sequências de assoalho pélvico em ordem didática, não por dificuldade isolada. */
@@ -44,8 +52,17 @@ export const PELVIC_ORDEM = [
 ] as const;
 
 const ATE_SOLTURA = 5;
-const ATE_FASE_3 = 10;
+export const ATE_FASE_3 = 10;
 export const ATE_ROTACAO = 17;
+
+/** A sequência da fase 2 — achar a soltura. Constante porque duas coisas
+ *  dependem de não divergirem: o que o item do Hoje serve na fase 2 e o que o
+ *  portão do preparo pra receber conta. */
+export const SEQUENCIA_DE_SOLTURA = "pelvic-soltura-identificacao";
+
+/** Quantas sessões de soltura a fase 2 pede. Derivada dos mesmos cortes das
+ *  fases, pra não virar um 5 escrito à mão em outro arquivo. */
+export const SESSOES_DE_SOLTURA = ATE_FASE_3 - ATE_SOLTURA;
 
 /** Fase 3 alterna força e coordenação em dias consecutivos. */
 const FASE_3 = ["pelvic-kegel-classico", "pelvic-alternancia"] as const;
@@ -80,6 +97,19 @@ export const OFERTA_VITALIDADE = [
   "pelvic-receber-preparo",
   "pelvic-pre-prazer",
 ] as const;
+
+/** As sequências que CONSTROEM a progressão do item diário — `PELVIC_ORDEM`
+ *  menos as ofertas da Vitalidade. Derivada das duas constantes acima, nunca
+ *  listada à mão: sequência nova entra na ordem e cai do lado certo sozinha.
+ *
+ *  É este conjunto, e não `PELVIC_ORDEM`, que a contagem de fases enxerga. As
+ *  três da Vitalidade são prática de verdade, mas prática de OUTRA coisa —
+ *  start-stop treina controle ejaculatório, não identificação nem soltura. Com
+ *  elas na conta, dez sessões de start-stop pulavam as duas primeiras fases e
+ *  destrancavam o preparo pra receber com zero soltura treinada. */
+export const PROGRESSAO_PELVICA: readonly string[] = PELVIC_ORDEM.filter(
+  (id) => !(OFERTA_VITALIDADE as readonly string[]).includes(id),
+);
 
 /** Onde cada sequência dá pra ser feita, em uma frase. Existe porque o item
  *  do Hoje trazia "Invisível, dá pra fazer sentada" FIXO no código, e isso é
@@ -140,6 +170,13 @@ export function rotuloPelvicoDoDia(doDia: PelvicDoDia): RotuloPelvico {
   };
 }
 
+/** Contagem vinda do banco tratada como contagem: nada de negativo, nada de
+ *  NaN, nada de fração. Um só lugar, porque as quatro entradas numéricas deste
+ *  módulo precisam da mesma higiene. */
+function saoInteiras(valor: number): number {
+  return Number.isFinite(valor) && valor > 0 ? Math.floor(valor) : 0;
+}
+
 export interface OfertaPelvica {
   sequenceId: string;
   titulo: string;
@@ -148,32 +185,47 @@ export interface OfertaPelvica {
   disponivel: boolean;
 }
 
+/** O que a página Vitalidade sabe do histórico dela. Objeto, e não três
+ *  números soltos, porque os três são contagens de assoalho pélvico e trocar
+ *  duas de lugar não daria erro de tipo — daria um portão de conteúdo sensível
+ *  abrindo pelo motivo errado, em silêncio. */
+export interface EstadoDaVitalidade {
+  /** Práticas da progressão do Hoje (`PROGRESSAO_PELVICA`) concluídas — a
+   *  mesma contagem que move as fases. */
+  praticasDaProgressao: number;
+  /** Sessões da sequência de soltura da fase 2 concluídas, na vida inteira. */
+  solturasFeitas: number;
+  /** Sessões de start-stop concluídas nos últimos 7 dias. */
+  startStopNaSemana: number;
+}
+
 /**
  * O que a página Vitalidade oferece hoje, além da sequência do dia.
  *
- * `startStopNaSemana` — sessões de start-stop concluídas nos últimos 7 dias.
- * A cadência sai do alvo que a própria tela declara ("2 a 3 vezes por semana,
- * com pelo menos uma sendo start-stop"): o start-stop fica disponível desde o
- * primeiro dia e a tela mostra se a semana já teve a dela. Na rotação da fase
- * 4 ele só aparecia a partir da 18ª prática e depois 1 vez a cada 9 dias — o
- * alvo declarado era inalcançável por uns quatro meses.
+ * `startStopNaSemana` — a cadência sai do alvo que a própria tela declara
+ * ("2 a 3 vezes por semana, com pelo menos uma sendo start-stop"): o start-stop
+ * fica disponível desde o primeiro dia e a tela mostra se a semana já teve a
+ * dela. Na rotação da fase 4 ele só aparecia a partir da 18ª prática e depois
+ * 1 vez a cada 9 dias — o alvo declarado era inalcançável por uns quatro meses.
  *
  * `pelvic-receber-preparo` é o único com pré-requisito, e é clínico, não
  * disciplinar: ele é relaxamento voluntário sob pressão, e a habilidade que o
  * sustenta é a soltura da fase 2. Antes disso o corpo fecha e dói.
  *
+ * Por isso o portão conta SOLTURA, não prática genérica. Ele já foi "≥ 10
+ * práticas de assoalho pélvico" — e como o start-stop desta mesma tela entrava
+ * na conta, dez sessões dele abriam a porta com zero soltura treinada, ou seja,
+ * exatamente para quem o preparo ainda machuca. Agora exige as duas coisas: a
+ * fase 2 vencida na progressão E as sessões de soltura feitas.
+ *
  * `pelvic-pre-prazer` não tem cadência nenhuma — é preparo pra usar na hora
  * que serve, não treino a cumprir.
  */
-export function ofertasDaVitalidade(
-  praticasFeitas: number,
-  startStopNaSemana: number,
-): OfertaPelvica[] {
-  const n = Number.isFinite(praticasFeitas) && praticasFeitas > 0 ? Math.floor(praticasFeitas) : 0;
-  const feitas = Number.isFinite(startStopNaSemana) && startStopNaSemana > 0
-    ? Math.floor(startStopNaSemana)
-    : 0;
-  const solturaAprendida = n >= ATE_FASE_3;
+export function ofertasDaVitalidade(estado: EstadoDaVitalidade): OfertaPelvica[] {
+  const n = saoInteiras(estado.praticasDaProgressao);
+  const solturas = saoInteiras(estado.solturasFeitas);
+  const feitas = saoInteiras(estado.startStopNaSemana);
+  const fase2Vencida = n >= ATE_FASE_3 && solturas >= SESSOES_DE_SOLTURA;
 
   return [
     {
@@ -187,10 +239,10 @@ export function ofertasDaVitalidade(
     {
       sequenceId: "pelvic-receber-preparo",
       titulo: tituloDaOferta("pelvic-receber-preparo"),
-      disponivel: solturaAprendida,
-      nota: solturaAprendida
+      disponivel: fase2Vencida,
+      nota: fase2Vencida
         ? "No seu ritmo, não numa frequência fixa. A progressão é de meses: só sobe de estágio depois de duas sessões confortáveis."
-        : `Abre quando a fase 2 estiver construída (${n}/${ATE_FASE_3} práticas). Sem saber soltar, o corpo fecha — e aí dói em vez de treinar.`,
+        : `Abre quando a fase 2 estiver construída (${Math.min(solturas, SESSOES_DE_SOLTURA)}/${SESSOES_DE_SOLTURA} sessões de soltura, ${Math.min(n, ATE_FASE_3)}/${ATE_FASE_3} práticas da progressão). Sem saber soltar, o corpo fecha — e aí dói em vez de treinar.`,
     },
     {
       sequenceId: "pelvic-pre-prazer",
@@ -218,8 +270,10 @@ export interface PelvicDoDia {
   etapa: string;
 }
 
-export function pelvicDoDia(praticasFeitas: number): PelvicDoDia {
-  const n = Number.isFinite(praticasFeitas) && praticasFeitas > 0 ? Math.floor(praticasFeitas) : 0;
+/** `praticasDaProgressao` — só o que `PROGRESSAO_PELVICA` cobre. Sessão da
+ *  página Vitalidade não move fase: ver o comentário do topo do módulo. */
+export function pelvicDoDia(praticasDaProgressao: number): PelvicDoDia {
+  const n = saoInteiras(praticasDaProgressao);
 
   if (n < ATE_SOLTURA) {
     return {
@@ -230,8 +284,8 @@ export function pelvicDoDia(praticasFeitas: number): PelvicDoDia {
 
   if (n < ATE_FASE_3) {
     return {
-      sequenceId: "pelvic-soltura-identificacao",
-      etapa: `Fase 2 · achar a soltura (${n - ATE_SOLTURA + 1}/${ATE_FASE_3 - ATE_SOLTURA}) — é ela que trata a precocidade`,
+      sequenceId: SEQUENCIA_DE_SOLTURA,
+      etapa: `Fase 2 · achar a soltura (${n - ATE_SOLTURA + 1}/${SESSOES_DE_SOLTURA}) — é ela que trata a precocidade`,
     };
   }
 

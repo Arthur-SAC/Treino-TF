@@ -9,8 +9,12 @@ import { registrarGastoAutomatico } from "../../lib/daily-log-helpers";
 import { garantirInicioDoAcompanhamento } from "../../lib/vitalidade-adesao";
 import { useStreakSono } from "../../hooks/useStreakSono";
 import { useStreakVitalidade } from "../../hooks/useStreakVitalidade";
-import { pelvicDoDia, ofertasDaVitalidade } from "../../lib/pelvic-progression";
-import { contarPraticasPelvicas, contarPraticasRecentes } from "../../lib/practice-log-helpers";
+import { pelvicDoDia, ofertasDaVitalidade, SEQUENCIA_DE_SOLTURA } from "../../lib/pelvic-progression";
+import {
+  contarPraticasDaProgressao,
+  contarPraticasDaSequencia,
+  contarPraticasRecentes,
+} from "../../lib/practice-log-helpers";
 import { hojeISO, diaDoAno } from "../../lib/today-date";
 import { buildDayRoutine } from "../../lib/today-routine";
 import { resolverAlvoSono } from "../../lib/routine-times";
@@ -54,22 +58,31 @@ export function Vitalidade() {
   // tela Hoje usa, janela e consulta incluídas.
   const streakSono = useStreakSono(alvoSono, todayISO);
 
-  // Quantas práticas de assoalho pélvico ela já concluiu — mesmo helper que o
-  // Hoje usa pra decidir a fase (identificar o músculo -> soltura -> Kegel ->
+  // Quantas práticas DA PROGRESSÃO ela já concluiu — mesmo helper que o Hoje
+  // usa pra decidir a fase (identificar o músculo -> soltura -> Kegel ->
   // variações). Extraído pra `practice-log-helpers.ts` porque as duas telas
-  // precisam do mesmo critério — duplicado, ele diverge em silêncio.
-  const pelvicFeitas = useLiveQuery(() => contarPraticasPelvicas(), []);
-  const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
+  // precisam do mesmo critério — duplicado, ele diverge em silêncio. As três
+  // sequências desta tela NÃO entram nesta conta, e o rótulo abaixo diz isso
+  // com todas as letras: são práticas de outra coisa, e contá-las pulava a
+  // identificação e a soltura inteiras.
+  const praticasDaProgressao = useLiveQuery(() => contarPraticasDaProgressao(), []);
+  const pelvicHoje = pelvicDoDia(praticasDaProgressao ?? 0);
 
   // As três sequências sexuais explícitas ou pré-íntimas saem POR AQUI, não
   // pela rotina do Hoje, que toca às 10h no trabalho. A contagem da semana
   // existe pro alvo declarado no topo desta tela ("pelo menos uma sessão de
-  // start-stop") ser medido contra o registro real.
+  // start-stop") ser medido contra o registro real; a de soltura existe porque
+  // o preparo pra receber só pode abrir depois de soltura TREINADA.
   const startStopNaSemana = useLiveQuery(
     () => contarPraticasRecentes("pelvic-start-stop", todayISO),
     [todayISO],
   );
-  const ofertas = ofertasDaVitalidade(pelvicFeitas ?? 0, startStopNaSemana ?? 0);
+  const solturasFeitas = useLiveQuery(() => contarPraticasDaSequencia(SEQUENCIA_DE_SOLTURA), []);
+  const ofertas = ofertasDaVitalidade({
+    praticasDaProgressao: praticasDaProgressao ?? 0,
+    solturasFeitas: solturasFeitas ?? 0,
+    startStopNaSemana: startStopNaSemana ?? 0,
+  });
 
   const streak = useStreakVitalidade(todayISO);
   const marcadoHoje = dailyLog?.gastoAutomatico ?? false;
@@ -123,7 +136,13 @@ export function Vitalidade() {
       <div className="card my-3">
         <h2 className="text-nude font-medium mb-1">Assoalho pélvico</h2>
         <p className="text-sm text-nude-warm">{pelvicHoje.etapa}</p>
-        <p className="text-muted text-xs mt-1">{pelvicFeitas ?? 0} sequências concluídas até agora</p>
+        {/* O rótulo acompanha o que é contado: só a progressão. As sessões do
+            card abaixo são práticas de verdade, mas de outra coisa — dizer
+            "sequências concluídas" e somar tudo é o que fazia dez start-stops
+            valerem como identificação e soltura. */}
+        <p className="text-muted text-xs mt-1">
+          {praticasDaProgressao ?? 0} sequências da progressão concluídas até agora
+        </p>
         <Link to={`/treino/movimento/${pelvicHoje.sequenceId}`} className="text-xs text-nude mt-2 inline-block">
           Ver sequência de hoje →
         </Link>
@@ -165,7 +184,7 @@ export function Vitalidade() {
           <li>
             Cintura na última medição: {cinturaRecente !== undefined ? `${cinturaRecente} cm` : "ainda sem medida registrada"}
           </li>
-          <li>Assoalho pélvico: {pelvicFeitas ?? 0} sequências concluídas</li>
+          <li>Assoalho pélvico: {praticasDaProgressao ?? 0} sequências da progressão concluídas</li>
         </ul>
       </div>
 
