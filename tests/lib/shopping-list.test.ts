@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildShoppingList } from "../../src/lib/shopping-list";
+import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import type { MealPlan } from "../../src/lib/db";
 
 const plan: MealPlan = {
@@ -47,5 +48,21 @@ describe("buildShoppingList", () => {
   it("ordena por categoria e depois por item", () => {
     const list = buildShoppingList(plan);
     expect(list.map((i) => i.item)).toEqual(["Pão integral", "Ovos"]); // carboidrato antes de proteina
+  });
+});
+
+// `ingredients` tem que acompanhar `foods`: mudar alimento sem mudar o
+// ingrediente correspondente faz a lista de compras divergir da receita — erro
+// já cometido e pego na frente 1. A lista é o que ela leva pra feira; se o
+// atum não estiver nela, o patê não existe na quarta-feira.
+describe("a lista de compras acompanha o cardápio de Aracaju", () => {
+  it("traz os ingredientes que esta frente introduziu e não traz os que ela tirou", () => {
+    const lista = buildShoppingList({ ...INITIAL_PLAN, id: 1 } as MealPlan).map((i) =>
+      i.item.toLowerCase(),
+    );
+    expect(lista.some((i) => i.includes("atum"))).toBe(true);
+    expect(lista.some((i) => i.includes("castanha de caju"))).toBe(true);
+    expect(lista.some((i) => i.includes("feijão de corda"))).toBe(true);
+    expect(lista.filter((i) => i.includes("peito de peru"))).toEqual([]);
   });
 });
