@@ -12,6 +12,14 @@ import type { WorkoutTemplate } from "../lib/db";
 // no fim do treino alongava a sessão em 20 min e empurrava o jantar para as
 // 20h — que é exatamente quando o jantar sai do controle. O aquecimento leve
 // na esteira continua: aquecer não é a mesma coisa que dosar cardio.
+// PADRÃO DE LEVANTAR (2026-08-12): o objetivo dela de erguer a noiva no colo
+// entrou nos ciclos de variação/hipertrofia/refinamento/manutenção por TROCA,
+// nunca por soma — a sessão de academia não cresce (mesma razão da zona 2
+// acima: mais minutos empurram o jantar pra depois das 20h). Cada exercício
+// novo (agachamento-goblet, carregamento-frontal, prancha-antirrotacao) saiu
+// de outro do mesmo template; contagem e durationMin ficam idênticos. A
+// manutenção não recebe o carregamento frontal de propósito: é a fase de
+// volume reduzido, e nem todo padrão precisa estar presente ali.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Ciclo 2 — VARIAÇÃO — mesmos objetivos, exercícios variados
@@ -30,7 +38,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 4, repsTarget: "10", restSec: 90 },
       { exerciseId: "agachamento-sumo", sets: 4, repsTarget: "10-12", restSec: 75, notes: "Glúteo + coxa interna" },
       { exerciseId: "stiff", sets: 3, repsTarget: "10", restSec: 75 },
-      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 60 },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, notes: "Padrão de levantar — carga à frente, aprende o agachamento que serve pra erguer no colo" },
     ],
   },
   {
@@ -44,10 +52,10 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "10 (leve)", restSec: 60 },
-      { exerciseId: "cross-over-cabo", sets: 3, repsTarget: "12 (leve)", restSec: 60, notes: "Crucifixo inclinado — busto" },
+      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20-30m", restSec: 60, notes: "Padrão de levantar — carga à frente do corpo" },
       { exerciseId: "remada-curvada", sets: 3, repsTarget: "10", restSec: 60 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
-      { exerciseId: "prancha-lateral", sets: 3, repsTarget: "40s cada", restSec: 45 },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "8 trocas cada lado", restSec: 45, notes: "Padrão de levantar — core que resiste a rotação, essencial pra carregar peso assimétrico" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
@@ -124,7 +132,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 5, repsTarget: "8-10", restSec: 90, notes: "Fase de ouro — empurra a carga, glúteo cresce" },
       { exerciseId: "smith-squat", sets: 4, repsTarget: "10-12", restSec: 90 },
       { exerciseId: "agachamento-livre", sets: 3, repsTarget: "10", restSec: 90 },
-      { exerciseId: "abdutor-maquina", sets: 4, repsTarget: "12-15", restSec: 60 },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, notes: "Padrão de levantar — carga à frente, aprende o agachamento que serve pra erguer no colo" },
     ],
   },
   {
@@ -138,7 +146,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Leve de propósito: peitoral leve dá base que projeta o busto, pesado constrói um peito que lê como masculino" },
-      { exerciseId: "cross-over-cabo", sets: 3, repsTarget: "12 (leve)", restSec: 60 },
+      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20-30m", restSec: 60, notes: "Padrão de levantar — carga à frente do corpo" },
       { exerciseId: "remada-baixa-maquina", sets: 4, repsTarget: "10-12", restSec: 75 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
     ],
@@ -193,7 +201,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
       { exerciseId: "agachamento-sumo", sets: 4, repsTarget: "12", restSec: 60 },
       { exerciseId: "kickback", sets: 4, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada" },
       { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
-      { exerciseId: "prancha-lateral", sets: 3, repsTarget: "30s cada", restSec: 30 },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "8 trocas cada lado", restSec: 45, notes: "Padrão de levantar — core que resiste a rotação, essencial pra carregar peso assimétrico" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
@@ -215,7 +223,7 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 4, repsTarget: "15-20 (média)", restSec: 45 },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "15", restSec: 60 },
       { exerciseId: "kickback", sets: 4, repsTarget: "20 cada", restSec: 30, notes: "Densidade — caneleira, alta repetição" },
-      { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "20 cada", restSec: 30 },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, notes: "Padrão de levantar — carga à frente, aprende o agachamento que serve pra erguer no colo" },
     ],
   },
   {
@@ -231,8 +239,8 @@ const REFINEMENT: WorkoutTemplate[] = [
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "15 (bem leve)", restSec: 45 },
       { exerciseId: "face-pull-polia", sets: 4, repsTarget: "20", restSec: 30, notes: "Abre os ombros, levanta o busto" },
       { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "15 (leve)", restSec: 45 },
-      { exerciseId: "dead-bug", sets: 3, repsTarget: "15 cada", restSec: 30 },
-      { exerciseId: "prancha", sets: 3, repsTarget: "60s", restSec: 30 },
+      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20-30m", restSec: 60, notes: "Padrão de levantar — carga à frente do corpo" },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "8 trocas cada lado", restSec: 45, notes: "Padrão de levantar — core que resiste a rotação, essencial pra carregar peso assimétrico" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },
@@ -308,7 +316,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "10-12", restSec: 75, notes: "Mantém a carga — não precisa subir sempre" },
       { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 75 },
       { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60 },
-      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45 },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, notes: "Padrão de levantar — carga à frente, aprende o agachamento que serve pra erguer no colo" },
     ],
   },
   {
@@ -324,7 +332,7 @@ const MAINTENANCE: WorkoutTemplate[] = [
       { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (leve)", restSec: 60 },
       { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "12", restSec: 60 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
-      { exerciseId: "prancha", sets: 3, repsTarget: "45s", restSec: 30 },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "8 trocas cada lado", restSec: 45, notes: "Padrão de levantar — core que resiste a rotação, essencial pra carregar peso assimétrico" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura, sem engrossar" },
     ],
   },

@@ -77,7 +77,10 @@ export async function seedDatabase(): Promise<void> {
   // novos (manutenção). Idempotente.
   // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
   // virou a caminhada do trabalho) e as orientações foram reescritas.
-  const TEMPLATE_SEED_VERSION = 10;
+  // v11: o padrão de levantar (agachamento-goblet, carregamento-frontal,
+  // prancha-antirrotacao) entrou nos ciclos de variação/hipertrofia/
+  // refinamento/manutenção — por troca, não por soma, pra sessão não crescer.
+  const TEMPLATE_SEED_VERSION = 11;
   const tplVersion = await db.settings.get("templateSeedVersion");
   if (((tplVersion?.value as number) ?? 0) < TEMPLATE_SEED_VERSION) {
     await db.transaction("rw", db.workoutTemplates, db.settings, async () => {
