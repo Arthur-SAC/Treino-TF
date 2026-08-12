@@ -8,6 +8,24 @@ import { ALL_TEMPLATES } from "../../src/data/all-templates";
 // Conteúdo de seed vive no IndexedDB, não no arquivo: sem bump de versão, texto
 // corrigido no repositório nunca chega ao aparelho de quem já usa o app. Estes
 // testes reconstroem o banco parado na versão anterior e cobram a chegada.
+//
+// DUAS REGRAS, aprendidas na revisão final desta frente — os casos de exercício
+// e de template passavam sem morder nenhuma das duas:
+//
+// 1. A versão plantada tem que ser a IMEDIATAMENTE ANTERIOR à atual. Plantar a
+//    versão 7 quando o código está na 9 faz o teste passar com 8 OU com 9, ou
+//    seja, ele não distingue "o bump aconteceu" de "o bump foi esquecido".
+//    Quando o código bumpar de novo, estes números sobem junto — é de propósito
+//    que dê trabalho: é o que mantém o teste ligado ao bump.
+// 2. A asserção tem que ser sobre conteúdo que só existe DEPOIS do bump. O caso
+//    de templates aferia `ALL_TEMPLATES[0].name` e a contagem total — dois
+//    valores que troca de exercício não muda. As 11 trocas da frente não fariam
+//    esse teste falhar se o bump tivesse sido esquecido.
+
+/** Versões imediatamente anteriores às que `seed.ts` carrega hoje. Se algum
+ *  bump subir e estes números não subirem junto, o teste vira decoração. */
+const ANTERIOR_EXERCICIOS = 9;
+const ANTERIOR_TEMPLATES = 11;
 
 describe("exercícios", () => {
   beforeEach(async () => {
@@ -29,7 +47,7 @@ describe("exercícios", () => {
     } as never);
     await db.settings.put({ key: "seeded", value: true });
     await db.settings.put({ key: "cyclesSeeded", value: true });
-    await db.settings.put({ key: "exerciseSeedVersion", value: 7 });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
 
     await seedDatabase();
 
@@ -38,6 +56,26 @@ describe("exercícios", () => {
     expect(ex?.description).toContain("5 km");
     // O link que ela colou é dela e continua lá.
     expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
+  });
+
+  it("os dois exercícios do padrão de levantar chegam, com o texto e o nível desta versão", async () => {
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
+
+    await seedDatabase();
+
+    const carregamento = await db.exercises.get("carregamento-frontal");
+    const prancha = await db.exercises.get("prancha-antirrotacao");
+    expect({ carregamento: !!carregamento, prancha: !!prancha })
+      .toEqual({ carregamento: true, prancha: true });
+
+    // O que a versão 10 corrigiu, e que sem bump ficaria só no repositório:
+    // a variação difícil que não dizia onde o peso fica, a exposição
+    // subestimada e os vídeos que faltavam nos dois.
+    expect(carregamento?.harderVariation).toContain("PEITO");
+    expect(carregamento?.exposureLevel).toBe(3);
+    expect({ c: !!carregamento?.videoUrl, p: !!prancha?.videoUrl }).toEqual({ c: true, p: true });
   });
 });
 
@@ -52,13 +90,44 @@ describe("templates de treino", () => {
     await db.workoutTemplates.put({ ...alvo, name: "Nome antigo" } as never);
     await db.settings.put({ key: "seeded", value: true });
     await db.settings.put({ key: "cyclesSeeded", value: true });
-    await db.settings.put({ key: "templateSeedVersion", value: 9 });
+    await db.settings.put({ key: "templateSeedVersion", value: ANTERIOR_TEMPLATES });
 
     await seedDatabase();
 
     const tpl = await db.workoutTemplates.get(alvo.id);
     expect(tpl?.name).toBe(alvo.name);
     expect(await db.workoutTemplates.count()).toBe(ALL_TEMPLATES.length);
+  });
+
+  // Nome e contagem total não mudam quando um exercício é trocado por outro —
+  // então o teste acima, sozinho, aprovaria uma troca que nunca sai do
+  // repositório. O par (template, exerciseId) é o que a troca de fato move.
+  it("as trocas do padrão de levantar chegam — pelo par (template, exercício)", async () => {
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "templateSeedVersion", value: ANTERIOR_TEMPLATES });
+
+    await seedDatabase();
+
+    const TROCAS: [string, string][] = [
+      // adaptação — o ciclo que ela alcança em ~3 semanas
+      ["seg-gluteo-mobilidade", "agachamento-goblet"],
+      ["ter-cintura-costas", "carregamento-frontal"],
+      ["ter-cintura-costas", "prancha-antirrotacao"],
+      // e os ciclos de construção
+      ["v-seg-gluteo-unilateral", "agachamento-goblet"],
+      ["v-ter-cintura-costas", "prancha-antirrotacao"],
+    ];
+    const faltando: string[] = [];
+    for (const [templateId, exerciseId] of TROCAS) {
+      const t = await db.workoutTemplates.get(templateId);
+      if (!t?.exercises.some((e) => e.exerciseId === exerciseId)) faltando.push(`${templateId} → ${exerciseId}`);
+    }
+    expect(faltando).toEqual([]);
+
+    // E o que SAIU também não pode voltar pelo banco parado.
+    const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
+    expect(seg?.exercises.some((e) => e.exerciseId === "abdutor-maquina")).toBe(false);
   });
 });
 
