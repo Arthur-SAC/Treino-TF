@@ -55,7 +55,11 @@ export async function seedDatabase(): Promise<void> {
   // v9: dois exercícios novos (carregamento-frontal, prancha-antirrotacao)
   // completam o padrão de força pra levantar a noiva no colo — a dobradiça de
   // quadril já existia, faltava carga à frente do corpo e core antirrotação.
-  const EXERCISE_SEED_VERSION = 9;
+  // v10: o carregamento frontal parou de sugerir carregamento unilateral na
+  // variação difícil (halter pendurado na lateral = trapézio superior sob
+  // carga, o oposto do objetivo), subiu de exposureLevel 2 → 3, e os dois
+  // exercícios novos ganharam vídeo de demonstração.
+  const EXERCISE_SEED_VERSION = 10;
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
