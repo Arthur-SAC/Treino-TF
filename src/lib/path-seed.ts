@@ -2,10 +2,23 @@ import { db, type Milestone } from "./db";
 import { MILESTONES, BODY_GOAL_MILESTONES, BUST_MILESTONES, VOICE_MILESTONES } from "../data/milestones-seed";
 import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 
-// v8: o plano de déficit passou de 2.200 para 2.300 kcal e as refeições foram
-// reescritas. As telas leem do IndexedDB — sem este bump, o aparelho dela
-// continuaria servindo o plano antigo enquanto o resto do app cita o novo.
-const MEAL_PLAN_VERSION = 8;
+// Exportada (e não apenas local a este módulo) pelo mesmo motivo que
+// EXERCISE_SEED_VERSION e TEMPLATE_SEED_VERSION são: o teste de chegada
+// (tests/lib/seeds-chegam-no-aparelho.test.ts) precisa plantar a versão
+// imediatamente anterior, e derivar "anterior = atual − 1" é a única forma de
+// esse número não destoar do código com o tempo. Enquanto ela era privada, o
+// plano alimentar era o único seed grande sem rede de chegada.
+//
+// v8 (histórico): o plano de déficit passou de 2.200 para 2.300 kcal e as
+// refeições foram reescritas. As telas leem do IndexedDB — sem bump, o aparelho
+// dela continua servindo o plano antigo enquanto o resto do app cita o novo.
+// v9: o cardápio inteiro foi reescrito — saiu o peito de peru (único
+// ultraprocessado), entraram patê de atum, castanha de caju e mais feijão de
+// corda, o lanche das 15h30 ganhou proteína de verdade, e manutenção e
+// superávit foram recalibrados de 2450/2700 para 3000/3300 contra o gasto real.
+// Sem este bump, o aparelho dela continuaria servindo a manutenção que é
+// déficit — exatamente na fase em que ela troca pra ele.
+export const MEAL_PLAN_VERSION = 9;
 const MILESTONE_SEED_VERSION = 7;
 
 const TODOS_OS_MARCOS = [

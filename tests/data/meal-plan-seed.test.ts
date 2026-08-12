@@ -40,9 +40,10 @@ describe("INITIAL_PLAN", () => {
   });
 
   // As três opções do lanche têm que ser intercambiáveis: escolher a 2 em vez
-  // da 1 não pode custar o dia. A opção 2 somava 338 kcal contra o alvo de 350
-  // porque o peito de peru declarava 83 kcal enquanto os próprios macros
-  // (17P/2C/2G) somam 94. Este é o período que a leva anterior calibrou.
+  // da 1 não pode custar o dia. O caso que originou este teste foi um alimento
+  // cujas kcal declaradas não batiam com os próprios macros e derrubava a opção
+  // 2 pra 338 contra o alvo 350; a frente 5 tirou esse alimento do cardápio, e
+  // a proteção contra o desvio continua.
   it("as três opções do lanche ficam perto do alvo — trocar de opção não muda o dia", () => {
     const lanche = INITIAL_PLAN.slots.find((s) => s.mealType === "lanche")!;
     for (const v of lanche.variants) {
@@ -93,12 +94,6 @@ describe("INITIAL_PLAN", () => {
         .toEqual({ opcao: v.label, dentroDoAlvo: true, kcal });
       expect({ opcao: v.label, proteinaOk: protein >= 20, protein }).toEqual({ opcao: v.label, proteinaOk: true, protein });
     }
-  });
-
-  it("as kcal do peito de peru batem com os próprios macros", () => {
-    const lanche = INITIAL_PLAN.slots.find((s) => s.mealType === "lanche")!;
-    const peru = lanche.variants.flatMap((v) => v.foods).find((f) => f.name.includes("Peito de peru"))!;
-    expect(peru.kcal).toBe((peru.proteinG ?? 0) * 4 + (peru.carbG ?? 0) * 4 + (peru.fatG ?? 0) * 9);
   });
 
   it("defaultMeals é derivado das variantes 0", () => {

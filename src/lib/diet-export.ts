@@ -56,7 +56,10 @@ export function renderDietMarkdown(plan: MealPlan, shopping: ShoppingItem[]): st
     for (const v of slot.variants) {
       lines.push(`### ${v.label}`);
       for (const f of v.foods) {
-        lines.push(`- ${f.name} — ${f.kcal} kcal`);
+        // A porção pesada vem antes das kcal: quem imprime este plano imprime
+        // pra montar marmita na balança, e metade dos alimentos não diz a
+        // porção no próprio nome ("Salada de folhas e tomate", "Ovo mexido").
+        lines.push(`- ${f.name} — ${f.qtyG} g — ${f.kcal} kcal`);
         if (f.preparation) lines.push(`  - Preparo: ${f.preparation}`);
       }
       if (v.ingredients.length) {
@@ -67,7 +70,7 @@ export function renderDietMarkdown(plan: MealPlan, shopping: ShoppingItem[]): st
     }
   }
 
-  lines.push(`## Lista de compras`);
+  lines.push(`## Lista de compras da semana`);
   let lastCat = "";
   for (const item of shopping) {
     if (item.category !== lastCat) {

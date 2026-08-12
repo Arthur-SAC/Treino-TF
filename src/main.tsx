@@ -54,6 +54,7 @@ import { EvolucaoView } from "./pages/path/EvolucaoView";
 import { MealPlanView } from "./pages/path/MealPlanView";
 import { MealPlanEdit } from "./pages/path/MealPlanEdit";
 import { ShoppingList } from "./pages/path/ShoppingList";
+import { MarmitaDomingo } from "./pages/path/MarmitaDomingo";
 import { MealsToday } from "./pages/path/MealsToday";
 import { DiaryView } from "./pages/path/DiaryView";
 import { LegalResources } from "./pages/path/LegalResources";
@@ -129,6 +130,7 @@ const router = createBrowserRouter(
         { path: "trilha/alimentacao", element: <MealPlanView /> },
         { path: "trilha/alimentacao/editar", element: <MealPlanEdit /> },
         { path: "trilha/alimentacao/lista-compras", element: <ShoppingList /> },
+        { path: "trilha/alimentacao/domingo", element: <MarmitaDomingo /> },
         { path: "refeicoes-hoje", element: <MealsToday /> },
         { path: "trilha/diario", element: <DiaryView /> },
         { path: "trilha/fertilidade", element: <FertilityTRH /> },

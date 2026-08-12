@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { seedDatabase, EXERCISE_SEED_VERSION, TEMPLATE_SEED_VERSION } from "../../src/lib/seed";
+import { seedPath, MEAL_PLAN_VERSION } from "../../src/lib/path-seed";
 import { seedStyle } from "../../src/lib/style-seed";
 import { seedMovement } from "../../src/lib/movement-seed";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
@@ -49,6 +50,7 @@ import { ALL_TEMPLATES } from "../../src/data/all-templates";
  *  logo abaixo. */
 const ANTERIOR_EXERCICIOS = EXERCISE_SEED_VERSION - 1;
 const ANTERIOR_TEMPLATES = TEMPLATE_SEED_VERSION - 1;
+const ANTERIOR_PLANO_ALIMENTAR = MEAL_PLAN_VERSION - 1;
 
 describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", () => {
   // Únicos números escritos à mão neste arquivo — de propósito: são a versão
@@ -63,6 +65,13 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
     expect(TEMPLATE_SEED_VERSION).toBe(12);
+  });
+
+  // O plano alimentar era o único seed grande fora deste arquivo: a versão dele
+  // vivia privada dentro de path-seed.ts, e nada aqui alcançava. Foi a mesma
+  // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
+  it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
+    expect(MEAL_PLAN_VERSION).toBe(9);
   });
 });
 
@@ -275,5 +284,45 @@ describe("sequências de movimento", () => {
       expect(s).toBeDefined();
       expect(s?.category).toBe("mobilidade");
     }
+  });
+});
+
+describe("plano alimentar", () => {
+  beforeEach(async () => {
+    await db.mealPlans.clear();
+    await db.milestones.clear();
+    await db.settings.clear();
+  });
+
+  it("o cardápio de Aracaju alcança quem estava na versão anterior", async () => {
+    // Reconstrói o banco dela: plano já semeado, parado na versão anterior —
+    // com o peito de peru no lanche e a manutenção descalibrada.
+    await db.settings.put({ key: "pathSeeded", value: true });
+    await db.settings.put({ key: "milestoneSeedVersion", value: 7 });
+    await db.settings.put({ key: "mealPlanVersion", value: ANTERIOR_PLANO_ALIMENTAR });
+    await db.mealPlans.add({
+      name: "Plano · manutenção (2450 kcal)",
+      goal: "manutencao",
+      kcalDaily: 2450,
+      proteinG: 185,
+      carbG: 266,
+      fatG: 70,
+      slots: [],
+      defaultMeals: [],
+    } as never);
+
+    await seedPath();
+
+    const manutencao = (await db.mealPlans.toArray()).find((p) => p.goal === "manutencao")!;
+    expect(manutencao.kcalDaily).toBe(3000);
+    expect(manutencao.name).toContain("3000");
+
+    // E o ultraprocessado não pode sobreviver pelo banco parado.
+    const todos = await db.mealPlans.toArray();
+    const nomes = todos.flatMap((p) =>
+      p.slots.flatMap((s) => s.variants.flatMap((v) => v.foods.map((f) => f.name))),
+    );
+    expect(nomes.filter((n) => /peito de peru/i.test(n))).toEqual([]);
+    expect(nomes.some((n) => /patê de atum/i.test(n))).toBe(true);
   });
 });

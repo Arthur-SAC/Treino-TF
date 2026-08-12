@@ -5,7 +5,7 @@ import type { MealVariant } from "../../lib/db";
 import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
-import { buildShoppingList } from "../../lib/shopping-list";
+import { buildWeeklyShoppingList } from "../../lib/shopping-list";
 import { renderDietMarkdown, renderDietHtml } from "../../lib/diet-export";
 
 const PERIOD_LABEL: Record<"cafe" | "almoco" | "lanche" | "jantar", string> = {
@@ -44,7 +44,14 @@ function VariantDetails({ v }: { v: MealVariant }) {
         <ul className="space-y-1.5 text-sm mt-2 ml-3">
           {v.foods.map((f, j) => (
             <li key={j}>
-              <span className="text-nude-warm">{f.name}</span>
+              <span className="flex justify-between gap-2">
+                <span className="text-nude-warm">{f.name}</span>
+                {/* A porção pesada, sempre — inclusive dos alimentos cujo nome
+                    não diz a grama ("Salada de folhas e tomate", "Ovo mexido").
+                    O dado sempre existiu; sem ele na tela, montar a marmita na
+                    balança no domingo virava adivinhação. */}
+                <span className="text-nude text-xs whitespace-nowrap">{f.qtyG} g</span>
+              </span>
               {f.preparation && (
                 <p className="text-muted text-xs mt-0.5 leading-relaxed">{f.preparation}</p>
               )}
@@ -66,7 +73,7 @@ export function MealPlanView() {
 
   function exportPdf() {
     if (!plan) return;
-    const html = renderDietHtml(plan, buildShoppingList(plan));
+    const html = renderDietHtml(plan, buildWeeklyShoppingList(plan));
     const w = window.open("", "_blank");
     if (!w) { alert("Permita pop-ups pra gerar o PDF."); return; }
     w.document.write(html);
@@ -77,7 +84,7 @@ export function MealPlanView() {
 
   async function exportDiet() {
     if (!plan) return;
-    const text = renderDietMarkdown(plan, buildShoppingList(plan));
+    const text = renderDietMarkdown(plan, buildWeeklyShoppingList(plan));
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({ title: plan.name, text });
@@ -147,6 +154,12 @@ export function MealPlanView() {
           className="flex-1 text-center border border-bg-border text-nude rounded-md py-2.5 text-sm"
         >
           Lista de compras
+        </Link>
+        <Link
+          to="/trilha/alimentacao/domingo"
+          className="flex-1 text-center border border-bg-border text-nude rounded-md py-2.5 text-sm"
+        >
+          Roteiro de domingo
         </Link>
       </div>
 
