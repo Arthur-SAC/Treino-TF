@@ -19,12 +19,12 @@ Reforma do app em **seis frentes**, decidida em 2026-08-10. Três concluídas e 
 | 3 | Corpo & treino | ✅ no ar | `6b5fdb7` |
 | 4 | Repertório íntimo | 📄 spec pronto | — |
 | 5 | Comida em Aracaju | ✅ no ar | (ver git log) |
-| 6 | Três modos de estilo | 📄 spec pronto | — |
+| 6 | Três modos de estilo | ✅ no ar | (ver git log) |
 
-**Testes:** 441 → 780. Build limpo. Tudo publicado em
+**Testes:** 441 → 812. Build limpo. Tudo publicado em
 https://arthur-sac.github.io/Treino-TF/ (deploy automático a cada `git push origin main`).
 
-**Próximo passo:** escrever o plano da frente 4 ou 6 (a ordem é dela) e executar.
+**Próximo passo:** a frente 4 (repertório íntimo) é a última. Spec pronto, não refazer.
 Os specs já estão escritos e aprovados — **não refaça o brainstorming delas.**
 
 ---
@@ -79,6 +79,8 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-12 | %BF pela régua **androide** (25,7%), não ginoide (41,6%). |
 | 08-12 | Padrão de levantar entra também na **adaptação**; **entrada fica de fora**. |
 | 08-12 | Cardápio mostra **grama de cada alimento** em toda tela, e a lista de compras fecha a **semana inteira** — nada de "multiplique conforme a semana". |
+| 08-12 | Estilo abre pelos **três modos** (público/casa/íntimo); paleta, peças e wishlist ficam depois, porque atravessam os três. |
+| 08-12 | Íntimo tem duas prateleiras: **de ver** e **de usar**. Renda nunca é peça de usar. |
 
 ---
 
@@ -118,8 +120,10 @@ exportadas de `src/lib/seed.ts` e travadas por teste
 
 ### 5.2 Rede que mira a palavra em vez da afirmação
 
-Aconteceu **quatro vezes**, sempre igual: um teste proibindo uma palavra também
+Aconteceu **seis vezes**, sempre igual: um teste proibindo uma palavra também
 proíbe **negá-la** — e quase apagou exatamente o texto que existia para proteger.
+As duas últimas foram em redes escritas nesta reforma, ou seja: conhecer a
+armadilha não basta, é preciso conferir o formato de cada rede nova.
 
 | A rede proibia | Quase apagou |
 |---|---|
@@ -127,6 +131,8 @@ proíbe **negá-la** — e quase apagou exatamente o texto que existia para prot
 | `TRH\|hormon` | a explicação honesta do custo de hormonizar |
 | `espacate` | *"espacate não é necessário pra nada disso"* |
 | `acima da cabeça` | *"acima da cabeça engrossaria ombro"* |
+| `renda` em peça de usar | *"tecido liso, **sem renda** no corpo da peça"* |
+| `masculin` | *"cintura baixa empurra silhueta pra estilo masculino"* |
 
 **Padrão correto:** proibir a **afirmação** (promessa, prescrição) e, separadamente,
 **exigir** que onde a palavra aparecer ela esteja negando. Mais trabalhoso, e é o
@@ -182,19 +188,6 @@ Não cria do zero: `intimidade-grinding`, `intimidade-cavalgar` e
   o canal de comando; **pinto pra cima** preso contra a barriga; a costura frontal do
   jeans é a vilã do esfregar com roupa.
 
-### Frente 6 — Três modos de estilo
-`docs/superpowers/specs/2026-08-11-tres-modos-estilo-design.md`
-
-- **Público** (andrógino, teto de segurança no nível 3 da escada) · **Casa** (ela mesma;
-  justa marca por contato, folgada marca por contraste) · **Íntimo** (lingerie).
-- **Os modos não são exclusivos:** ela quer calça larga e camisa solta **com lingerie
-  por baixo** — público por fora, íntimo por baixo.
-- Peça **de ver** (renda) × peça **de usar** (microfibra lisa, sem costura frontal):
-  renda é abrasiva em 20 min de atrito e machuca a noiva.
-- Migração de dado: `Garment.discretion` tem dois valores e vira três modos.
-- **Corrige a frente 1**, que registrou "público masculino" — está errado.
-- Tamanhos dela: cueca **GG**, calcinha **52**. Compra-se pelo **quadril e coxa**, nunca
-  pela cintura. E o tamanho vai mudar em 6-8 meses — comprar pouco agora.
 
 ---
 
@@ -211,6 +204,8 @@ Não cria do zero: `intimidade-grinding`, `intimidade-cavalgar` e
 | Rotina do dia | `src/lib/today-routine.ts` |
 | Cardápio (fonte única) | `src/data/meal-plan-seed.ts` · versão em `src/lib/path-seed.ts` |
 | Roteiro de domingo · porção de cada pote | `src/data/marmita-domingo-seed.ts`, `src/lib/marmita-porcoes.ts` |
+| Três modos de estilo · migração | `src/lib/db.ts` (`StyleMode`), `src/lib/style-seed.ts` (`migrarModos`) |
+| Guia de tamanho e compra | `src/data/tamanhos-seed.ts` (números interpolados de `objetivo.ts`) |
 | Fotos dela | `imagens/eu`, `imagens/objetivo` — **gitignored, nunca versionar** |
 
 ---
