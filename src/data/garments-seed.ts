@@ -10,6 +10,7 @@ export const GARMENTS: Garment[] = [
     whyItWorks: "Alonga o pescoço verticalmente e quebra a linha horizontal dos ombros. Cria ponto focal no centro do peito, atraindo o olhar pra baixo dos ombros.",
     cautions: "O ganho está na vertical do decote: gola alta fechada devolve a linha horizontal e achata o colo, então o efeito some.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "decote-coracao",
@@ -18,6 +19,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair"],
     whyItWorks: "Suaviza linha dos ombros e enquadra o busto, criando ilusão de mais volume.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "cinto-largo-cintura",
@@ -35,6 +37,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair", "trabalho"],
     whyItWorks: "Volume na parte de baixo amplifica visual do quadril e cria proporção ampulheta instantânea com qualquer top justo.",
     mode: "casa",
+    homeEffect: "contraste",
   },
   {
     id: "saia-lapis",
@@ -44,6 +47,7 @@ export const GARMENTS: Garment[] = [
     whyItWorks: "Marca cintura e quadril, alongando pernas. Ideal pra silhueta ampulheta.",
     cautions: "Escolha cintura ALTA — cintura baixa empurra silhueta pra estilo masculino.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "calca-cintura-alta",
@@ -61,6 +65,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["trabalho", "sair"],
     whyItWorks: "O peplum (saiote acima do quadril) dá volume aparente ao quadril, enfatizando cintura. Trabalha mesmo em corpos com quadril estreito.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "vestido-saia-rodada",
@@ -69,6 +74,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair", "festa"],
     whyItWorks: "Top justo + saia rodada = ampulheta automática. Caimento clássico da silhueta feminina.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "blusa-com-franzido",
@@ -77,6 +83,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair"],
     whyItWorks: "O franzido na frente cria volume aparente no busto sem postiço.",
     mode: "casa",
+    homeEffect: "contraste",
   },
   {
     id: "macacao-cintura-marcada",
@@ -85,6 +92,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair"],
     whyItWorks: "Cria silhueta vertical com ponto focal forte na cintura. Versátil.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "casaco-trench",
@@ -112,6 +120,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["trabalho", "sair"],
     whyItWorks: "Decote V + cintura amarrada + saia que abre. Combina TODOS os truques de ampulheta numa peça só.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "blusa-pescoco-aberto",
@@ -121,6 +130,7 @@ export const GARMENTS: Garment[] = [
     whyItWorks: "Mostra mais pele do pescoço e clavícula sem revelar trapézio quando ombros não são pendentes pra trás.",
     cautions: "Combine com retração escapular boa — se ombros estão pra frente, gola boat acentua isso.",
     mode: "casa",
+    homeEffect: "contraste",
   },
   {
     id: "salto-medio",
@@ -155,6 +165,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "sair"],
     whyItWorks: "Revela clavícula e pescoço, suaviza linha dos ombros visualmente porque o tecido cai abaixo da articulação.",
     mode: "casa",
+    homeEffect: "contraste",
   },
   {
     id: "vestido-bodycon",
@@ -164,6 +175,7 @@ export const GARMENTS: Garment[] = [
     whyItWorks: "Quando seu quadril/coxa estiverem mais desenvolvidos, vestido justo revela toda a silhueta.",
     cautions: "Espera resultado de 6+ meses de treino de glúteo antes — em corpo com quadril menor, marca o que não quer marcar.",
     mode: "casa",
+    homeEffect: "contato",
   },
   {
     id: "saia-godê-midi",
@@ -172,6 +184,7 @@ export const GARMENTS: Garment[] = [
     occasion: ["casual", "trabalho", "sair"],
     whyItWorks: "Mais discreta que rodada curta mas mantém o efeito ampulheta. Combina com qualquer top justo.",
     mode: "casa",
+    homeEffect: "contraste",
   },
 
   // === MODO PÚBLICO (dia a dia, andrógino com o teto que o ambiente comporta, pró-barriga) ===
