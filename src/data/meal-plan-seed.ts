@@ -460,16 +460,23 @@ const SLOTS: MealSlot[] = [
   },
 
   // ─── LANCHE (~350 kcal) ───────────────────────────────────────────────────
-  // Ela come às 16h, caminha 1h com os cães e treina 17h45 — logo em seguida.
-  // Todas as opções ficam em ≤5g de gordura (gordura pesa exatamente nessa
-  // janela) e evitam excesso de integral/castanha (fibra também pesa aqui).
+  // Ela come às 15h30, caminha 5 km do trabalho pra casa, passeia 1h com os cães
+  // e treina 18h15 — tudo depois deste lanche e antes do jantar. Duas regras
+  // saem daí, e nenhuma é preferência:
+  //
+  // 1. ≤5g de gordura em toda opção. Gordura atrasa o esvaziamento gástrico e
+  //    pesa exatamente nessa janela — por isso a castanha de caju que esta
+  //    frente trouxe para o cardápio entra no CAFÉ, nunca aqui.
+  // 2. ≥20g de proteína em toda opção. Antes desta frente, duas das três
+  //    opções entregavam 14g e 7g: o lanche parecia cumprido e o jantar
+  //    descontrolava às 19h30, que é o ponto de falha real dela.
   {
     mealType: "lanche",
     targetKcal: 350,
     variants: [
       {
         id: "lanche-1",
-        label: "Opção 1 · Iogurte, banana & aveia",
+        label: "Opção 1 · Iogurte com whey, banana & aveia",
         effort: "zero-preparo",
         foods: [
           {
@@ -494,25 +501,34 @@ const SLOTS: MealSlot[] = [
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
           {
-            name: "Aveia em flocos (3 colheres de sopa)",
+            // Metade da aveia que havia aqui trocada por whey: a opção somava
+            // 14g de proteína num lanche que precisa segurar 5 km a pé, 1h de
+            // cães e o treino. Mesma kcal, o dobro de proteína, mesmo zero
+            // preparo — o pó vai no potinho de casa e mistura na hora.
+            name: "Whey protein (1/2 scoop) & aveia em flocos (2 colheres de sopa)",
             qtyG: 40,
-            kcal: 150,
-            proteinG: 6,
-            carbG: 27,
+            kcal: 155,
+            proteinG: 19,
+            carbG: 16,
             fatG: 3,
-            preparation: "Polvilha por cima do iogurte na hora de comer — sem cozinhar.",
+            preparation:
+              "Leva o pó já medido num potinho. Na hora, joga por cima do iogurte e mexe — sem cozinhar, sem liquidificador.",
           },
         ],
         ingredients: [
           { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-          { item: "Aveia em flocos", qty: 40, unit: "g", category: "carboidrato" },
+          { item: "Aveia em flocos", qty: 20, unit: "g", category: "carboidrato" },
+          { item: "Whey protein", qty: 20, unit: "g", category: "laticinio" },
         ],
       },
       {
         id: "lanche-2",
-        label: "Opção 2 · Pão com peito de peru & banana",
-        effort: "zero-preparo",
+        label: "Opção 2 · Pão com patê de atum caseiro & banana",
+        // Era zero-preparo com peito de peru fatiado. O patê é feito no domingo
+        // e dura os três primeiros dias da semana na geladeira — dia útil
+        // continua sendo só montar.
+        effort: "lote-domingo",
         foods: [
           {
             name: "Pão de forma (2 fatias)",
@@ -524,46 +540,18 @@ const SLOTS: MealSlot[] = [
             preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
           },
           {
-            name: "Peito de peru fatiado (6 fatias)",
-            qtyG: 90,
-            // 17P + 2C + 2G = 68 + 8 + 18 = 94 kcal. Estava 83, e o buraco de
-            // 11 kcal derrubava a opção 2 do lanche pra 338 contra o alvo 350.
-            kcal: 94,
-            proteinG: 17,
-            carbG: 2,
-            fatG: 2,
-            preparation: "Frios fatiados, direto da geladeira — de casa ou do trabalho.",
-          },
-          {
-            name: "Banana média",
-            qtyG: 150,
+            // Substitui o peito de peru, que era o único ultraprocessado do
+            // cardápio e o pedido explícito dela. Iogurte no lugar de maionese
+            // não é purismo: maionese sozinha colocaria ~10g de gordura num
+            // lanche com teto de 5g.
+            name: "Patê de atum caseiro (1 lata escorrida + iogurte)",
+            qtyG: 130,
             kcal: 125,
-            proteinG: 1,
-            carbG: 32,
-            fatG: 0,
-            preparation: "Ao natural.",
-          },
-        ],
-        ingredients: [
-          { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
-          { item: "Peito de peru fatiado", qty: 90, unit: "g", category: "proteina" },
-          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
-        ],
-      },
-      {
-        id: "lanche-3",
-        label: "Opção 3 · Cuscuz pequeno & banana",
-        effort: "5-min",
-        foods: [
-          {
-            name: "Cuscuz de milho pequeno (sem manteiga)",
-            qtyG: 180,
-            kcal: 276,
-            proteinG: 6,
-            carbG: 58,
-            fatG: 4,
+            proteinG: 27,
+            carbG: 2,
+            fatG: 1,
             preparation:
-              "Hidrata 60g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
+              "Escorre bem uma lata de atum em água. Amassa com garfo junto de 2 colheres de sopa de iogurte natural, suco de meio limão, cebolinha picada, sal e pimenta. Rende 3 porções e dura 3 dias na geladeira — faz no domingo, num pote fechado.",
           },
           {
             name: "Banana média",
@@ -576,7 +564,55 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Flocão de milho (cuscuz)", qty: 60, unit: "g", category: "carboidrato" },
+          { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
+          { item: "Atum em água (lata)", qty: 100, unit: "g", category: "proteina" },
+          { item: "Iogurte natural desnatado", qty: 30, unit: "g", category: "laticinio" },
+          { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
+          { item: "Cebolinha", qty: 5, unit: "g", category: "hortifruti" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+        ],
+      },
+      {
+        id: "lanche-3",
+        label: "Opção 3 · Cuscuz pequeno com whey & banana",
+        effort: "5-min",
+        foods: [
+          {
+            // Era 180g de cuscuz sozinho: 276 kcal de carboidrato quase puro,
+            // 6g de proteína. Porção menor abre espaço pro whey sem passar do
+            // alvo do slot.
+            name: "Cuscuz de milho pequeno (sem manteiga)",
+            qtyG: 110,
+            kcal: 168,
+            proteinG: 4,
+            carbG: 35,
+            fatG: 2,
+            preparation:
+              "Hidrata 37g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
+          },
+          {
+            name: "Whey protein (1/2 scoop) batido com água",
+            qtyG: 20,
+            kcal: 80,
+            proteinG: 16,
+            carbG: 2,
+            fatG: 1,
+            preparation:
+              "Pó medido de casa no shaker. No trabalho, só água e chacoalha — 20 segundos.",
+          },
+          {
+            name: "Banana média",
+            qtyG: 120,
+            kcal: 100,
+            proteinG: 1,
+            carbG: 24,
+            fatG: 0,
+            preparation: "Ao natural.",
+          },
+        ],
+        ingredients: [
+          { item: "Flocão de milho (cuscuz)", qty: 37, unit: "g", category: "carboidrato" },
+          { item: "Whey protein", qty: 20, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
@@ -766,9 +802,10 @@ export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
   goal: "deficit",
   kcalDaily: 2300,
   // Batem com a soma real da variante 0 (ver tests/data/meal-plan-coerencia.test.ts):
-  // 2330 kcal, 190g proteína, 271g carbo, 53g gordura.
-  proteinG: 190,
-  carbG: 271,
+  // 2335 kcal, 203g proteína, 260g carbo, 53g gordura. A proteína subiu de 190
+  // com a troca de metade da aveia do lanche por whey.
+  proteinG: 203,
+  carbG: 260,
   fatG: 53,
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
