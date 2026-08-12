@@ -52,7 +52,10 @@ export async function seedDatabase(): Promise<void> {
   // v8: "Cardio zona 2" deixou de ser um item do fim do treino e passou a
   // descrever a caminhada de 5 km do trabalho para casa — nome, descrição, erros
   // comuns e dicas mudaram junto, e nada disso chega ao aparelho dela sem o bump.
-  const EXERCISE_SEED_VERSION = 8;
+  // v9: dois exercícios novos (carregamento-frontal, prancha-antirrotacao)
+  // completam o padrão de força pra levantar a noiva no colo — a dobradiça de
+  // quadril já existia, faltava carga à frente do corpo e core antirrotação.
+  const EXERCISE_SEED_VERSION = 9;
   const exVersion = await db.settings.get("exerciseSeedVersion");
   if (((exVersion?.value as number) ?? 0) < EXERCISE_SEED_VERSION) {
     await db.transaction("rw", db.exercises, db.settings, async () => {
