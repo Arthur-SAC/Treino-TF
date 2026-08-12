@@ -148,6 +148,12 @@ export function MealPlanView() {
         >
           Lista de compras
         </Link>
+        <Link
+          to="/trilha/alimentacao/domingo"
+          className="flex-1 text-center border border-bg-border text-nude rounded-md py-2.5 text-sm"
+        >
+          Roteiro de domingo
+        </Link>
       </div>
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Refeições e opções</h2>
