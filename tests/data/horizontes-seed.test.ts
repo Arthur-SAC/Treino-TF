@@ -5,9 +5,9 @@ import { MEDIDAS_PARTIDA, FASES } from "../../src/lib/objetivo";
 const texto = JSON.stringify(HORIZONTES);
 
 describe("horizontes: duas trilhas, não uma escada esperando a TRH", () => {
-  it("tem as quatro seções previstas", () => {
+  it("tem as cinco seções previstas", () => {
     expect(HORIZONTES.map((s) => s.id)).toEqual([
-      "trilha-vestida", "trilha-cama", "cirurgia", "linha-do-tempo",
+      "trilha-vestida", "trilha-cama", "cirurgia", "linha-do-tempo", "flexibilidade",
     ]);
   });
 

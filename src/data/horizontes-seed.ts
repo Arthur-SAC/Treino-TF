@@ -1,4 +1,5 @@
 import type { GuideSection } from "../components/GuideAccordion";
+import { HORIZONTE_FLEX } from "../lib/flex-progression";
 
 // Onde dá pra chegar, dito sem adoçante. A TRH não tem data — então este
 // arquivo NÃO é uma escada esperando por ela. São duas trilhas simultâneas,
@@ -49,6 +50,23 @@ export const HORIZONTES: GuideSection[] = [
       "Mês 6-8: cintura em 84, peso por volta de 81 kg. É aqui que a silhueta vira.",
       "Mês 8-30: fase 2. A balança SOBE de propósito, até 85-88 kg, e o quadril volta aos mesmos 114 cm de hoje, agora feitos de músculo. Ver 85 kg nessa fase é o sinal de que deu certo, não de que falhou.",
       "Destreinada com gordura na faixa de 25-30% é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha.",
+    ],
+  },
+  {
+    id: "flexibilidade",
+    title: "Horizonte da flexibilidade",
+    // Sem prazo declarado ela mede o progresso contra uma meta que nunca foi
+    // dela — o caso concreto é espacate: é o que todo mundo assume que
+    // "flexibilidade" significa, e não serve para nada do que ela quer.
+    // Números vêm de HORIZONTE_FLEX (src/lib/flex-progression.ts), não escritos
+    // à mão — a regra que evitou três divergências texto×módulo neste projeto.
+    intro: "Prazo declarado, para não medir progresso contra uma meta que nunca foi sua.",
+    tips: [
+      `A primeira mudança perceptível vem em ${HORIZONTE_FLEX.primeiraMudancaSemanas[0]} a ${HORIZONTE_FLEX.primeiraMudancaSemanas[1]} semanas de prática diária — o horizonte mais curto desta lista inteira.`,
+      `O que as posições que você quer pedem — abertura, rotação, sustentação sem tensão — vem em ${HORIZONTE_FLEX.posicoesQueElaQuerMeses[0]} a ${HORIZONTE_FLEX.posicoesQueElaQuerMeses[1]} meses de trabalho diário. Isso resolve praticamente tudo.`,
+      "Espacate não é necessário para nada disso. Não é meta deste plano — se aparecer no caminho, é bônus, não objetivo.",
+      `Espacate frontal, só se você quiser por querer, leva ${HORIZONTE_FLEX.espacateFrontalMeses[0]} a ${HORIZONTE_FLEX.espacateFrontalMeses[1]} meses de trabalho constante.`,
+      `Espacate lateral: ${HORIZONTE_FLEX.espacateLateral}`,
     ],
   },
 ];
