@@ -716,7 +716,7 @@ export const SEQUENCES: DanceSequence[] = [
     category: "intimidade",
     level: "intermediario",
     durationMin: 11,
-    focus: "Aguentar e controlar a posição de montaria por cima: sentar com as pernas dobradas, mover o quadril pelo glúteo+core (não pela lombar) e cansar menos. HONESTIDADE: cavalgar PENETRANDO ela depende também de manter a ereção nessa compressão e do alinhamento com a posição dela — nem sempre dá. O 'descer e esfregar' (grinding) é o plano mais garantido e tá na sequência ao lado. Joelhos sentem a montaria ajoelhada — pose de treino, não horas seguidas.",
+    focus: "Aguentar e controlar a posição de montaria por cima: sentar com as pernas dobradas, mover o quadril pelo glúteo+core (não pela lombar) e cansar menos. HONESTIDADE: cavalgar PENETRANDO ela depende de manter a ereção nessa compressão e do alinhamento com a posição dela — nem sempre dá, e isso não é falha sua. O 'descer e esfregar' (grinding) é o plano mais garantido e tá na sequência ao lado; e quando o que ela quer é penetrar você, a via é mão e dedos (sequência 'Receber por mão e dedos'). Joelhos sentem a montaria ajoelhada — pose de treino, não horas seguidas.",
     videoUrl: "https://www.youtube.com/results?search_query=hip+internal+rotation+mobility+pelvic+tilt",
     moves: [
       { name: "Aquecimento de quadril e joelho", description: "Círculos de quadril 8x + mobilidade de tornozelo e joelho (você vai apoiar peso dobrada). 90/90 sentada 30s cada lado pra acordar a rotação interna.", durationSec: 90 },
@@ -730,20 +730,61 @@ export const SEQUENCES: DanceSequence[] = [
   },
   {
     id: "intimidade-grinding",
-    name: "Grinding pélvico",
+    name: "Grinding pélvico · por cima",
     category: "intimidade",
     level: "intermediario",
-    durationMin: 9,
-    focus: "Pega o rebolado, a figura 8 e a onda corporal que você já treina na dança e transforma em atrito controlado — região contra região. É o plano mais garantido e o mais sensual: ritmo lento, pélvis 'pra baixo e pra frente', peso dosado. Comunica com ela o que tá bom; pressão e ritmo ajustam pelo retorno dela.",
+    durationMin: 12,
+    focus:
+      "Treino do atrito que faz ela gozar com você por cima — que é a sua configuração, sempre. Quatro coisas decidem o resultado, e três delas são contraintuitivas: o movimento é FRENTE-E-TRÁS (estocada serve para penetração e não faz nada pelo clitóris); o contato NUNCA se rompe; quando a respiração dela mudar, você CONGELA as variáveis em vez de acelerar; e o tempo real é de 15 a 25 minutos contínuos, não 5. Grinding falha quase sempre por ser tratado como preliminar e interrompido no meio. Aqui você treina o movimento e a resistência dele sozinha, pra na hora não ser o seu quadril que desiste primeiro.",
     videoUrl: "https://www.youtube.com/results?search_query=body+roll+hip+roll+tutorial+slow",
     moves: [
-      { name: "Aquecimento (onda corporal)", description: "Em pé, joelhos suaves. Onda corporal lenta: cabeça → peito → quadril descendo, depois subindo. 1 min pra entrar no ritmo lento.", durationSec: 60 },
-      { name: "Rolê pélvico pra baixo e pra frente", description: "Em pé ou de quatro, foca o movimento da pélvis indo pra baixo e pra frente (como pressionar e deslizar), depois recolhe. É a base do grinding. Lento, contínuo. 1 min.", durationSec: 60, repeat: 16 },
-      { name: "Figura 8 deitada de lado", description: "Deitada de lado apoiada no cotovelo, desenha o '8' com o quadril, pernas livres pra flexionar. Treina o atrito lateral e a continuidade do movimento. 30s cada lado.", durationSec: 60, repeat: 2 },
-      { name: "Grinding sentada por cima (no ar)", description: "Sentada como se estivesse por cima dela (joelhos ao lado, peso nas pernas). Faz o rolê pélvico pra frente e pra baixo, comandando pelo core. Sem pressa. 1-2 min.", durationSec: 120 },
-      { name: "Grinding deitada por cima (no ar)", description: "Em prancha apoiada nos antebraços/joelhos (imagina ela embaixo). Move só a pélvis num rolê pra frente-baixo, mantendo o tronco estável. Trabalha o atrito na horizontal. 1 min.", durationSec: 60 },
-      { name: "De quatro com rolê", description: "De quatro, faz o gato-vaca virar rolê contínuo: empina (anteversão) → arredonda (retroversão) levando a pélvis pra trás e pra frente. Posição versátil pros dois lados. 1 min.", durationSec: 60 },
-      { name: "Cooldown", description: "Criança + respiração lenta pra soltar lombar e pélvis. 1 min.", durationSec: 60 },
+      {
+        name: "Aquecimento — onda corporal lenta",
+        description:
+          "Em pé, joelhos suaves. Onda lenta: cabeça → peito → quadril descendo, depois subindo. 1 min. Entra no ritmo lento de propósito — a velocidade do grinding é menor do que a intuição pede.",
+        durationSec: 60,
+      },
+      {
+        name: "Frente-e-trás com contato constante",
+        description:
+          "De quatro ou em pé, desliza a pélvis PARA FRENTE e para trás num plano só, como quem esfrega — não para baixo e para cima. Estocada é movimento de penetração e não estimula o clitóris; o que estimula é o seu púbis deslizando contra o dela sem nunca perder o contato. Se o contato se rompe a cada repetição, o estímulo dela reinicia do zero. 2 min contínuos.",
+        durationSec: 120,
+      },
+      {
+        name: "Posição: o pinto vai pra cima, preso contra a barriga",
+        description:
+          "Antes de começar, ajeita pra cima, por dentro do cós da cueca. Três motivos verdadeiros ao mesmo tempo: o seu púbis (o osso) é a superfície que faz a pressão nela, e precisa estar livre; assim ele não é dobrado a cada movimento; e a glande sai da linha de frente do atrito, o que melhora o SEU controle e adia o seu orgasmo. Cueca justa segura, cueca larga deixa escapar. Isto NÃO é tuck — tuck é para aparência com roupa e é incompatível com ereção.",
+        durationSec: 30,
+      },
+      {
+        name: "Sentada por cima (no ar) — 3 min contínuos",
+        description:
+          "Sentada como se estivesse sobre ela, joelhos ao lado do quadril dela, peso nas suas pernas. Rolê pélvico para frente e para baixo, comandado pelo core, sem pressa. Segura 3 min sem parar. Se o flexor de quadril ou a lombar reclamarem antes do tempo, ali está o seu limite real — e é ele que a trilha de resistência do rebolado constrói.",
+        durationSec: 180,
+      },
+      {
+        name: "Deitada por cima (no ar) — o formato do carro",
+        description:
+          "Apoiada nos antebraços e joelhos, tronco estável, move só a pélvis num rolê para frente e para baixo. É este o formato que serve em espaço apertado — com ela reclinada no banco do passageiro você não tem altura para nada vertical. 2 min.",
+        durationSec: 120,
+      },
+      {
+        name: "Congelar as variáveis",
+        description:
+          "A regra que decide o resultado. Quando a respiração dela mudar — mais curta, mais alta, presa —, você NÃO acelera e NÃO aumenta a pressão. Mantém a mesma velocidade, a mesma pressão e o mesmo ângulo até o fim. Acelerar quando a pessoa responde é o erro quase universal, e ele reinicia a subida dela. Vai ficar monótono pra você muito antes de ficar pra ela; aguentar essa monotonia é a habilidade inteira. Treina aqui: escolhe um ritmo, põe 2 min no relógio e não muda nada.",
+        durationSec: 120,
+      },
+      {
+        name: "As mãos dela na bunda são o canal de comando",
+        description:
+          "Você não cede o controle da posição, mas as mãos dela já ficam exatamente onde o comando mora: puxar para baixo = mais pressão; segurar parado = mantém assim; empurrar = alivia. Combina isso com ela uma vez, fora da hora, e depois não precisa mais falar nada — resolve a calibragem sem quebrar o ritmo.",
+        durationSec: 30,
+      },
+      {
+        name: "Cooldown",
+        description: "Criança + respiração lenta pra soltar lombar e flexor de quadril. 1 min.",
+        durationSec: 60,
+      },
     ],
   },
 ];
