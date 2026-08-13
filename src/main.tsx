@@ -140,6 +140,10 @@ const router = createBrowserRouter(
         { path: "trilha/diario", element: <DiaryView /> },
         { path: "trilha/fertilidade", element: <FertilityTRH /> },
         { path: "trilha/apoio", element: <Support /> },
+        // Rota canônica: a Vitalidade virou aba própria e não é mais uma
+        // página dentro da Trilha. O caminho antigo fica de pé porque pode
+        // estar salvo — link que vira 404 é conteúdo que deixou de chegar.
+        { path: "vitalidade", element: <Vitalidade /> },
         { path: "trilha/vitalidade", element: <Vitalidade /> },
         { path: "trilha/direitos", element: <LegalResources /> },
         { path: "configuracoes", element: <Settings /> },

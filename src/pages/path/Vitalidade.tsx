@@ -20,6 +20,14 @@ import { buildDayRoutine } from "../../lib/today-routine";
 import { resolverAlvoSono } from "../../lib/routine-times";
 import { useSetting } from "../../hooks/useSetting";
 
+/** Primeira frase do `focus`, pra a lista dar o que a sequência é sem virar
+ *  parágrafo. O `focus` de intimidade é longo de propósito — a explicação
+ *  completa mora na sequência, não no índice. */
+function primeiraFrase(texto: string): string {
+  const corte = texto.indexOf(". ");
+  return corte === -1 ? texto : texto.slice(0, corte + 1);
+}
+
 export function Vitalidade() {
   const today = new Date();
   const todayISO = hojeISO(today);
@@ -78,6 +86,12 @@ export function Vitalidade() {
     [todayISO],
   );
   const solturasFeitas = useLiveQuery(() => contarPraticasDaSequencia(SEQUENCIA_DE_SOLTURA), []);
+  // Lidas do banco, não de uma lista escrita aqui: sequência nova de intimidade
+  // aparece sozinha, sem depender de alguém lembrar de vir editar esta tela.
+  const sequenciasIntimas = useLiveQuery(
+    () => db.danceSequences.where("category").equals("intimidade").toArray(),
+    [],
+  );
   const ofertas = ofertasDaVitalidade({
     praticasDaProgressao: praticasDaProgressao ?? 0,
     solturasFeitas: solturasFeitas ?? 0,
@@ -169,6 +183,35 @@ export function Vitalidade() {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* A dois. Esta seção existe porque ela foi procurar este conteúdo e não
+          achou: as sequências viviam na oitava e última seção de Treino →
+          Movimento, e nada nesta tela apontava pra elas. Lista TODAS as de
+          `category: "intimidade"`, derivadas do banco — não uma seleção escrita
+          à mão, que envelheceria calada na próxima sequência nova. */}
+      <div className="card my-3">
+        <h2 className="text-nude font-medium mb-1">A dois</h2>
+        <p className="text-muted text-xs mb-2">
+          Técnica, não clima: o que fazer, com que ritmo e por quanto tempo.
+        </p>
+        <ul className="space-y-2">
+          {(sequenciasIntimas ?? []).map((s) => (
+            <li key={s.id}>
+              <Link to={`/treino/movimento/${s.id}`} className="text-sm text-nude-warm font-medium">
+                {s.name} →
+              </Link>
+              <p className="text-muted text-xs mt-0.5 leading-relaxed">{primeiraFrase(s.focus)}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="text-muted text-xs mt-3 pt-2 border-t border-bg-border">
+          <Link to="/beleza/estilo/intimo" className="text-nude">
+            Lingerie · de ver × de usar →
+          </Link>
+          <br />
+          Renda é peça de ver. Pro atrito, peça lisa sem costura frontal.
+        </p>
       </div>
 
       <div className="card my-3">

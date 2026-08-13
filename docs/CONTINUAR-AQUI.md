@@ -93,6 +93,8 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-12 | Cardápio mostra **grama de cada alimento** em toda tela, e a lista de compras fecha a **semana inteira** — nada de "multiplique conforme a semana". |
 | 08-12 | Estilo abre pelos **três modos** (público/casa/íntimo); paleta, peças e wishlist ficam depois, porque atravessam os três. |
 | 08-12 | Íntimo tem duas prateleiras: **de ver** e **de usar**. Renda nunca é peça de usar. |
+| 08-13 | **Vitalidade ganha aba própria** na barra de baixo (6 abas), reunindo sequências a dois + streak + lingerie. Rótulo "Vitalidade" — nunca descreve o que tem dentro, porque a barra fica visível pra quem olhar o celular dela. |
+| 08-13 | Ela **gosta da tela Hoje** ("tudo que tenho que fazer no dia") e acha as outras abas confusas. Ao acrescentar tela, perguntar antes se cabe no Hoje. |
 
 ---
 
@@ -127,6 +129,16 @@ Apareceu **sete vezes** nesta reforma, em formas diferentes:
 7. Trocas aplicadas só em ciclos distantes → objetivo não alcançaria ela por 2,5 meses
 8. Rodízio indexado por dia da semana (0-6) numa lista que passou de 7 itens →
    os índices 7+ nunca eram alcançados (`presenceSuggestionForDay`, frente 4)
+9. **Conteúdo alcançável só por caminho que ela não percorre.** Relatado por ela
+   em 2026-08-13: foi procurar o que serve pra uma noite com a noiva e não achou.
+   As sequências estavam na 8ª e última seção de Treino → Movimento, o streak só
+   pelo atalho do Hoje (a Vitalidade nem estava nas abas da Trilha), e a lingerie
+   em Beleza → Estilo → Íntimo. **Três abas de baixo diferentes.** O seed estava
+   certo, o bump estava feito, e mesmo assim o conteúdo não chegava.
+
+**A pergunta, agora completa:** *isso chega no aparelho dela* (versão de seed) **e
+existe caminho até isso** (aba, filtro, rodízio, ordem na página)? As duas metades
+falham em silêncio e produzem o mesmo resultado: conteúdo que existe e não serve.
 
 **Sempre pergunte: isso chega no aparelho dela?** As **cinco** versões de seed
 são agora exportadas e travadas por pino em
