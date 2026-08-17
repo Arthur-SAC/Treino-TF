@@ -26,7 +26,7 @@ const SLOTS: MealSlot[] = [
           {
             // Era 150g/230kcal — subiu pra 160g pra ajudar a fechar a conta
             // dos 2300kcal do plano (ver comentário de SLOTS acima).
-            name: "Cuscuz de milho (sem manteiga)",
+            name: "Cuscuz de milho (160g cozido, sem manteiga)",
             qtyG: 160,
             kcal: 245,
             proteinG: 5,
@@ -315,14 +315,14 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Frango grelhado (180g)",
+            name: "Frango grelhado (180g já grelhado)",
             qtyG: 180,
             kcal: 297,
             proteinG: 56,
             carbG: 0,
             fatG: 7,
             preparation:
-              "Tempera com sal, pimenta, alho amassado e suco de limão. Marina 10 min. Frigideira em fogo alto com fio de azeite, grelha 4-5 min cada lado. Coxa desossada é mais barata que o peito e serve igual.",
+              "A grama é DEPOIS de grelhar: 240g crus viram os 180g do prato. Tempera com sal, pimenta, alho amassado e suco de limão. Marina 10 min. Frigideira em fogo alto com fio de azeite, grelha 4-5 min cada lado. Estes números são de PEITO — coxa é mais barata, mas na mesma porção dá ~13g menos de proteína e o dobro de gordura, então não é troca neutra.",
           },
           {
             // Era 150g/163kcal — subiu pra 170g pra ajudar a fechar a conta
@@ -337,7 +337,7 @@ const SLOTS: MealSlot[] = [
               "Refoga alho em azeite, adiciona o arroz, cobre com água (2:1). Fogo baixo, tampado, ~18 min.",
           },
           {
-            name: "Feijão de corda / macassar (1 concha, 100g)",
+            name: "Feijão de corda / macassar (1 concha, 100g cozido)",
             qtyG: 100,
             kcal: 95,
             proteinG: 7,
@@ -367,7 +367,10 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Coxa de frango (ou peito)", qty: 180, unit: "g", category: "proteina" },
+          // 240 crus rendem os 180 grelhados do prato: carne perde ~25% de água
+          // no fogo. A lista mandava comprar 180 e a receita pedia 180 já
+          // prontos — ela compraria menos frango do que precisa, toda semana.
+          { item: "Peito de frango", qty: 240, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 91, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
@@ -383,7 +386,7 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Carne moída patinho (150g)",
+            name: "Carne moída patinho (150g já refogada)",
             qtyG: 150,
             kcal: 242,
             proteinG: 35,
@@ -434,7 +437,7 @@ const SLOTS: MealSlot[] = [
             // O feijão de corda é o carboidrato mais barato e mais local do
             // cardápio, e sai da mesma panela de pressão do domingo. Aqui ele
             // fecha os 53 kcal que faltavam pro alvo do slot.
-            name: "Feijão de corda / macassar (meia concha, 50g)",
+            name: "Feijão de corda / macassar (meia concha, 50g cozido)",
             qtyG: 50,
             kcal: 48,
             proteinG: 4,
@@ -444,7 +447,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Carne moída patinho", qty: 150, unit: "g", category: "proteina" },
+          { item: "Carne moída patinho", qty: 190, unit: "g", category: "proteina" },
           { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Macaxeira (aipim)", qty: 170, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
@@ -503,7 +506,7 @@ const SLOTS: MealSlot[] = [
             // Esta opção somava 603 kcal contra o alvo de 700 — 13,9% de
             // desvio. Uma concha de feijão de corda fecha quase exato, e é o
             // acompanhamento que já vem pronto do lote de domingo.
-            name: "Feijão de corda / macassar (1 concha, 100g)",
+            name: "Feijão de corda / macassar (1 concha, 100g cozido)",
             qtyG: 100,
             kcal: 95,
             proteinG: 7,
@@ -513,7 +516,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Tainha ou sardinha", qty: 200, unit: "g", category: "proteina" },
+          { item: "Tainha ou sardinha", qty: 250, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 80, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Quiabo", qty: 150, unit: "g", category: "hortifruti" },
@@ -631,7 +634,7 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
-          { item: "Atum em água (lata)", qty: 100, unit: "g", category: "proteina" },
+          { item: "Atum em água (lata)", qty: 140, unit: "g", category: "proteina" },
           { item: "Iogurte natural desnatado", qty: 30, unit: "g", category: "laticinio" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Cebolinha", qty: 5, unit: "g", category: "hortifruti" },
@@ -739,7 +742,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Peito de frango", qty: 200, unit: "g", category: "proteina" },
+          { item: "Peito de frango", qty: 270, unit: "g", category: "proteina" },
           { item: "Macaxeira (aipim)", qty: 200, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 100, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
@@ -850,7 +853,7 @@ const SLOTS: MealSlot[] = [
               "Folhas lavadas regadas com azeite e suco de limão.",
           },
           {
-            name: "Feijão de corda / macassar (meia concha, 50g)",
+            name: "Feijão de corda / macassar (meia concha, 50g cozido)",
             qtyG: 50,
             kcal: 48,
             proteinG: 4,
@@ -860,7 +863,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Tainha ou sardinha", qty: 220, unit: "g", category: "proteina" },
+          { item: "Tainha ou sardinha", qty: 275, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 64, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
