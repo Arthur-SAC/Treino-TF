@@ -18,7 +18,13 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // superávit foram recalibrados de 2450/2700 para 3000/3300 contra o gasto real.
 // Sem este bump, o aparelho dela continuaria servindo a manutenção que é
 // déficit — exatamente na fase em que ela troca pra ele.
-export const MEAL_PLAN_VERSION = 9;
+// v10: peso de compra (cru) separado do peso do prato (pronto). Ela pesou o
+// almoço pela primeira vez e a pergunta expôs que a lista mandava comprar 180g
+// de frango pra uma receita que pede 180g JÁ GRELHADOS — carne perde ~25% de
+// água no fogo, então ela compraria menos do que precisa toda semana. Junto,
+// saiu a frase que dizia que coxa "serve igual" ao peito: na mesma porção dá
+// ~13g menos de proteína e o dobro de gordura.
+export const MEAL_PLAN_VERSION = 10;
 const MILESTONE_SEED_VERSION = 7;
 
 const TODOS_OS_MARCOS = [

@@ -71,7 +71,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // vivia privada dentro de path-seed.ts, e nada aqui alcançava. Foi a mesma
   // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
   it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
-    expect(MEAL_PLAN_VERSION).toBe(9);
+    expect(MEAL_PLAN_VERSION).toBe(10);
   });
 
   // A versão do estilo também vivia privada dentro do módulo — era o último
