@@ -16,6 +16,11 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "Mobilidade 90/90", description: "Sentada com uma perna à frente em 90° e outra ao lado em 90°. Inclina tronco sobre perna da frente, depois pra trás. Alterna lados.", durationSec: 120 },
       { name: "Ponte de glúteo (suave)", description: "Deitada, joelhos dobrados. Sobe quadril apertando glúteo. Não usa lombar. 12 repetições lentas.", durationSec: 90, repeat: 12 },
       { name: "Borboleta (alongamento)", description: "Sentada, planta dos pés juntas, joelhos pros lados. Respira fundo deixando joelhos descerem. 1 min.", durationSec: 60 },
+      // O vacuum mora aqui, e não só no treino de terça, porque o próprio
+      // exercício manda fazer quase todo dia — e a sessão de academia não
+      // cresce. De manhã, antes de comer, é quando ele é mais fácil: barriga
+      // vazia, sem esforço de recuperação nenhum.
+      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 90, repeat: 3 },
       { name: "Respiração final", description: "Deitada, mão na barriga. 5 respirações profundas pra terminar.", durationSec: 60 },
     ],
   },
@@ -88,6 +93,9 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "90/90 com rotação", description: "Sentada, uma perna à frente em 90° e outra ao lado em 90°. Gira o tronco sobre a perna da frente, depois troca de lado passando os joelhos pelo chão sem usar as mãos. 8 trocas.", durationSec: 180, repeat: 8 },
       { name: "Abertura em V", description: "Sentada, pernas abertas o quanto for confortável, coluna longa. Caminha as mãos pra frente sem arredondar as costas. Para onde alonga sem doer, 90s.", durationSec: 90 },
       { name: "Agachamento profundo com apoio", description: "Segura no espaldar ou num apoio, agacha o mais fundo que der com os calcanhares no chão. Fica 60s deixando o peso abrir o quadril. 2 vezes.", durationSec: 120, repeat: 2 },
+      // Progride pelo TEMPO de isometria (30 → 45 → 60s), nunca por carga: é
+      // transverso, e carga aqui engrossaria justamente o que ela quer afinar.
+      { name: "Vacuum abdominal · 45s", description: "Expira todo o ar e puxa o umbigo pra dentro e pra cima, colando na coluna. Segura 45s respirando curto pela costela. 3 vezes. Se o oblíquo aparecer ou a barriga estufar, é sinal de que virou abdominal comum — volta a puxar pra DENTRO.", durationSec: 135, repeat: 3 },
       { name: "Respiração final", description: "Deitada, joelhos dobrados. 5 respirações longas soltando tudo. É na expiração que o tecido cede.", durationSec: 60, repeat: 5 },
     ],
   },
@@ -104,6 +112,7 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "90/90 sustentado", description: "Fica 90s de cada lado na posição, tronco ereto, sem apoio das mãos se der. É a rotação que as posições pedem.", durationSec: 180, repeat: 2 },
       { name: "Abertura em V com respiração", description: "2 min na abertura, descendo só na expiração. Se a lombar arredondar, sobe um pouco — coluna longa vale mais que centímetro.", durationSec: 120 },
       { name: "Agachamento profundo livre", description: "Sem apoio, 90s. Se ainda precisar de apoio, tudo bem — continua na fase 2 desse movimento até soltar.", durationSec: 90 },
+      { name: "Vacuum abdominal · 60s em pé", description: "Em pé agora, que é a versão difícil: expira todo o ar e puxa o umbigo pra dentro e pra cima, segurando 60s com respiração curta e contínua. 3 vezes. Em pé não há gravidade ajudando — é o transverso sozinho, e é ele que segura a cintura o dia inteiro sem você pensar.", durationSec: 180, repeat: 3 },
       { name: "Respiração final", description: "Deitada, 5 respirações longas.", durationSec: 60, repeat: 5 },
     ],
   },

@@ -31,7 +31,7 @@ import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
-import { metaDePausas } from "../lib/micro-pausas";
+import { metaDePausas, horariosDasPausas } from "../lib/micro-pausas";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -107,12 +107,15 @@ export function Today() {
   const walkGoalMin = useSetting("walkGoalMin");
 
   // Alvo de micro-pausas derivado da mesma configuração que dispara os
-  // lembretes — 9h→18h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
-  // pouco ou muito.
+  // lembretes — 7h→16h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
+  // pouco ou muito; sem os HORÁRIOS, ela precisava lembrar sozinha de parar
+  // seis vezes no meio do expediente, que é o que não acontece num dia de
+  // trabalho (pedido dela, 2026-08-18).
   const pausaInicio = useSetting("activeBreakStartHour");
   const pausaFim = useSetting("activeBreakEndHour");
   const pausaIntervalo = useSetting("activeBreakIntervalMin");
   const metaPausas = metaDePausas(pausaInicio, pausaFim, pausaIntervalo);
+  const horasDasPausas = horariosDasPausas(pausaInicio, pausaFim, pausaIntervalo);
 
   const morningRoutines = useLiveQuery(
     () => db.skincareRoutines.where("time").equals("morning").toArray(),
@@ -286,6 +289,12 @@ export function Today() {
     if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
+    // Os horários, e o convite pra tocar. O item dizia só "Discretas, ao longo
+    // do dia": nem quando parar, nem que havia conteúdo atrás do toque — o
+    // mesmo padrão que o café já resolve com "Toque pra ver a receita".
+    if (item.id === "micro-pausas") {
+      return `Toque pra ver o que fazer · ${horasDasPausas.join(" · ")}`;
+    }
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
       return dailyLog?.sleepAt

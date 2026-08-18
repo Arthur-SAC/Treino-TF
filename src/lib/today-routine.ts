@@ -86,10 +86,18 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 //
 // A rotação servida aqui também não contém nada sexual explícito ou
 // pré-íntimo: start-stop, preparo pra receber e a sequência pré-prazer são
-// oferecidos pela página Vitalidade (`ofertasDaVitalidade`). Este item cai às
-// 10h, no trabalho — abrir qualquer um dos três aqui é expor na tela o que
-// ela não escolheu abrir naquele lugar.
-const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "trabalho", label: "Assoalho pélvico", subtitle: "Firmeza e controle — a sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "10:00" };
+// oferecidos pela página Vitalidade (`ofertasDaVitalidade`).
+//
+// MORA NA NOITE, e não mais às 10h no expediente. Ela apontou a contradição em
+// 2026-08-17: metade da progressão é deitada no chão — o próprio app diz
+// "Deitada, precisa de chão" por sequência — e as deitadas são justamente as
+// PRIMEIRAS, que é onde ela está. Agendar isso no meio do trabalho é pedir o
+// impossível, e item impossível some da vida em uma semana.
+//
+// Fica logo ANTES do alongamento da noite de propósito: os dois pedem o mesmo
+// chão e o mesmo momento de privacidade, então é uma ida ao chão em vez de
+// duas. O custo caro não é a duração, é começar.
+const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "Firmeza e controle — a sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:20" };
 const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
 
 type TipoDeDia = "semana" | "sabado" | "domingo";
@@ -187,6 +195,7 @@ const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
+  ASSOALHO,
   // Mesma progressão do alongamento da manhã, trilha própria (ver
   // flex-progression.ts): a noite trabalha flexão profunda e rotação, e
   // misturar a contagem com a manhã faria uma trilha mascarar a outra.
@@ -232,8 +241,8 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
       : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana()] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
-    ? { id: "trabalho", label: "Durante o dia", items: [ASSOALHO, ALMOCO, AGUA] }
-    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ASSOALHO, ALMOCO, MICRO_PAUSAS, AGUA] };
+    ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
+    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ALMOCO, MICRO_PAUSAS, AGUA] };
 
   const semanaItems: RoutineItem[] = [];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
