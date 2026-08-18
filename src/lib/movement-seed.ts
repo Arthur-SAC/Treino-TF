@@ -11,7 +11,12 @@ import { SEQUENCES } from "../data/sequences-seed";
 // (sempre por cima, congelar variáveis, 15-25 min), esfregar com roupa,
 // receber por mão e dedos, e as quatro fases de resistência do rebolado.
 // Sem este bump, tudo isso fica só no repositório.
-export const MOVEMENT_VERSION = 10;
+// v11: o vacuum entrou nas TRÊS fases do alongamento da manhã (30s → 45s →
+// 60s em pé). O exercício sempre disse "faça quase todo dia" e o app servia
+// num dia por ciclo de treino — ela apontou a contradição em 2026-08-17. A
+// sessão de academia não cresce, então o caminho diário tinha que ser fora
+// dela, e de manhã em jejum é quando o vacuum é mais fácil.
+export const MOVEMENT_VERSION = 11;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

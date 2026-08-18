@@ -73,8 +73,11 @@ export const DEFAULTS: Settings = {
   eveningReminderTime: "22:00",
   workoutReminderTime: "18:00",
   activeBreakIntervalMin: 90,
-  activeBreakStartHour: 9,
-  activeBreakEndHour: 18,
+  // Expediente real dela: 7h-16h. Vinha 9h-18h, um padrão genérico que punha a
+  // primeira pausa duas horas depois de ela já estar trabalhando e a última
+  // meia hora depois de ela ter saído.
+  activeBreakStartHour: 7,
+  activeBreakEndHour: 16,
   hydrationIntervalMin: 60,
   hydrationGoalMl: 2000,
   quietHours: { from: "22:00", to: "08:00" },

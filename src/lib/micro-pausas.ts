@@ -24,6 +24,29 @@ export function metaDePausas(horaInicio: number, horaFim: number, intervaloMin: 
   return Math.max(1, Math.floor(minutosDeExpediente / intervaloMin));
 }
 
+/** A que horas cai cada pausa do dia. Existe porque o contador da tela dizia
+ *  só "2 de 6" — quantas faltam, nunca quando —, e isso deixa pra ela a tarefa
+ *  de lembrar sozinha de parar seis vezes no meio do expediente. Lembrar é
+ *  exatamente o que não acontece num dia de trabalho.
+ *
+ *  Devolve "HH:MM" pra bater com o formato dos outros horários da rotina. */
+export function horariosDasPausas(
+  horaInicio: number,
+  horaFim: number,
+  intervaloMin: number,
+): string[] {
+  const quantas = metaDePausas(horaInicio, horaFim, intervaloMin);
+  const passo = intervaloMin > 0 ? intervaloMin : 60;
+  const saida: string[] = [];
+  for (let i = 0; i < quantas; i++) {
+    const min = horaInicio * 60 + i * passo;
+    const hh = String(Math.floor(min / 60) % 24).padStart(2, "0");
+    const mm = String(min % 60).padStart(2, "0");
+    saida.push(`${hh}:${mm}`);
+  }
+  return saida;
+}
+
 /** Os movimentos da pausa nº `n` do dia (0-indexado). Rotativo e estável: a
  *  mesma pausa devolve sempre o mesmo conjunto, e ao longo do dia o rodízio
  *  cobre o catálogo inteiro (ver teste "cobre todos os movimentos"). */

@@ -84,7 +84,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // Com esta, as CINCO versões de seed do app têm pino: exercícios, templates,
   // plano alimentar, estilo e movimento. Era a última que vivia privada.
   it("MOVEMENT_VERSION é a versão revisada nesta rodada", () => {
-    expect(MOVEMENT_VERSION).toBe(10);
+    expect(MOVEMENT_VERSION).toBe(11);
   });
 });
 

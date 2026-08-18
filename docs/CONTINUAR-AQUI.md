@@ -136,9 +136,23 @@ Apareceu **sete vezes** nesta reforma, em formas diferentes:
    em Beleza → Estilo → Íntimo. **Três abas de baixo diferentes.** O seed estava
    certo, o bump estava feito, e mesmo assim o conteúdo não chegava.
 
-**A pergunta, agora completa:** *isso chega no aparelho dela* (versão de seed) **e
-existe caminho até isso** (aba, filtro, rodízio, ordem na página)? As duas metades
-falham em silêncio e produzem o mesmo resultado: conteúdo que existe e não serve.
+10. **Promessa sem agenda que a cumpra.** Três relatos dela em 2026-08-17/18,
+    todos achados usando o app de verdade: o vacuum dizia "faça quase todo dia"
+    e aparecia num dia por ciclo de treino; o assoalho caía às 10h no
+    expediente, sendo que metade da progressão é deitada no chão — e o app
+    **já sabia**, tinha "Deitada, precisa de chão" escrito por sequência; e as
+    micro-pausas mostravam "0 de 6" sem dizer quando parar nem que havia
+    conteúdo atrás do toque. Somado a isso, o padrão de expediente era 9h-18h
+    genérico enquanto o dela é 7h-16h.
+
+**A pergunta, agora com três metades:** *isso chega no aparelho dela* (versão de
+seed), *existe caminho até isso* (aba, filtro, rodízio, ordem na página) **e a
+agenda permite fazer** (horário, lugar, frequência)? As três falham em silêncio e
+produzem o mesmo resultado: conteúdo que existe e não serve.
+
+**Teste que guarda a terceira:** `tests/lib/promessa-tem-caminho.test.ts`. Se um
+exercício promete frequência diária, ele precisa existir fora do treino — a
+sessão de academia não cresce.
 
 **Sempre pergunte: isso chega no aparelho dela?** As **cinco** versões de seed
 são agora exportadas e travadas por pino em
