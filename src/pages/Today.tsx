@@ -31,7 +31,7 @@ import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
-import { metaDePausas, horariosDasPausas } from "../lib/micro-pausas";
+import { horariosDasPausas } from "../lib/micro-pausas";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -114,7 +114,6 @@ export function Today() {
   const pausaInicio = useSetting("activeBreakStartHour");
   const pausaFim = useSetting("activeBreakEndHour");
   const pausaIntervalo = useSetting("activeBreakIntervalMin");
-  const metaPausas = metaDePausas(pausaInicio, pausaFim, pausaIntervalo);
   const horasDasPausas = horariosDasPausas(pausaInicio, pausaFim, pausaIntervalo);
 
   const morningRoutines = useLiveQuery(
@@ -156,7 +155,7 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today));
+  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas);
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
@@ -227,7 +226,10 @@ export function Today() {
   const { done, toggle } = useRoutineChecks(todayISO);
   const [recipeMealType, setRecipeMealType] = useState<RoutineMealType | null>(null);
   const [skincareTime, setSkincareTime] = useState<"morning" | "evening" | null>(null);
-  const [pausaAberta, setPausaAberta] = useState(false);
+  // Qual pausa está aberta (índice), não um booleano: cada linha do dia serve
+  // os movimentos da SUA pausa, num rodízio do catálogo. Com um booleano, as
+  // seis abriam os mesmos três movimentos.
+  const [pausaAberta, setPausaAberta] = useState<number | null>(null);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -278,9 +280,9 @@ export function Today() {
         <button type="button" onClick={() => void addWalk(todayISO, 10)} className="text-xs bg-wine text-nude-warm px-2 py-1 rounded-md">+10 min</button>
       );
     }
-    if (item.control === "breaks") {
-      return <span className="text-[11px] text-nude">{dailyLog?.activeBreakCount ?? 0} de {metaPausas}</span>;
-    }
+    // As pausas não têm mais contador ao lado: cada uma virou uma linha com
+    // caixinha e hora, então "3 de 6" seria repetir o que as próprias caixinhas
+    // já mostram — e pior, sem dizer QUAIS faltam.
     return undefined;
   };
 
@@ -289,12 +291,6 @@ export function Today() {
     if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
-    // Os horários, e o convite pra tocar. O item dizia só "Discretas, ao longo
-    // do dia": nem quando parar, nem que havia conteúdo atrás do toque — o
-    // mesmo padrão que o café já resolve com "Toque pra ver a receita".
-    if (item.id === "micro-pausas") {
-      return `Toque pra ver o que fazer · ${horasDasPausas.join(" · ")}`;
-    }
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
       return dailyLog?.sleepAt
@@ -391,7 +387,7 @@ export function Today() {
                   : item.control === "skincare" && item.skincareTime
                     ? () => setSkincareTime(item.skincareTime!)
                     : item.control === "breaks"
-                      ? () => setPausaAberta(true)
+                      ? () => setPausaAberta(item.breakIndex ?? 0)
                       : undefined
               }
             />
@@ -403,10 +399,10 @@ export function Today() {
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
       {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
-      {pausaAberta && (
+      {pausaAberta !== null && (
         <MicroPausaModal
-          n={dailyLog?.activeBreakCount ?? 0}
-          onClose={() => setPausaAberta(false)}
+          n={pausaAberta}
+          onClose={() => setPausaAberta(null)}
           onFeito={() => void addBreak()}
         />
       )}

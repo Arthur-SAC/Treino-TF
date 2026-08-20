@@ -22,8 +22,12 @@ export interface RoutineItem {
   skincareTime?: "morning" | "evening"; // itens control:"skincare" abrem o roteiro do período
   /** Horário padrão "HH:MM". A usuária ajusta em /hoje/horarios; o ajuste fica
    *  no setting `routineTimes` e vence este valor (ver `routine-times.ts`).
-   *  Itens sem horário (água, micro-pausas) são de dia inteiro, de propósito. */
+   *  Itens sem horário (água) são de dia inteiro, de propósito. */
   defaultTime?: string;
+  /** Qual pausa do dia este item é (0-indexado). Só nos itens de micro-pausa:
+   *  o modal serve os movimentos da pausa nº n, num rodízio do catálogo, e sem
+   *  o índice as seis pausas do dia abririam os mesmos três movimentos. */
+  breakIndex?: number;
 }
 
 export interface RoutineBlockGroup {
@@ -98,7 +102,28 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 // chão e o mesmo momento de privacidade, então é uma ida ao chão em vez de
 // duas. O custo caro não é a duração, é começar.
 const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "Firmeza e controle — a sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:20" };
-const MICRO_PAUSAS: RoutineItem = { id: "micro-pausas", block: "trabalho", label: "Micro-pausas de postura", subtitle: "Discretas, ao longo do dia", control: "breaks" };
+/** Uma linha por pausa, cada uma com a própria caixinha e o próprio horário.
+ *
+ *  Era um item só ("Micro-pausas de postura") com um contador "0 de 6" ao
+ *  lado. Ela pediu a troca em 2026-08-19, e o motivo é prático: com uma
+ *  caixinha só, marcar significava "fiz as pausas" em bloco, o que não diz
+ *  quais já foram nem lembra da próxima. Seis linhas com hora funcionam como o
+ *  resto da rotina — é olhar e ver o que falta.
+ *
+ *  Os horários vêm de fora porque dependem da configuração dela (início, fim e
+ *  intervalo do expediente) e este módulo é puro. Sem horários, nenhuma linha:
+ *  caixinha sem hora seria pior que o item antigo. */
+function microPausas(horarios: readonly string[]): RoutineItem[] {
+  return horarios.map((hora, i) => ({
+    id: `micro-pausa-${hora.replace(":", "")}`,
+    block: "trabalho" as const,
+    label: "Micro-pausa",
+    subtitle: "Toque pra ver o que fazer",
+    control: "breaks" as const,
+    defaultTime: hora,
+    breakIndex: i,
+  }));
+}
 
 type TipoDeDia = "semana" | "sabado" | "domingo";
 
@@ -207,7 +232,11 @@ const NOITE: RoutineItem[] = [
   { id: "dormir", block: "noite", label: "Dormir", subtitle: "Marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
 ];
 
-function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] {
+function buildBlocks(
+  dayOfWeek: number,
+  dayOfYear: number,
+  horariosDePausa: readonly string[],
+): RoutineBlockGroup[] {
   const isSaturday = dayOfWeek === 6;
   const isSunday = dayOfWeek === 0;
 
@@ -242,7 +271,7 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
-    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ALMOCO, MICRO_PAUSAS, AGUA] };
+    : { id: "trabalho", label: "No trabalho", timeHint: "7h–16h", items: [ALMOCO, ...microPausas(horariosDePausa), AGUA] };
 
   const semanaItems: RoutineItem[] = [];
   if (!isSaturday && !isSunday) semanaItems.push({ id: "lembrete-sabado-danca", block: "semana", label: "Sábado · dança / rebolado", to: "/treino/movimento" });
@@ -265,8 +294,14 @@ function buildBlocks(dayOfWeek: number, dayOfYear: number): RoutineBlockGroup[] 
   ];
 }
 
-/** `dayOfYear` decide itens em dias alternados (ex.: barba). Quem chama calcula
- *  o dia do ano — a função em si continua pura e determinística. */
-export function buildDayRoutine(dayOfWeek: number, dayOfYear: number): DayRoutine {
-  return { dayOfWeek, blocks: buildBlocks(dayOfWeek, dayOfYear) };
+/** `dayOfYear` decide itens em dias alternados (ex.: barba). `horariosDePausa`
+ *  vira uma linha de micro-pausa cada, com caixinha própria — vem de fora
+ *  porque depende da configuração de expediente dela, e este módulo é puro.
+ *  Quem calcula os dois é a tela; a função continua determinística. */
+export function buildDayRoutine(
+  dayOfWeek: number,
+  dayOfYear: number,
+  horariosDePausa: readonly string[] = [],
+): DayRoutine {
+  return { dayOfWeek, blocks: buildBlocks(dayOfWeek, dayOfYear, horariosDePausa) };
 }

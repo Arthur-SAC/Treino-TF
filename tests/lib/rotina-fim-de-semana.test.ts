@@ -19,9 +19,13 @@ describe("fim de semana", () => {
   });
 
   it("micro-pausas de expediente só existem em dia de semana", () => {
-    const fds = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).some((i) => i.id === "micro-pausas");
-    const semana = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items).some((i) => i.id === "micro-pausas");
-    expect({ fds, semana }).toEqual({ fds: false, semana: true });
+    // Uma linha por horário desde 2026-08-19 (antes era um item só com
+    // contador), então a checagem é por prefixo do id.
+    const temPausa = (dow: number) =>
+      buildDayRoutine(dow, 1, ["07:00", "10:00"])
+        .blocks.flatMap((b) => b.items)
+        .some((i) => i.id.startsWith("micro-pausa"));
+    expect({ fds: temPausa(6), semana: temPausa(3) }).toEqual({ fds: false, semana: true });
   });
 
   it("as quatro refeições existem nos sete dias — a fome não sabe que dia é", () => {

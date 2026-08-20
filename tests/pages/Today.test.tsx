@@ -48,18 +48,25 @@ describe("Today (backbone)", () => {
     expect(screen.queryByText(/alvo 22:30/)).not.toBeInTheDocument();
   });
 
-  it("o contador de micro-pausas mostra o alvo do dia, não só quantas já foram", async () => {
-    const hoje = hojeISO();
+  // Antes era um item só com contador "3 de 6". Ela pediu caixinha por horário
+  // em 2026-08-19: contador diz quantas faltam, caixinha diz QUAIS — e é isso
+  // que serve no meio do expediente.
+  it("cada micro-pausa é uma linha com caixinha própria", async () => {
     const ehFimDeSemana = [0, 6].includes(new Date().getDay());
-    await db.dailyLog.put({ date: hoje, waterMl: 0, activeBreakCount: 3 });
     render(<MemoryRouter><Today /></MemoryRouter>);
     await screen.findByText("Manhã");
-    // 9h→18h a cada 90 min = 6. O item só existe em dia de expediente.
+
     if (ehFimDeSemana) {
-      expect(screen.queryByText("3 de 6")).not.toBeInTheDocument();
-    } else {
-      expect(await screen.findByText("3 de 6")).toBeInTheDocument();
+      expect(screen.queryAllByText("Micro-pausa")).toHaveLength(0);
+      return;
     }
+    // Expediente 7h-16h a cada 90 min = 6 pausas.
+    expect(screen.getAllByText("Micro-pausa")).toHaveLength(6);
+    // Cada uma com o próprio horário, no formato que o app usa ("7h", "8h30").
+    for (const hora of ["7h", "8h30", "10h", "11h30", "13h", "14h30"]) {
+      expect(screen.getByText(hora)).toBeInTheDocument();
+    }
+    expect(screen.getAllByRole("checkbox", { name: /marcar Micro-pausa/i })).toHaveLength(6);
   });
 
   it("abre a receita da refeição direto no Hoje (sem ir pra outra aba)", async () => {
