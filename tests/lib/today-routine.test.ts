@@ -11,11 +11,11 @@ describe("buildDayRoutine", () => {
   });
 
   it("dia de semana inclui os itens-âncora da rotina", () => {
-    const ids = buildDayRoutine(3, 1).blocks.flatMap((b) => b.items.map((i) => i.id));
+    const ids = buildDayRoutine(3, 1, ["07:00", "10:00"]).blocks.flatMap((b) => b.items.map((i) => i.id));
     expect(ids).toEqual(
       expect.arrayContaining([
         "alongamento-manha", "skincare-manha", "sol-manha",
-        "agua", "micro-pausas",
+        "agua", "micro-pausa-0700",
         "lanche-saida", "caes", "treino",
         "skincare-noite", "alongamento-noite", "seu-tempo", "diario",
       ]),
