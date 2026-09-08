@@ -24,7 +24,7 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // água no fogo, então ela compraria menos do que precisa toda semana. Junto,
 // saiu a frase que dizia que coxa "serve igual" ao peito: na mesma porção dá
 // ~13g menos de proteína e o dobro de gordura.
-export const MEAL_PLAN_VERSION = 12;
+export const MEAL_PLAN_VERSION = 13;
 const MILESTONE_SEED_VERSION = 7;
 
 const TODOS_OS_MARCOS = [

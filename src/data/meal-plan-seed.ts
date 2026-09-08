@@ -33,6 +33,21 @@ export const PROTEINA_PISO_POR_REFEICAO: Record<MealSlot["mealType"], number> = 
   jantar: 45,
 };
 
+/** Piso de gordura do DIA, como percentual da energia. Não é preferência de
+ *  sabor: abaixo de ~20% das calorias em gordura a produção hormonal cai, e é
+ *  a mesma afirmação que o plano de manutenção já fazia em comentário desde a
+ *  frente 5 — sem nada que a cobrasse.
+ *
+ *  O buraco que isso deixava: das 135 combinações possíveis de opções do
+ *  cardápio de déficit, 9 caíam abaixo de 20% e 24 abaixo de 22%. A pior dava
+ *  17,7% (45 g), e vinha de escolhas que parecem as mais "certinhas" do
+ *  cardápio — a vitamina de whey no café e o frango com legumes no jantar,
+ *  as duas opções mais magras. Hoje a pior combinação dá 21,4%.
+ *
+ *  Vale para o dia inteiro, e não por refeição, porque o lanche tem teto
+ *  próprio de 5 g (é pré-treino) e nunca poderia cumprir um piso. */
+export const GORDURA_PISO_PCT = 20;
+
 const SLOTS: MealSlot[] = [
   // ─── CAFÉ DA MANHÃ (~450 kcal) ────────────────────────────────────────────
   {
@@ -49,6 +64,7 @@ const SLOTS: MealSlot[] = [
     variants: [
       {
         id: "cafe-1",
+        recomendada: true,
         label: "Opção 1 · Cuscuz de milho, ovo mexido & whey",
         effort: "5-min",
         foods: [
@@ -168,12 +184,12 @@ const SLOTS: MealSlot[] = [
         effort: "5-min",
         foods: [
           {
-            name: "Aveia em flocos (2 colheres de sopa cheias)",
-            qtyG: 25,
-            kcal: 94,
-            proteinG: 4,
-            carbG: 17,
-            fatG: 2,
+            name: "Aveia em flocos (1 colher de sopa cheia)",
+            qtyG: 15,
+            kcal: 56,
+            proteinG: 2,
+            carbG: 10,
+            fatG: 1,
             preparation:
               "Coloca no liquidificador junto com o resto. Se sobrar aveia solta, pode cozinhar 3 min com leite e canela em vez de bater.",
           },
@@ -188,11 +204,11 @@ const SLOTS: MealSlot[] = [
               "Bate no liquidificador com o leite, a banana e a aveia. Vitamina pronta em 30s.",
           },
           {
-            name: "Banana média",
-            qtyG: 120,
-            kcal: 100,
+            name: "Banana pequena",
+            qtyG: 100,
+            kcal: 84,
             proteinG: 1,
-            carbG: 24,
+            carbG: 20,
             fatG: 0,
             preparation: "Bate no liquidificador com os outros ingredientes.",
           },
@@ -218,13 +234,29 @@ const SLOTS: MealSlot[] = [
             preparation:
               "Bate junto com o resto — deixa a vitamina mais cremosa — ou come do lado, se preferir a textura.",
           },
+          {
+            // Esta era a opção MAIS MAGRA do cardápio inteiro: 8g de gordura,
+            // contra 25g da opção 2. Vitamina de whey com leite desnatado é
+            // quase toda proteína e carboidrato, e escolhê-la três dias
+            // seguidos derrubava o dia abaixo do piso de gordura sem nada
+            // avisar. Parte da aveia e da banana saiu pra abrir espaço: a
+            // troca é de carboidrato por gordura, não soma de caloria.
+            name: "Pasta de amendoim integral (1 colher de sopa)",
+            qtyG: 15,
+            kcal: 90,
+            proteinG: 4,
+            carbG: 3,
+            fatG: 7,
+            preparation: "Uma colher cheia no liquidificador junto com o resto. Integral, sem açúcar — a lista de ingredientes tem que ser só amendoim e sal.",
+          },
         ],
         ingredients: [
-          { item: "Aveia em flocos", qty: 25, unit: "g", category: "carboidrato" },
+          { item: "Aveia em flocos", qty: 15, unit: "g", category: "carboidrato" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Leite", qty: 200, unit: "ml", category: "laticinio" },
           { item: "Castanha de caju", qty: 10, unit: "g", category: "mercearia" },
+          { item: "Pasta de amendoim integral", qty: 15, unit: "g", category: "mercearia" },
         ],
       },
       // Opções 4 e 5 migraram do lanche das 16h: eram leves demais em gordura
@@ -357,6 +389,7 @@ const SLOTS: MealSlot[] = [
     variants: [
       {
         id: "almoco-1",
+        recomendada: true,
         label: "Opção 1 · Frango grelhado, arroz & feijão de corda",
         effort: "lote-domingo",
         foods: [
@@ -465,7 +498,7 @@ const SLOTS: MealSlot[] = [
             carbG: 16,
             fatG: 0,
             preparation:
-              "Cozinha inteira com casca — 15 min na pressão ou ~40 fervendo. Morna, a casca sai esfregando com a mão, sem descascador. Corta em cubos e tempera com azeite, sal e um fio de limão. Guarda em pote SEPARADO: beterraba tinge o arroz e o frango de rosa.",
+              "Cozinha inteira com casca — 15 min na pressão ou ~40 fervendo. Morna, a casca sai esfregando com a mão, sem descascador. Corta em cubos e tempera com azeite, sal e um fio de limão. Guarda em pote SEPARADO: beterraba tinge o arroz e o frango de rosa. O efeito dela na circulação aparece 2 a 3 h depois de comida — em dia que importa, esta é a refeição certa pra ela.",
           },
           {
             name: "Salada de folhas",
@@ -606,6 +639,7 @@ const SLOTS: MealSlot[] = [
     variants: [
       {
         id: "lanche-1",
+        recomendada: true,
         label: "Opção 1 · Iogurte com whey, banana & aveia",
         effort: "zero-preparo",
         foods: [
@@ -780,6 +814,7 @@ const SLOTS: MealSlot[] = [
     variants: [
       {
         id: "jantar-1",
+        recomendada: true,
         label: "Opção 1 · Frango desfiado, macaxeira & legumes",
         effort: "lote-domingo",
         foods: [
@@ -797,11 +832,11 @@ const SLOTS: MealSlot[] = [
               "Cozinha o frango em água com sal e alho ~20 min na pressão (ou 15 min fervendo). Deixa esfriar, desfia com dois garfos. Refoga com cebola, alho, tomate e pimenta.",
           },
           {
-            name: "Macaxeira cozida (200g)",
-            qtyG: 200,
-            kcal: 250,
+            name: "Macaxeira cozida (180g)",
+            qtyG: 180,
+            kcal: 225,
             proteinG: 2,
-            carbG: 60,
+            carbG: 54,
             fatG: 0,
             preparation:
               "Descasca, corta em pedaços, cozinha em água com sal ~20-25 min até ficar macia. Escorre e tempera com um fio de azeite.",
@@ -817,24 +852,29 @@ const SLOTS: MealSlot[] = [
               "A beterraba já sai cozida do lote de domingo: corta em cubos. O quiabo em rodelas, refogado em fogo médio com alho e um fio de azeite ~8 min. Junta a beterraba no fim, só pra aquecer — refogar do zero ela levaria 40 min.",
           },
           {
-            name: "Azeite (1/2 cs)",
-            qtyG: 6,
-            kcal: 53,
+            // Meia colher aqui fazia deste o jantar mais magro do cardápio
+            // (14g). Combinado com a vitamina do café, o dia caía a 17,7% da
+            // energia em gordura — abaixo dos ~20% que o próprio plano de
+            // manutenção declara como piso hormonal. Uma colher inteira, e a
+            // macaxeira devolve a caloria.
+            name: "Azeite (1 cs)",
+            qtyG: 12,
+            kcal: 100,
             proteinG: 0,
             carbG: 0,
-            fatG: 6,
-            preparation: "Finaliza os legumes e a macaxeira.",
+            fatG: 11,
+            preparation: "Finaliza os legumes e a macaxeira. Fio generoso, não gota.",
           },
         ],
         ingredients: [
           { item: "Peito de frango", qty: 270, unit: "g", category: "proteina" },
-          { item: "Macaxeira (aipim)", qty: 200, unit: "g", category: "carboidrato" },
+          { item: "Macaxeira (aipim)", qty: 180, unit: "g", category: "carboidrato" },
           { item: "Beterraba", qty: 120, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 50, unit: "g", category: "hortifruti" },
-          { item: "Azeite", qty: 6, unit: "ml", category: "gordura" },
+          { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
         ],
       },
       {
@@ -939,7 +979,7 @@ const SLOTS: MealSlot[] = [
             carbG: 16,
             fatG: 0,
             preparation:
-              "Já sai cozida do lote de domingo: corta em cubos e serve fria, ou aquece 1 min na frigideira com azeite, alho e sal. Pote separado do peixe — beterraba tinge tudo de rosa.",
+              "Já sai cozida do lote de domingo: corta em cubos e serve fria, ou aquece 1 min na frigideira com azeite, alho e sal. Pote separado do peixe — beterraba tinge tudo de rosa. Jantar cedo é melhor que jantar tarde: o efeito dela na circulação leva 2 a 3 h pra aparecer.",
           },
           {
             name: "Salada verde + azeite (1 cs)",
