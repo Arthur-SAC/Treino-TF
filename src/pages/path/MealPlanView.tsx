@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import type { MealSlot, MealVariant } from "../../lib/db";
 import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
 import { RecomendadaBadge } from "../../components/RecomendadaBadge";
+import { GuideAccordion } from "../../components/GuideAccordion";
+import { COMER_FORA } from "../../data/comer-fora-seed";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
 import { buildWeeklyShoppingList } from "../../lib/shopping-list";
@@ -198,6 +200,14 @@ export function MealPlanView() {
           ela vai no almoço ou num jantar cedo, não à noite.
         </p>
       </div>
+
+      {/* Fica ACIMA da lista de opções, e não no fim da página, porque o
+          cardápio responde "o que como em casa" e esta seção responde "e nos
+          dias em que eu não como em casa" — que é metade dos fins de semana
+          dela. Conteúdo que existe no fim de uma página longa é conteúdo que
+          ela não encontra (a lição da frente 4). */}
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Quando você come fora</h2>
+      <GuideAccordion sections={COMER_FORA} className="mb-4" />
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Refeições e opções</h2>
       <div className="space-y-3">
