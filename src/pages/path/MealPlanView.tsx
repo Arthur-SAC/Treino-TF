@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
-import type { MealVariant } from "../../lib/db";
+import type { MealSlot, MealVariant } from "../../lib/db";
 import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
+import { RecomendadaBadge } from "../../components/RecomendadaBadge";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
 import { buildWeeklyShoppingList } from "../../lib/shopping-list";
@@ -17,6 +18,17 @@ const GOAL_LABEL: Record<"deficit" | "manutencao" | "superavit", string> = {
   manutencao: "Manutenção (fase refinamento/manutenção)",
   superavit: "Superávit leve · crescer o glúteo (fase hipertrofia)",
 };
+
+/** Soma da combinação recomendada — uma variante por refeição. Calculada aqui,
+ *  e não escrita na frase, porque número em prosa é número que diverge do dado
+ *  no primeiro dia em que um alimento muda. */
+function somaDoDiaRecomendado(slots: MealSlot[]) {
+  const foods = slots.flatMap((s) => (s.variants.find((v) => v.recomendada) ?? s.variants[0]).foods);
+  const kcal = foods.reduce((s, f) => s + f.kcal, 0);
+  const proteinG = foods.reduce((s, f) => s + (f.proteinG ?? 0), 0);
+  const fatG = foods.reduce((s, f) => s + (f.fatG ?? 0), 0);
+  return { kcal, proteinG, fatG, gorduraPct: Math.round(((fatG * 9) / kcal) * 100) };
+}
 
 function VariantDetails({ v }: { v: MealVariant }) {
   const [open, setOpen] = useState(false);
@@ -35,6 +47,7 @@ function VariantDetails({ v }: { v: MealVariant }) {
               {EFFORT_LABEL[v.effort]}
             </span>
           )}
+          {v.recomendada && <RecomendadaBadge />}
           {" "}
           <span className="text-nude text-xs">{open ? "▾" : "▸"}</span>
         </span>
@@ -70,6 +83,8 @@ export function MealPlanView() {
   if (!plan) {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
   }
+
+  const diaRecomendado = somaDoDiaRecomendado(plan.slots);
 
   function exportPdf() {
     if (!plan) return;
@@ -161,6 +176,27 @@ export function MealPlanView() {
         >
           Roteiro de domingo
         </Link>
+      </div>
+
+      {/* O porquê da marca mora aqui, uma vez, e não repetido em cada linha.
+          Linguagem neutra de propósito: a tela de comida fica visível a quem
+          olhar o celular dela, e o motivo íntimo do nitrato mora na Vitalidade,
+          que é a aba de rótulo neutro. */}
+      <div className="card mb-3">
+        <h2 className="text-nude-warm font-medium text-sm mb-1.5">A combinação recomendada</h2>
+        <p className="text-muted text-xs leading-relaxed">
+          As opções marcadas <span className="text-nude">recomendada</span> montam o dia mais completo deste
+          cardápio: <span className="text-nude-warm">{diaRecomendado.kcal} kcal · {diaRecomendado.proteinG} g
+          de proteína · {diaRecomendado.fatG} g de gordura ({diaRecomendado.gorduraPct}% da energia)</span>,
+          com beterraba no jantar, e as quatro cabem na semana inteira sem estragar. Nas outras opções você
+          não erra o dia — nenhuma cai abaixo do piso de gordura —, mas essa é a que rende mais.
+        </p>
+        <p className="text-muted text-xs leading-relaxed mt-2">
+          <span className="text-nude-warm">Duas exceções que valem a pena:</span> duas vezes por semana
+          troque o almoço ou o jantar pela opção de peixe (tainha ou sardinha) — é a gordura que o resto do
+          cardápio não tem. E a beterraba rende mais 2 a 3 horas depois de comida, então em dia que importa
+          ela vai no almoço ou num jantar cedo, não à noite.
+        </p>
       </div>
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Refeições e opções</h2>

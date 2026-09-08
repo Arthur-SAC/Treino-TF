@@ -111,6 +111,16 @@ export interface MealVariant {
    *  porque a usuária declarou que não quer cozinhar — o cardápio já era
    *  acessível, faltava o esforço ficar legível na hora de decidir. */
   effort?: "zero-preparo" | "5-min" | "air-fryer" | "lote-domingo";
+  /** A opção que o cardápio recomenda dentro deste período. Uma por slot, e as
+   *  quatro juntas formam a COMBINAÇÃO recomendada do dia — que é o que ela
+   *  pediu ("se existe melhor e pior, marca a melhor pra eu seguir").
+   *
+   *  O critério não é gosto: é o dia que entrega mais proteína entre os que
+   *  respeitam o piso de gordura, carregam nitrato e cabem na semana inteira
+   *  sem estragar. Está cobrado em tests/data/combinacao-recomendada.test.ts —
+   *  se um alimento mudar e outra combinação passar a ser melhor, o teste
+   *  quebra em vez de a marca continuar apontando para o lugar errado. */
+  recomendada?: boolean;
 }
 
 export interface MealSlot {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal, type MealVariant } from "../lib/db";
 import { getActiveMealPlan, EFFORT_LABEL, variantEscolhida } from "../lib/meal-plan";
+import { RecomendadaBadge } from "./RecomendadaBadge";
 import { hojeISO } from "../lib/today-date";
 
 export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
@@ -134,6 +135,7 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
                       {EFFORT_LABEL[v.effort]}
                     </span>
                   )}
+                  {v.recomendada && <RecomendadaBadge />}
                   {/* Marcador curto: quem repete o estado por extenso é o
                       botão de ação lá dentro, e duas frases iguais no mesmo
                       card só fazem a pessoa ler duas vezes. */}
