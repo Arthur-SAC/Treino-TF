@@ -428,7 +428,7 @@ const SLOTS: MealSlot[] = [
       },
       {
         id: "almoco-2",
-        label: "Opção 2 · Carne moída, macaxeira & jerimum",
+        label: "Opção 2 · Carne moída, macaxeira & beterraba",
         effort: "lote-domingo",
         foods: [
           {
@@ -452,14 +452,20 @@ const SLOTS: MealSlot[] = [
               "Descasca e corta a macaxeira em pedaços. Cozinha em água com sal ~20-25 min até ficar macia (espeta com garfo pra testar). Escorre e tempera com um fio de azeite.",
           },
           {
-            name: "Jerimum (abóbora) cozido (150g)",
+            // Trocou o jerimum a pedido dela (2026-09-08). Os macros ficam os
+            // mesmos de propósito: 150 g de beterraba cozida dão 66 kcal contra
+            // 68 do jerimum, e 15 g de carboidrato contra 16 — diferença dentro
+            // do arredondamento da própria tabela. Mexer nos números aqui daria
+            // uma precisão que o dado não tem e obrigaria a recalcular o dia
+            // inteiro por causa de 2 kcal.
+            name: "Beterraba cozida (150g)",
             qtyG: 150,
             kcal: 68,
             proteinG: 2,
             carbG: 16,
             fatG: 0,
             preparation:
-              "Corta o jerimum em cubos, cozinha no vapor 10 min ou na pressão 5 min. Tempera com azeite, sal e noz-moscada.",
+              "Cozinha inteira com casca — 15 min na pressão ou ~40 fervendo. Morna, a casca sai esfregando com a mão, sem descascador. Corta em cubos e tempera com azeite, sal e um fio de limão. Guarda em pote SEPARADO: beterraba tinge o arroz e o frango de rosa.",
           },
           {
             name: "Salada de folhas",
@@ -477,7 +483,7 @@ const SLOTS: MealSlot[] = [
             proteinG: 0,
             carbG: 0,
             fatG: 11,
-            preparation: "Rega a salada e o jerimum.",
+            preparation: "Rega a salada e a beterraba.",
           },
           {
             // O feijão de corda é o carboidrato mais barato e mais local do
@@ -496,7 +502,7 @@ const SLOTS: MealSlot[] = [
           { item: "Carne moída patinho", qty: 205, unit: "g", category: "proteina" },
           { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Macaxeira (aipim)", qty: 130, unit: "g", category: "carboidrato" },
-          { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
+          { item: "Beterraba", qty: 180, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
@@ -801,14 +807,14 @@ const SLOTS: MealSlot[] = [
               "Descasca, corta em pedaços, cozinha em água com sal ~20-25 min até ficar macia. Escorre e tempera com um fio de azeite.",
           },
           {
-            name: "Legumes refogados — jerimum & quiabo (150g)",
+            name: "Legumes refogados — beterraba & quiabo (150g)",
             qtyG: 150,
             kcal: 55,
             proteinG: 2,
             carbG: 12,
             fatG: 0,
             preparation:
-              "Corta o jerimum em cubos e o quiabo em rodelas, refoga em fogo médio com alho e um fio de azeite, ~10 min.",
+              "A beterraba já sai cozida do lote de domingo: corta em cubos. O quiabo em rodelas, refogado em fogo médio com alho e um fio de azeite ~8 min. Junta a beterraba no fim, só pra aquecer — refogar do zero ela levaria 40 min.",
           },
           {
             name: "Azeite (1/2 cs)",
@@ -823,7 +829,7 @@ const SLOTS: MealSlot[] = [
         ingredients: [
           { item: "Peito de frango", qty: 270, unit: "g", category: "proteina" },
           { item: "Macaxeira (aipim)", qty: 200, unit: "g", category: "carboidrato" },
-          { item: "Jerimum (abóbora)", qty: 100, unit: "g", category: "hortifruti" },
+          { item: "Beterraba", qty: 120, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
@@ -902,7 +908,7 @@ const SLOTS: MealSlot[] = [
       },
       {
         id: "jantar-3",
-        label: "Opção 3 · Peixe, jerimum & salada",
+        label: "Opção 3 · Peixe, beterraba & salada",
         effort: "lote-domingo",
         foods: [
           {
@@ -926,14 +932,14 @@ const SLOTS: MealSlot[] = [
               "Refoga alho, adiciona o arroz, cobre com água (2:1). Fogo baixo tampado ~18 min.",
           },
           {
-            name: "Jerimum (abóbora) refogado (150g)",
+            name: "Beterraba cozida (150g)",
             qtyG: 150,
             kcal: 68,
             proteinG: 2,
             carbG: 16,
             fatG: 0,
             preparation:
-              "Corta em cubos, refoga com um fio de azeite, alho e sal, ~10 min em fogo médio.",
+              "Já sai cozida do lote de domingo: corta em cubos e serve fria, ou aquece 1 min na frigideira com azeite, alho e sal. Pote separado do peixe — beterraba tinge tudo de rosa.",
           },
           {
             name: "Salada verde + azeite (1 cs)",
@@ -959,7 +965,7 @@ const SLOTS: MealSlot[] = [
           { item: "Tainha ou sardinha", qty: 275, unit: "g", category: "proteina" },
           { item: "Arroz", qty: 64, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
-          { item: "Jerimum (abóbora)", qty: 150, unit: "g", category: "hortifruti" },
+          { item: "Beterraba", qty: 180, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Azeite", qty: 10, unit: "ml", category: "gordura" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },

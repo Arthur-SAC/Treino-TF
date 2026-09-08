@@ -77,13 +77,13 @@ export const ROTEIRO_DOMINGO: readonly EtapaMarmita[] = [
     rende: "Arroz de 5 a 6 refeições.",
   },
   {
-    id: "macaxeira-jerimum",
+    id: "macaxeira-beterraba",
     ordem: 5,
-    titulo: "Macaxeira e jerimum",
+    titulo: "Macaxeira e beterraba",
     maoNaMassaMin: 12,
     sozinhoMin: 25,
     comoFazer:
-      "Descasca 1 kg de macaxeira e corta em pedaços grandes — é a etapa mais braçal do dia, e é por isso que ela vem depois, quando as outras panelas já estão trabalhando sozinhas. Cozinha em água com sal por 20-25 minutos. Na panela do lado, jerimum em cubos, 10 minutos no vapor.",
+      "Descasca 1 kg de macaxeira e corta em pedaços grandes — é a etapa mais braçal do dia, e é por isso que ela vem depois, quando as outras panelas já estão trabalhando sozinhas. Cozinha em água com sal por 20-25 minutos. Na panela do lado, beterrabas INTEIRAS e com casca cobertas de água, 15 minutos na pressão. Descascar antes é o erro: com casca ela não sangra a cor na água, e depois de morna a casca sai só esfregando com a mão. Guarda em pote separado — beterraba tinge o resto da marmita.",
     rende: "Carboidrato e legume de 4 a 5 refeições — inclusive a macaxeira fria que vai no lanche do trabalho.",
   },
   {
