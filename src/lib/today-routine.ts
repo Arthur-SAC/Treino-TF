@@ -5,7 +5,7 @@
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
-export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite";
+export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite" | "rebolado";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
@@ -268,7 +268,7 @@ function buildBlocks(
         // colocar dois itens de movimento somando na mesma meta.
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
-          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
+          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", linkKey: "rebolado", defaultTime: "17:30" },
           caes("sabado"),
         ],
       }

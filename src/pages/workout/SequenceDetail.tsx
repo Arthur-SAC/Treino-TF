@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { db, type PracticeLog } from "../../lib/db";
 import { MoveStep } from "../../components/MoveStep";
 import { VideoSection } from "../../components/VideoSection";
@@ -9,6 +9,7 @@ import { hojeISO } from "../../lib/today-date";
 export function SequenceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const sequence = useLiveQuery(
     async () => (id ? await db.danceSequences.get(id) : undefined),
     [id],
@@ -36,7 +37,11 @@ export function SequenceDetail() {
       durationMin: sequence.durationMin,
       notes: notes.trim() || undefined,
     } as PracticeLog);
-    navigate("/treino/movimento", { replace: true });
+    // Volta pra tela de origem — quase sempre o Hoje, que já marca o item
+    // sozinho pela prática registrada. Aberta direto, sem histórico, cai na
+    // lista do Movimento.
+    if (location.key !== "default") navigate(-1);
+    else navigate("/treino/movimento", { replace: true });
   }
 
   const allDone = activeIdx >= sequence.moves.length - 1;

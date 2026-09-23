@@ -7,7 +7,8 @@ import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
-import { contarPraticasDaProgressao, contarPraticasFlex } from "../lib/practice-log-helpers";
+import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
+import { reboladoDoDia } from "../lib/rebolado-progression";
 import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
@@ -112,6 +113,12 @@ export function Today() {
   const flexNoiteHoje = flexDoDia("noite", praticasFlexNoite ?? 0);
   const flexManhaRotulo = rotuloFlexDoDia("Alongamento manhã", flexManhaHoje);
   const flexNoiteRotulo = rotuloFlexDoDia("Alongamento noite", flexNoiteHoje);
+  // Rebolado de sábado com a progressão de resistência (auditoria 2026-09-23:
+  // a trilha existia e nenhuma tela a servia).
+  const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
+  const reboladoHoje = reboladoDoDia(praticasRebolado ?? 0);
+  // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
+  const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -244,6 +251,11 @@ export function Today() {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
     if (item.linkKey === "skincareMorning") return !!morningDone;
     if (item.linkKey === "skincareNight") return !!eveningDone;
+    const logs = praticasDeHoje ?? [];
+    if (item.linkKey === "pelvic") return praticadaHoje(logs, pelvicHoje.sequenceId, todayISO);
+    if (item.linkKey === "flexManha") return praticadaHoje(logs, flexManhaHoje.sequenceId, todayISO);
+    if (item.linkKey === "flexNoite") return praticadaHoje(logs, flexNoiteHoje.sequenceId, todayISO);
+    if (item.linkKey === "rebolado") return praticadaHoje(logs, reboladoHoje.sequenceId, todayISO);
     return false;
   };
 
@@ -299,6 +311,7 @@ export function Today() {
     if (item.linkKey === "pelvic") return pelvicRotulo.subtitle;
     if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
+    if (item.linkKey === "rebolado") return reboladoHoje.etapa;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -333,6 +346,7 @@ export function Today() {
     if (item.linkKey === "pelvic") return `/treino/movimento/${pelvicHoje.sequenceId}`;
     if (item.linkKey === "flexManha") return `/treino/movimento/${flexManhaHoje.sequenceId}`;
     if (item.linkKey === "flexNoite") return `/treino/movimento/${flexNoiteHoje.sequenceId}`;
+    if (item.linkKey === "rebolado") return `/treino/movimento/${reboladoHoje.sequenceId}`;
     return item.to;
   };
 
