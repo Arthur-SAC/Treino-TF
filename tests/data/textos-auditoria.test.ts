@@ -14,6 +14,11 @@ describe("textos que não mentem", () => {
     expect(vitD.subtitle).not.toMatch(/resolve/i);
   });
 
+  it("o sol da manhã também não promete atacar o cansaço", () => {
+    const sol = buildDayRoutine(0, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "sol-manha")!;
+    expect(sol.subtitle).not.toMatch(/ataca|cansaço/i);
+  });
+
   it("a Vitalidade não diz mais que o assoalho cai às 10h no trabalho — ele é às 21h20", () => {
     const v = fonte("src/pages/path/Vitalidade.tsx");
     expect(v).not.toMatch(/meio do expediente/);

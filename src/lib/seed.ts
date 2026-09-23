@@ -155,6 +155,18 @@ export async function seedDatabase(): Promise<void> {
     await db.settings.put({ key: "lembretesMigracao", value: LEMBRETES_MIGRACAO });
   }
 
+  // Quem já marcava a creatina antes do início ser gravado: o início é a
+  // primeira marcação que já existe, não a próxima (as 2 semanas recomeçariam).
+  const inicio = await db.settings.get("creatinaInicio");
+  if (!inicio?.value) {
+    const marcadas = (await db.routineChecks.toArray())
+      .filter((c) => c.itemId === "creatina")
+      .filter((c) => c.done)
+      .map((c) => c.date)
+      .sort();
+    if (marcadas.length > 0) await db.settings.put({ key: "creatinaInicio", value: marcadas[0] });
+  }
+
   await seedMedidasPartida();
 }
 
