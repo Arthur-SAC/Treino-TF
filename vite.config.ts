@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: "Treino",
         short_name: "Treino",
-        description: "App pessoal de transição",
+        description: "App pessoal de treino e rotina",
         lang: "pt-BR",
         theme_color: "#1a0a0e",
         background_color: "#1a0a0e",

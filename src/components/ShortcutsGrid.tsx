@@ -2,10 +2,13 @@ import { Link } from "react-router-dom";
 
 interface Shortcut { icon: string; label: string; sub: string; to: string }
 
+// Rótulos neutros de propósito (2026-09-23): o Hoje fica aberto na tela, e o
+// ambiente onde ela mora não é receptivo. O conteúdo de cada página não mudou —
+// só o que aparece do lado de fora. Rede em tests/lib/discricao-rotulos.test.ts.
 export const SHORTCUTS: Shortcut[] = [
-  { icon: "◉", label: "Vitalidade", sub: "assoalho pélvico · firmeza · controle", to: "/trilha/vitalidade" },
-  { icon: "✚", label: "Fertilidade & TRH", sub: "seu plano · perguntas pro médico", to: "/trilha/fertilidade" },
-  { icon: "♡", label: "Apoio", sub: "dia difícil · disforia · rede", to: "/trilha/apoio" },
+  { icon: "◉", label: "Vitalidade", sub: "rotina diária · progresso", to: "/vitalidade" },
+  { icon: "✚", label: "Saúde · planos", sub: "consultas · perguntas pro médico", to: "/trilha/fertilidade" },
+  { icon: "♡", label: "Apoio", sub: "dia difícil · rede de apoio", to: "/trilha/apoio" },
   { icon: "❋", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
   { icon: "❖", label: "Estilo", sub: "discreto · combinações", to: "/beleza/estilo/pecas" },
   { icon: "◈", label: "Corpo", sub: "medidas · fotos", to: "/corpo/medidas" },

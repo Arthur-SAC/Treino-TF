@@ -122,7 +122,7 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 // Fica logo ANTES do alongamento da noite de propósito: os dois pedem o mesmo
 // chão e o mesmo momento de privacidade, então é uma ida ao chão em vez de
 // duas. O custo caro não é a duração, é começar.
-const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "Firmeza e controle — a sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:20" };
+const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "A sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:20" };
 /** Uma linha por pausa, cada uma com a própria caixinha e o próprio horário.
  *
  *  Era um item só ("Micro-pausas de postura") com um contador "0 de 6" ao
@@ -245,7 +245,7 @@ const NOITE: RoutineItem[] = [
   // Mesma progressão do alongamento da manhã, trilha própria (ver
   // flex-progression.ts): a noite trabalha flexão profunda e rotação, e
   // misturar a contagem com a manhã faria uma trilha mascarar a outra.
-  { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril (+ intimidade)", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "21:30" },
+  { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "21:30" },
   { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
   // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a

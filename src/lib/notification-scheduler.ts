@@ -4,6 +4,13 @@ import { getSetting, setSetting } from "./settings-helpers";
 import { PRESENCE_ITEMS } from "./daily-routine";
 import { hojeISO } from "./today-date";
 
+/** Aparece na tela de bloqueio — visível pra quem pegar o celular dela. Não
+ *  descreve o que a sequência é (tests/lib/discricao-rotulos.test.ts). */
+export const NOTIFICACAO_NOITE = {
+  titulo: "Antes de dormir",
+  corpo: "Um pouco de movimento: postura, alongamento ou dança",
+} as const;
+
 let intervalId: ReturnType<typeof setInterval> | null = null;
 
 async function tick() {
@@ -89,7 +96,7 @@ async function tick() {
         .and((p) => presenceIds.includes(p.sequenceId))
         .count()) > 0;
     if (shouldRemindOncePerDay({ currentMin, targetMin: presencaMin, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
-      notify("Antes de dormir", "Um pouco de presença: postura, gingado, dança ou intimidade");
+      notify(NOTIFICACAO_NOITE.titulo, NOTIFICACAO_NOITE.corpo);
       await setSetting("lastPresencaReminderAt", todayISO);
     }
   }

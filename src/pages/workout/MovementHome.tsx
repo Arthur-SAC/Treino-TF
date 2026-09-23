@@ -114,7 +114,7 @@ export function MovementHome() {
         ))}
       </div>
 
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Twerk · rebolado safado (3 semanas)</h2>
+      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Rebolado · progressão de 3 semanas</h2>
       <div className="space-y-2 mb-4">
         {twerk.map((s) => (
           <SequenceCard

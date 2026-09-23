@@ -24,7 +24,8 @@ describe("Fertilidade & TRH", () => {
   // perdido, ainda mais este. A porta é o atalho do Hoje.
   it("tem porta: o atalho do Hoje aponta pra ela e a rota existe", () => {
     render(<MemoryRouter><ShortcutsGrid /></MemoryRouter>);
-    const atalho = screen.getByLabelText("Fertilidade & TRH");
+    // O rótulo do atalho é neutro desde 2026-09-23 (discrição); a porta continua.
+    const atalho = screen.getByLabelText("Saúde · planos");
     expect(atalho).toHaveAttribute("href", "/trilha/fertilidade");
     expect(ROTAS).toContain('path: "trilha/fertilidade"');
   });
