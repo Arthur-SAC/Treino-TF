@@ -233,14 +233,14 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 ## 9. Dívidas registradas
 
 **Auditoria de 2026-09-23 (confirmada no código), em ordem de impacto:**
-1. Guia de medida manda cintura na "parte mais estreita" — tem que ser no umbigo (Navy e
+1. ✅ (2026-09-23, `888b3ae`) Guia de medida mandava cintura na "parte mais estreita" — tem que ser no umbigo (Navy e
    partida dependem disso). Ombro ambíguo (largura × circunferência). `Measurements.tsx:19-21`.
 2. `progression.ts`: peitoral, postura e costas em HOLD_LIGHT — supino e remadas nunca sobem
    carga, contra o objetivo. Carga sobe sem comparar com o alvo de reps; incremento de 1 kg
    não existe em halter/placa; séries não marcadas são salvas; sessão salva não se edita.
 3. Progresso invisível: peso não tem gráfico; `WhrChart` mira 0,68; medida/sessão sem
    editar/apagar; formulário de medida duplica no segundo toque.
-4. Exposição: atalhos do Hoje ("Fertilidade & TRH", "disforia", "firmeza"), alongamento
+4. ✅ parcial (2026-09-23, `288e0e9`: Hoje, notificação, manifest, título do Movimento). Falta: "virilha, perianal" na home de Beleza; a aba "Íntimo" do Estilo é decisão dela (três modos) — não mexer sem perguntar. Era: exposição nos atalhos do Hoje ("Fertilidade & TRH", "disforia", "firmeza"), alongamento
    "(+ intimidade)", notificação das 21h com "intimidade", manifest "App pessoal de
    transição", rótulos em Beleza/Estilo/Movimento.
 5. Tudo termina fora do Hoje: sequência concluída não marca o item; refeições com duas
