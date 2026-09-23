@@ -18,8 +18,8 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 
 | Entrega | Conteúdo | Estado |
 |---|---|---|
-| 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ mergeada na main (`1a40bc6`), 944 testes — **push só com o ok dela** |
-| 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ branch `feat/chun-li-entrega-2` |
+| 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ no ar (`1a40bc6`) |
+| 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ no ar (`f90f351`), 985 testes |
 | Auditoria | achados de 2026-09-23 (seção 9) | pendente — itens 1-4 vão junto da entrega 2 |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
