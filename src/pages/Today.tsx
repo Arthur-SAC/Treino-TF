@@ -35,6 +35,8 @@ import { hojeISO, diaDoAno } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
+import { SemanaCard } from "../components/SemanaCard";
+import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
 import { primeiraMarcacao, mostrarAvisoAgua, SUBTITULO_AVISO_AGUA, CREATINA_ITEM_ID } from "../lib/creatina";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
@@ -352,6 +354,13 @@ export function Today() {
 
   const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
   const { projecao, invalida: partidaInvalida, carregando: partidaCarregando } = usePartida();
+  const datasDeTreino = useLiveQuery(async () => (await db.workoutSessions.toArray()).map((x) => x.date), []);
+  const treinosSemana = treinosNaSemana(datasDeTreino ?? [], todayISO);
+  const ultimaMedida = measurementsAsc?.at(-1);
+  const variacaoSemana =
+    projecao && ultimaMedida && ultimaMedida.date > projecao.partida.data
+      ? variacaoDesdePartida(projecao.partida, ultimaMedida)
+      : null;
 
   return (
     <div className="p-4 pb-24 space-y-3">
@@ -366,13 +375,14 @@ export function Today() {
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
+      <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
           `.card` com padding e borda próprios — em 4 colunas numa tela
           estreita "Skincare" e "Vitalidade" espremem contra a borda do
           próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
       <div className="grid grid-cols-2 gap-2">
-        <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
+        <StreakCard label="Treino" count={Math.min(last7DaysTraining ?? 0, 5)} total={5} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Sono" count={last7DaysSleep} total={7} />
         {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele
