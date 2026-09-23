@@ -80,7 +80,7 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
     datePlanned: isoFromMonthsFromNow(MILESTONES_MESES.cintura88),
     title: "▱Cintura 88 — destrava o superávit",
     category: "fisico",
-    notes: "88 cm é a trava do app (CINTURA_LIBERA_SUPERAVIT_CM). Abaixo dela, comer a mais vira glúteo; acima, vira barriga. Partida: 99 cm.",
+    notes: "88 cm é a trava do app (CINTURA_LIBERA_SUPERAVIT_CM). Abaixo dela, comer a mais vira glúteo; acima, vira barriga. Em maio: 99 cm.",
   },
   {
     datePlanned: isoFromMonthsFromNow(MILESTONES_MESES.cintura84),

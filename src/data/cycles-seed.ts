@@ -1,12 +1,14 @@
 import type { WorkoutTemplate } from "../lib/db";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Todos os ciclos mantêm glúteo como PRIORIDADE Nº 1 (4 estímulos/semana) e
-// vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
+// Fase 1 (adaptação/variação) foi reescrita pra Chun-Li macia em 2026-09-23:
+// 3 inferiores + 2 superiores, glúteo médio 3x (ver docs/OBJETIVO.md). A fase 2
+// (hipertrofia em diante) será reescrita pra Smartfit quando ela trocar.
+// Os ciclos vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
 // refinamento (alta rep/densidade) → manutenção (segura a forma quando o
 // objetivo do momento é consolidar, não crescer).
 // Regras fixas: dias de força (seg/ter/qui/sex) começam com cardio + articular;
-// quarta começa com articular e tem o circuito de glúteo médio (ponte + abdução).
+// quarta começa com articular e tem ponte + abdução deitada.
 // ZONA 2 NÃO ENTRA AQUI: ela caminha 5 km do trabalho para casa todo dia, o
 // que já é zona 2 e em dose melhor (diária, não 3x/semana). Prescrever de novo
 // no fim do treino alongava a sessão em 20 min e empurrava o jantar para as

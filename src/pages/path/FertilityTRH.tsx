@@ -43,7 +43,7 @@ const GUIDE: GuideSection[] = [
     intro: "Sem gatilho, sem fase que dispara a conversa — só quando fizer sentido pra você.",
     tips: [
       "Não existe fase do treino que 'libere' a conversa sobre hormônio. Se um dia você quiser revisitar, o momento é o que você escolher — não uma etapa que o app marca por você.",
-      "Prático, se ajudar: quando o treino entrar na fase de Manutenção, a base de músculo/glúteo já está construída e sobra mais espaço mental pra decisões grandes como essa. É só um dado a mais, não uma data.",
+      "Uma ideia sua, de 23/09/2026: se o BBL acontecer (depois dos 30), ele marca o fim da fase discreta — e a TRH pode vir depois dele, se você quiser. É uma possibilidade que você nomeou, não uma etapa marcada.",
       "Quando (e se) você quiser conversar com o médico, é depois de você e sua amada terem os filhos de vocês — sem outro pré-requisito.",
     ],
   },

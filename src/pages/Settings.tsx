@@ -196,11 +196,11 @@ export function Settings() {
           <p className="text-muted text-xs mt-1">Usada pra estimar a gordura corporal (método Navy).</p>
         </div>
         <div>
-          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Meta WHR (cintura/quadril)</label>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Alvo da Silhueta (cintura÷quadril)</label>
           <input type="number" step={0.01} min={0.5} max={1.1} value={targetWhr}
                  onChange={(e) => void setSetting("targetWhr", Number(e.target.value))}
                  className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
-          <p className="text-muted text-xs mt-1">0,72 = ampulheta forte · 0,80 = moderada.</p>
+          <p className="text-muted text-xs mt-1">Só muda a régua da tela Silhueta e do gráfico de razão. A troca de ciclo segue a cintura (84 no fim da fase 1).</p>
         </div>
         <div>
           <label className="block text-muted text-xs uppercase tracking-wider mb-1">Meta ombro/quadril</label>

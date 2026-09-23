@@ -42,7 +42,7 @@ export const GUIA_TAMANHOS: readonly GuiaTamanho[] = [
     id: "validade-do-tamanho",
     titulo: "O tamanho tem data de validade — compra pouco agora",
     corpo:
-      `Em ${MARCO_84.mesMin} a ${MARCO_84.mesMax} meses a cintura vai de ${MEDIDAS_PARTIDA.cinturaCm} para ${FASE_1.cinturaCm} e o ` +
+      `Em ${MARCO_84.mesMin} a ${MARCO_84.mesMax} meses a cintura vai de ${MEDIDAS_PARTIDA.cinturaCm} (a medição de maio) para ${FASE_1.cinturaCm} e o ` +
       `quadril de ${MEDIDAS_PARTIDA.quadrilCm} para cerca de ${FASE_1.quadrilCm}. Depois, na fase 2, ` +
       `o quadril volta a ${FASE_2.quadrilCm} — mesmo número, feito de músculo. Ou seja: o teu tamanho ` +
       `desce e depois sobe de novo. Enxoval completo hoje é dinheiro com data marcada. Compra 2 ou 3 ` +

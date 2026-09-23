@@ -13,10 +13,12 @@ const ROTAS = Object.values(
 )[0];
 
 describe("Fertilidade & TRH", () => {
-  it("mostra o plano dela e a menção à fase de Manutenção do treino", () => {
+  // A menção à "fase de Manutenção" como momento saiu em 2026-09-23 (nenhuma
+  // fase do treino marca a conversa); entrou a ideia dela: BBL e depois, talvez, TRH.
+  it("mostra o plano dela e a ideia de 23/09 (BBL, e talvez TRH depois)", () => {
     render(<MemoryRouter><FertilityTRH /></MemoryRouter>);
     expect(screen.getByText("Meu plano")).toBeInTheDocument();
-    expect(screen.getAllByText(/Manuten/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/BBL/).length).toBeGreaterThan(0);
   });
 
   // Os marcos de fertilidade saíram da linha do tempo (as datas eram inventadas).

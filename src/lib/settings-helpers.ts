@@ -103,8 +103,8 @@ export const DEFAULTS: Settings = {
   // min fixos via `creditarPasseio`. A meta existe pra avisar quando um dos
   // dois NÃO aconteceu; se ficasse em 75, batia sozinha antes de ela chegar
   // em casa e o medidor "X / Y min" parava de informar qualquer coisa. No
-  // fim de semana só há o passeio, então o medidor mostra 60/120 — verdade,
-  // não falha: o fim de semana é mesmo mais parado.
+  // fim de semana, desde 2026-09-23, também são duas: os 5 km da manhã e o
+  // passeio, e as duas juntas fecham os 120.
   walkGoalMin: 120,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",

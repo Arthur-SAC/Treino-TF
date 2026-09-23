@@ -303,7 +303,7 @@ function buildBlocks(
     // dia de folga. Agora aponta pro roteiro com a ordem do fogo.
     semanaItems.unshift({ id: "marmita-domingo", block: "semana", label: "Marmita da semana", subtitle: "Roteiro de 62 min com a ordem do fogo — depois dele, a semana é só esquentar", to: "/trilha/alimentacao/domingo" });
     // Vitamina D semanal: tomada no domingo junto da marmita (refeição com gordura).
-    semanaItems.push({ id: "vitamina-d", block: "semana", label: "Vitamina D · 10.000 UI (semanal)", subtitle: "Toma junto de uma refeição com gordura — resolve o cansaço" });
+    semanaItems.push({ id: "vitamina-d", block: "semana", label: "Vitamina D · 10.000 UI (semanal)", subtitle: "Toma junto de uma refeição com gordura — é a dose semanal de manutenção que você escolheu" });
   }
 
   return [
