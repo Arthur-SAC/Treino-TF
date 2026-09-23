@@ -69,9 +69,11 @@ export const DEFAULTS: Settings = {
   movementVersion: 1,
   makeupSeeded: false,
   voiceSeeded: false,
-  morningReminderTime: "08:00",
-  eveningReminderTime: "22:00",
-  workoutReminderTime: "18:00",
+  // Os horários dos itens de skincare e treino da rotina do Hoje (auditoria
+  // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
+  morningReminderTime: "06:25",
+  eveningReminderTime: "20:00",
+  workoutReminderTime: "18:15",
   activeBreakIntervalMin: 90,
   // Expediente real dela: 7h-16h. Vinha 9h-18h, um padrão genérico que punha a
   // primeira pausa duas horas depois de ela já estar trabalhando e a última
@@ -79,8 +81,10 @@ export const DEFAULTS: Settings = {
   activeBreakStartHour: 7,
   activeBreakEndHour: 16,
   hydrationIntervalMin: 60,
-  hydrationGoalMl: 2000,
-  quietHours: { from: "22:00", to: "08:00" },
+  // 96 kg, 5 km a pé e treino em Aracaju: 2 L ficava curto (~35 ml/kg ≈ 3,4 L).
+  hydrationGoalMl: 3000,
+  // O dia dela começa às 6h e ela deita às 22h30.
+  quietHours: { from: "22:30", to: "06:00" },
   routineTimes: {},
   focusModeUntil: null,
   notificationsEnabled: true,

@@ -129,6 +129,24 @@ export async function seedDatabase(): Promise<void> {
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
   }
 
+  // Lembretes que ainda estão no padrão antigo passam pros horários da rotina
+  // (auditoria 2026-09-23: 8h e 22h, com silêncio 22h-8h, nenhum tocava). Só
+  // troca valor igual ao padrão antigo — o que ela ajustou fica. Idempotente:
+  // depois da troca, nada mais bate com o antigo.
+  const ANTIGOS: Array<[string, unknown, unknown]> = [
+    ["morningReminderTime", "08:00", "06:25"],
+    ["eveningReminderTime", "22:00", "20:00"],
+    ["workoutReminderTime", "18:00", "18:15"],
+    ["hydrationGoalMl", 2000, 3000],
+    ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
+  ];
+  for (const [key, antigo, novo] of ANTIGOS) {
+    const atual = await db.settings.get(key);
+    if (atual && JSON.stringify(atual.value) === JSON.stringify(antigo)) {
+      await db.settings.put({ key, value: novo });
+    }
+  }
+
   await seedMedidasPartida();
 }
 
