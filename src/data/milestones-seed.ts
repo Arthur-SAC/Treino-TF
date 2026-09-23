@@ -1,6 +1,6 @@
 import type { Milestone } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
-import { CONSUMO } from "../lib/objetivo";
+import { CONSUMO, FASES, MARCOS_CINTURA } from "../lib/objetivo";
 
 function isoFromMonthsFromNow(months: number): string {
   const d = new Date();
@@ -48,7 +48,15 @@ export const MILESTONES: Omit<Milestone, "id">[] = [
 ];
 
 // Roadmap do objetivo físico. Os números vêm de src/lib/objetivo.ts — este
-// arquivo NARRA, não decide. Se um número mudar lá, muda aqui.
+// arquivo NARRA, não decide. Se um número mudar lá, muda aqui. Os meses também:
+// desde a entrega 2 (2026-09-23) eles saem das fases e dos marcos de cintura.
+const FASE_1 = FASES.find((f) => f.id === "fase-1")!;
+const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
+export const MILESTONES_MESES = {
+  cintura88: MARCOS_CINTURA[0].mesMin,
+  cintura84: MARCOS_CINTURA[1].mesMin,
+  fase2: FASE_2.mesInicio,
+} as const;
 export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
   {
     datePlanned: isoFromMonthsFromNow(0),
@@ -69,22 +77,22 @@ export const BODY_GOAL_MILESTONES: Omit<Milestone, "id">[] = [
     notes: "É por volta daqui que a foto começa a mostrar diferença. Se não mostrar, o problema é adesão, não o plano — revise as 16h e o jantar antes de mexer em qualquer outra coisa.",
   },
   {
-    datePlanned: isoFromMonthsFromNow(4),
+    datePlanned: isoFromMonthsFromNow(MILESTONES_MESES.cintura88),
     title: "▱Cintura 88 — destrava o superávit",
     category: "fisico",
     notes: "88 cm é a trava do app (CINTURA_LIBERA_SUPERAVIT_CM). Abaixo dela, comer a mais vira glúteo; acima, vira barriga. Partida: 99 cm.",
   },
   {
-    datePlanned: isoFromMonthsFromNow(7),
+    datePlanned: isoFromMonthsFromNow(MILESTONES_MESES.cintura84),
     title: "▱Cintura 84 — a silhueta vira",
     category: "fisico",
-    notes: "Fim da fase 1: peso por volta de 81 kg, cintura 84, razão cintura÷quadril em ~0,79. Não é o fim do caminho — é o ponto em que roupa justa passa a fazer o que você quer.",
+    notes: `Fim da fase 1: peso por volta de ${FASE_1.pesoKgMin}-${FASE_1.pesoKgMax} kg, cintura ${FASE_1.cinturaCm}, razão cintura÷quadril em ~${FASE_1.whrProvavel.toLocaleString("pt-BR")}. Não é o fim do caminho — é o ponto em que roupa justa passa a fazer o que você quer.`,
   },
   {
-    datePlanned: isoFromMonthsFromNow(8),
+    datePlanned: isoFromMonthsFromNow(MILESTONES_MESES.fase2),
     title: "◆Fase 2 — Construir glúteo (a balança SOBE)",
     category: "fisico",
-    notes: "Daqui em diante o peso sobe de propósito, de ~81 para 85-88 kg. Ver 85 kg nesta fase é o sinal de que deu certo, não de que falhou. O quadril volta aos 114 cm — o mesmo número de hoje, feito de músculo.",
+    notes: `Daqui em diante o peso sobe de propósito, de ${FASE_1.pesoKgMin}-${FASE_1.pesoKgMax} para ${FASE_2.pesoKgMin}-${FASE_2.pesoKgMax} kg. Ver ${FASE_2.pesoKgMin} kg nesta fase é o sinal de que deu certo, não de que falhou. O quadril volta aos ${FASE_2.quadrilCm} cm — o mesmo número de hoje, feito de músculo.`,
   },
   {
     datePlanned: isoFromMonthsFromNow(18),

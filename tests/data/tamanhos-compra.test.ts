@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { GUIA_TAMANHOS } from "../../src/data/tamanhos-seed";
-import { MEDIDAS_PARTIDA, FASES } from "../../src/lib/objetivo";
+import { MEDIDAS_PARTIDA, FASES, MARCOS_CINTURA } from "../../src/lib/objetivo";
 
 const texto = GUIA_TAMANHOS.map((g) => `${g.titulo} ${g.corpo}`).join("\n");
 
@@ -38,5 +38,11 @@ describe("guia de tamanho e compra", () => {
   it("toda entrada tem título e corpo", () => {
     const vazias = GUIA_TAMANHOS.filter((g) => !g.titulo.trim() || !g.corpo.trim()).map((g) => g.id);
     expect(vazias).toEqual([]);
+  });
+
+  it("o prazo da cintura sai dos marcos de objetivo.ts, não está escrito à mão", () => {
+    const fonte = Object.values(import.meta.glob("../../src/data/tamanhos-seed.ts", { query: "?raw", import: "default", eager: true }))[0] as string;
+    expect(fonte).not.toMatch(/Em \d+ a \d+ meses/);
+    expect(JSON.stringify(GUIA_TAMANHOS)).toContain(`${MARCOS_CINTURA[1].mesMin} a ${MARCOS_CINTURA[1].mesMax} meses`);
   });
 });
