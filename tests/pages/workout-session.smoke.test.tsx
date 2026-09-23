@@ -47,3 +47,22 @@ describe("Workout session smoke", () => {
     });
   });
 });
+
+// Revisão da auditoria: "Corrigir" no único exercício deixava uma sessão sem
+// nenhum exercício gravada — e ela contava como treino feito na semana.
+describe("Corrigir o único exercício", () => {
+  it("não deixa sessão vazia contando como treino", async () => {
+    await db.workoutSessions.clear();
+    render(
+      <MemoryRouter initialEntries={["/treino/sessao/seg-gluteo-mobilidade"]}>
+        <Routes>
+          <Route path="/treino/sessao/:templateId" element={<SessionDetail />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click((await screen.findAllByRole("button", { name: /marcar feito/i }))[0]);
+    await waitFor(async () => expect(await db.workoutSessions.count()).toBe(1));
+    fireEvent.click(await screen.findByRole("button", { name: /corrigir aquecimento/i }));
+    await waitFor(async () => expect(await db.workoutSessions.count()).toBe(0));
+  });
+});

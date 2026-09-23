@@ -97,6 +97,13 @@ export function SessionDetail() {
     const tplId = template.id;
     const durationMin = template.durationMin;
     saveChain.current = saveChain.current.then(async () => {
+      // Sem nenhum exercício (o "Corrigir" tirou o único), a sessão some: vazia,
+      // ela contava como treino feito na semana.
+      if (nextRecorded.length === 0) {
+        if (sessionIdRef.current !== undefined) await db.workoutSessions.delete(sessionIdRef.current);
+        sessionIdRef.current = undefined;
+        return;
+      }
       const id = (await db.workoutSessions.put({
         id: sessionIdRef.current,
         date: todayISO,
