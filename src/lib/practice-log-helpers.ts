@@ -20,10 +20,14 @@ import type { PracticeLog } from "./db";
  *  os logs é a tela. */
 export function praticadaHoje(
   logs: ReadonlyArray<Pick<PracticeLog, "date" | "sequenceId">>,
-  sequenceId: string,
+  sequenceId: string | readonly string[],
   hoje: string,
 ): boolean {
-  return logs.some((l) => l.date === hoje && l.sequenceId === sequenceId);
+  // Aceita a TRILHA inteira: a sequência "do dia" sai da contagem de práticas,
+  // e registrar a de hoje sobe a contagem — na virada de fase o id do dia muda
+  // no mesmo instante e a prática recém-feita deixaria de contar.
+  const ids = typeof sequenceId === "string" ? [sequenceId] : sequenceId;
+  return logs.some((l) => l.date === hoje && ids.includes(l.sequenceId));
 }
 
 /** Quantas práticas DA PROGRESSÃO ela concluiu. Move as fases, e é lida por

@@ -8,7 +8,9 @@ import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
-import { reboladoDoDia } from "../lib/rebolado-progression";
+import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
+import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
+import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
 import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
@@ -252,16 +254,25 @@ export function Today() {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
     if (item.linkKey === "skincareMorning") return !!morningDone;
     if (item.linkKey === "skincareNight") return !!eveningDone;
-    const logs = praticasDeHoje ?? [];
-    if (item.linkKey === "pelvic") return praticadaHoje(logs, pelvicHoje.sequenceId, todayISO);
-    if (item.linkKey === "flexManha") return praticadaHoje(logs, flexManhaHoje.sequenceId, todayISO);
-    if (item.linkKey === "flexNoite") return praticadaHoje(logs, flexNoiteHoje.sequenceId, todayISO);
-    if (item.linkKey === "rebolado") return praticadaHoje(logs, reboladoHoje.sequenceId, todayISO);
     return false;
   };
 
+  // Assoalho, alongamentos e rebolado: feitos também quando qualquer prática
+  // da trilha foi concluída hoje (revisão da auditoria 2026-09-23).
+  const trilhaDoItem: Partial<Record<string, readonly string[]>> = {
+    pelvic: PROGRESSAO_PELVICA,
+    flexManha: SEQUENCIAS_FLEX.manha,
+    flexNoite: SEQUENCIAS_FLEX.noite,
+    rebolado: SEQUENCIAS_REBOLADO,
+  };
+  const praticadaNaTrilha = (item: RoutineItem): boolean => {
+    const trilha = item.linkKey ? trilhaDoItem[item.linkKey] : undefined;
+    return !!trilha && praticadaHoje(praticasDeHoje ?? [], trilha, todayISO);
+  };
   const isDone = (item: RoutineItem): boolean =>
-    item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
+    item.control === "link" || item.control === "skincare"
+      ? linkDone(item)
+      : done.has(item.id) || praticadaNaTrilha(item);
 
   // Passear com os cães credita (ou devolve, se desmarcado) 1h de movimento;
   // marcar "Dormir" registra a hora real do relógio como hora de deitar, e
