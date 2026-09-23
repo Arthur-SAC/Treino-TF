@@ -32,6 +32,7 @@ import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
+import { primeiraMarcacao, mostrarAvisoAgua, SUBTITULO_AVISO_AGUA, CREATINA_ITEM_ID } from "../lib/creatina";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -76,6 +77,12 @@ export function Today() {
   );
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
+  // Primeira vez que ela marcou a creatina: é daqui que contam as 2 semanas
+  // do aviso de água. Varre só as linhas do item — são uma por dia.
+  const primeiraCreatina = useLiveQuery(
+    async () => primeiraMarcacao(await db.routineChecks.filter((c) => c.itemId === CREATINA_ITEM_ID).toArray()),
+    [],
+  );
 
   // Quantas práticas DA PROGRESSÃO ela já concluiu — define em que fase ela
   // está (identificar o músculo -> soltura -> Kegel -> variações). Mesmo
@@ -301,6 +308,9 @@ export function Today() {
     // contra a meta — uma meta que não aparece na tela não existe.
     if (item.control === "walk") {
       return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
+    }
+    if (item.id === CREATINA_ITEM_ID && mostrarAvisoAgua(primeiraCreatina ?? null, todayISO)) {
+      return SUBTITULO_AVISO_AGUA;
     }
     return item.subtitle;
   };

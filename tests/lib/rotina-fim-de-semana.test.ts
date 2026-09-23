@@ -66,16 +66,20 @@ describe("fim de semana", () => {
   // deslocamentos reais e distintos, e a meta de 120 min (ver settings-helpers.ts) soma os dois —
   // diferente do caso antigo (já corrigido) de um único passeio aparecendo
   // duas vezes sob ids diferentes.
-  it("no fim de semana só há um item de movimento; em dia de semana são dois (caminhada + cães)", () => {
+  // Desde 2026-09-23 (spec Chun-Li macia) o fim de semana também tem os 5 km,
+  // de manhã: são duas caminhadas reais nos sete dias.
+  it("fim de semana e dia útil têm duas caminhadas reais cada (5 km + cães)", () => {
     for (let dow = 0; dow < 7; dow++) {
       const fimDeSemana = dow === 0 || dow === 6;
-      const walksEsperados = fimDeSemana ? ["caes-fds"] : ["caminhada-trabalho", "caes"];
+      const walksEsperados = fimDeSemana ? ["caminhada-fds", "caes-fds"] : ["caminhada-trabalho", "caes"];
       const walks = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items).filter((i) => i.control === "walk");
       expect({ dow, walks: walks.map((i) => i.id) }).toEqual({ dow, walks: walksEsperados });
     }
   });
 
-  it("no sábado o passeio é o único item de caminhada, e não invade a dança", () => {
+  it("no sábado as caminhadas não invadem a dança — os 5 km são de manhã e o passeio depois dela", () => {
+    const manha = buildDayRoutine(6, 1).blocks.find((b) => b.id === "manha")!;
+    expect(manha.items.find((i) => i.id === "caminhada-fds")!.defaultTime).toBe("07:30");
     const tarde = buildDayRoutine(6, 1).blocks.find((b) => b.id === "tarde")!;
     expect(tarde.items.filter((i) => i.control === "walk").map((i) => i.id)).toEqual(["caes-fds"]);
     const ids = tarde.items.map((i) => i.id);
