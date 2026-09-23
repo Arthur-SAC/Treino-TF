@@ -4,6 +4,7 @@ import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
 import { encryptBackup, decryptBackup } from "../lib/backup";
+import { coletarBackup, restaurarBackup, type BackupPayload } from "../lib/backup-io";
 import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
 
@@ -59,29 +60,7 @@ export function Settings() {
       return;
     }
     try {
-      const payload = {
-        measurements: await db.measurements.toArray(),
-        photos: await Promise.all(
-          (await db.photos.toArray()).map(async (p) => ({
-            ...p,
-            blob: await blobToBase64(p.blob),
-          })),
-        ),
-        sessions: await db.workoutSessions.toArray(),
-        meals: await db.meals.toArray(),
-        skincareLogs: await db.skincareLogs.toArray(),
-        haircare: await db.haircare.toArray(),
-        dailyLog: await db.dailyLog.toArray(),
-        voiceRecordings: await Promise.all(
-          (await db.voiceRecordings.toArray()).map(async (r) => ({
-            ...r,
-            blob: await blobToBase64(r.blob),
-          })),
-        ),
-        voicePracticeLogs: await db.voicePracticeLogs.toArray(),
-        practiceLogs: await db.practiceLogs.toArray(),
-        milestones: await db.milestones.toArray(),
-      };
+      const payload = await coletarBackup();
       const encrypted = await encryptBackup(payload, password);
       const blob = new Blob([encrypted], { type: "application/octet-stream" });
       const url = URL.createObjectURL(blob);
@@ -108,47 +87,8 @@ export function Settings() {
     }
     try {
       const encrypted = await file.text();
-      type ImportPayload = {
-        measurements: unknown[];
-        photos: Array<{ blob: string; date: string; tag: string; category: string }>;
-        sessions: unknown[];
-        meals: unknown[];
-        skincareLogs: unknown[];
-        haircare: unknown[];
-        dailyLog: unknown[];
-        voiceRecordings?: Array<{ blob: string; date: string; durationSec: number; exerciseId?: string; avgPitchHz?: number }>;
-        voicePracticeLogs?: unknown[];
-        practiceLogs?: unknown[];
-        milestones?: unknown[];
-      };
-      const payload = await decryptBackup<ImportPayload>(encrypted, password);
-      await db.transaction("rw", [db.measurements, db.photos, db.workoutSessions, db.meals, db.skincareLogs, db.haircare, db.dailyLog, db.voiceRecordings, db.voicePracticeLogs, db.practiceLogs, db.milestones], async () => {
-        await db.measurements.bulkAdd(payload.measurements as never);
-        await db.photos.bulkAdd(
-          await Promise.all(
-            payload.photos.map(async (p) => ({
-              ...p,
-              blob: await base64ToBlob(p.blob),
-            })),
-          ) as never,
-        );
-        await db.workoutSessions.bulkAdd(payload.sessions as never);
-        await db.meals.bulkAdd(payload.meals as never);
-        await db.skincareLogs.bulkAdd(payload.skincareLogs as never);
-        await db.haircare.bulkAdd(payload.haircare as never);
-        await db.dailyLog.bulkAdd(payload.dailyLog as never);
-        await db.voiceRecordings.bulkAdd(
-          await Promise.all(
-            (payload.voiceRecordings ?? []).map(async (r) => ({
-              ...r,
-              blob: await base64ToBlob(r.blob),
-            })),
-          ) as never,
-        );
-        await db.voicePracticeLogs.bulkAdd((payload.voicePracticeLogs ?? []) as never);
-        await db.practiceLogs.bulkAdd((payload.practiceLogs ?? []) as never);
-        await db.milestones.bulkAdd((payload.milestones ?? []) as never);
-      });
+      const payload = await decryptBackup<BackupPayload>(encrypted, password);
+      await restaurarBackup(payload);
       setInfo("Backup importado.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha na importação (senha errada ou arquivo corrompido?).");
@@ -310,21 +250,4 @@ export function Settings() {
       </div>
     </div>
   );
-}
-
-async function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result as string;
-      resolve(result.split(",")[1] ?? "");
-    };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(blob);
-  });
-}
-
-async function base64ToBlob(b64: string): Promise<Blob> {
-  const res = await fetch(`data:application/octet-stream;base64,${b64}`);
-  return res.blob();
 }
