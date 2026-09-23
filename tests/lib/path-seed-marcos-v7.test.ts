@@ -145,7 +145,8 @@ describe("migração v7 dos marcos", () => {
     const whr = await acheTitulo("Re-avaliar relação cintura/quadril");
     expect(whr!.datePlanned).toBe("2026-08-13");
     // O texto, esse sim, é reescrito.
-    expect(whr!.notes).toContain("0,87");
+    // Desde 2026-09-23 compara com a medição de partida dela, não com maio.
+    expect(whr!.notes).toContain("medição de partida");
     expect(whr!.notes).not.toContain("quadril aumentar 1-2cm");
   });
 
@@ -190,7 +191,7 @@ describe("migração v7 dos marcos", () => {
   it("instalação nova já nasce na versão da migração, sem rodá-la", async () => {
     await seedPath();
     const v = await db.settings.get("milestoneSeedVersion");
-    expect(v?.value).toBe(9);
+    expect(v?.value).toBe(10);
     expect(await db.milestones.count()).toBe(TOTAL_DO_SEED);
   });
 });

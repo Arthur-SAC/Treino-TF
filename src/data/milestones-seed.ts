@@ -37,13 +37,13 @@ export const MILESTONES: Omit<Milestone, "id">[] = [
     datePlanned: isoFromMonthsFromNow(3),
     title: "Re-avaliar relação cintura/quadril (WHR)",
     category: "fisico",
-    notes: "Medir de novo e comparar a RAZÃO, não os centímetros soltos. Partida: 0,87 (cintura 99 / quadril 114). Nesta altura a cintura deve estar chegando nos 88 cm — e o quadril também cai, porque tem gordura nele: isso é esperado, não perda de glúteo. Ele volta aos 114 cm na fase 2, feito de músculo. Quem manda no número é a cintura.",
+    notes: "Medir de novo e comparar a RAZÃO com a da sua medição de partida, não os centímetros soltos. Nesta altura a cintura deve estar chegando nos 88 cm — e o quadril também cai, porque tem gordura nele: isso é esperado, não perda de glúteo. Ele volta na fase 2, feito de músculo. Quem manda no número é a cintura.",
   },
   {
     datePlanned: isoFromMonthsFromNow(6),
-    title: "✂ Cabelo na fase de transição — manter forma e saúde crescendo",
+    title: "✂ Cabelo — o corte do cacho no lugar",
     category: "fisico",
-    notes: "Com cronograma consistente + retenção (cetim, baixa manipulação, aparar só pontas), o cabelo deve estar visivelmente mais comprido e saudável. Fase do meio-termo: dar forma com camadas longas sem encurtar, disfarçar formatos esquisitos com acessórios. Rumo a um pouco abaixo dos ombros.",
+    notes: "Corte cacheado andrógino a feminino (wolf cut): camadas que emolduram o rosto, volume no topo e franja cortina. O que feminiza é a forma, não o comprimento — aparar a cada 8-10 semanas mantém o desenho. Rotina Juba de lavagem 2-3x por semana e reconstrução leve 1x por mês.",
   },
 ];
 
