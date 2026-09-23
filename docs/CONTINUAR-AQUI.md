@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | Entrega | Conteúdo | Estado |
 |---|---|---|
 | 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ mergeada na main (`1a40bc6`), 944 testes — **push só com o ok dela** |
-| 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos datados | pendente |
+| 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ branch `feat/chun-li-entrega-2` |
 | Auditoria | achados de 2026-09-23 (seção 9) | pendente — itens 1-4 vão junto da entrega 2 |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
@@ -245,7 +245,7 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
    transição", rótulos em Beleza/Estilo/Movimento.
 5. Tudo termina fora do Hoje: sequência concluída não marca o item; refeições com duas
    fontes de verdade (`MealsToday` × `routineChecks`), `MealsToday` sem grama.
-6. Advisor de ciclo exige WHR 0,73 (alvo final) pra liberar a fase 2, em vez de cintura 84.
+6. ✅ (entrega 2) Advisor de ciclo exigia WHR 0,73 (alvo final) pra liberar a fase 2, em vez de cintura 84.
 7. Backup não inclui `settings`, `routineChecks`, peças, looks, produtos, depilação.
 8. Progressão do rebolado (`rebolado-progression.ts`) não é servida por tela nenhuma.
 9. Lembretes de skincare desalinhados da rotina (22h cai no silêncio); meta de água 2 L.

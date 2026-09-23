@@ -55,12 +55,16 @@ Comparação visual em `imagens/objetivo/silhueta-comparacao-2026-09-23.png` (fo
 Piso de cintura natural: **80** (caixa torácica larga). Números-alvo vivem em
 `src/lib/objetivo.ts` — **nunca** escrever à mão em tela ou seed.
 
+**Partida:** a primeira medição que ela registrar a partir de 23/09/2026 (peso + cintura
+no umbigo + pescoço) — `src/lib/partida.ts`. O Hoje pede a medição enquanto ela não existe;
+depois mostra peso-alvo e prazos em mês de calendário, e os Horizontes montam a linha do tempo.
+
 ## 5. As fases
 
 | Fase | O que acontece | Comida | Onde treina |
 |---|---|---|---|
-| **1 · Tirar a barriga** (~5,5–6 meses) | cintura → 84, peso → ~82, músculo começando | **2.200 kcal**, 150–160 g proteína | academia do prédio |
-| **2 · Construir** (até ~mês 21–27) | glúteo destacado, coxa, peito de cima, costas. **A balança sobe de propósito** (84–87 kg); quadril volta a 114–116 feito de músculo | manutenção 2.750 · superávit leve 2.950 **só com cintura ≤ 88** | **Smartfit** (ver seção 8) |
+| **1 · Tirar a barriga** (~5,5–7,5 meses; o app calcula pela medição de partida dela) | cintura → 84, peso → 80–82 (massa magra ÷ 0,87–0,89), músculo começando | **2.200 kcal** contra gasto 2.700–2.900 (0,45–0,64 kg/sem), 150–160 g proteína | academia do prédio |
+| **2 · Construir** (até ~mês 21–27) | glúteo destacado, coxa, peito de cima, costas. **A balança sobe de propósito** (85–88 kg); quadril volta a 114–116 feito de músculo | manutenção 2.750 · superávit leve 2.950 **só com cintura ≤ 88** | **Smartfit** (ver seção 8) |
 | **3 · Marcar de leve** (2–3 meses, opcional) | "durinha, levemente marcado" | déficit curto ~2.400 | onde estiver |
 | **Horizonte cirúrgico** | lipo 360 + BBL (+ implante de mama opcional) | peso estável ~6 meses antes; **não** fazer a fase 3 | — |
 
@@ -111,8 +115,8 @@ Quando ela disser que trocou de academia:
    pull-through), mesa flexora, máquina de glúteo, hack/smith. Use pra projeção e dobra.
    O teste `no-low-pulley.test.ts` é da academia do prédio — revisar quando ela trocar.
 5. **Comida da fase 2:** o app troca sozinho pra manutenção/superávit pela cintura
-   (`resolveGoal`, trava 88). Conferir se o **advisor de ciclo** usa cintura 84 (fim da fase
-   1) e não o alvo final de WHR — ver dívidas no `CONTINUAR-AQUI.md`.
+   (`resolveGoal`, trava 88). O **advisor de ciclo** libera a hipertrofia com cintura ≤ 84
+   (fim da fase 1) ou platô de cintura — corrigido na entrega 2.
 6. **Réguas que já existem e devem continuar valendo:** `tests/data/fase1-chun-li.test.ts`
    (faixas, blocos, duração, proibidos) — copiar o padrão pra fase 2.
 
