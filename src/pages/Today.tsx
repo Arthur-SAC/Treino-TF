@@ -337,7 +337,7 @@ export function Today() {
   };
 
   const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
-  const { projecao, carregando: partidaCarregando } = usePartida();
+  const { projecao, invalida: partidaInvalida, carregando: partidaCarregando } = usePartida();
 
   return (
     <div className="p-4 pb-24 space-y-3">
@@ -351,7 +351,7 @@ export function Today() {
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
-      {!partidaCarregando && <PartidaCard projecao={projecao} />}
+      {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
           `.card` com padding e borda próprios — em 4 colunas numa tela

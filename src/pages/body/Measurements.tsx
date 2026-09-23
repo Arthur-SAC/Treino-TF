@@ -135,11 +135,27 @@ export function Measurements() {
                 )}
               </div>
               <div className="text-sm text-muted grid grid-cols-2 gap-x-3">
+                {m.weightKg !== undefined && <span>Peso: {m.weightKg.toLocaleString("pt-BR")} kg</span>}
+                {m.neckCm !== undefined && <span>Pescoço: {formatCm(m.neckCm)}</span>}
                 {m.waistCm !== undefined && <span>Cintura: {formatCm(m.waistCm)}</span>}
                 {m.hipCm !== undefined && <span>Quadril: {formatCm(m.hipCm)}</span>}
                 {m.shouldersCm !== undefined && <span>Ombros: {formatCm(m.shouldersCm)}</span>}
                 {m.chestCm !== undefined && <span>Busto: {formatCm(m.chestCm)}</span>}
               </div>
+              {/* A primeira medição desde o recomeço vira a partida: um erro de
+                  digitação precisa ter como sair (revisão da entrega 2). */}
+              <button
+                type="button"
+                aria-label={`Apagar medida de ${formatDateBR(new Date(m.date))}`}
+                onClick={() => {
+                  if (m.id !== undefined && window.confirm("Apagar esta medida? Não dá pra desfazer.")) {
+                    void db.measurements.delete(m.id);
+                  }
+                }}
+                className="text-muted text-xs underline mt-2"
+              >
+                Apagar
+              </button>
             </div>
           );
         })}

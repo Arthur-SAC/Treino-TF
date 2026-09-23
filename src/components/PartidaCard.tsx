@@ -6,7 +6,18 @@ const entre = ([a, b]: [string, string]) => (a === b ? mesAno(a) : `${mesAno(a)}
 // O norte do dia numa linha. Sem partida, pede a medição — é dela que saem o
 // peso-alvo e os prazos (ela recomeçou do zero em 23/09/2026 e não tinha como
 // medir no dia). Com partida, fica sempre à vista, sem ocupar a tela.
-export function PartidaCard({ projecao }: { projecao: Projecao | null }) {
+export function PartidaCard({ projecao, invalida = false }: { projecao: Projecao | null; invalida?: boolean }) {
+  if (!projecao && invalida) {
+    return (
+      <div className="card">
+        <h3 className="text-nude-warm font-medium">Medição de partida</h3>
+        <p className="text-muted text-sm mt-1">
+          A medição que você registrou não fechou a conta — confere se a cintura (no umbigo) e o pescoço não ficaram trocados ou com uma vírgula fora do lugar. Dá pra apagar a medida errada na lista.
+        </p>
+        <Link to="/corpo/medidas" className="text-sm text-nude-warm underline mt-2 inline-block">Conferir medidas</Link>
+      </div>
+    );
+  }
   if (!projecao) {
     return (
       <div className="card">

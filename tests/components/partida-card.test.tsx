@@ -19,3 +19,11 @@ describe("card de partida no Hoje", () => {
     expect(screen.getByText(/fim da fase 1/i)).toBeInTheDocument();
   });
 });
+
+describe("card de partida com medição que não fecha a conta", () => {
+  it("pede pra conferir cintura e pescoço em vez de só 'medir agora'", () => {
+    render(<MemoryRouter><PartidaCard projecao={null} invalida /></MemoryRouter>);
+    expect(screen.getByText(/não fechou a conta/i)).toBeInTheDocument();
+    expect(screen.getByText(/pescoço/i)).toBeInTheDocument();
+  });
+});

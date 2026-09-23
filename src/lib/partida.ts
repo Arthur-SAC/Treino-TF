@@ -38,19 +38,43 @@ const CINTURA_FIM_FASE1 = FASES.find((f) => f.id === "fase-1")!.cinturaCm;
 const CINTURA_TRAVA = MARCOS_CINTURA[0].cinturaCm; // 88 — a trava do superávit
 const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
-export function escolherPartida(ms: readonly Measurement[], recomeco: string = RECOMECO_DATA): Partida | null {
-  const validas = ms
+/** Medições desde o recomeço com os três campos da conta, em ordem: data, e
+ *  no mesmo dia o menor id. */
+function candidatas(ms: readonly Measurement[], recomeco: string): Partida[] {
+  return ms
     .filter((x) => x.date >= recomeco && !!x.weightKg && !!x.waistCm && !!x.neckCm)
-    .sort((a, b) => (a.date === b.date ? (a.id ?? 0) - (b.id ?? 0) : a.date < b.date ? -1 : 1));
-  const p = validas[0];
-  if (!p) return null;
-  return {
-    data: p.date,
-    pesoKg: p.weightKg!,
-    cinturaCm: p.waistCm!,
-    pescocoCm: p.neckCm!,
-    ...(p.hipCm ? { quadrilCm: p.hipCm } : {}),
-  };
+    .sort((a, b) => (a.date === b.date ? (a.id ?? 0) - (b.id ?? 0) : a.date < b.date ? -1 : 1))
+    .map((p) => ({
+      data: p.date,
+      pesoKg: p.weightKg!,
+      cinturaCm: p.waistCm!,
+      pescocoCm: p.neckCm!,
+      ...(p.hipCm ? { quadrilCm: p.hipCm } : {}),
+    }));
+}
+
+export function escolherPartida(ms: readonly Measurement[], recomeco: string = RECOMECO_DATA): Partida | null {
+  return candidatas(ms, recomeco)[0] ?? null;
+}
+
+/** A partida que o app usa: a primeira medição que FECHA A CONTA — cintura
+ *  maior que o pescoço, %G positiva e peso-alvo abaixo do próprio peso. Um
+ *  erro de digitação no celular (cintura e pescoço trocados, uma vírgula fora
+ *  do lugar) não pode virar a partida pra sempre: o app pula a medição e usa a
+ *  próxima. `invalida` = existe medição desde o recomeço, mas nenhuma fecha a
+ *  conta — o card pede pra conferir, em vez de pedir pra medir de novo. */
+export function partidaPlausivel(
+  ms: readonly Measurement[],
+  alturaCm: number,
+  recomeco: string = RECOMECO_DATA,
+): { resultado: Projecao | null; invalida: boolean } {
+  const cs = candidatas(ms, recomeco);
+  for (const c of cs) {
+    if (c.cinturaCm <= c.pescocoCm) continue;
+    const pr = projetar(c, alturaCm);
+    if (pr && pr.gorduraPct > 0 && pr.pesoAlvoFase1[1] < c.pesoKg) return { resultado: pr, invalida: false };
+  }
+  return { resultado: null, invalida: cs.length > 0 };
 }
 
 /** "YYYY-MM-DD" + semanas → "YYYY-MM". Conta em UTC puro, sem fuso local. */

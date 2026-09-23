@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { escolherPartida, projetar, mesAno } from "../../src/lib/partida";
+import { escolherPartida, projetar, mesAno, partidaPlausivel } from "../../src/lib/partida";
 import type { Measurement } from "../../src/lib/db";
 
 const m = (x: Partial<Measurement> & { date: string }): Measurement => ({ ...x } as Measurement);
@@ -51,5 +51,27 @@ describe("projeção da fase 1", () => {
   });
   it("mês por extenso curto", () => {
     expect(mesAno("2027-03")).toBe("mar/2027");
+  });
+});
+
+describe("partida plausível — um erro de digitação não trava o app", () => {
+  it("pula a medição que não fecha a conta (cintura e pescoço trocados) e usa a próxima", () => {
+    const r = partidaPlausivel([
+      m({ id: 1, date: "2026-09-24", weightKg: 96, waistCm: 40, neckCm: 99 }),
+      m({ id: 2, date: "2026-09-26", weightKg: 96, waistCm: 99, neckCm: 40 }),
+    ], 173);
+    expect(r.resultado?.partida.data).toBe("2026-09-26");
+    expect(r.invalida).toBe(false);
+  });
+
+  it("pula a medição cujo peso-alvo sairia acima do próprio peso", () => {
+    const r = partidaPlausivel([m({ id: 1, date: "2026-09-24", weightKg: 96, waistCm: 60, neckCm: 40 })], 173);
+    expect(r.resultado).toBeNull();
+    expect(r.invalida).toBe(true);
+  });
+
+  it("sem nenhuma medição desde o recomeço, não há partida e não é 'inválida' — só falta medir", () => {
+    const r = partidaPlausivel([m({ date: "2026-05-13", weightKg: 96, waistCm: 99, neckCm: 40 })], 173);
+    expect(r).toEqual({ resultado: null, invalida: false });
   });
 });
