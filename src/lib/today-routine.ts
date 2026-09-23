@@ -237,6 +237,19 @@ function tardeSemana(): RoutineItem[] {
   ];
 }
 
+/** Sexta e sábado ela sai com a noiva (e domingo, de 15 em 15): o jantar
+ *  lembra que existe plano pra isso, no lugar de fingir que ela janta a
+ *  marmita (auditoria 2026-09-23). */
+function noiteDoDia(dayOfWeek: number): RoutineItem[] {
+  const fora = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0;
+  if (!fora) return NOITE;
+  return NOITE.map((i) =>
+    i.id === "jantar"
+      ? { ...i, note: "Vai jantar fora? A verba da semana cobre — o que pedir está em Alimentação, no plano de comer fora." }
+      : i,
+  );
+}
+
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
@@ -310,7 +323,7 @@ function buildBlocks(
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: NOITE },
+    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }

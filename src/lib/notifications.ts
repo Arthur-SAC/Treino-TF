@@ -28,7 +28,8 @@ export async function requestNotificationPermission(): Promise<boolean> {
 
 export function notify(title: string, body: string): void {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
-  new Notification(title, { body, icon: "/icons/icon-192.svg" });
+  // BASE_URL: o app publicado mora em /Treino-TF/ — "/icons/…" dava 404.
+  new Notification(title, { body, icon: `${import.meta.env.BASE_URL}icons/icon-192.svg` });
 }
 
 export function shouldNotifyNow(
