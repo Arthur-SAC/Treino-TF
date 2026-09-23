@@ -47,4 +47,14 @@ describe("os produtos chegam no aparelho dela", () => {
     expect(nomes).toContain("Co-wash Salon Line / Lola");
     expect(nomes.some((n) => /Juba/.test(n))).toBe(true);
   });
+
+  it("não traz de volta produto que ela apagou — só acrescenta os de cabelo novos", async () => {
+    await db.settings.put({ key: "beautySeeded", value: true });
+    // Ela tem só um produto: apagou todos os outros do seed.
+    await db.products.add({ name: "Meu protetor", category: "skincare" } as never);
+    await seedBeauty();
+    const produtos = await db.products.toArray();
+    expect(produtos.filter((p) => p.category !== "haircare").map((p) => p.name)).toEqual(["Meu protetor"]);
+    expect(produtos.some((p) => /Juba/.test(p.name))).toBe(true);
+  });
 });

@@ -64,8 +64,10 @@ export async function seedBeauty(): Promise<void> {
         const intacto = existentes.find((x) => x.name === nome && x.notes === notaAntiga && !x.boughtAt);
         if (intacto?.id !== undefined) await db.products.delete(intacto.id);
       }
+      // Só os de cabelo novos: acrescentar tudo que falta traria de volta o
+      // que ela apagou de propósito na tela de produtos.
       const nomes = new Set(existentes.map((x) => x.name));
-      for (const p of PRODUCTS) {
+      for (const p of PRODUCTS.filter((x) => x.category === "haircare")) {
         if (!nomes.has(p.name)) await db.products.add({ ...p } as never);
       }
       await db.settings.put({ key: "productSeedVersion", value: PRODUCT_SEED_VERSION });

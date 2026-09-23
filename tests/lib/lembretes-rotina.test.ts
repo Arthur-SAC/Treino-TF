@@ -44,3 +44,16 @@ describe("migração dos lembretes no aparelho dela", () => {
     expect((await db.settings.get("hydrationGoalMl"))?.value).toBe(3000);
   });
 });
+
+describe("a migração dos lembretes roda uma vez só", () => {
+  it("se depois ela escolher 08:00 de propósito, a próxima abertura não desfaz", async () => {
+    const { db } = await import("../../src/lib/db");
+    const { seedDatabase } = await import("../../src/lib/seed");
+    await db.settings.clear();
+    await db.settings.put({ key: "morningReminderTime", value: "08:00" });
+    await seedDatabase(); // migra pra 06:25
+    await db.settings.put({ key: "morningReminderTime", value: "08:00" }); // escolha dela
+    await seedDatabase(); // abre de novo
+    expect((await db.settings.get("morningReminderTime"))?.value).toBe("08:00");
+  });
+});
