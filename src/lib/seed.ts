@@ -23,7 +23,8 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // carga, o oposto do objetivo), subiu de exposureLevel 2 → 3, e os dois
 // exercícios novos ganharam vídeo de demonstração.
 // v11: nove exercícios da Chun-Li macia (coxa, braço, costas médias) e as categorias Pernas e Braços.
-export const EXERCISE_SEED_VERSION = 11;
+// v12: peito de cima progride — o catálogo para de mandar manter LEVE (auditoria 2026-09-23).
+export const EXERCISE_SEED_VERSION = 12;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.
@@ -34,7 +35,8 @@ export const EXERCISE_SEED_VERSION = 11;
 // sem isso o padrão de levantar só chegaria nela daqui a ~48 sessões. A Fase
 // de Entrada continua de fora de propósito (rampa de exposição).
 // v13: fase 1 reescrita para a Chun-Li macia (3 inferiores + 2 superiores, abdutora 3x, braço e peito de cima).
-export const TEMPLATE_SEED_VERSION = 13;
+// v14: nota do supino da hipertrofia concorda com a progressão do peito.
+export const TEMPLATE_SEED_VERSION = 14;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");

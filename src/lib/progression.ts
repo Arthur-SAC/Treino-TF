@@ -9,6 +9,8 @@ export interface ProgressionInput {
   hitTopOfRange?: boolean;
   category?: string;
   equipment?: readonly string[];
+  /** Carga inicial do exercício — usada quando a última vez foi sem peso. */
+  startLoadKg?: number;
 }
 
 // Só a postura fica leve (face pull, extensão lombar, retração): é trabalho de
@@ -25,15 +27,20 @@ export function isHoldLight(category: string): boolean {
  *  halter nem em placa — a sugestão antiga pedia um peso que não havia. */
 export function incrementoDoEquipamento(equipment: readonly string[] = []): number {
   const tem = (...ids: string[]) => equipment.some((e) => ids.some((i) => e === i || e.startsWith(i)));
+  const SEM_CARGA = ["peso-corporal", "colchonete", "nenhum"];
+  if (equipment.length > 0 && equipment.every((e) => SEM_CARGA.includes(e))) return 0;
   if (tem("caneleira")) return 1;
   if (tem("leg-press", "maquina-", "multiestacao", "polia")) return 5;
   return 2;
 }
 
 export function suggestNextLoad({
-  lastLoad, feedback, completedAllReps, hitTopOfRange = false, category, equipment,
+  lastLoad, feedback, completedAllReps, hitTopOfRange = false, category, equipment, startLoadKg,
 }: ProgressionInput): number {
   const passo = incrementoDoEquipamento(equipment);
+  // Saindo do "sem peso" (ex.: hip thrust da Entrada), o próximo degrau é a
+  // carga inicial do exercício (a barra vazia), não "+2 kg".
+  if (lastLoad === 0 && startLoadKg && completedAllReps && feedback !== "hard") return startLoadKg;
   if (category && isHoldLight(category)) {
     return completedAllReps ? lastLoad : Math.max(0, lastLoad - passo);
   }

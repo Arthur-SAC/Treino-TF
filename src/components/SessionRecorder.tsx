@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
-import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries, type LastPerformance } from "../lib/progression";
+import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries, incrementoDoEquipamento, type LastPerformance } from "../lib/progression";
 import { formatDateBR } from "../lib/format";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
@@ -67,6 +67,8 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         if (!mounted) return;
         const alvoDaquelaVez = tplAntigo?.exercises.find((e) => e.exerciseId === exercise.id)?.repsTarget ?? repsTarget;
         const { completou, topo } = avaliarSeries(lastPerf.sets, alvoDaquelaVez);
+        // Peso corporal não tem passo de carga: sem sugestão, fica "Peso corporal".
+        if (incrementoDoEquipamento(exercise.equipment) === 0) return;
         setSuggested(
           suggestNextLoad({
             lastLoad: lastSet.weight,
@@ -75,6 +77,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
             hitTopOfRange: topo,
             category: exercise.category,
             equipment: exercise.equipment,
+            startLoadKg: exercise.startLoadKg,
           }),
         );
         // Pré-preenche as séries com o que foi feito da última vez (a usuária ajusta).

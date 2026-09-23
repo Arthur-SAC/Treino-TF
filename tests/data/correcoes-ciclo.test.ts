@@ -47,11 +47,13 @@ describe("correções de programação (Bloco B da spec 2026-07-27)", () => {
     expect(temHinge).toBe(true);
   });
 
-  it("o peitoral da hipertrofia é leve — pesado constrói peito masculino", () => {
+  // Desde 2026-09-23 o peito de cima progride. O que continua proibido é o
+  // peito pesado de poucas reps (e supino reto/declinado, que nem existe aqui).
+  it("o peitoral da hipertrofia não é pesado — 3 séries, 10 reps ou mais", () => {
     const h = CYCLE_TEMPLATES.find((t) => t.id === "h-ter-cintura-costas");
     const supino = h?.exercises.find((e) => e.exerciseId === "supino-inclinado-halteres");
     expect(supino?.sets).toBeLessThanOrEqual(3);
-    expect(supino?.repsTarget.toLowerCase()).toContain("leve");
+    expect(Number(supino?.repsTarget.match(/\d+/)?.[0])).toBeGreaterThanOrEqual(10);
   });
 
   it("nenhum dia de inferior programa mais zona 2 — a caminhada diária já entrega a dose", () => {

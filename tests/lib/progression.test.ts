@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { suggestNextLoad, suggestNextHoldTime, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries } from "../../src/lib/progression";
+import { suggestNextLoad, suggestNextHoldTime, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries, incrementoDoEquipamento } from "../../src/lib/progression";
 
 // Regras de 2026-09-23 (auditoria): o incremento é o do equipamento, "médio"
 // só sobe quando todas as séries bateram o topo da faixa, e completar é bater o
@@ -32,6 +32,17 @@ describe("suggestNextLoad", () => {
     expect(isHoldLight("costas")).toBe(false);
     expect(isHoldLight("postura")).toBe(true);
     expect(suggestNextLoad({ ...base, lastLoad: 6, feedback: "easy", category: "postura" })).toBe(6);
+  });
+});
+
+describe("carga zero e peso corporal (revisão da auditoria)", () => {
+  it("peso corporal não tem passo de carga", () => {
+    expect(incrementoDoEquipamento(["peso-corporal"])).toBe(0);
+    expect(incrementoDoEquipamento(["colchonete"])).toBe(0);
+    expect(incrementoDoEquipamento(["nenhum"])).toBe(0);
+  });
+  it("saindo do 'sem peso', a sugestão é a carga inicial do exercício, não +2", () => {
+    expect(suggestNextLoad({ lastLoad: 0, feedback: "easy", completedAllReps: true, equipment: ["barra", "anilhas", "banco"], startLoadKg: 20 })).toBe(20);
   });
 });
 

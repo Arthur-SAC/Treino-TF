@@ -156,7 +156,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Leve de propósito: peitoral leve dá base que projeta o busto, pesado constrói um peito que lê como masculino" },
+      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "10-12", restSec: 60, notes: "Inclinado e controlado: enche o peito de cima. O que lê como masculino é supino reto ou declinado pesado — este progride" },
       { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20-30m", restSec: 60, notes: "Padrão de levantar — carga à frente do corpo" },
       { exerciseId: "remada-baixa-maquina", sets: 4, repsTarget: "10-12", restSec: 75 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
