@@ -209,7 +209,7 @@ function caes(dia: TipoDeDia): RoutineItem {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
   }
   if (dia === "domingo") {
-    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; hoje é daqui que vem quase todo o seu movimento" };
+    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã" };
   }
   return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
 }

@@ -782,7 +782,7 @@ const SLOTS: MealSlot[] = [
             proteinG: 2,
             carbG: 22,
             fatG: 0,
-            preparation: "Cortada em cubos no domingo, num pote fechado — dura 3 dias na geladeira. Come gelada antes da caminhada.",
+            preparation: "Cortada em cubos no domingo, num pote fechado — dura 3 dias na geladeira. Come gelada no lanche.",
           },
           {
             // Entra com o slot indo pra 500 kcal. Era a opção mais pobre do
@@ -1139,13 +1139,13 @@ export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · manutenção (2750 kcal)",
   goal: "manutencao",
   kcalDaily: 2750,
-  // Soma real da variante 0 com o boost: 2988 kcal, 228g proteína, 342g carbo,
-  // 76g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
+  // Soma real da variante 0 com o boost: 2768 kcal, 224g proteína, 278g carbo,
+  // 81g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
   // derruba testosterona, e é a testosterona que sustenta metade dos objetivos
   // desta fase (ver a frente 2).
-  proteinG: 228,
-  carbG: 342,
-  fatG: 76,
+  proteinG: 224,
+  carbG: 278,
+  fatG: 81,
   slots: MAINTENANCE_SLOTS,
   defaultMeals: deriveDefaultMeals(MAINTENANCE_SLOTS),
 };
@@ -1154,10 +1154,10 @@ export const SURPLUS_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · superávit leve (2950 kcal)",
   goal: "superavit",
   kcalDaily: 2950,
-  // Soma real da variante 0 com o boost: 3288 kcal, 255g proteína, 382g carbo,
+  // Soma real da variante 0 com o boost: 2968 kcal, 250g proteína, 307g carbo,
   // 79g gordura.
-  proteinG: 255,
-  carbG: 382,
+  proteinG: 250,
+  carbG: 307,
   fatG: 79,
   slots: SURPLUS_SLOTS,
   defaultMeals: deriveDefaultMeals(SURPLUS_SLOTS),

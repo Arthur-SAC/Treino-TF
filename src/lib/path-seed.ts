@@ -26,7 +26,8 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // ~13g menos de proteína e o dobro de gordura.
 // v14: déficit a 2.200 (gasto real 2.600-2.800), manutenção 2.750, superávit 2.950.
 // v15: whey em gramas de pó, castanha-do-pará no café-4, melancia no lanche-3.
-export const MEAL_PLAN_VERSION = 15;
+// v16: macros declarados de manutenção e superávit voltam a bater com a comida (eram os de 3.000/3.300).
+export const MEAL_PLAN_VERSION = 16;
 // v8: o marco da fase 1 passou a citar a meta de CONSUMO (2.200), não um número solto.
 const MILESTONE_SEED_VERSION = 8;
 
