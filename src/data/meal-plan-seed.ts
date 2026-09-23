@@ -1,11 +1,11 @@
 import type { MealPlan, MealSlot, MealVariant, Ingredient } from "../lib/db";
 import { deriveDefaultMeals } from "../lib/meal-plan";
 
-// 2300 kcal pra déficit moderado — 96kg, 27 anos, 1,73m. Recalibrado de 2200:
-// o número velho foi calculado antes do app saber que ela caminha 5km/dia
-// (ver CONSUMO.gastoEstimadoKcalMin/Max em objetivo.ts). Deficit contra o
-// gasto real de hoje continua na mesma faixa de ritmo de perda.
-// Proteína ~211g · Gordura ~52g · Carbo ~236g · ~0,5-0,7 kg/semana
+// 2200 kcal pra déficit moderado — 96kg, 27 anos, 1,73m (spec Chun-Li macia,
+// 2026-09-23). Contra o gasto real de 2.600-2.800 (CONSUMO em objetivo.ts) dá
+// ~400-600 de déficit: ela escolheu 2.200 e não 2.000 porque déficit maior
+// derruba testosterona, e firmeza, libido e força são metade dos objetivos.
+// Proteína ~211g · Gordura ~57g · Carbo ~207g · ~0,45-0,6 kg/semana
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
 /** Piso de proteína de CADA opção, por refeição. A soma dos quatro é
  *  CONSUMO.proteinaGMin — é isso que faz o piso do dia valer para qualquer
@@ -21,7 +21,7 @@ import { deriveDefaultMeals } from "../lib/meal-plan";
  *  lanche 21 + jantar 39. Mesmas 2300 kcal, 83g de proteína a menos, e nada
  *  na tela dizia.
  *
- *  Ela está num déficit de 600-800 kcal treinando cinco vezes por semana, e a
+ *  Ela está num déficit de 400-600 kcal treinando cinco vezes por semana, e a
  *  massa magra (~71 kg) é o número que sustenta o plano inteiro — o alvo antigo
  *  de 65 kg foi descartado justamente por ficar abaixo dela. Proteína é o que
  *  protege isso, e um buraco silencioso aqui sai como músculo perdido meses
@@ -58,7 +58,7 @@ const SLOTS: MealSlot[] = [
     // rende mais onde o esforço está, e o total do dia não mudou.
     //
     // A soma dos 4 targetKcal precisa continuar batendo com
-    // INITIAL_PLAN.kcalDaily, senão MealPlanView mostra 2300 no topo e outro
+    // INITIAL_PLAN.kcalDaily, senão MealPlanView mostra 2200 no topo e outro
     // número somando os alvos por refeição logo abaixo, na mesma tela.
     targetKcal: 450,
     variants: [
@@ -405,7 +405,7 @@ const SLOTS: MealSlot[] = [
           },
           {
             // Era 150g/163kcal — subiu pra 170g pra ajudar a fechar a conta
-            // dos 2300kcal do plano (ver comentário de SLOTS acima).
+            // dos 2200 kcal do plano (ver comentário de SLOTS acima).
             name: "Arroz cozido (120g)",
             qtyG: 120,
             kcal: 130,
@@ -635,7 +635,7 @@ const SLOTS: MealSlot[] = [
   // distribuição, não de força de vontade.
   {
     mealType: "lanche",
-    targetKcal: 500,
+    targetKcal: 450,
     variants: [
       {
         id: "lanche-1",
@@ -654,13 +654,13 @@ const SLOTS: MealSlot[] = [
           },
           {
             // Era "Banana média" 150g/125kcal — subiu pra uma banana grande
-            // pra ajudar a fechar a conta dos 2300kcal do plano (ver
+            // pra ajudar a fechar a conta dos 2200 kcal do plano (ver
             // comentário de SLOTS acima).
-            name: "Banana grande",
-            qtyG: 170,
-            kcal: 142,
+            name: "Banana média",
+            qtyG: 120,
+            kcal: 100,
             proteinG: 1,
-            carbG: 36,
+            carbG: 24,
             fatG: 0,
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
@@ -695,12 +695,12 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Pão de forma (3 fatias)",
-            qtyG: 75,
-            kcal: 195,
-            proteinG: 6,
-            carbG: 36,
-            fatG: 3,
+            name: "Pão de forma (2 fatias)",
+            qtyG: 50,
+            kcal: 130,
+            proteinG: 4,
+            carbG: 24,
+            fatG: 2,
             preparation: "Direto do pacote — sem preparo, ou 1 min na torradeira se preferir.",
           },
           {
@@ -739,7 +739,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Pão de forma", qty: 3, unit: "fatias", category: "carboidrato" },
+          { item: "Pão de forma", qty: 2, unit: "fatias", category: "carboidrato" },
           { item: "Atum em água (lata)", qty: 140, unit: "g", category: "proteina" },
           { item: "Iogurte natural desnatado", qty: 200, unit: "g", category: "laticinio" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
@@ -756,14 +756,14 @@ const SLOTS: MealSlot[] = [
             // Era 180g de cuscuz sozinho: 276 kcal de carboidrato quase puro,
             // 6g de proteína. Porção menor abre espaço pro whey sem passar do
             // alvo do slot.
-            name: "Cuscuz de milho (140g cozido, sem manteiga)",
-            qtyG: 140,
-            kcal: 214,
-            proteinG: 5,
-            carbG: 45,
-            fatG: 2,
+            name: "Cuscuz de milho (100g cozido, sem manteiga)",
+            qtyG: 100,
+            kcal: 153,
+            proteinG: 4,
+            carbG: 32,
+            fatG: 1,
             preparation:
-              "Hidrata 47g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
+              "Hidrata 34g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
           },
           {
             name: "Whey protein (1 scoop) batido com água",
@@ -798,7 +798,7 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Flocão de milho (cuscuz)", qty: 47, unit: "g", category: "carboidrato" },
+          { item: "Flocão de milho (cuscuz)", qty: 34, unit: "g", category: "carboidrato" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
@@ -810,7 +810,7 @@ const SLOTS: MealSlot[] = [
   // ─── JANTAR (~700 kcal) ───────────────────────────────────────────────────
   {
     mealType: "jantar",
-    targetKcal: 700,
+    targetKcal: 650,
     variants: [
       {
         id: "jantar-1",
@@ -820,7 +820,7 @@ const SLOTS: MealSlot[] = [
         foods: [
           {
             // Era 180g/297kcal — subiu pra 200g pra ajudar a fechar a conta
-            // dos 2300kcal do plano (ver comentário de SLOTS acima). Frango é
+            // dos 2200 kcal do plano (ver comentário de SLOTS acima). Frango é
             // fonte de proteína, não gordura — preferido pra somar kcal.
             name: "Frango desfiado (200g)",
             qtyG: 200,
@@ -832,11 +832,11 @@ const SLOTS: MealSlot[] = [
               "Cozinha o frango em água com sal e alho ~20 min na pressão (ou 15 min fervendo). Deixa esfriar, desfia com dois garfos. Refoga com cebola, alho, tomate e pimenta.",
           },
           {
-            name: "Macaxeira cozida (180g)",
-            qtyG: 180,
-            kcal: 225,
+            name: "Macaxeira cozida (140g)",
+            qtyG: 140,
+            kcal: 175,
             proteinG: 2,
-            carbG: 54,
+            carbG: 42,
             fatG: 0,
             preparation:
               "Descasca, corta em pedaços, cozinha em água com sal ~20-25 min até ficar macia. Escorre e tempera com um fio de azeite.",
@@ -868,7 +868,7 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Peito de frango", qty: 270, unit: "g", category: "proteina" },
-          { item: "Macaxeira (aipim)", qty: 180, unit: "g", category: "carboidrato" },
+          { item: "Macaxeira (aipim)", qty: 140, unit: "g", category: "carboidrato" },
           { item: "Beterraba", qty: 120, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
@@ -893,11 +893,11 @@ const SLOTS: MealSlot[] = [
               "Bate 4 ovos com sal, pimenta e salsinha. Frigideira antiaderente em fogo médio com fio de azeite. Despeja, espalha o queijo coalho picado por cima, dobra quando as bordas firmarem (~3 min).",
           },
           {
-            name: "Cuscuz de milho (sem manteiga, 80g cozido)",
-            qtyG: 80,
-            kcal: 123,
-            proteinG: 3,
-            carbG: 26,
+            name: "Cuscuz de milho (sem manteiga, 50g cozido)",
+            qtyG: 50,
+            kcal: 77,
+            proteinG: 2,
+            carbG: 16,
             fatG: 1,
             preparation:
               "Hidrata o flocão com água morna e sal, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Finaliza com um fio de azeite — nunca manteiga.",
@@ -939,7 +939,7 @@ const SLOTS: MealSlot[] = [
           { item: "Ovos", qty: 4, unit: "un", category: "proteina" },
           { item: "Queijo coalho", qty: 40, unit: "g", category: "laticinio" },
           { item: "Peito de frango", qty: 67, unit: "g", category: "proteina" },
-          { item: "Flocão de milho (cuscuz)", qty: 27, unit: "g", category: "carboidrato" },
+          { item: "Flocão de milho (cuscuz)", qty: 17, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 80, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
           { item: "Azeite", qty: 9, unit: "ml", category: "gordura" },
@@ -962,11 +962,11 @@ const SLOTS: MealSlot[] = [
               "Tempera com sal, limão, alho e coentro. Forno 200°C por 20-25 min, ou grelha na frigideira 5-6 min cada lado.",
           },
           {
-            name: "Arroz cozido (120g)",
-            qtyG: 120,
-            kcal: 156,
-            proteinG: 3,
-            carbG: 34,
+            name: "Arroz cozido (85g)",
+            qtyG: 85,
+            kcal: 110,
+            proteinG: 2,
+            carbG: 24,
             fatG: 0,
             preparation:
               "Refoga alho, adiciona o arroz, cobre com água (2:1). Fogo baixo tampado ~18 min.",
@@ -1003,7 +1003,7 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Tainha ou sardinha", qty: 275, unit: "g", category: "proteina" },
-          { item: "Arroz", qty: 64, unit: "g", category: "carboidrato" },
+          { item: "Arroz", qty: 45, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
           { item: "Beterraba", qty: 180, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
@@ -1016,16 +1016,16 @@ const SLOTS: MealSlot[] = [
 ];
 
 export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano padrão · emagrecimento (2300 kcal)",
+  name: "Plano padrão · emagrecimento (2200 kcal)",
   goal: "deficit",
-  kcalDaily: 2300,
+  kcalDaily: 2200,
   // Batem com a soma real da variante 0 (ver tests/data/meal-plan-coerencia.test.ts):
-  // 2288 kcal, 211g proteína, 237g carbo, 52g gordura. O carboidrato caiu com a
-  // redistribuição café/almoço → lanche; a proteína subiu porque o piso por
-  // refeição (PROTEINA_PISO_POR_REFEICAO) puxou as opções pobres para cima.
+  // 2218 kcal, 211g proteína, 207g carbo, 57g gordura. A queda de 2300 para
+  // 2200 (2026-09-23) saiu do carboidrato do lanche e do jantar — proteína e
+  // gordura ficaram onde estavam.
   proteinG: 211,
-  carbG: 237,
-  fatG: 52,
+  carbG: 207,
+  fatG: 57,
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
 };
@@ -1058,15 +1058,15 @@ function boostSlots(slots: MealSlot[], boostByMeal: Partial<Record<MealSlot["mea
   });
 }
 
-// Manutenção: +700 kcal sobre a base de 2300, fechando 3000. O número anterior
-// (+150, fechando 2450) foi calculado contra um gasto estimado de ~2700 — antes
-// de CONSUMO.gastoEstimadoKcalMin/Max (objetivo.ts) contar a caminhada de 5 km
-// do trabalho pra casa. Com ela contada, o gasto real é 2900-3100, e o plano
-// que se chamava "manutenção" era um déficit de ~550 kcal/dia. Ela troca pra
-// este plano quando a cintura chegar a 88 (mês 3-4), que é exatamente a fase de
-// construir glúteo: construir em déficit sem saber é o pior desfecho possível.
+// Manutenção: +550 kcal sobre a base de 2200, fechando 2750. Recalibrado em
+// 2026-09-23 (spec Chun-Li macia): o gasto real dela é 2.600-2.800 — a
+// caminhada de 5 km não era diária desde maio, como o app supunha, e o 3000
+// anterior (contra 2.900-3.100) seria superávit disfarçado. 2750 fica dentro
+// de 5% do gasto médio, que é o que a palavra "manutenção" significa
+// (tests/data/meal-plan-coerencia.test.ts). Ela troca pra este plano quando a
+// cintura chegar a 88 — a fase de construir glúteo e coxa.
 //
-// A soma dos quatro acréscimos tem que dar 700 EXATOS — boostSlots soma o mesmo
+// A soma dos quatro acréscimos tem que dar 550 EXATOS — boostSlots soma o mesmo
 // valor ao targetKcal do slot e a cada variante dele, e a invariante testada é
 // que a soma dos alvos seja o kcalDaily declarado.
 const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
@@ -1075,65 +1075,58 @@ const MAINTENANCE_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
     ingredients: [{ item: "Castanha de caju", qty: 27, unit: "g", category: "mercearia" }],
   },
   almoco: {
-    foods: [{ name: "Arroz & feijão de corda extra da fase (+90g arroz, +100g feijão)", qtyG: 190, kcal: 200, proteinG: 9, carbG: 39, fatG: 1, preparation: "Porção maior dos dois — os dois já saem prontos do lote de domingo." }],
+    foods: [{ name: "Arroz & feijão de corda extra da fase (+65g arroz, +65g feijão)", qtyG: 130, kcal: 150, proteinG: 6, carbG: 28, fatG: 1, preparation: "Porção maior dos dois — os dois já saem prontos do lote de domingo." }],
+    ingredients: [
+      { item: "Arroz", qty: 35, unit: "g", category: "carboidrato" },
+      { item: "Feijão de corda (macassar)", qty: 33, unit: "g", category: "carboidrato" },
+    ],
+  },
+  lanche: {
+    foods: [{ name: "Macaxeira cozida do lote (80g)", qtyG: 80, kcal: 100, proteinG: 1, carbG: 24, fatG: 0, preparation: "Cozida no domingo, comida fria mesmo — ou 40s no micro-ondas do trabalho." }],
+    ingredients: [{ item: "Macaxeira (aipim)", qty: 80, unit: "g", category: "carboidrato" }],
+  },
+  jantar: {
+    foods: [{ name: "Arroz extra da fase (+38g cozido) & azeite (1 cs)", qtyG: 50, kcal: 150, proteinG: 1, carbG: 11, fatG: 11, preparation: "Um pouco mais de arroz e um fio generoso de azeite por cima do prato." }],
+    ingredients: [
+      { item: "Arroz", qty: 20, unit: "g", category: "carboidrato" },
+      { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
+    ],
+  },
+};
+
+// Superávit leve: +750 kcal sobre a base de 2200, fechando 2950 — acima do teto
+// do gasto estimado (2800), que é o que faz a palavra "superávit" ser verdade,
+// e só ~150-350 acima dele: superávit grande a 96 kg vira barriga, não glúteo.
+//
+// O whey do café não é enfeite nem pode ser trocado por outra fonte: o nome
+// precisa casar com /whey extra da fase/i em TODA variante do café — é o que
+// tests/lib/phase-nutrition.test.ts cobra. Soma dos acréscimos: 750 exatos.
+const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
+  cafe: {
+    foods: [
+      { name: "Whey extra da fase (30 g de pó)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." },
+      { name: "Castanha de caju da fase (20g)", qtyG: 20, kcal: 110, proteinG: 4, carbG: 6, fatG: 9, preparation: "Ao natural, junto do café." },
+    ],
+    ingredients: [
+      { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
+      { item: "Castanha de caju", qty: 20, unit: "g", category: "mercearia" },
+    ],
+  },
+  almoco: {
+    foods: [{ name: "Arroz & feijão de corda extra da fase (+90g arroz, +100g feijão)", qtyG: 190, kcal: 200, proteinG: 9, carbG: 39, fatG: 1, preparation: "Porção maior dos dois pra sustentar o ganho de glúteo e coxa." }],
     ingredients: [
       { item: "Arroz", qty: 48, unit: "g", category: "carboidrato" },
       { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
     ],
   },
   lanche: {
-    // Carboidrato puro, gordura ZERO — e isso não é estilo. A base do lanche já
-    // usa 3-4g dos 5g de teto (ela caminha 5 km e treina logo depois), então
-    // qualquer gordura aqui estoura o teto em toda variante de uma vez.
-    foods: [{ name: "Macaxeira cozida do lote (120g)", qtyG: 120, kcal: 150, proteinG: 1, carbG: 36, fatG: 0, preparation: "Cozida no domingo, comida fria mesmo — ou 40s no micro-ondas do trabalho." }],
+    foods: [{ name: "Macaxeira cozida do lote (120g)", qtyG: 120, kcal: 150, proteinG: 1, carbG: 36, fatG: 0, preparation: "Cozida no domingo, comida fria — ou 40s no micro-ondas do trabalho." }],
     ingredients: [{ item: "Macaxeira (aipim)", qty: 120, unit: "g", category: "carboidrato" }],
   },
   jantar: {
-    foods: [{ name: "Arroz extra da fase (+92g cozido) & azeite (1 cs)", qtyG: 104, kcal: 200, proteinG: 2, carbG: 22, fatG: 11, preparation: "Mais arroz e um fio generoso de azeite por cima do prato." }],
+    foods: [{ name: "Batata doce extra da fase (80g) & azeite (1 cs)", qtyG: 92, kcal: 170, proteinG: 1, carbG: 16, fatG: 11, preparation: "Cozida ou no vapor, junto com o jantar, com um fio generoso de azeite." }],
     ingredients: [
-      { item: "Arroz", qty: 49, unit: "g", category: "carboidrato" },
-      { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
-    ],
-  },
-};
-
-// Superávit leve: +1000 kcal sobre a base de 2300, fechando 3300 — acima do teto
-// do gasto estimado (3100), que é o que faz a palavra "superávit" ser verdade.
-// Mesma dívida do bloco acima: o número anterior (+400, fechando 2700) ficava
-// ABAIXO do gasto real, ou seja, o plano de crescer glúteo era um déficit.
-//
-// O whey do café não é enfeite nem pode ser trocado por outra fonte: o nome
-// precisa casar com /whey extra da fase/i em TODA variante do café — é o que
-// tests/lib/phase-nutrition.test.ts cobra. Soma dos acréscimos: 1000 exatos.
-const SURPLUS_BOOST: Partial<Record<MealSlot["mealType"], Boost>> = {
-  cafe: {
-    foods: [
-      { name: "Whey extra da fase (1 scoop)", qtyG: 30, kcal: 120, proteinG: 24, carbG: 3, fatG: 1, preparation: "Bate junto na vitamina ou dissolve no leite/água." },
-      { name: "Castanha de caju da fase (32g)", qtyG: 32, kcal: 180, proteinG: 6, carbG: 10, fatG: 14, preparation: "Ao natural, junto do café." },
-    ],
-    ingredients: [
-      { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
-      { item: "Castanha de caju", qty: 32, unit: "g", category: "mercearia" },
-    ],
-  },
-  almoco: {
-    foods: [{ name: "Arroz & feijão de corda extra da fase (+110g arroz, +130g feijão)", qtyG: 240, kcal: 250, proteinG: 11, carbG: 49, fatG: 1, preparation: "Porção maior dos dois pra sustentar o ganho de glúteo." }],
-    ingredients: [
-      { item: "Arroz", qty: 59, unit: "g", category: "carboidrato" },
-      { item: "Feijão de corda (macassar)", qty: 65, unit: "g", category: "carboidrato" },
-    ],
-  },
-  lanche: {
-    // Sem gordura aqui de propósito, mesmo na fase de crescer o glúteo: o
-    // lanche continua sendo o pré-treino (5 km a pé + 1h de cães + treino logo
-    // depois), e o teto de 5g de gordura do slot não relaxa por causa da fase.
-    foods: [{ name: "Macaxeira cozida do lote (160g)", qtyG: 160, kcal: 200, proteinG: 1, carbG: 48, fatG: 0, preparation: "Cozida no domingo, comida fria — ou 40s no micro-ondas do trabalho." }],
-    ingredients: [{ item: "Macaxeira (aipim)", qty: 160, unit: "g", category: "carboidrato" }],
-  },
-  jantar: {
-    foods: [{ name: "Batata doce extra da fase (105g) & azeite (1 cs)", qtyG: 117, kcal: 250, proteinG: 2, carbG: 35, fatG: 11, preparation: "Cozida ou no vapor, junto com o jantar, com um fio generoso de azeite." }],
-    ingredients: [
-      { item: "Batata doce", qty: 105, unit: "g", category: "carboidrato" },
+      { item: "Batata doce", qty: 80, unit: "g", category: "carboidrato" },
       { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
     ],
   },
@@ -1143,9 +1136,9 @@ const MAINTENANCE_SLOTS = boostSlots(SLOTS, MAINTENANCE_BOOST);
 const SURPLUS_SLOTS = boostSlots(SLOTS, SURPLUS_BOOST);
 
 export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano · manutenção (3000 kcal)",
+  name: "Plano · manutenção (2750 kcal)",
   goal: "manutencao",
-  kcalDaily: 3000,
+  kcalDaily: 2750,
   // Soma real da variante 0 com o boost: 2988 kcal, 228g proteína, 342g carbo,
   // 76g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
   // derruba testosterona, e é a testosterona que sustenta metade dos objetivos
@@ -1158,9 +1151,9 @@ export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
 };
 
 export const SURPLUS_PLAN: Omit<MealPlan, "id"> = {
-  name: "Plano · superávit leve (3300 kcal)",
+  name: "Plano · superávit leve (2950 kcal)",
   goal: "superavit",
-  kcalDaily: 3300,
+  kcalDaily: 2950,
   // Soma real da variante 0 com o boost: 3288 kcal, 255g proteína, 382g carbo,
   // 79g gordura.
   proteinG: 255,

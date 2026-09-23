@@ -7,7 +7,7 @@
 // contou pra ela.
 //
 // E a verba não é de graça, apesar da palavra "discricionária" sugerir isso.
-// O cardápio já ocupa as 2.300 kcal inteiras da meta — os quatro slots somam
+// O cardápio já ocupa as 2.200 kcal inteiras da meta — os quatro slots somam
 // exatamente o kcalDaily do plano, e há teste cobrando isso. Então a verba é
 // consumo POR CIMA do plano, e sai direto do déficit. Dizer "você tem 250 kcal
 // livres" sem dizer o preço seria a mesma classe de meia-verdade que a frente 1

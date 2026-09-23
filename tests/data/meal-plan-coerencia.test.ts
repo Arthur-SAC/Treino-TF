@@ -27,7 +27,8 @@ describe("plano de déficit bate com a meta declarada em objetivo.ts", () => {
   });
 
   it("o nome do plano não contradiz o número", () => {
-    expect(deficit.name).not.toContain("2200");
+    // O número antigo não pode sobrar no nome (era 2200 até agosto, 2300 até 2026-09-23).
+    expect(deficit.name).not.toContain("2300");
     expect(deficit.name).toContain(String(CONSUMO.metaKcal));
   });
 });

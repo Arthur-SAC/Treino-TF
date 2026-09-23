@@ -71,7 +71,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // vivia privada dentro de path-seed.ts, e nada aqui alcançava. Foi a mesma
   // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
   it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
-    expect(MEAL_PLAN_VERSION).toBe(13);
+    expect(MEAL_PLAN_VERSION).toBe(14);
   });
 
   // A versão do estilo também vivia privada dentro do módulo — era o último
@@ -417,8 +417,8 @@ describe("plano alimentar", () => {
     await seedPath();
 
     const manutencao = (await db.mealPlans.toArray()).find((p) => p.goal === "manutencao")!;
-    expect(manutencao.kcalDaily).toBe(3000);
-    expect(manutencao.name).toContain("3000");
+    expect(manutencao.kcalDaily).toBe(2750);
+    expect(manutencao.name).toContain("2750");
 
     // E o ultraprocessado não pode sobreviver pelo banco parado.
     const todos = await db.mealPlans.toArray();
@@ -427,5 +427,27 @@ describe("plano alimentar", () => {
     );
     expect(nomes.filter((n) => /peito de peru/i.test(n))).toEqual([]);
     expect(nomes.some((n) => /patê de atum/i.test(n))).toBe(true);
+  });
+  it("o déficit a 2.200 chega em quem estava com o plano de 2.300", async () => {
+    await db.settings.put({ key: "pathSeeded", value: true });
+    await db.settings.put({ key: "milestoneSeedVersion", value: 7 });
+    await db.settings.put({ key: "mealPlanVersion", value: ANTERIOR_PLANO_ALIMENTAR });
+    await db.mealPlans.add({
+      name: "Plano padrão · emagrecimento (2300 kcal)",
+      goal: "deficit",
+      kcalDaily: 2300,
+      proteinG: 211,
+      carbG: 231,
+      fatG: 57,
+      slots: [],
+      defaultMeals: [],
+    } as never);
+
+    await seedPath();
+
+    const deficit = (await db.mealPlans.toArray()).find((p) => p.goal === "deficit")!;
+    expect(deficit.kcalDaily).toBe(2200);
+    const marcos = JSON.stringify(await db.milestones.toArray());
+    expect(marcos).not.toMatch(/2\.300 kcal/);
   });
 });

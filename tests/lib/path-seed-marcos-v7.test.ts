@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db, type Milestone } from "../../src/lib/db";
 import { seedPath } from "../../src/lib/path-seed";
+import { CONSUMO } from "../../src/lib/objetivo";
 import {
   MILESTONES,
   BODY_GOAL_MILESTONES,
@@ -71,8 +72,9 @@ describe("migração v7 dos marcos", () => {
     expect(t).toContain("♡ Busto sem hormônio — avaliar começar a usar bralette");
 
     const tudo = JSON.stringify(await db.milestones.toArray());
-    expect(tudo).toContain("2.300");
-    expect(tudo).not.toContain("2.200");
+    // A meta vem de CONSUMO desde 2026-09-23 (2.200); o 2.300 da v7 não pode sobrar.
+    expect(tudo).toContain(CONSUMO.metaKcal.toLocaleString("pt-BR"));
+    expect(tudo).not.toContain("2.300");
     expect(tudo).not.toMatch(/\bTR?H\b/);
   });
 
@@ -188,7 +190,7 @@ describe("migração v7 dos marcos", () => {
   it("instalação nova já nasce na versão da migração, sem rodá-la", async () => {
     await seedPath();
     const v = await db.settings.get("milestoneSeedVersion");
-    expect(v?.value).toBe(7);
+    expect(v?.value).toBe(8);
     expect(await db.milestones.count()).toBe(TOTAL_DO_SEED);
   });
 });
@@ -199,7 +201,7 @@ describe("migração do plano alimentar", () => {
     await db.settings.clear();
   });
 
-  it("o déficit de 2.300 kcal alcança quem parou na versão anterior do plano", async () => {
+  it("o déficit atual alcança quem parou numa versão antiga do plano", async () => {
     await db.mealPlans.add({ goal: "deficit", kcalDaily: 2200, proteinG: 160, slots: [] } as never);
     await db.settings.put({ key: "pathSeeded", value: true });
     await db.settings.put({ key: "mealPlanVersion", value: 7 });
@@ -208,6 +210,6 @@ describe("migração do plano alimentar", () => {
     await seedPath();
 
     const deficit = (await db.mealPlans.toArray()).find((p) => p.goal === "deficit");
-    expect(deficit?.kcalDaily).toBe(2300);
+    expect(deficit?.kcalDaily).toBe(CONSUMO.metaKcal);
   });
 });
