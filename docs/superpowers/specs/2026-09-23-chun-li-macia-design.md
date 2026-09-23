@@ -41,18 +41,34 @@ dela em caminho nenhum (piso ~80 natural, ~77-80 com lipo).
 
 ## Parte 1 — metas e prazos
 
-### 1.1 Partida re-ancorada
-- `MEDIDAS_PARTIDA` (`src/lib/objetivo.ts`) passa a ser a medição nova dela. Os
-  valores de 13/05/2026 viram `MEDIDAS_MAIO_2026` (histórico, citado em texto
-  quando útil). **Bloqueio de implementação:** os números novos vêm dela; o
-  plano deve ter uma tarefa explícita "receber medição" antes de fixá-los.
-- Onde houver prazo relativo ("mês 3-4"), o app passa a mostrar **mês de
-  calendário** derivado de `MEDIDAS_PARTIDA.data` (ex.: "dez/2026–jan/2027").
-  Função pura nova em `objetivo.ts` (ex.: `mesesParaCalendario(inicio, mesMin,
-  mesMax)`), com teste.
-- Primeira abertura após a atualização: o Hoje pede **medição nova** (peso,
-  cintura, quadril e o resto) enquanto não existir medição com data ≥ a da
-  partida nova.
+### 1.1 Partida re-ancorada — automática, pela primeira medição dela
+Ela não tem como medir agora e quer começar a treinar já. Então a partida **não é
+escrita no código**: é derivada do aparelho.
+- Nova constante `RECOMECO_DATA = "2026-09-23"` em `objetivo.ts`. A **partida
+  real** é a primeira medição registrada com data ≥ `RECOMECO_DATA` (lida do
+  IndexedDB por um hook, ex. `usePartida()`; a regra de escolha é função pura
+  testada). `MEDIDAS_PARTIDA` (13/05/2026) vira histórico e deixa de ancorar
+  prazo.
+- **Com partida:** prazos em **mês de calendário** a partir da data dela (função
+  pura, ex. `mesesParaCalendario(inicio, mesMin, mesMax)`); **peso-alvo da fase
+  1 derivado da massa magra** dela (Navy androide, `body-composition.ts`) em vez
+  de 82 fixo — faixa de %G-alvo declarada em `objetivo.ts`; ritmo estimado a
+  partir do peso real e do déficit de `CONSUMO`.
+- **Sem partida:** telas que citam prazo ou peso-alvo mostram "aparece depois da
+  sua primeira medição" — nunca prazos contados de maio. O Hoje mostra um card
+  pedindo a medição (peso, cintura na altura do umbigo, pescoço obrigatórios para
+  o cálculo; o resto opcional).
+- Metas em cm (cintura 84, piso 80, trava 88) não dependem da partida.
+- Textos de seed que hoje interpolam `MEDIDAS_PARTIDA` (`tamanhos-seed.ts`,
+  `vitalidade-guide-seed.ts`) passam a citar a partida quando existir ou uma
+  formulação sem número; conferir cada um.
+
+### 1.1b Entregas
+- **Entrega 1 (primeiro):** parte 2 (treino) + parte 3 (cardápio, vitalidade,
+  Hoje) — nada disso depende de medida; publicar assim que pronto.
+- **Entrega 2:** parte 1 (partida automática, fases, horizontes, consumo).
+  `CONSUMO` (1.2) entra na entrega 1 junto com o cardápio, porque o déficit e a
+  verba de comer fora leem dele.
 
 ### 1.2 Consumo
 `CONSUMO`: `gastoEstimadoKcalMin: 2600`, `gastoEstimadoKcalMax: 2800` (comentário
@@ -187,4 +203,4 @@ agendado — sem agenda de BBL no app hoje, então aparece como opção declarad
 ## Riscos
 - **Seed sem bump não chega no celular** — toda mudança de seed bumpa versão.
 - **Merge local não publica** — só `git push origin main` atualiza o PWA.
-- Números da fase 1 ficam provisórios até a medição nova.
+- Até a primeira medição, o app não mostra prazo nem peso-alvo — por desenho.
