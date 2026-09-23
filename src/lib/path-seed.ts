@@ -29,7 +29,10 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // v16: macros declarados de manutenção e superávit voltam a bater com a comida (eram os de 3.000/3.300).
 export const MEAL_PLAN_VERSION = 16;
 // v8: o marco da fase 1 passou a citar a meta de CONSUMO (2.200), não um número solto.
-const MILESTONE_SEED_VERSION = 8;
+// v9: os meses e pesos dos marcos saem das fases (entrega 2). A regravação
+// reancora as datas dos marcos não concluídos no dia da atualização — o que
+// coincide com o recomeço dela (23/09/2026).
+const MILESTONE_SEED_VERSION = 9;
 
 const TODOS_OS_MARCOS = [
   ...MILESTONES,
@@ -250,6 +253,9 @@ export async function seedPath(): Promise<void> {
       if (msVersion < 8) {
         // A meta caiu para 2.200 (spec Chun-Li macia): o marco que cita as
         // calorias tem que dizer o mesmo número que o plano.
+        await regravaMarcosV7();
+      }
+      if (msVersion < 9) {
         await regravaMarcosV7();
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });

@@ -32,6 +32,8 @@ import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
 import { hojeISO, diaDoAno } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
+import { usePartida } from "../hooks/usePartida";
+import { PartidaCard } from "../components/PartidaCard";
 import { primeiraMarcacao, mostrarAvisoAgua, SUBTITULO_AVISO_AGUA, CREATINA_ITEM_ID } from "../lib/creatina";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
@@ -335,6 +337,7 @@ export function Today() {
   };
 
   const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
+  const { projecao, invalida: partidaInvalida, carregando: partidaCarregando } = usePartida();
 
   return (
     <div className="p-4 pb-24 space-y-3">
@@ -347,6 +350,8 @@ export function Today() {
       </div>
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
+
+      {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
           `.card` com padding e borda próprios — em 4 colunas numa tela

@@ -190,7 +190,7 @@ describe("migração v7 dos marcos", () => {
   it("instalação nova já nasce na versão da migração, sem rodá-la", async () => {
     await seedPath();
     const v = await db.settings.get("milestoneSeedVersion");
-    expect(v?.value).toBe(8);
+    expect(v?.value).toBe(9);
     expect(await db.milestones.count()).toBe(TOTAL_DO_SEED);
   });
 });

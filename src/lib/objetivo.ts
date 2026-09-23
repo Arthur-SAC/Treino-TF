@@ -46,7 +46,7 @@ export function razaoOmbroQuadril(ombrosCm: number, quadrilCm: number): number {
 }
 
 export interface FaseObjetivo {
-  id: "fase-1" | "fase-2";
+  id: "fase-1" | "fase-2" | "fase-3";
   nome: string;
   resumo: string;
   mesInicio: number;
@@ -77,7 +77,7 @@ export const FASES: readonly FaseObjetivo[] = [
     resumo:
       "A cintura é o problema inteiro: hoje ela é o ponto mais largo do tronco. Enquanto for, não existe silhueta possível.",
     mesInicio: 0,
-    mesFim: 8,
+    mesFim: 7,
     pesoKgMin: 80,
     pesoKgMax: 82,
     cinturaCm: 84,
@@ -90,8 +90,8 @@ export const FASES: readonly FaseObjetivo[] = [
     nome: "Construir glúteo",
     resumo:
       "A balança sobe de propósito. O quadril volta ao mesmo 114 de hoje, feito de músculo — mesmo número, corpo irreconhecível. Compare por foto, não por fita.",
-    mesInicio: 8,
-    mesFim: 30,
+    mesInicio: 7,
+    mesFim: 24,
     pesoKgMin: 85,
     pesoKgMax: 88,
     cinturaCm: 83,
@@ -99,11 +99,37 @@ export const FASES: readonly FaseObjetivo[] = [
     whrProvavel: 0.77,
     whrExcelente: 0.73,
   },
+  {
+    id: "fase-3",
+    nome: "Marcar de leve",
+    resumo:
+      "Opcional e curta: 2-3 meses de déficit leve pro 'durinha, levemente marcado'. Não acontece se o BBL estiver marcado — a cirurgia precisa de gordura pra colher.",
+    mesInicio: 24,
+    mesFim: 27,
+    pesoKgMin: 82,
+    pesoKgMax: 86,
+    cinturaCm: 82,
+    quadrilCm: 114,
+    whrProvavel: 0.72,
+  },
 ] as const;
 
 /** Piso de cintura. Busto 106,5 significa caixa torácica larga, e costela não
  *  encolhe: abaixo disso não existe, por mais déficit que se faça. */
 export const CINTURA_PISO_CM = 80;
+
+/** O dia em que ela recomeçou do zero (spec Chun-Li macia). A partida é a
+ *  primeira medição registrada a partir daqui — ver src/lib/partida.ts. */
+export const RECOMECO_DATA = "2026-09-23";
+
+/** %G (régua androide) do fim da fase 1. A faixa foi escolhida por reproduzir
+ *  os 80-82 kg já prometidos para a partida de maio (massa magra ~71 kg):
+ *  peso-alvo = massa magra ÷ (1 − %G). Não é meta de secura — é a mesma
+ *  massa magra com a barriga fora. */
+export const PCT_GORDURA_FIM_FASE1: readonly [number, number] = [0.11, 0.13];
+
+/** Fim da fase 2 em meses desde a partida (máximo natural). */
+export const FIM_FASE2_MESES: readonly [number, number] = [21, 27];
 
 const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
@@ -131,9 +157,10 @@ export const CONSUMO = {
    *  domingo + treino de força 5x + cães com NEAT baixo (mais parado que
    *  andando). Recalibrado em 2026-09-23: o valor anterior (2.900-3.100)
    *  supunha os 5 km todo dia útil desde maio, e ela contou que andava "de vez
-   *  em quando". */
-  gastoEstimadoKcalMin: 2600,
-  gastoEstimadoKcalMax: 2800,
+   *  em quando". (2.600-2.800 era a conta sem a caminhada de sábado e
+   *  domingo — corrigido na entrega 2.) */
+  gastoEstimadoKcalMin: 2700,
+  gastoEstimadoKcalMax: 2900,
   /** 2.200, escolhida por ela contra 2.000: déficit acima de ~750 derruba
    *  testosterona, e firmeza, libido e força são metade dos objetivos. */
   metaKcal: 2200,
@@ -163,8 +190,8 @@ export interface MarcoCintura {
 export const MARCOS_CINTURA: readonly MarcoCintura[] = [
   {
     cinturaCm: 88,
-    mesMin: 3,
-    mesMax: 4,
+    mesMin: 4,
+    mesMax: 5,
     titulo: "Cintura 88 — destrava o superávit",
     porQue:
       "É a trava de CINTURA_LIBERA_SUPERAVIT_CM em meal-plan.ts. Abaixo dela, superávit vira glúteo; acima, vira barriga.",

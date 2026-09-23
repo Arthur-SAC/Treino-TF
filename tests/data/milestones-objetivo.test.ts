@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { BODY_GOAL_MILESTONES } from "../../src/data/milestones-seed";
+import { BODY_GOAL_MILESTONES, MILESTONES_MESES } from "../../src/data/milestones-seed";
 import { MARCOS_CINTURA, FASES, CONSUMO } from "../../src/lib/objetivo";
 
 const texto = JSON.stringify(BODY_GOAL_MILESTONES);
@@ -38,5 +38,17 @@ describe("marcos do objetivo", () => {
     expect(fase2.whrProvavel).toBeLessThanOrEqual(provMax);
     expect(fase2.whrExcelente!).toBeGreaterThanOrEqual(excMin);
     expect(fase2.whrExcelente!).toBeLessThanOrEqual(excMax);
+  });
+
+  it("os meses dos marcos saem de objetivo.ts — cintura 88, cintura 84 e fase 2", () => {
+    expect(MILESTONES_MESES.cintura88).toBe(MARCOS_CINTURA[0].mesMin);
+    expect(MILESTONES_MESES.cintura84).toBe(MARCOS_CINTURA[1].mesMin);
+    expect(MILESTONES_MESES.fase2).toBe(FASES.find((f) => f.id === "fase-2")!.mesInicio);
+  });
+
+  it("os pesos citados nos marcos são os das fases", () => {
+    const f1 = FASES.find((f) => f.id === "fase-1")!;
+    expect(texto).toContain(`${f1.pesoKgMin}-${f1.pesoKgMax} kg`);
+    expect(texto).not.toMatch(/~81|por volta de 81/);
   });
 });
