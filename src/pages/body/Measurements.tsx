@@ -9,16 +9,19 @@ import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { formatCm, formatDateBR } from "../../lib/format";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
-const GUIDE_MEDICAO: GuideSection[] = [
+// Exportado para o teste que prende a régua: cintura no umbigo e ombro em
+// circunferência são os pontos da partida e da conta de gordura (Navy).
+export const GUIDE_MEDICAO: GuideSection[] = [
   {
     id: "como-medir",
     title: "Como medir certo",
     intro:
       "Medir sempre do mesmo jeito é o que torna os dados comparáveis ao longo do tempo. Use uma fita métrica flexível e não elástica.",
     tips: [
-      "Cintura: localize a linha natural — a parte mais estreita do tronco, geralmente acima do osso do quadril e abaixo das costelas. Fique em pé, expire normalmente e passe a fita justa, sem apertar nem folgar.",
+      "Cintura: na altura do umbigo — é onde a barriga está e é o ponto que a conta de gordura usa. Fique em pé, barriga solta, expire normalmente e passe a fita justa, sem apertar nem folgar. Medir mais acima dá um número menor que não se compara com o da partida.",
       "Quadril: meça na parte mais larga do bumbum, com os pés unidos. A fita deve ficar paralela ao chão.",
-      "Ombros: da ponta de um ombro à ponta do outro, passando pela parte mais larga das costas. Fique ereta, braços relaxados ao lado do corpo.",
+      "Ombros: a fita dá a volta no corpo passando pela parte mais larga dos ombros, por cima dos músculos do ombro e das costas. Fique ereta, braços relaxados ao lado do corpo. É circunferência, não a distância de uma ponta à outra.",
+      "Busto: na linha dos mamilos, fita paralela ao chão, braços relaxados, depois de expirar.",
       "Pescoço: logo abaixo do pomo de adão, no ponto mais estreito. Fita paralela ao chão, sem comprimir.",
       "Coxa: na parte mais grossa da coxa, geralmente no terço superior, logo abaixo da dobra glútea. Perna levemente afastada para a fita não comprimir.",
       "Braço: no bíceps relaxado, no ponto mais largo entre o ombro e o cotovelo.",
