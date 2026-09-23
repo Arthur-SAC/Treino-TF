@@ -1,28 +1,50 @@
 import { describe, it, expect } from "vitest";
-import { suggestNextLoad, suggestNextHoldTime, isHoldLight, isTimeBased, findLastPerformance } from "../../src/lib/progression";
+import { suggestNextLoad, suggestNextHoldTime, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries } from "../../src/lib/progression";
 
+// Regras de 2026-09-23 (auditoria): o incremento é o do equipamento, "médio"
+// só sobe quando todas as séries bateram o topo da faixa, e completar é bater o
+// MÍNIMO da faixa em toda série (antes, qualquer rep > 0 contava).
 describe("suggestNextLoad", () => {
-  it("fácil + carga <5kg → +0,5", () => {
-    expect(suggestNextLoad({ lastLoad: 4, feedback: "easy", completedAllReps: true })).toBe(4.5);
+  const base = { feedback: "medium" as const, completedAllReps: true, hitTopOfRange: false, equipment: ["halteres"] };
+  it("fácil → sobe um incremento do equipamento (halter +2)", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 10, feedback: "easy" })).toBe(12);
   });
-  it("fácil + carga 5–20 → +2", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true })).toBe(12);
+  it("máquina e leg press sobem uma placa (+5)", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 40, feedback: "easy", equipment: ["leg-press"] })).toBe(45);
+    expect(suggestNextLoad({ ...base, lastLoad: 20, feedback: "easy", equipment: ["multiestacao"] })).toBe(25);
   });
-  it("fácil + carga >=20 → +2,5", () => {
-    expect(suggestNextLoad({ lastLoad: 20, feedback: "easy", completedAllReps: true })).toBe(22.5);
+  it("caneleira sobe 1", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 2, feedback: "easy", equipment: ["caneleira"] })).toBe(3);
   });
-  it("médio + completou → +1 (mantém momentum)", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "medium", completedAllReps: true })).toBe(11);
+  it("médio só sobe se bateu o topo da faixa em toda série", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 10 })).toBe(10);
+    expect(suggestNextLoad({ ...base, lastLoad: 10, hitTopOfRange: true })).toBe(12);
   });
-  it("difícil + completou → mantém", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: true })).toBe(10);
+  it("difícil mantém", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 10, feedback: "hard", hitTopOfRange: true })).toBe(10);
   });
-  it("não completou → -1 (piso 0)", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: false })).toBe(9);
-    expect(suggestNextLoad({ lastLoad: 0.5, feedback: "hard", completedAllReps: false })).toBe(0);
+  it("não completou desce um incremento (piso 0), mesmo com 'fácil'", () => {
+    expect(suggestNextLoad({ ...base, lastLoad: 10, feedback: "easy", completedAllReps: false })).toBe(8);
+    expect(suggestNextLoad({ ...base, lastLoad: 1, completedAllReps: false })).toBe(0);
   });
-  it("não completou tem prioridade sobre 'easy'", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: false })).toBe(9);
+  it("peito e costas progridem — só a postura fica leve", () => {
+    expect(isHoldLight("peitoral")).toBe(false);
+    expect(isHoldLight("costas")).toBe(false);
+    expect(isHoldLight("postura")).toBe(true);
+    expect(suggestNextLoad({ ...base, lastLoad: 6, feedback: "easy", category: "postura" })).toBe(6);
+  });
+});
+
+describe("avaliarSeries", () => {
+  it("completou = toda série no mínimo da faixa; topo = toda série no máximo", () => {
+    expect(avaliarSeries([{ reps: 12 }, { reps: 10 }], "10-12")).toEqual({ completou: true, topo: false });
+    expect(avaliarSeries([{ reps: 12 }, { reps: 12 }], "10-12")).toEqual({ completou: true, topo: true });
+    expect(avaliarSeries([{ reps: 12 }, { reps: 8 }], "10-12")).toEqual({ completou: false, topo: false });
+  });
+  it("entende '12 (LEVE)', '15 cada' e faixa sem número", () => {
+    expect(avaliarSeries([{ reps: 12 }], "12 (LEVE)").topo).toBe(true);
+    expect(avaliarSeries([{ reps: 15 }], "15 cada").completou).toBe(true);
+    expect(avaliarSeries([{ reps: 3 }], "até a falha").completou).toBe(true);
   });
 });
 
@@ -42,17 +64,17 @@ describe("suggestNextHoldTime", () => {
 });
 
 describe("progressão consciente da categoria", () => {
-  it("isHoldLight marca peitoral/postura/costas", () => {
-    expect(isHoldLight("peitoral")).toBe(true);
+  // Desde 2026-09-23 só a postura é hold-light (peito e costas progridem).
+  it("isHoldLight marca só a postura", () => {
     expect(isHoldLight("postura")).toBe(true);
-    expect(isHoldLight("costas")).toBe(true);
+    expect(isHoldLight("peitoral")).toBe(false);
     expect(isHoldLight("gluteo")).toBe(false);
   });
   it("hold-light não sobe carga mesmo no easy", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true, category: "peitoral" })).toBe(10);
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true, category: "postura" })).toBe(10);
   });
-  it("hold-light recua se não completou as reps", () => {
-    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: false, category: "postura" })).toBe(9);
+  it("hold-light recua um incremento se não completou as reps", () => {
+    expect(suggestNextLoad({ lastLoad: 10, feedback: "hard", completedAllReps: false, category: "postura" })).toBe(8);
   });
   it("gluteo segue a lógica normal", () => {
     expect(suggestNextLoad({ lastLoad: 10, feedback: "easy", completedAllReps: true, category: "gluteo" })).toBe(12);
@@ -63,6 +85,11 @@ describe("progressão consciente da categoria", () => {
 });
 
 describe("isTimeBased", () => {
+  it("carregamento em metros (farmer walk, carregamento frontal) registra como feito, não kg×reps", () => {
+    expect(isTimeBased("30m")).toBe(true);
+    expect(isTimeBased("20m")).toBe(true);
+    expect(isTimeBased("12")).toBe(false);
+  });
   it("detecta exercícios por tempo (minutos/segundos)", () => {
     expect(isTimeBased("5-7min")).toBe(true);
     expect(isTimeBased("5min")).toBe(true);

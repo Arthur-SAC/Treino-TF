@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { Exercise, WorkoutSession } from "../lib/db";
 import { db } from "../lib/db";
-import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, type LastPerformance } from "../lib/progression";
+import { suggestNextLoad, isHoldLight, isTimeBased, findLastPerformance, avaliarSeries, type LastPerformance } from "../lib/progression";
 import { formatDateBR } from "../lib/format";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
@@ -58,13 +58,17 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         setLast(lastPerf);
         if (timeBased) return;
         const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
-        const completedAllReps = lastPerf.sets.every((s) => s.reps > 0);
+        // Completou = toda série no mínimo da faixa; topo = toda série no
+        // máximo (antes, qualquer rep > 0 contava como completar).
+        const { completou, topo } = avaliarSeries(lastPerf.sets, repsTarget);
         setSuggested(
           suggestNextLoad({
             lastLoad: lastSet.weight,
             feedback: lastPerf.feedback,
-            completedAllReps,
+            completedAllReps: completou,
+            hitTopOfRange: topo,
             category: exercise.category,
+            equipment: exercise.equipment,
           }),
         );
         // Pré-preenche as séries com o que foi feito da última vez (a usuária ajusta).
@@ -83,7 +87,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
     return () => {
       mounted = false;
     };
-  }, [exercise.id, timeBased]);
+  }, [exercise.id, timeBased, repsTarget, exercise.category, exercise.equipment]);
 
   useEffect(() => {
     if (!restRunning || restRemaining === null) return;
@@ -137,10 +141,14 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   }
 
   function handleSave() {
+    // Só as séries marcadas como feitas: as outras vêm pré-preenchidas da
+    // última vez e entrariam no histórico sem terem acontecido. Se nenhuma foi
+    // marcada, salva as preenchidas — quem não usa o check não perde o treino.
+    const preenchidas = sets.filter((s) => s.reps.trim() !== "");
+    const feitas = preenchidas.filter((s) => s.done);
     const entry: WorkoutSession["exercises"][number] = {
       exerciseId: exercise.id,
-      sets: sets
-        .filter((s) => s.reps.trim() !== "")
+      sets: (feitas.length > 0 ? feitas : preenchidas)
         .map((s) => ({
           reps: Number(s.reps),
           weight: Number(s.weight.replace(",", ".")) || 0,
@@ -165,7 +173,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           </button>
         </div>
         <p className="text-muted text-xs mt-0.5">
-          {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
+          {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · {/\d\s*m\b/i.test(repsTarget) ? "por distância" : "por tempo"}
         </p>
         {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mt-2 mb-1">{notes}</p>}
         {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
@@ -202,7 +210,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
       </div>
 
       {isHoldLight(exercise.category) && (
-        <p className="text-xs text-muted mb-2">Manter leve — não subir a carga (silhueta).</p>
+        <p className="text-xs text-muted mb-2">Postura: carga leve e controle — aqui o ganho é a posição, não o peso.</p>
       )}
       {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mb-2">{notes}</p>}
       {exercise.successCue && (

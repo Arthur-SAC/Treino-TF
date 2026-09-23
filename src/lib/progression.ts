@@ -3,40 +3,73 @@ export type SessionFeedback = "easy" | "medium" | "hard";
 export interface ProgressionInput {
   lastLoad: number;
   feedback: SessionFeedback;
+  /** Toda série bateu o MÍNIMO da faixa de reps (ver avaliarSeries). */
   completedAllReps: boolean;
+  /** Toda série bateu o TOPO da faixa. Sem isso, "médio" mantém a carga. */
+  hitTopOfRange?: boolean;
   category?: string;
+  equipment?: readonly string[];
 }
 
-const HOLD_LIGHT_CATEGORIES = new Set(["peitoral", "postura", "costas"]);
+// Só a postura fica leve (face pull, extensão lombar, retração): é trabalho de
+// controle, não de carga. Peito e costas saíram daqui em 2026-09-23 — o
+// objetivo pede peito cheio em cima e costas/braço com força de levantar, e a
+// regra antiga travava supino e remadas pra sempre.
+const HOLD_LIGHT_CATEGORIES = new Set(["postura"]);
 
 export function isHoldLight(category: string): boolean {
   return HOLD_LIGHT_CATEGORIES.has(category);
 }
 
-export function suggestNextLoad({ lastLoad, feedback, completedAllReps, category }: ProgressionInput): number {
+/** O menor salto de carga que o equipamento dela permite. +1 kg não existe em
+ *  halter nem em placa — a sugestão antiga pedia um peso que não havia. */
+export function incrementoDoEquipamento(equipment: readonly string[] = []): number {
+  const tem = (...ids: string[]) => equipment.some((e) => ids.some((i) => e === i || e.startsWith(i)));
+  if (tem("caneleira")) return 1;
+  if (tem("leg-press", "maquina-", "multiestacao", "polia")) return 5;
+  return 2;
+}
+
+export function suggestNextLoad({
+  lastLoad, feedback, completedAllReps, hitTopOfRange = false, category, equipment,
+}: ProgressionInput): number {
+  const passo = incrementoDoEquipamento(equipment);
   if (category && isHoldLight(category)) {
-    // manter leve: nunca sobe; só recua se não completou as reps
-    return completedAllReps ? lastLoad : Math.max(0, lastLoad - 1);
+    return completedAllReps ? lastLoad : Math.max(0, lastLoad - passo);
   }
-  if (!completedAllReps) {
-    return Math.max(0, lastLoad - 1);
-  }
-  if (feedback === "easy") {
-    if (lastLoad < 5) return lastLoad + 0.5;
-    if (lastLoad < 20) return lastLoad + 2;
-    return lastLoad + 2.5;
-  }
-  if (feedback === "medium") {
-    return lastLoad + 1;
-  }
+  if (!completedAllReps) return Math.max(0, lastLoad - passo);
+  if (feedback === "easy") return lastLoad + passo;
+  if (feedback === "medium") return hitTopOfRange ? lastLoad + passo : lastLoad;
   return lastLoad; // hard
+}
+
+/** Faixa de reps do template ("10-12", "12 (LEVE)", "15 cada"). Sem número,
+ *  não há régua — qualquer série conta como completa. */
+function faixaDeReps(repsTarget: string): [number, number] | null {
+  const m = repsTarget.match(/(\d+)(?:\s*-\s*(\d+))?/);
+  if (!m) return null;
+  const min = Number(m[1]);
+  return [min, Number(m[2] ?? min)];
+}
+
+export function avaliarSeries(
+  sets: ReadonlyArray<{ reps: number }>,
+  repsTarget: string,
+): { completou: boolean; topo: boolean } {
+  const faixa = faixaDeReps(repsTarget);
+  if (!faixa || sets.length === 0) return { completou: sets.length > 0, topo: false };
+  return {
+    completou: sets.every((s) => s.reps >= faixa[0]),
+    topo: sets.every((s) => s.reps >= faixa[1]),
+  };
 }
 
 /** Exercício medido por TEMPO (cardio, aquecimento, isometria) — sem reps nem
  *  carga. Detecta pelo alvo de repetições do template ("5-7min", "30-45s"). */
 export function isTimeBased(repsTarget: string): boolean {
   const t = repsTarget.toLowerCase();
-  return /min/.test(t) || /\d\s*s\b/.test(t);
+  // Metros também: carregamento é feito ou não feito, não kg×reps (2026-09-23).
+  return /min/.test(t) || /\d\s*s\b/.test(t) || /\d\s*m\b/.test(t);
 }
 
 export interface LastPerformance {
