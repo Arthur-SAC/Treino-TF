@@ -1,117 +1,103 @@
 import type { WorkoutTemplate } from "../lib/db";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CICLO 1 — ADAPTAÇÃO — glúteo é PRIORIDADE Nº 1. Enxuto pra INICIANTE:
-// sessões de ~22–40 min (ela está começando e não quer 2h; os dias que
-// perderam a zona 2 em 2026-08-10 ficaram mais curtos — a caminhada diária
-// já cobre o cardio). Poucos exercícios,
-// 3 séries, foco em aprender o padrão e ativar glúteo. Cintura fina = só core
-// transverso (sem oblíquo com carga). A progressão de volume vem nas fases
-// seguintes (variação/hipertrofia). Regra: força começa com cardio + articular.
-//
-// PADRÃO DE LEVANTAR (2026-08-12, revisão final): as trocas que dão a força de
-// erguer a noiva no colo entraram TAMBÉM aqui, e não só nos ciclos de
-// variação/hipertrofia/refinamento/manutenção. Motivo: ela está em `entrada-1`,
-// e variação fica a ~48 sessões — uns dois meses e meio. O segundo objetivo
-// declarado do programa não chegaria até ela neste ano de treino. A adaptação
-// ela alcança em ~3 semanas.
-// A FASE DE ENTRADA fica de fora de propósito: é rampa de exposição, e
-// atravessar o salão carregando peso na frente do corpo na semana 1 é cedo
-// demais — o que ela precisa nas três primeiras semanas é entrar na academia e
-// voltar no dia seguinte, não um padrão novo que chama atenção.
-// Mesma regra dos outros ciclos: a sessão NÃO cresce. Cada exercício que entra
-// saiu de outro do mesmo template; contagem e `durationMin` ficam idênticos
-// (congelados em `tests/data/trocas-forca.test.ts`).
+// CICLO 1 — ADAPTAÇÃO — reescrito para a Chun-Li macia (spec 2026-09-23).
+// O objetivo virou "Chun-Li macia com glúteo destacado": coxa inteira grossa,
+// glúteo que passa da linha da coxa, costas bonitas, peito cheio em cima e
+// braço com força pra levantar a noiva. A semana passou a ser 3 dias de
+// inferior + 2 de superior. O glúteo médio (a largura do quadril de frente)
+// ganhou abdutora de máquina em 3 dias: antes era um dia forte e um simbólico.
+// Adaptação é a rampa até a variação: nenhum grupo passa do volume dela
+// (tests/data/fase1-chun-li.test.ts). Sem zona 2: a caminhada de 5 km é o
+// cardio. Sem búlgaro nem swing, avançados demais pra quem está começando.
+// `durationMin` = estimarDuracaoMin (session-duration.ts), nunca à mão.
+// Os ids são os de sempre: o histórico de sessões dela aponta pra eles.
 // ═══════════════════════════════════════════════════════════════════════════
 export const WORKOUT_PLAN: WorkoutTemplate[] = [
   {
     id: "seg-gluteo-mobilidade",
-    name: "◆Glúteo A · Força",
+    name: "◆Inferior A · Glúteo + coxa da frente",
     dayOfWeek: 1,
-    durationMin: 27,
+    durationMin: 42,
     cycle: "adaptacao",
-    purpose: "Hoje é glúteo pesado: construir a base de músculo que dá volume e forma ao bumbum. É a alavanca mais forte que você tem, e responde rápido porque você está começando.",
+    purpose: "Hoje é projeção do glúteo e a frente da coxa: o bumbum que passa da linha da coxa e a perna grossa da Chun-Li.",
     exercises: [
-      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, notes: "Aquece leve" },
-      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
-      { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "12 cada", restSec: 30, notes: "Ativação — sente o glúteo ligar antes de carregar" },
-      { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "10-12", restSec: 90, notes: "O MAIOR construtor de glúteo. Some peso quando as reps saírem fácil" },
-      { exerciseId: "smith-squat", sets: 3, repsTarget: "12", restSec: 90, notes: "Leg press 45° com pés ALTOS e um pouco abertos = foco glúteo. Empurra pelo calcanhar. Plataforma pequena? faz unilateral (um pé por vez)" },
-      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 60, notes: "Padrão de levantar — halter contra o peito, cotovelos pra baixo. Começa leve: é o agachamento que ensina a erguer alguém no colo" },
+      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento", notes: "Aquece leve" },
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "10-12", restSec: 90, block: "maquina", notes: "O maior construtor de projeção. Some peso quando as 12 saírem fácil" },
+      { exerciseId: "leg-press-pes-medios", sets: 3, repsTarget: "12", restSec: 90, block: "maquina", notes: "Pés no MEIO da plataforma: é a frente da coxa" },
+      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Glúteo médio — a largura do quadril de frente" },
+      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, block: "solo", notes: "Padrão de levantar: halter contra o peito, cotovelos pra baixo" },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, block: "solo", notes: "Transverso: afina a cintura por dentro" },
     ],
   },
   {
     id: "ter-cintura-costas",
-    name: "Superior leve + Cintura fina",
+    name: "Superior A · Peito de cima + costas + braço",
     dayOfWeek: 2,
-    durationMin: 36,
+    durationMin: 42,
     cycle: "adaptacao",
-    purpose: "Hoje afina a cintura e cuida da postura e do busto, com carga leve pra deixar o tronco elegante sem engrossar.",
+    purpose: "Hoje é o tronco da Chun-Li: peito cheio em cima, meio das costas firme e braço com força — sem alargar ombro.",
     exercises: [
-      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
-      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Base de busto — carga leve" },
-      // Saiu a remada baixa, não o face pull: os dois eram o MESMO padrão
-      // (puxada horizontal pra postura) e a sessão tinha os dois. O face pull
-      // fica porque é o que abre o ombro e levanta o busto, custa menos tempo
-      // (45s de intervalo contra 60s) e a redundância era do outro lado. O
-      // carregamento ocupa quase o mesmo tempo que a remada ocupava — por isso
-      // os 36 min continuam honestos.
-      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20m", restSec: 60, notes: "Padrão de levantar — peso contra o PEITO, nunca no ombro. Tronco ereto o percurso inteiro" },
-      { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },
-      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "6 trocas cada lado", restSec: 30, notes: "Padrão de levantar — core que resiste a rotação; pessoa no colo se mexe. Qualidade acima de repetição" },
-      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Transverso — afina a cintura por dentro, sem engrossar" },
+      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "remada-baixa-maquina", sets: 3, repsTarget: "12", restSec: 75, block: "maquina", notes: "Pegada neutra, cotovelos rentes ao corpo: espessura no meio das costas, sem abrir" },
+      { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Postura: ombro pra trás = peito projetado" },
+      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12", restSec: 75, block: "solo", notes: "Peito de CIMA — é ele que enche o decote" },
+      { exerciseId: "rosca-martelo", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
+      { exerciseId: "triceps-testa-barra-w", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
+      { exerciseId: "prancha-antirrotacao", sets: 3, repsTarget: "6 trocas cada lado", restSec: 30, block: "solo", notes: "Core que resiste a rotação — pessoa no colo se mexe" },
     ],
   },
   {
     id: "qua-mobilidade-danca",
-    name: "Mobilidade + Dança + ◆Glúteo médio",
+    name: "◆Inferior B · Glúteo médio + coxa",
     dayOfWeek: 3,
-    durationMin: 40,
+    durationMin: 35,
     cycle: "adaptacao",
-    purpose: "Hoje solta o quadril e trabalha o glúteo médio — o que arredonda a lateral do bumbum e dá o gingado. Dia mais leve.",
+    purpose: "Hoje é a lateral do quadril e a coxa por dentro e pela frente: o que abre a silhueta vista de frente.",
     exercises: [
-      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "cat-cow", sets: 2, repsTarget: "10", restSec: 0 },
-      { exerciseId: "agachamento-assistido-espaldar", sets: 2, repsTarget: "30-60s", restSec: 20, notes: "Destrava o quadril de quem fica sentada" },
-      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 30, notes: "Glúteo médio na máquina — arredonda a lateral" },
-      { exerciseId: "clamshell", sets: 3, repsTarget: "20 cada", restSec: 30 },
-      { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30 },
-      { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30 },
-      { exerciseId: "rebolado-basico", sets: 3, repsTarget: "1min", restSec: 30 },
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Tronco um pouco inclinado pra frente: puxa pra parte de cima do glúteo" },
+      { exerciseId: "cadeira-extensora", sets: 3, repsTarget: "12", restSec: 60, block: "maquina" },
+      { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", notes: "Coxa interna cheia — as coxas se encostam" },
+      { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "15 cada", restSec: 30, block: "solo" },
+      { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 30, block: "solo" },
     ],
   },
   {
     id: "qui-gluteo-coxa",
-    name: "◆Glúteo B · Unilateral + Coxa",
+    name: "Superior B · Força de levantar",
     dayOfWeek: 4,
-    durationMin: 27,
+    durationMin: 42,
     cycle: "adaptacao",
-    purpose: "Hoje é glúteo e coxa um lado de cada vez: corrige assimetria e deixa as pernas mais cheias e femininas.",
+    purpose: "Hoje é a força de carregar: pegada, braço e costas médias, com a lombar protegida.",
     exercises: [
-      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
-      { exerciseId: "ativacao-gluteo-band-walks", sets: 2, repsTarget: "12 cada", restSec: 30 },
-      { exerciseId: "step-up-gluteo", sets: 3, repsTarget: "10 cada", restSec: 60, notes: "Sobe empurrando pelo calcanhar da perna de cima, desce devagar. Substitui o búlgaro, que é avançado demais pra esta fase" },
-      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 60, notes: "Dobradiça de quadril — o padrão que mais constrói glúteo. Amplitude só até onde o posterior deixa, sem arredondar a lombar" },
-      { exerciseId: "hip-thrust-unilateral", sets: 3, repsTarget: "10 cada", restSec: 60 },
-      { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, notes: "Coxa interna cheia — silhueta curvilínea" },
+      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "cross-over-cabo", sets: 3, repsTarget: "12", restSec: 60, block: "solo", notes: "Crucifixo inclinado leve: aproxima o meio do peito" },
+      { exerciseId: "remada-unilateral-halter", sets: 3, repsTarget: "10 cada", restSec: 60, block: "solo" },
+      { exerciseId: "rosca-barra-w", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
+      { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20m", restSec: 60, block: "solo", notes: "Peso contra o PEITO, tronco ereto — o movimento de erguer alguém" },
+      { exerciseId: "extensao-lombar", sets: 2, repsTarget: "12", restSec: 45, block: "solo" },
+      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, block: "solo" },
     ],
   },
   {
     id: "sex-peitoral-postura",
-    name: "◆Glúteo C · Volume + Core",
+    name: "◆Inferior C · Glúteo máximo + posterior",
     dayOfWeek: 5,
-    durationMin: 22,
+    durationMin: 40,
     cycle: "adaptacao",
-    purpose: "Hoje é bombeamento de glúteo (muita repetição) + core que segura a cintura fina.",
+    purpose: "Hoje é o glúteo que passa da linha da coxa e a dobra de baixo nítida: projeção, com o posterior na medida.",
     exercises: [
-      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0 },
-      { exerciseId: "hip-thrust-barra", sets: 4, repsTarget: "15-20 (bombeamento)", restSec: 45, notes: "Reps altas, carga média — bomba de sangue no glúteo" },
-      { exerciseId: "kickback", sets: 3, repsTarget: "15 cada", restSec: 30, notes: "Pico de glúteo — caneleira pesada, controla a volta" },
-      { exerciseId: "abdutor-band-em-pe", sets: 3, repsTarget: "15 cada", restSec: 30 },
-      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30-45s", restSec: 30, notes: "Cinto interno — é o transverso que afina a cintura por dentro, e é a alavanca que você tem" },
+      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "4min", restSec: 0, block: "aquecimento" },
+      { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
+      { exerciseId: "flexora-em-pe", sets: 2, repsTarget: "12 cada", restSec: 45, block: "maquina" },
+      { exerciseId: "hip-thrust-barra", sets: 3, repsTarget: "15", restSec: 60, block: "maquina", notes: "Carga média, reps altas, pausa de 1 s no topo" },
+      { exerciseId: "stiff", sets: 3, repsTarget: "12", restSec: 75, block: "solo", notes: "Dobradiça: amplitude só até onde o posterior deixa, lombar neutra" },
+      { exerciseId: "kickback", sets: 3, repsTarget: "12 cada", restSec: 30, block: "solo", notes: "Pico do glúteo — controla a volta" },
     ],
   },
 ];

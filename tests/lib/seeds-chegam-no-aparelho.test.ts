@@ -64,7 +64,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(12);
+    expect(TEMPLATE_SEED_VERSION).toBe(13);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele
@@ -180,6 +180,20 @@ describe("templates de treino", () => {
   // Nome e contagem total não mudam quando um exercício é trocado por outro —
   // então o teste acima, sozinho, aprovaria uma troca que nunca sai do
   // repositório. O par (template, exerciseId) é o que a troca de fato move.
+  it("a fase 1 da Chun-Li macia chega em quem estava na versão anterior", async () => {
+    await db.workoutTemplates.put({ ...ALL_TEMPLATES.find((t) => t.id === "seg-gluteo-mobilidade")!, exercises: [] } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "templateSeedVersion", value: ANTERIOR_TEMPLATES });
+
+    await seedDatabase();
+
+    const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
+    expect(seg?.exercises.map((e) => e.exerciseId)).toContain("leg-press-pes-medios");
+    const qui = await db.workoutTemplates.get("v-qui-gluteo-stiff");
+    expect(qui?.exercises.map((e) => e.exerciseId)).toContain("farmer-walk");
+  });
+
   it("as trocas do padrão de levantar chegam — pelo par (template, exercício)", async () => {
     await db.settings.put({ key: "seeded", value: true });
     await db.settings.put({ key: "cyclesSeeded", value: true });
@@ -190,7 +204,8 @@ describe("templates de treino", () => {
     const TROCAS: [string, string][] = [
       // adaptação — o ciclo que ela alcança em ~3 semanas
       ["seg-gluteo-mobilidade", "agachamento-goblet"],
-      ["ter-cintura-costas", "carregamento-frontal"],
+      // o carregamento foi pra quinta (Superior B · força de levantar) em 2026-09-23
+      ["qui-gluteo-coxa", "carregamento-frontal"],
       ["ter-cintura-costas", "prancha-antirrotacao"],
       // e os ciclos de construção
       ["v-seg-gluteo-unilateral", "agachamento-goblet"],
@@ -204,8 +219,10 @@ describe("templates de treino", () => {
     expect(faltando).toEqual([]);
 
     // E o que SAIU também não pode voltar pelo banco parado.
+    // Na Chun-Li macia (2026-09-23) a abdutora ENTROU na segunda de propósito
+    // (glúteo médio 3x); o que saiu de lá foi o leg press de pés altos.
     const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
-    expect(seg?.exercises.some((e) => e.exerciseId === "abdutor-maquina")).toBe(false);
+    expect(seg?.exercises.some((e) => e.exerciseId === "smith-squat")).toBe(false);
   });
 });
 
