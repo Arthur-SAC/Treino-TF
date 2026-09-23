@@ -3,23 +3,13 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { ExerciseCard } from "../../components/ExerciseCard";
+import { CATEGORIES, CATEGORY_LABELS } from "../../lib/exercise-categories";
 
 // Exportado pra testes: um exercício com `category` fora desta lista some do
 // filtro (só aparece em "Todos") e mostra o texto cru no card em vez de um
 // rótulo em pt-BR — já aconteceu de conteúdo existir e não chegar até ela por
 // exatamente esse motivo, então a taxonomia é testada contra o catálogo real.
-export const CATEGORIES = ["gluteo", "cintura", "costas", "postura", "peitoral", "mobilidade", "danca", "aquecimento", "cardio"];
-const CATEGORY_LABELS: Record<string, string> = {
-  gluteo: "Glúteo",
-  cintura: "Cintura",
-  costas: "Costas",
-  postura: "Postura",
-  peitoral: "Peitoral",
-  mobilidade: "Mobilidade",
-  danca: "Dança",
-  aquecimento: "Aquecimento",
-  cardio: "Cardio",
-};
+export { CATEGORIES };
 
 export function ExerciseLibrary() {
   const [category, setCategory] = useState<string | null>(null);

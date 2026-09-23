@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ordenarPorBloco } from "../../src/lib/session-order";
 import { ENTRADA_TEMPLATES } from "../../src/data/entrada-seed";
-import { WORKOUT_PLAN } from "../../src/data/workout-plan-seed";
+import { CYCLE_TEMPLATES } from "../../src/data/cycles-seed";
 import type { WorkoutTemplate } from "../../src/lib/db";
 
 type TplEx = WorkoutTemplate["exercises"][number];
@@ -55,7 +55,11 @@ describe("ordenarPorBloco", () => {
     for (const soloPrimeiro of [false, true]) {
       expect(ordenarPorBloco(antigo, soloPrimeiro)).toEqual(antigo);
     }
-    for (const t of WORKOUT_PLAN) {
+    // A adaptação ganhou blocos em 2026-09-23 (Chun-Li macia); os ciclos da
+    // fase 2 continuam sem, e são eles que exercitam este caminho agora.
+    const semBloco = CYCLE_TEMPLATES.filter((t) => t.exercises.every((e) => !e.block));
+    expect(semBloco.length).toBeGreaterThan(0);
+    for (const t of semBloco) {
       expect(ordenarPorBloco(t.exercises, true)).toEqual(t.exercises);
     }
   });

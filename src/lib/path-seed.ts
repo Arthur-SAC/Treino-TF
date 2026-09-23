@@ -24,8 +24,12 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // água no fogo, então ela compraria menos do que precisa toda semana. Junto,
 // saiu a frase que dizia que coxa "serve igual" ao peito: na mesma porção dá
 // ~13g menos de proteína e o dobro de gordura.
-export const MEAL_PLAN_VERSION = 13;
-const MILESTONE_SEED_VERSION = 7;
+// v14: déficit a 2.200 (gasto real 2.600-2.800), manutenção 2.750, superávit 2.950.
+// v15: whey em gramas de pó, castanha-do-pará no café-4, melancia no lanche-3.
+// v16: macros declarados de manutenção e superávit voltam a bater com a comida (eram os de 3.000/3.300).
+export const MEAL_PLAN_VERSION = 16;
+// v8: o marco da fase 1 passou a citar a meta de CONSUMO (2.200), não um número solto.
+const MILESTONE_SEED_VERSION = 8;
 
 const TODOS_OS_MARCOS = [
   ...MILESTONES,
@@ -165,7 +169,7 @@ async function upsertMealPlans(): Promise<void> {
     if (match?.id !== undefined) {
       await db.mealPlans.update(match.id, p);
     } else {
-      await db.mealPlans.add(p as never);
+      await db.mealPlans.add({ ...p } as never);
     }
   }
 }
@@ -176,10 +180,10 @@ export async function seedPath(): Promise<void> {
   if (seeded?.value !== true) {
     await db.transaction("rw", [db.milestones, db.mealPlans, db.settings], async () => {
       for (const m of TODOS_OS_MARCOS) {
-        await db.milestones.add(m as never);
+        await db.milestones.add({ ...m } as never);
       }
       if ((await db.mealPlans.count()) === 0) {
-        await db.mealPlans.add(INITIAL_PLAN as never); // garante déficit em [0]
+        await db.mealPlans.add({ ...INITIAL_PLAN } as never); // garante déficit em [0]
       }
       await upsertMealPlans();
       await db.settings.put({ key: "pathSeeded", value: true });
@@ -196,10 +200,10 @@ export async function seedPath(): Promise<void> {
   if (msVersion < MILESTONE_SEED_VERSION) {
     await db.transaction("rw", [db.milestones, db.settings], async () => {
       if (msVersion < 2) {
-        for (const m of BODY_GOAL_MILESTONES) await db.milestones.add(m as never);
+        for (const m of BODY_GOAL_MILESTONES) await db.milestones.add({ ...m } as never);
       }
       if (msVersion < 3) {
-        for (const m of BUST_MILESTONES) await db.milestones.add(m as never);
+        for (const m of BUST_MILESTONES) await db.milestones.add({ ...m } as never);
       }
       if (msVersion < 4) {
         // Atualiza o marco antigo de "pixie" pro de crescimento (ou adiciona se faltar).
@@ -210,12 +214,12 @@ export async function seedPath(): Promise<void> {
           if (pixie?.id !== undefined) {
             await db.milestones.update(pixie.id, { title: novo.title, notes: novo.notes });
           } else {
-            await db.milestones.add(novo as never);
+            await db.milestones.add({ ...novo } as never);
           }
         }
       }
       if (msVersion < 5) {
-        for (const m of VOICE_MILESTONES) await db.milestones.add(m as never);
+        for (const m of VOICE_MILESTONES) await db.milestones.add({ ...m } as never);
       }
       if (msVersion < 6) {
         // Troca os emojis antigos dos marcos por símbolos de linha (mesmo
@@ -241,6 +245,11 @@ export async function seedPath(): Promise<void> {
         // só no arquivo: o banco dela continuaria exibindo a "Fase 5" pendurada
         // no hormônio e o déficit de 2.200 kcal. Marco que não chega na tela
         // dela não aconteceu.
+        await regravaMarcosV7();
+      }
+      if (msVersion < 8) {
+        // A meta caiu para 2.200 (spec Chun-Li macia): o marco que cita as
+        // calorias tem que dizer o mesmo número que o plano.
         await regravaMarcosV7();
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });

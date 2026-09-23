@@ -171,7 +171,8 @@ describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) ind
     // que é o que este teste (e o bug histórico) tratam.
     const idDoPasseio = (dow: number) =>
       buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items)
-        .find((i) => i.control === "walk" && i.id !== "caminhada-trabalho")!.id;
+        // e desde 2026-09-23 o fim de semana tem os 5 km (`caminhada-fds`) também
+        .find((i) => i.control === "walk" && i.id !== "caminhada-trabalho" && i.id !== "caminhada-fds")!.id;
     expect(idDoPasseio(3)).toBe("caes"); // quarta-feira
     expect(idDoPasseio(6)).toBe("caes-fds"); // sábado
     expect(idDoPasseio(0)).toBe("caes-fds"); // domingo

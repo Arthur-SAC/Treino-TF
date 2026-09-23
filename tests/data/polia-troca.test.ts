@@ -15,7 +15,10 @@ describe("troca da polia baixa", () => {
 
   it("usa os substitutos com caneleira/barra", () => {
     expect(referenced).toContain("kickback");
-    expect(referenced).toContain("good-morning");
+    // O pull-through saiu por causa da polia baixa curta; o que importa é a
+    // dobradiça continuar no programa. Desde 2026-09-23 ela vem pelo stiff
+    // (o good-morning saiu da variação reescrita para a Chun-Li macia).
+    expect(referenced.some((id) => id === "good-morning" || id === "stiff")).toBe(true);
   });
 
   it("todo exerciseId referenciado existe no catálogo", () => {

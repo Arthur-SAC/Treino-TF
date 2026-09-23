@@ -60,7 +60,26 @@ function isBarbaDay(dayOfYear: number): boolean {
 // falsos a partir da quarta semana. Este módulo é puro e não conhece o
 // catálogo nem a trilha (`flex-progression.ts`), então quem deriva a verdade
 // é Today.tsx, mesma camada que já resolve o item pélvico.
-function manhaItems(dayOfYear: number): RoutineItem[] {
+/** Creatina 3 g no café, todo dia. O horário é o do café porque o efeito vem
+ *  do acúmulo, não da hora — amarrar a um hábito que já existe é o que faz
+ *  lembrar. O aviso de água das primeiras 2 semanas é derivado em Today.tsx
+ *  (precisa do histórico de marcações; este módulo é puro). */
+const CREATINA: RoutineItem = {
+  id: "creatina", block: "manha", label: "Creatina · 3 g",
+  subtitle: "No café, todo dia, com água ou na vitamina — funciona pelo acúmulo, não pelo horário",
+  defaultTime: "06:35",
+};
+
+/** Os 5 km também no sábado e no domingo (decisão dela, 2026-09-23): é o
+ *  acelerador que tira ~1 mês da fase 1 sem cortar comida. De manhã, antes
+ *  do calor de Aracaju. Credita os 60 min como a do trabalho. */
+const CAMINHADA_FDS: RoutineItem = {
+  id: "caminhada-fds", block: "manha", label: "Caminhada · 5 km (fim de semana)",
+  subtitle: "~1h em ritmo de zona 2 — o mesmo da volta do trabalho",
+  control: "walk", to: "/treino/exercicio/cardio-zona2", defaultTime: "07:30",
+};
+
+function manhaItems(dayOfYear: number, fimDeSemana: boolean): RoutineItem[] {
   const items: RoutineItem[] = [
     { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
   ];
@@ -68,8 +87,10 @@ function manhaItems(dayOfYear: number): RoutineItem[] {
   items.push(
     { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning", defaultTime: "06:25" },
     { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
+    CREATINA,
     { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   );
+  if (fimDeSemana) items.push(CAMINHADA_FDS);
   return items;
 }
 
@@ -188,7 +209,7 @@ function caes(dia: TipoDeDia): RoutineItem {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
   }
   if (dia === "domingo") {
-    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; hoje é daqui que vem quase todo o seu movimento" };
+    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã" };
   }
   return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
 }
@@ -229,7 +250,7 @@ const NOITE: RoutineItem[] = [
   { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
   // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a
   // partir do horário do próprio item (que a usuária ajusta em /hoje/horarios).
-  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
+  { id: "dormir", block: "noite", label: "Dormir", subtitle: "Meta: 7–7,5 h até as 6h · marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },
 ];
 
 function buildBlocks(
@@ -255,12 +276,12 @@ function buildBlocks(
       ? { id: "tarde", label: "Fim de tarde", items: [
           lanche("domingo"),
           caes("domingo"),
-          // Sem control:"walk" de propósito: o passeio logo acima já mostra o
-          // contador de movimento do dia, e dois itens repetindo "X / 120 min"
-          // fariam parecer que o domingo pede duas caminhadas — não pede, só
-          // há o passeio.
+          // Sem control:"walk" de propósito: é descanso, não movimento. Desde
+          // 2026-09-23 (spec Chun-Li macia) o domingo tem DUAS caminhadas reais
+          // — os 5 km da manhã (`caminhada-fds`) e o passeio — e cada uma
+          // credita as suas, igual ao dia útil.
           //
-          // Em dia de semana é o INVERSO: `tardeSemana()` dá control:"walk" a
+          // Em dia de semana também: `tardeSemana()` dá control:"walk" a
           // DOIS itens de propósito (`caminhada-trabalho` e `caes`), porque
           // ali são duas caminhadas reais e distintas (5 km do trabalho +
           // passeio com os cães) e as duas devem creditar — daí a meta padrão
@@ -286,7 +307,7 @@ function buildBlocks(
   }
 
   return [
-    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear) },
+    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday) },
     trabalho,
     tarde,
     { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: NOITE },

@@ -33,17 +33,14 @@ describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
   it("os templates que perderam a zona 2 tiveram exatamente 18 min descontados do durationMin", () => {
     const NOVA_DURACAO: Record<string, number> = {
       // src/data/cycles-seed.ts
-      "v-seg-gluteo-unilateral": 42,
-      "v-qui-gluteo-stiff": 37,
-      "v-sex-peitoral-postura": 32,
       "h-seg-gluteo-volume": 47,
       "h-qui-gluteo-posterior": 37,
       "h-sex-peitoral-postura": 37,
       "r-seg-gluteo-densidade": 32,
       "r-qui-gluteo-simetria": 32,
       "r-sex-peitoral-refinamento": 32,
-      "m-seg-gluteo": 32,
-      "m-qui-gluteo": 27,
+      "m-seg-gluteo": 37,
+      "m-qui-gluteo": 32,
       "m-sex-gluteo": 27,
       // src/data/entrada-seed.ts
       "e1-seg": 12,
@@ -58,12 +55,10 @@ describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
       "e3-qua": 17,
       "e3-qui": 10,
       "e3-sex": 17,
-      // src/data/workout-plan-seed.ts
-      "seg-gluteo-mobilidade": 27,
-      "qui-gluteo-coxa": 27,
-      "sex-peitoral-postura": 22,
     };
-    expect(Object.keys(NOVA_DURACAO)).toHaveLength(27);
+    // Eram 27; adaptação e variação saíram em 2026-09-23 (Chun-Li macia) — a duração delas
+    // agora vem do estimador (tests/data/fase1-chun-li.test.ts).
+    expect(Object.keys(NOVA_DURACAO)).toHaveLength(21);
     for (const [id, esperado] of Object.entries(NOVA_DURACAO)) {
       const t = ALL_TEMPLATES.find((tpl) => tpl.id === id);
       expect({ id, durationMin: t?.durationMin }).toEqual({ id, durationMin: esperado });
@@ -74,19 +69,15 @@ describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
   // acima (ou seja, nunca teve zona 2) deveria ter sido tocado no fix.
   it("templates que nunca tiveram zona 2 mantiveram durationMin intocado", () => {
     const NAO_AFETADOS: Record<string, number> = {
-      "v-ter-cintura-costas": 52,
-      "v-qua-mobilidade-danca": 54,
       "h-ter-cintura-costas": 35,
       "h-qua-mobilidade-danca": 54,
       "r-ter-cintura-postura": 48,
       "r-qua-mobilidade-danca": 56,
       "m-ter-superior": 45,
       "m-qua-mobilidade": 48,
-      "e1-ter": 25,
-      "e2-ter": 27,
-      "e3-ter": 27,
-      "ter-cintura-costas": 36,
-      "qua-mobilidade-danca": 40,
+      "e1-ter": 33,
+      "e2-ter": 35,
+      "e3-ter": 35,
     };
     for (const [id, esperado] of Object.entries(NAO_AFETADOS)) {
       const t = ALL_TEMPLATES.find((tpl) => tpl.id === id);

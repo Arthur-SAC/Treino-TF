@@ -19,7 +19,7 @@ describe("Workout session smoke", () => {
         </Routes>
       </MemoryRouter>,
     );
-    await waitFor(() => expect(screen.getByText(/Glúteo A/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Inferior A/)).toBeInTheDocument());
     expect(await screen.findByText(/Antes de começar/i)).toBeInTheDocument();
 
     // O primeiro exercício é cardio (por tempo): agora é só "Marcar feito", sem reps/peso

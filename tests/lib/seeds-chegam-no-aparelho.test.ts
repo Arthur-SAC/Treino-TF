@@ -60,18 +60,18 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(10);
+    expect(EXERCISE_SEED_VERSION).toBe(11);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(12);
+    expect(TEMPLATE_SEED_VERSION).toBe(13);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele
   // vivia privada dentro de path-seed.ts, e nada aqui alcançava. Foi a mesma
   // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
   it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
-    expect(MEAL_PLAN_VERSION).toBe(13);
+    expect(MEAL_PLAN_VERSION).toBe(16);
   });
 
   // A versão do estilo também vivia privada dentro do módulo — era o último
@@ -92,6 +92,23 @@ describe("exercícios", () => {
   beforeEach(async () => {
     await db.exercises.clear();
     await db.settings.clear();
+  });
+
+  it("os exercícios da Chun-Li macia chegam em quem estava na versão anterior, sem apagar o vídeo dela", async () => {
+    await db.exercises.put({
+      id: "hip-thrust-barra", name: "Hip thrust", category: "gluteo", equipment: ["barra"],
+      difficulty: "intermediario", description: "antigo", commonMistakes: [], exposureLevel: 4,
+      videoUrl: "https://exemplo/video-dela",
+    } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
+
+    await seedDatabase();
+
+    expect(await db.exercises.get("cadeira-extensora")).toBeDefined();
+    expect((await db.exercises.get("rosca-martelo"))?.category).toBe("bracos");
+    expect((await db.exercises.get("hip-thrust-barra"))?.videoUrl).toBe("https://exemplo/video-dela");
   });
 
   it("o cardio zona 2 reescrito alcança quem estava na versão anterior", async () => {
@@ -163,6 +180,20 @@ describe("templates de treino", () => {
   // Nome e contagem total não mudam quando um exercício é trocado por outro —
   // então o teste acima, sozinho, aprovaria uma troca que nunca sai do
   // repositório. O par (template, exerciseId) é o que a troca de fato move.
+  it("a fase 1 da Chun-Li macia chega em quem estava na versão anterior", async () => {
+    await db.workoutTemplates.put({ ...ALL_TEMPLATES.find((t) => t.id === "seg-gluteo-mobilidade")!, exercises: [] } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "templateSeedVersion", value: ANTERIOR_TEMPLATES });
+
+    await seedDatabase();
+
+    const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
+    expect(seg?.exercises.map((e) => e.exerciseId)).toContain("leg-press-pes-medios");
+    const qui = await db.workoutTemplates.get("v-qui-gluteo-stiff");
+    expect(qui?.exercises.map((e) => e.exerciseId)).toContain("farmer-walk");
+  });
+
   it("as trocas do padrão de levantar chegam — pelo par (template, exercício)", async () => {
     await db.settings.put({ key: "seeded", value: true });
     await db.settings.put({ key: "cyclesSeeded", value: true });
@@ -173,7 +204,8 @@ describe("templates de treino", () => {
     const TROCAS: [string, string][] = [
       // adaptação — o ciclo que ela alcança em ~3 semanas
       ["seg-gluteo-mobilidade", "agachamento-goblet"],
-      ["ter-cintura-costas", "carregamento-frontal"],
+      // o carregamento foi pra quinta (Superior B · força de levantar) em 2026-09-23
+      ["qui-gluteo-coxa", "carregamento-frontal"],
       ["ter-cintura-costas", "prancha-antirrotacao"],
       // e os ciclos de construção
       ["v-seg-gluteo-unilateral", "agachamento-goblet"],
@@ -187,8 +219,10 @@ describe("templates de treino", () => {
     expect(faltando).toEqual([]);
 
     // E o que SAIU também não pode voltar pelo banco parado.
+    // Na Chun-Li macia (2026-09-23) a abdutora ENTROU na segunda de propósito
+    // (glúteo médio 3x); o que saiu de lá foi o leg press de pés altos.
     const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
-    expect(seg?.exercises.some((e) => e.exerciseId === "abdutor-maquina")).toBe(false);
+    expect(seg?.exercises.some((e) => e.exerciseId === "smith-squat")).toBe(false);
   });
 });
 
@@ -383,8 +417,8 @@ describe("plano alimentar", () => {
     await seedPath();
 
     const manutencao = (await db.mealPlans.toArray()).find((p) => p.goal === "manutencao")!;
-    expect(manutencao.kcalDaily).toBe(3000);
-    expect(manutencao.name).toContain("3000");
+    expect(manutencao.kcalDaily).toBe(2750);
+    expect(manutencao.name).toContain("2750");
 
     // E o ultraprocessado não pode sobreviver pelo banco parado.
     const todos = await db.mealPlans.toArray();
@@ -393,5 +427,27 @@ describe("plano alimentar", () => {
     );
     expect(nomes.filter((n) => /peito de peru/i.test(n))).toEqual([]);
     expect(nomes.some((n) => /patê de atum/i.test(n))).toBe(true);
+  });
+  it("o déficit a 2.200 chega em quem estava com o plano de 2.300", async () => {
+    await db.settings.put({ key: "pathSeeded", value: true });
+    await db.settings.put({ key: "milestoneSeedVersion", value: 7 });
+    await db.settings.put({ key: "mealPlanVersion", value: ANTERIOR_PLANO_ALIMENTAR });
+    await db.mealPlans.add({
+      name: "Plano padrão · emagrecimento (2300 kcal)",
+      goal: "deficit",
+      kcalDaily: 2300,
+      proteinG: 211,
+      carbG: 231,
+      fatG: 57,
+      slots: [],
+      defaultMeals: [],
+    } as never);
+
+    await seedPath();
+
+    const deficit = (await db.mealPlans.toArray()).find((p) => p.goal === "deficit")!;
+    expect(deficit.kcalDaily).toBe(2200);
+    const marcos = JSON.stringify(await db.milestones.toArray());
+    expect(marcos).not.toMatch(/2\.300 kcal/);
   });
 });

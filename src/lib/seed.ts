@@ -22,7 +22,8 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // variação difícil (halter pendurado na lateral = trapézio superior sob
 // carga, o oposto do objetivo), subiu de exposureLevel 2 → 3, e os dois
 // exercícios novos ganharam vídeo de demonstração.
-export const EXERCISE_SEED_VERSION = 10;
+// v11: nove exercícios da Chun-Li macia (coxa, braço, costas médias) e as categorias Pernas e Braços.
+export const EXERCISE_SEED_VERSION = 11;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.
@@ -32,7 +33,8 @@ export const EXERCISE_SEED_VERSION = 10;
 // v12: o mesmo padrão entrou na ADAPTAÇÃO, que ela alcança em ~3 semanas —
 // sem isso o padrão de levantar só chegaria nela daqui a ~48 sessões. A Fase
 // de Entrada continua de fora de propósito (rampa de exposição).
-export const TEMPLATE_SEED_VERSION = 12;
+// v13: fase 1 reescrita para a Chun-Li macia (3 inferiores + 2 superiores, abdutora 3x, braço e peito de cima).
+export const TEMPLATE_SEED_VERSION = 13;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");

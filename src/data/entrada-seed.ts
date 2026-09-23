@@ -55,7 +55,7 @@ const SEMANA_1: WorkoutTemplate[] = [
     id: "e1-ter",
     name: "Entrada · Postura + Core",
     dayOfWeek: 2,
-    durationMin: 25,
+    durationMin: 33,
     cycle: "entrada-1",
     purpose: "Postura e core. Ombro pra trás muda a leitura do tronco hoje, sem esperar nenhum ganho físico.",
     exercises: [
@@ -65,6 +65,8 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "prancha", sets: 3, repsTarget: "30s", restSec: 30, block: "solo" },
       { exerciseId: "dead-bug", sets: 3, repsTarget: "10 cada", restSec: 30, block: "solo" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "30s", restSec: 30, block: "solo", notes: "Cinto interno — afina a cintura por dentro, sem engrossar" },
+      { exerciseId: "cross-over-cabo", sets: 2, repsTarget: "12", restSec: 60, block: "solo", notes: "Crucifixo inclinado bem leve — peito de cima" },
+      { exerciseId: "rosca-martelo", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
     ],
   },
   {
@@ -133,7 +135,7 @@ const SEMANA_2: WorkoutTemplate[] = [
     id: "e2-ter",
     name: "Entrada · Postura + Core II",
     dayOfWeek: 2,
-    durationMin: 27,
+    durationMin: 35,
     cycle: "entrada-2",
     purpose: "Postura de novo — é o ganho mais rápido que existe e não depende de perder nem um grama.",
     exercises: [
@@ -143,6 +145,8 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "prancha", sets: 3, repsTarget: "40s", restSec: 30, block: "solo" },
       { exerciseId: "dead-bug", sets: 3, repsTarget: "12 cada", restSec: 30, block: "solo" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "40s", restSec: 30, block: "solo" },
+      { exerciseId: "cross-over-cabo", sets: 2, repsTarget: "12", restSec: 60, block: "solo", notes: "Crucifixo inclinado bem leve — peito de cima" },
+      { exerciseId: "rosca-martelo", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
     ],
   },
   {
@@ -209,7 +213,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     id: "e3-ter",
     name: "Entrada · Postura + Core III",
     dayOfWeek: 2,
-    durationMin: 27,
+    durationMin: 35,
     cycle: "entrada-3",
     purpose: "Postura e cintura. O vacuum é o que afina por dentro — nenhum abdominal com carga faz isso.",
     exercises: [
@@ -218,6 +222,8 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "20", restSec: 45, block: "maquina" },
       { exerciseId: "prancha", sets: 3, repsTarget: "45s", restSec: 30, block: "solo" },
       { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "45s", restSec: 30, block: "solo" },
+      { exerciseId: "cross-over-cabo", sets: 2, repsTarget: "12", restSec: 60, block: "solo", notes: "Crucifixo inclinado bem leve — peito de cima" },
+      { exerciseId: "rosca-martelo", sets: 2, repsTarget: "12", restSec: 60, block: "solo" },
     ],
   },
   {

@@ -69,7 +69,7 @@ export const VITALIDADE_GUIA: GuideSection[] = [
     title: "Zinco",
     intro: "Deficiência de zinco derruba volume. Suplementar só ajuda quem está faltando.",
     tips: [
-      "Castanha de caju é a fonte barata e local — Sergipe produz caju, e ela entra fácil no lanche do dia a dia.",
+      "Castanha de caju é a fonte barata e local — Sergipe produz caju, e ela entra fácil no café do dia a dia.",
       "Isso é sinal de que vale revisar o cardápio, não de que falta suplemento novo: a reforma do plano alimentar é outra frente que já cobre isso.",
     ],
   },
@@ -80,6 +80,18 @@ export const VITALIDADE_GUIA: GuideSection[] = [
     tips: [
       "Efeito modesto — não é a alavanca que resolve sozinha.",
       "É o mesmo start-stop que a sessão de Vitalidade já prescreve como alvo. De novo, nada novo para adicionar na rotina.",
+    ],
+  },
+  {
+    id: "comida",
+    title: "Comida — o que ajuda e quanto",
+    intro: "O efeito da comida existe e é modesto. O que pesa de verdade é o déficit moderado (por isso 2.200 e não menos), dormir 7 horas, treinar e perder a barriga.",
+    tips: [
+      "Beterraba: melhora o fluxo de sangue, que é metade da firmeza. Jantar cedo ajuda, porque o efeito leva 2 a 3 horas pra aparecer.",
+      "Melancia: entra no lanche porque é barata em Aracaju e ajuda na mesma direção da beterraba, com efeito pequeno.",
+      "Castanha-do-pará: fonte de selênio. Uma ou duas por dia, nunca mais que duas — em excesso o selênio faz mal.",
+      "Peixe duas vezes por semana e carne, ovo e feijão no resto: é daí que vêm o ômega-3 e o zinco.",
+      "Fórmulas de farmácia que prometem testosterona ou firmeza estão sem evidência boa. O app não recomenda nenhuma.",
     ],
   },
   {

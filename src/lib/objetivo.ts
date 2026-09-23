@@ -127,10 +127,16 @@ export const PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 = razaoOmbroQuadril(
 );
 
 export const CONSUMO = {
-  /** Mifflin-St Jeor + 5 km a pé por dia + 1h de cães + força 4-5x/semana. */
-  gastoEstimadoKcalMin: 2900,
-  gastoEstimadoKcalMax: 3100,
-  metaKcal: 2300,
+  /** Mifflin-St Jeor (trabalho sentada) + caminhada de 5 km de segunda a
+   *  domingo + treino de força 5x + cães com NEAT baixo (mais parado que
+   *  andando). Recalibrado em 2026-09-23: o valor anterior (2.900-3.100)
+   *  supunha os 5 km todo dia útil desde maio, e ela contou que andava "de vez
+   *  em quando". */
+  gastoEstimadoKcalMin: 2600,
+  gastoEstimadoKcalMax: 2800,
+  /** 2.200, escolhida por ela contra 2.000: déficit acima de ~750 derruba
+   *  testosterona, e firmeza, libido e força são metade dos objetivos. */
+  metaKcal: 2200,
   /** Piso, não faixa fechada: em déficit, exceder proteína protege músculo —
    *  não é erro nutricional entregar mais que proteinaGMax. proteinaGMax
    *  existe só como referência de "alvo confortável", nunca como teto a não
