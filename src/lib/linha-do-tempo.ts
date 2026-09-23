@@ -24,7 +24,7 @@ export function linhaDoTempo(pr: Projecao | null): GuideSection {
       ? "Cintura 88: você já começou abaixo dela — a trava do superávit não te segura."
       : `Cintura 88 entre ${entre(pr.cintura88)}: é a trava que destrava o superávit.`,
     `Fim da fase 1 entre ${entre(pr.fimFase1)}: cintura 84 e peso por volta de ${pr.pesoAlvoFase1[0]}–${pr.pesoAlvoFase1[1]} kg.`,
-    `Fase 2 até ${entre(pr.fimFase2)}: a balança SOBE de propósito, até ${FASE_2.pesoKgMin}-${FASE_2.pesoKgMax} kg, e o quadril volta a ${FASE_2.quadrilCm} feito de músculo.`,
+    `Fase 2 termina entre ${entre(pr.fimFase2)}: a balança SOBE de propósito, até ${FASE_2.pesoKgMin}-${FASE_2.pesoKgMax} kg, e o quadril volta a ${FASE_2.quadrilCm} feito de músculo.`,
     "Se a medição do mês ficar atrás da data, a pergunta é adesão (16h e jantar), não o plano.",
   ];
   return { id: "linha-do-tempo", title: "Linha do tempo", intro, tips };

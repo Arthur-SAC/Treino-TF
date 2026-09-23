@@ -18,6 +18,7 @@ describe("linha do tempo", () => {
     expect(s).toMatch(/\/2027/);
     expect(s).toMatch(/\/2028/);
     expect(s).toMatch(/balança SOBE/);
+    expect(s).toMatch(/Fase 2 termina entre/);
   });
 
   it("partida já abaixo de 88 não inventa data pra trava", () => {
