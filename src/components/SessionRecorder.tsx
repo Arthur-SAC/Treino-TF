@@ -51,7 +51,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
       .below(hojeISO() + "z")
       .reverse()
       .toArray()
-      .then((prev) => {
+      .then(async (prev) => {
         if (!mounted) return;
         const lastPerf = findLastPerformance(prev, exercise.id);
         if (!lastPerf) return;
@@ -60,7 +60,13 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
         // Completou = toda série no mínimo da faixa; topo = toda série no
         // máximo (antes, qualquer rep > 0 contava como completar).
-        const { completou, topo } = avaliarSeries(lastPerf.sets, repsTarget);
+        // Contra o alvo que ela treinou DAQUELA vez: o mesmo exercício tem 15
+        // reps num dia e 18 no outro, e o alvo sobe a cada fase da Entrada.
+        // Julgar pelo alvo de hoje mandava baixar a carga a cada troca.
+        const tplAntigo = lastPerf.templateId ? await db.workoutTemplates.get(lastPerf.templateId) : undefined;
+        if (!mounted) return;
+        const alvoDaquelaVez = tplAntigo?.exercises.find((e) => e.exerciseId === exercise.id)?.repsTarget ?? repsTarget;
+        const { completou, topo } = avaliarSeries(lastPerf.sets, alvoDaquelaVez);
         setSuggested(
           suggestNextLoad({
             lastLoad: lastSet.weight,

@@ -52,3 +52,30 @@ describe("SessionRecorder — séries salvas", () => {
     expect(screen.getByText(/por distância/i)).toBeInTheDocument();
   });
 });
+
+import { db } from "../../src/lib/db";
+
+// Revisão da auditoria: a última vez era julgada contra o alvo de HOJE. O mesmo
+// exercício tem 15 reps num dia e 18 no outro (e sobe de alvo a cada fase da
+// Entrada) — o app mandaria baixar a carga a cada troca.
+describe("SessionRecorder — julga a última vez pelo alvo daquela vez", () => {
+  it("15 reps limpas num dia de 15 não viram 'não completou' num dia de 18", async () => {
+    await db.workoutSessions.clear();
+    await db.workoutTemplates.clear();
+    await db.workoutTemplates.put({
+      id: "t-antigo", name: "x", dayOfWeek: 1, durationMin: 30,
+      exercises: [{ exerciseId: "abdutor-maquina", sets: 2, repsTarget: "15", restSec: 45 }],
+    });
+    await db.workoutSessions.add({
+      date: "2026-09-21", templateId: "t-antigo", difficultySelf: "medium",
+      exercises: [{ exerciseId: "abdutor-maquina", sets: [{ reps: 15, weight: 30 }, { reps: 15, weight: 30 }] }],
+    } as never);
+    render(
+      <SessionRecorder
+        exercise={{ ...ex, id: "abdutor-maquina", category: "gluteo", equipment: ["maquina-abdutor"] }}
+        setsTarget={2} repsTarget="18" restSec={45} onSave={() => {}}
+      />,
+    );
+    expect(await screen.findByText(/Sugestão: 35 kg/)).toBeInTheDocument();
+  });
+});

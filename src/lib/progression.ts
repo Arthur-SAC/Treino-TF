@@ -76,6 +76,8 @@ export interface LastPerformance {
   date: string;
   sets: Array<{ reps: number; weight: number }>;
   feedback: SessionFeedback;
+  /** O template daquela sessão — é contra o alvo DELE que a última vez se julga. */
+  templateId?: string;
 }
 
 /** Acha a última vez que o exercício foi registrado (com séries). Espera a lista
@@ -83,6 +85,7 @@ export interface LastPerformance {
 export function findLastPerformance(
   sessions: Array<{
     date: string;
+    templateId?: string;
     difficultySelf?: SessionFeedback;
     exercises: Array<{ exerciseId: string; sets: Array<{ reps: number; weight: number }> }>;
   }>,
@@ -95,6 +98,7 @@ export function findLastPerformance(
         date: s.date,
         sets: found.sets.map((x) => ({ reps: x.reps, weight: x.weight })),
         feedback: s.difficultySelf ?? "medium",
+        ...(s.templateId ? { templateId: s.templateId } : {}),
       };
     }
   }
