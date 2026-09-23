@@ -1,6 +1,8 @@
 # Continuar aqui
 
-**Última atualização:** 2026-08-12
+**Última atualização:** 2026-09-23
+
+> **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
 
 Este arquivo existe para que nenhuma sessão comece do zero. Ele carrega o estado,
@@ -10,34 +12,21 @@ as decisões já tomadas e as regras que não podem ser reinventadas.
 
 ## 1. Onde estamos
 
-Reforma do app em **seis frentes**, decidida em 2026-08-10. Três concluídas e no ar.
+**Reforma Chun-Li macia (2026-09-23).** Ela recomeçou do zero (desde maio só caminhava de vez
+em quando) e o objetivo ficou preciso — ver `docs/OBJETIVO.md`.
+Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 
-| # | Frente | Estado | Merge |
-|---|---|---|---|
-| 1 | Verdade e objetivo | ✅ no ar | `d72b0f8` |
-| 2 | Vitalidade sexual | ✅ no ar | `0f53135` |
-| 3 | Corpo & treino | ✅ no ar | `6b5fdb7` |
-| 4 | Repertório íntimo | ✅ no ar | (ver git log) |
-| 5 | Comida em Aracaju | ✅ no ar | (ver git log) |
-| 6 | Três modos de estilo | ✅ no ar | (ver git log) |
+| Entrega | Conteúdo | Estado |
+|---|---|---|
+| 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ mergeada na main (`1a40bc6`), 944 testes — **push só com o ok dela** |
+| 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos datados | pendente |
+| Auditoria | achados de 2026-09-23 (seção 9) | pendente — itens 1-4 vão junto da entrega 2 |
 
-**A reforma das seis frentes está completa.**
+A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
-**Testes:** 441 → 845. Build limpo. Tudo publicado em
-https://arthur-sac.github.io/Treino-TF/ (deploy automático a cada `git push origin main`).
-
-**Próximo passo:** não há frente pendente. O que existe é a lista de dívidas da
-seção 9 e o que ela trouxer de novo. Duas conversas de 2026-08-12 ficaram sem
-virar trabalho, de propósito — ela pediu pra deixar pra depois:
-
-- **Peito sem hormônio.** O marco de busto promete "fullness de gordura no
-  peito" enquanto o plano está em déficit tirando gordura do corpo todo. Ela
-  decidiu **não** corrigir agora. Não trazer de novo sem ela pedir.
-- **TH de janela definida.** Ela levantou a ideia de hormonizar para desenvolver
-  mama (que é permanente) e depois parar para recuperar a função. O app inteiro
-  assume "TH não tem data"; esta é uma terceira via que ele não considera.
-  Ela disse que quer conversar depois.
-Os specs já estão escritos e aprovados — **não refaça o brainstorming delas.**
+**Conversas ainda abertas:** *TH de janela definida* (ela quer conversar depois). A de
+*peito sem hormônio* foi reaberta por ela em 2026-09-23 e virou objetivo (peitoral de cima,
+postura; mama só com implante ou TRH).
 
 ---
 
@@ -94,6 +83,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-12 | Estilo abre pelos **três modos** (público/casa/íntimo); paleta, peças e wishlist ficam depois, porque atravessam os três. |
 | 08-12 | Íntimo tem duas prateleiras: **de ver** e **de usar**. Renda nunca é peça de usar. |
 | 08-13 | **Vitalidade ganha aba própria** na barra de baixo (6 abas), reunindo sequências a dois + streak + lingerie. Rótulo "Vitalidade" — nunca descreve o que tem dentro, porque a barra fica visível pra quem olhar o celular dela. |
+| 09-23 | Objetivo: **Chun-Li macia com glúteo destacado** (ver `OBJETIVO.md`). 2.200 kcal; treino 5 × ≤60 min redistribuído; fase 1 no prédio, fase 2 na Smartfit; BBL depois dos 30 marca o fim da fase discreta. |
 | 08-13 | Ela **gosta da tela Hoje** ("tudo que tenho que fazer no dia") e acha as outras abas confusas. Ao acrescentar tela, perguntar antes se cabe no Hoje. |
 
 ---
@@ -105,7 +95,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
   sobre todo o `src/` (`tests/data/sem-trh-agendada.test.ts`).
 - Quando algo é inalcançável sem hormônio, a palavra é **"impossível"**, não "difícil".
 - **Nada engrossa ombro nem trapézio.** Restrição mais antiga do programa.
-- **A sessão de academia não cresce.** Todo exercício que entra sai de outro.
+- **Sessão de academia ≤ 60 min pelo estimador** (`src/lib/session-duration.ts`). Desde 2026-09-23 a regra é o teto, não "não cresce".
 - Módulos em `src/lib/` declarados puros: **sem `db`, sem `new Date()`**.
 - Comentário de código explica o **porquê**, não o quê.
 - Faixas de resultado sempre **duplas** (provável × execução excelente).
@@ -241,6 +231,31 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 ---
 
 ## 9. Dívidas registradas
+
+**Auditoria de 2026-09-23 (confirmada no código), em ordem de impacto:**
+1. Guia de medida manda cintura na "parte mais estreita" — tem que ser no umbigo (Navy e
+   partida dependem disso). Ombro ambíguo (largura × circunferência). `Measurements.tsx:19-21`.
+2. `progression.ts`: peitoral, postura e costas em HOLD_LIGHT — supino e remadas nunca sobem
+   carga, contra o objetivo. Carga sobe sem comparar com o alvo de reps; incremento de 1 kg
+   não existe em halter/placa; séries não marcadas são salvas; sessão salva não se edita.
+3. Progresso invisível: peso não tem gráfico; `WhrChart` mira 0,68; medida/sessão sem
+   editar/apagar; formulário de medida duplica no segundo toque.
+4. Exposição: atalhos do Hoje ("Fertilidade & TRH", "disforia", "firmeza"), alongamento
+   "(+ intimidade)", notificação das 21h com "intimidade", manifest "App pessoal de
+   transição", rótulos em Beleza/Estilo/Movimento.
+5. Tudo termina fora do Hoje: sequência concluída não marca o item; refeições com duas
+   fontes de verdade (`MealsToday` × `routineChecks`), `MealsToday` sem grama.
+6. Advisor de ciclo exige WHR 0,73 (alvo final) pra liberar a fase 2, em vez de cintura 84.
+7. Backup não inclui `settings`, `routineChecks`, peças, looks, produtos, depilação.
+8. Progressão do rebolado (`rebolado-progression.ts`) não é servida por tela nenhuma.
+9. Lembretes de skincare desalinhados da rotina (22h cai no silêncio); meta de água 2 L.
+10. Cabelo ainda fala em crescer/pixie em marcos, Beleza e produtos.
+
+**Menores (revisão final da entrega 1):** query da creatina varre `routineChecks` inteira;
+aviso de água substitui o subtítulo de dose; migração v8 dos marcos reancora datas;
+comentários com LANCHE ~500 / JANTAR ~700.
+
+**Anteriores:**
 
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e
   `Vitalidade.tsx` — a regra foi extraída, a montagem não.
