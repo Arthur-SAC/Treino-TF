@@ -20,7 +20,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 |---|---|---|
 | 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ no ar (`1a40bc6`) |
 | 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ no ar (`f90f351`), 985 testes |
-| Auditoria | achados de 2026-09-23 (seção 9) | pendente — itens 1-4 vão junto da entrega 2 |
+| Auditoria | achados de 2026-09-23 (seção 9) | ✅ tudo menos a fase 2 — plano `docs/superpowers/plans/2026-09-23-auditoria.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -235,21 +235,21 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 **Auditoria de 2026-09-23 (confirmada no código), em ordem de impacto:**
 1. ✅ (2026-09-23, `888b3ae`) Guia de medida mandava cintura na "parte mais estreita" — tem que ser no umbigo (Navy e
    partida dependem disso). Ombro ambíguo (largura × circunferência). `Measurements.tsx:19-21`.
-2. `progression.ts`: peitoral, postura e costas em HOLD_LIGHT — supino e remadas nunca sobem
+2. ✅ `progression.ts`: peitoral, postura e costas em HOLD_LIGHT — supino e remadas nunca sobem
    carga, contra o objetivo. Carga sobe sem comparar com o alvo de reps; incremento de 1 kg
    não existe em halter/placa; séries não marcadas são salvas; sessão salva não se edita.
-3. Progresso invisível: peso não tem gráfico; `WhrChart` mira 0,68; medida/sessão sem
+3. ✅ Progresso invisível: peso não tem gráfico; `WhrChart` mira 0,68; medida/sessão sem
    editar/apagar; formulário de medida duplica no segundo toque.
 4. ✅ parcial (2026-09-23, `288e0e9`: Hoje, notificação, manifest, título do Movimento). Falta: "virilha, perianal" na home de Beleza; a aba "Íntimo" do Estilo é decisão dela (três modos) — não mexer sem perguntar. Era: exposição nos atalhos do Hoje ("Fertilidade & TRH", "disforia", "firmeza"), alongamento
    "(+ intimidade)", notificação das 21h com "intimidade", manifest "App pessoal de
    transição", rótulos em Beleza/Estilo/Movimento.
-5. Tudo termina fora do Hoje: sequência concluída não marca o item; refeições com duas
+5. ✅ Tudo termina fora do Hoje: sequência concluída não marca o item; refeições com duas
    fontes de verdade (`MealsToday` × `routineChecks`), `MealsToday` sem grama.
 6. ✅ (entrega 2) Advisor de ciclo exigia WHR 0,73 (alvo final) pra liberar a fase 2, em vez de cintura 84.
-7. Backup não inclui `settings`, `routineChecks`, peças, looks, produtos, depilação.
-8. Progressão do rebolado (`rebolado-progression.ts`) não é servida por tela nenhuma.
-9. Lembretes de skincare desalinhados da rotina (22h cai no silêncio); meta de água 2 L.
-10. Cabelo ainda fala em crescer/pixie em marcos, Beleza e produtos.
+7. ✅ Backup não inclui `settings`, `routineChecks`, peças, looks, produtos, depilação.
+8. ✅ Progressão do rebolado (`rebolado-progression.ts`) não é servida por tela nenhuma.
+9. ✅ Lembretes de skincare desalinhados da rotina (22h cai no silêncio); meta de água 2 L.
+10. ✅ Cabelo ainda fala em crescer/pixie em marcos, Beleza e produtos.
 
 **Menores (revisão final da entrega 1):** query da creatina varre `routineChecks` inteira;
 aviso de água substitui o subtítulo de dose; migração v8 dos marcos reancora datas;
