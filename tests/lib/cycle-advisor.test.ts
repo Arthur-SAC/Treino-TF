@@ -10,8 +10,8 @@ const base = {
   activeCycle: "variacao" as const,
   sessionsInCycle: 60,
   threshold: 60,
-  whr: 0.85,
-  targetWhr: 0.72,
+  waistCm: 95 as number | null,
+  cinturaFimFase1: 84,
   waistTrend: down,
   hipTrend: up,
   waistGuardTriggered: false,
@@ -32,20 +32,27 @@ describe("recommendCycleChange", () => {
     expect(r?.toCycle).toBe("variacao");
   });
 
-  it("variacao -> hipertrofia quando WHR atinge o alvo", () => {
-    const r = recommendCycleChange({ ...base, whr: 0.72, waistTrend: down });
+  // Antes pedia WHR 0,73 — o alvo do FIM da fase 2 — pra ENTRAR na fase 2.
+  // A fase 2 começa quando a fase 1 termina: cintura 84 (2026-09-23).
+  it("variacao -> hipertrofia quando a cintura chega à do fim da fase 1", () => {
+    const r = recommendCycleChange({ ...base, waistCm: 84, waistTrend: down });
     expect(r?.toCycle).toBe("hipertrofia");
-    expect(r?.reason).toMatch(/alvo/i);
+    expect(r?.reason).toMatch(/84/);
   });
 
   it("variacao -> hipertrofia quando a cintura estabiliza (platô)", () => {
-    const r = recommendCycleChange({ ...base, whr: 0.85, waistTrend: stable });
+    const r = recommendCycleChange({ ...base, waistCm: 90, waistTrend: stable });
     expect(r?.toCycle).toBe("hipertrofia");
     expect(r?.reason).toMatch(/estabiliz/i);
   });
 
-  it("variacao NÃO avança se cintura ainda cai e WHR longe do alvo", () => {
-    expect(recommendCycleChange({ ...base, whr: 0.85, waistTrend: down })).toBeNull();
+  it("variacao NÃO avança se a cintura ainda cai e está acima de 84", () => {
+    expect(recommendCycleChange({ ...base, waistCm: 90, waistTrend: down })).toBeNull();
+  });
+
+  it("sem medição de cintura, só o platô libera", () => {
+    expect(recommendCycleChange({ ...base, waistCm: null, waistTrend: down })).toBeNull();
+    expect(recommendCycleChange({ ...base, waistCm: null, waistTrend: stable })?.toCycle).toBe("hipertrofia");
   });
 
   it("hipertrofia -> refinamento quando a trava de cintura dispara (override do piso)", () => {
