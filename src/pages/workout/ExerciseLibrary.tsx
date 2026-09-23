@@ -8,13 +8,15 @@ import { ExerciseCard } from "../../components/ExerciseCard";
 // filtro (só aparece em "Todos") e mostra o texto cru no card em vez de um
 // rótulo em pt-BR — já aconteceu de conteúdo existir e não chegar até ela por
 // exatamente esse motivo, então a taxonomia é testada contra o catálogo real.
-export const CATEGORIES = ["gluteo", "cintura", "costas", "postura", "peitoral", "mobilidade", "danca", "aquecimento", "cardio"];
+export const CATEGORIES = ["gluteo", "pernas", "cintura", "costas", "postura", "peitoral", "bracos", "mobilidade", "danca", "aquecimento", "cardio"];
 const CATEGORY_LABELS: Record<string, string> = {
   gluteo: "Glúteo",
+  pernas: "Pernas",
   cintura: "Cintura",
   costas: "Costas",
   postura: "Postura",
   peitoral: "Peitoral",
+  bracos: "Braços",
   mobilidade: "Mobilidade",
   danca: "Dança",
   aquecimento: "Aquecimento",

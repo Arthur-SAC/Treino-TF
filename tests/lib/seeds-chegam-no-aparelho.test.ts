@@ -60,7 +60,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(10);
+    expect(EXERCISE_SEED_VERSION).toBe(11);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
@@ -92,6 +92,23 @@ describe("exercícios", () => {
   beforeEach(async () => {
     await db.exercises.clear();
     await db.settings.clear();
+  });
+
+  it("os exercícios da Chun-Li macia chegam em quem estava na versão anterior, sem apagar o vídeo dela", async () => {
+    await db.exercises.put({
+      id: "hip-thrust-barra", name: "Hip thrust", category: "gluteo", equipment: ["barra"],
+      difficulty: "intermediario", description: "antigo", commonMistakes: [], exposureLevel: 4,
+      videoUrl: "https://exemplo/video-dela",
+    } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
+
+    await seedDatabase();
+
+    expect(await db.exercises.get("cadeira-extensora")).toBeDefined();
+    expect((await db.exercises.get("rosca-martelo"))?.category).toBe("bracos");
+    expect((await db.exercises.get("hip-thrust-barra"))?.videoUrl).toBe("https://exemplo/video-dela");
   });
 
   it("o cardio zona 2 reescrito alcança quem estava na versão anterior", async () => {
