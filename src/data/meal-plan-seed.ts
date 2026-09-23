@@ -99,7 +99,7 @@ const SLOTS: MealSlot[] = [
             carbG: 12,
             fatG: 1,
             preparation:
-              "Bate no liquidificador (ou shaker) 1 scoop de whey com água ou leite + banana. Pronto em 30s.",
+              "Bate no liquidificador (ou shaker) 30 g de whey com água ou leite + banana. Pronto em 30s.",
           },
         ],
         ingredients: [
@@ -160,7 +160,7 @@ const SLOTS: MealSlot[] = [
             // Sem o whey esta opção entregava 24g de proteína contra 42g da
             // opção 1: trocar de opção custava 18g de proteína sem nada avisar.
             // O piso por refeição (PROTEINA_PISO_POR_REFEICAO) existe pra isso.
-            name: "Whey protein (1/2 scoop) batido com água",
+            name: "Whey protein (20 g de pó) batido com água",
             qtyG: 20,
             kcal: 80,
             proteinG: 16,
@@ -194,7 +194,7 @@ const SLOTS: MealSlot[] = [
               "Coloca no liquidificador junto com o resto. Se sobrar aveia solta, pode cozinhar 3 min com leite e canela em vez de bater.",
           },
           {
-            name: "Whey protein (1 scoop)",
+            name: "Whey protein (30 g de pó)",
             qtyG: 30,
             kcal: 120,
             proteinG: 24,
@@ -302,7 +302,7 @@ const SLOTS: MealSlot[] = [
             // kcal, 14g de proteína a mais. Sem ele esta opção entregava 26g
             // contra os 42g da opção 1, e escolher ovo cozido em vez de whey
             // custava proteína sem nada avisar.
-            name: "Whey protein (1/2 scoop) batido com água",
+            name: "Whey protein (20 g de pó) batido com água",
             qtyG: 20,
             kcal: 80,
             proteinG: 16,
@@ -311,22 +311,22 @@ const SLOTS: MealSlot[] = [
             preparation: "Dissolve no shaker com água gelada. 30 segundos.",
           },
           {
-            // 10g em vez de 15: esta opção estava a 53 kcal do alvo, menos
-            // desviada que a 2 e a 3.
-            name: "Castanha de caju (10g)",
-            qtyG: 10,
-            kcal: 56,
-            proteinG: 2,
-            carbG: 3,
-            fatG: 4,
-            preparation: "Ao natural — nada pra preparar.",
+            // Castanha-do-pará no lugar do caju nesta opção: selênio. Duas
+            // unidades bastam e é o teto — em excesso o selênio faz mal.
+            name: "Castanha-do-pará (2 unidades)",
+            qtyG: 8,
+            kcal: 53,
+            proteinG: 1,
+            carbG: 1,
+            fatG: 5,
+            preparation: "Ao natural. Duas e só duas por dia — é o teto seguro.",
           },
         ],
         ingredients: [
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
           { item: "Whey protein", qty: 20, unit: "g", category: "laticinio" },
-          { item: "Castanha de caju", qty: 10, unit: "g", category: "mercearia" },
+          { item: "Castanha-do-pará", qty: 2, unit: "un", category: "mercearia" },
         ],
       },
       {
@@ -360,7 +360,7 @@ const SLOTS: MealSlot[] = [
             // Ocupa o lugar da banana que estava aqui. Esta era a opção mais
             // pobre do cardápio inteiro em proteína — 21g contra os 42g da
             // opção 1 — e nada na tela dizia isso.
-            name: "Whey protein (1/2 scoop) batido com água",
+            name: "Whey protein (20 g de pó) batido com água",
             qtyG: 20,
             kcal: 80,
             proteinG: 16,
@@ -665,11 +665,11 @@ const SLOTS: MealSlot[] = [
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
           {
-            // Scoop inteiro e aveia dobrada com o slot indo de 350 pra 500
+            // Dose inteira de whey (30 g) e aveia dobrada com o slot indo de 350 pra 500
             // kcal: o acréscimo entra aqui, e não na banana, porque é o único
             // item da opção que carrega proteína junto. Mesmo zero preparo — o
             // pó vai no potinho de casa e mistura na hora.
-            name: "Whey protein (1 scoop) & aveia em flocos (4 colheres de sopa)",
+            name: "Whey protein (30 g de pó) & aveia em flocos (40 g)",
             qtyG: 70,
             kcal: 270,
             proteinG: 30,
@@ -766,7 +766,7 @@ const SLOTS: MealSlot[] = [
               "Hidrata 34g de flocão com água morna e sal de manhã, descansa 5 min, cozinha na cuscuzeira (ou micro-ondas ~4 min). Leva pronto e frio pro trabalho — come em temperatura ambiente.",
           },
           {
-            name: "Whey protein (1 scoop) batido com água",
+            name: "Whey protein (30 g de pó) batido com água",
             qtyG: 30,
             kcal: 120,
             proteinG: 24,
@@ -776,17 +776,17 @@ const SLOTS: MealSlot[] = [
               "Pó medido de casa no shaker. No trabalho, só água e chacoalha — 20 segundos.",
           },
           {
-            name: "Banana média",
-            qtyG: 120,
-            kcal: 100,
-            proteinG: 1,
-            carbG: 24,
+            name: "Melancia (300g, sem casca)",
+            qtyG: 300,
+            kcal: 90,
+            proteinG: 2,
+            carbG: 22,
             fatG: 0,
-            preparation: "Ao natural.",
+            preparation: "Cortada em cubos no domingo, num pote fechado — dura 3 dias na geladeira. Come gelada antes da caminhada.",
           },
           {
             // Entra com o slot indo pra 500 kcal. Era a opção mais pobre do
-            // lanche em proteína (21g); com o scoop inteiro e o iogurte, passa
+            // lanche em proteína (21g); com a dose inteira de 30 g de whey e o iogurte, passa
             // o piso de 30g sem levar gordura nenhuma pra janela do treino.
             name: "Iogurte natural desnatado (170g)",
             qtyG: 170,
@@ -800,7 +800,7 @@ const SLOTS: MealSlot[] = [
         ingredients: [
           { item: "Flocão de milho (cuscuz)", qty: 34, unit: "g", category: "carboidrato" },
           { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
-          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+          { item: "Melancia", qty: 300, unit: "g", category: "hortifruti" },
           { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
         ],
       },

@@ -25,7 +25,8 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // saiu a frase que dizia que coxa "serve igual" ao peito: na mesma porção dá
 // ~13g menos de proteína e o dobro de gordura.
 // v14: déficit a 2.200 (gasto real 2.600-2.800), manutenção 2.750, superávit 2.950.
-export const MEAL_PLAN_VERSION = 14;
+// v15: whey em gramas de pó, castanha-do-pará no café-4, melancia no lanche-3.
+export const MEAL_PLAN_VERSION = 15;
 // v8: o marco da fase 1 passou a citar a meta de CONSUMO (2.200), não um número solto.
 const MILESTONE_SEED_VERSION = 8;
 
