@@ -94,6 +94,17 @@ export async function coletarBackup(): Promise<BackupPayload> {
  *  (configurações, peças, produtos, planos) precisa ser substituído, não somado. */
 export async function restaurarBackup(p: BackupPayload): Promise<void> {
   await db.transaction("rw", db.tables, async () => {
+    // Tabelas que o seed de um aparelho novo já preencheu, com ids que não
+    // batem com os dela (os dela têm buracos e linhas de migração): se o
+    // backup traz a tabela, ela é limpa antes — senão as sobras do seed ficam
+    // duplicadas ao lado das dela. Tabela ausente (backup antigo) fica como está.
+    const semeadas = [
+      [p.milestones, db.milestones], [p.products, db.products], [p.mealPlans, db.mealPlans],
+      [p.stylePalette, db.stylePalette], [p.outfits, db.outfits], [p.garments, db.garments],
+    ] as const;
+    for (const [dados, tabela] of semeadas) {
+      if (dados) await tabela.clear();
+    }
     await db.measurements.bulkPut(p.measurements as never);
     await db.photos.bulkPut(desserializar(p.photos) as never);
     await db.workoutSessions.bulkPut(p.sessions as never);

@@ -64,4 +64,24 @@ describe("backup completo — ida e volta", () => {
     await restaurarBackup(payload);
     expect(await db.measurements.count()).toBe(1);
   });
+
+  it("num aparelho recém-semeado, marcos e produtos do backup SUBSTITUEM os do seed — sem sobras duplicadas", async () => {
+    await db.milestones.bulkAdd([
+      { datePlanned: "2026-10-01", title: "Marco A", category: "fisico" },
+      { datePlanned: "2026-11-01", title: "Marco B", category: "fisico" },
+    ] as never);
+    await db.products.add({ name: "Produto dela", category: "skincare" } as never);
+    const payload = await coletarBackup();
+    await limpar();
+    // o aparelho novo: seed com ids e conteúdos que não batem com os dela
+    await db.milestones.bulkAdd([
+      { datePlanned: "2026-10-01", title: "Seed 1", category: "fisico" },
+      { datePlanned: "2026-10-02", title: "Seed 2", category: "fisico" },
+      { datePlanned: "2026-10-03", title: "Seed 3", category: "fisico" },
+    ] as never);
+    await db.products.bulkAdd([{ name: "Seed P1", category: "skincare" }, { name: "Seed P2", category: "skincare" }] as never);
+    await restaurarBackup(payload);
+    expect((await db.milestones.toArray()).map((m) => m.title).sort()).toEqual(["Marco A", "Marco B"]);
+    expect((await db.products.toArray()).map((p) => p.name)).toEqual(["Produto dela"]);
+  });
 });
