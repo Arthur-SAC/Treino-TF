@@ -115,13 +115,15 @@ equipamento do prédio como plano B — os exercícios serão reescritos para a
 Smartfit quando ela trocar (fora desta spec; registrar em memória).
 
 ### 2.2 Semana (adaptação em diante), cada sessão ≤60 min
+Sem zona 2 em template nenhum: a caminhada de 5 km (agora todos os dias) é o
+cardio, regra vigente desde 2026-08-10.
 | Dia | Foco |
 |---|---|
-| Seg · Inferior A | glúteo projeção + quadríceps (hip thrust, leg press pés ao meio, abdutora, coice caneleira) · zona 2 |
+| Seg · Inferior A | glúteo projeção + quadríceps (hip thrust, leg press pés ao meio, abdutora, coice caneleira) |
 | Ter · Superior A | peito superior + costas médias + braço (supino inclinado halteres, remada baixa pegada neutra, rosca martelo, tríceps testa barra W, face pull) · core |
 | Qua · Inferior B | glúteo médio + adutor + quadríceps (abdutora tronco inclinado, abdução deitada, goblet/step-up, adutora, extensora) |
 | Qui · Superior B | peito superior + costas + força de levantar (crucifixo inclinado halteres, remada unilateral halter, rosca barra W, carregamento frontal, farmer walk, extensão lombar leve) · core |
-| Sex · Inferior C | glúteo máximo + posterior (hip thrust unilateral, flexora, abdutora, coice) · zona 2 |
+| Sex · Inferior C | glúteo máximo + posterior (hip thrust unilateral, flexora, abdutora, coice) |
 
 Rebolado sai da quarta; fica no sábado (dança) e na progressão de vitalidade.
 
@@ -180,12 +182,13 @@ agendado — sem agenda de BBL no app hoje, então aparece como opção declarad
 - Entram: **melancia** em alguns lanches (citrulina); **1-2 castanhas-do-pará/dia**
   no lugar de uma porção de caju — teste garante **nunca >2/dia** (selênio).
 - Texto honesto: efeito da comida é modesto; o que pesa é déficit moderado,
-  sono, treino e perder a barriga; maca/tribulus sem evidência.
+  sono, treino e perder a barriga; fórmulas de farmácia sem evidência — sem
+  nomear substância (`vitalidade-guide.test.ts` proíbe os nomes).
 
 ### 3.4 Hoje
 - **Creatina 3 g** diária no café (item marcável). Aviso nas primeiras 2 semanas
-  a partir da primeira marcação: "+1-2 kg de água, não é gordura", também junto
-  ao gráfico de peso.
+  a partir da primeira marcação: "+1-2 kg de água, não é gordura". (Não há
+  gráfico de peso no app; o aviso fica no item.)
 - **Caminhada 5 km sáb e dom**, horário ajustável (seg-sex já é
   `caminhada-trabalho`).
 - **Sono 7-7,5 h:** horário de dormir padrão ajustado para caber 7-7,5 h até
