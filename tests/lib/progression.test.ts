@@ -96,10 +96,11 @@ describe("progressão consciente da categoria", () => {
 });
 
 describe("isTimeBased", () => {
-  it("carregamento em metros (farmer walk, carregamento frontal) registra como feito, não kg×reps", () => {
-    expect(isTimeBased("30m")).toBe(true);
-    expect(isTimeBased("20m")).toBe(true);
-    expect(isTimeBased("12")).toBe(false);
+  // Revisão da auditoria: carregamento é o exercício de "levantar a noiva" —
+  // precisa registrar carga. Metros NÃO são "por tempo".
+  it("carregamento em metros registra carga (não é 'por tempo')", () => {
+    expect(isTimeBased("30m")).toBe(false);
+    expect(isTimeBased("20-30m")).toBe(false);
   });
   it("detecta exercícios por tempo (minutos/segundos)", () => {
     expect(isTimeBased("5-7min")).toBe(true);

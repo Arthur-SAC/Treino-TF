@@ -46,10 +46,10 @@ describe("SessionRecorder — séries salvas", () => {
     expect(screen.getByText(/postura/i)).toBeInTheDocument();
   });
 
-  it("carregamento em metros vira 'Marcar feito', com a distância", () => {
+  it("carregamento registra carga e distância — é o exercício de levantar a noiva", () => {
     render(<SessionRecorder exercise={{ ...ex, id: "farmer-walk", category: "cintura" }} setsTarget={3} repsTarget="30m" restSec={60} onSave={() => {}} />);
-    expect(screen.getByRole("button", { name: /marcar feito/i })).toBeInTheDocument();
-    expect(screen.getByText(/por distância/i)).toBeInTheDocument();
+    expect(screen.getAllByPlaceholderText("kg")).toHaveLength(3);
+    expect(screen.getAllByPlaceholderText("m")).toHaveLength(3);
   });
 });
 

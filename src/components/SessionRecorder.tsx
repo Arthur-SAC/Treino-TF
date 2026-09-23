@@ -34,6 +34,8 @@ function describeLast(last: LastPerformance): string {
 
 export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave }: Props) {
   const timeBased = isTimeBased(repsTarget);
+  // Carregamento ("20m", "30m"): o segundo campo é a distância, não reps.
+  const porDistancia = /\d\s*m\b/i.test(repsTarget);
   const [sets, setSets] = useState<Array<{ reps: string; weight: string; done: boolean }>>(
     () => Array.from({ length: setsTarget }, () => ({ reps: "", weight: "", done: false })),
   );
@@ -182,7 +184,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           </button>
         </div>
         <p className="text-muted text-xs mt-0.5">
-          {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · {/\d\s*m\b/i.test(repsTarget) ? "por distância" : "por tempo"}
+          {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
         </p>
         {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mt-2 mb-1">{notes}</p>}
         {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
@@ -278,11 +280,11 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
                 inputMode="numeric"
                 value={s.reps}
                 onChange={(e) => handleSetChange(i, "reps", e.target.value)}
-                placeholder="reps"
+                placeholder={porDistancia ? "m" : "reps"}
                 disabled={s.done}
                 className="w-full bg-bg-deep border border-bg-border rounded-md px-2 py-1.5 pr-9 text-nude-warm text-sm"
               />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted text-[0.65rem]">reps</span>
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted text-[0.65rem]">{porDistancia ? "m" : "reps"}</span>
             </div>
             <button
               type="button"

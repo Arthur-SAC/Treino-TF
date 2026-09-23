@@ -75,8 +75,9 @@ export function avaliarSeries(
  *  carga. Detecta pelo alvo de repetições do template ("5-7min", "30-45s"). */
 export function isTimeBased(repsTarget: string): boolean {
   const t = repsTarget.toLowerCase();
-  // Metros também: carregamento é feito ou não feito, não kg×reps (2026-09-23).
-  return /min/.test(t) || /\d\s*s\b/.test(t) || /\d\s*m\b/.test(t);
+  // Metros NÃO: carregamento é o exercício de levantar a noiva e precisa
+  // registrar carga (revisão da auditoria, 2026-09-23).
+  return /min/.test(t) || /\d\s*s\b/.test(t);
 }
 
 export interface LastPerformance {
