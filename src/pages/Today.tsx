@@ -37,7 +37,8 @@ import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
-import { primeiraMarcacao, mostrarAvisoAgua, SUBTITULO_AVISO_AGUA, CREATINA_ITEM_ID } from "../lib/creatina";
+import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
+import { setSetting } from "../lib/settings-helpers";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -83,11 +84,9 @@ export function Today() {
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
   // Primeira vez que ela marcou a creatina: é daqui que contam as 2 semanas
-  // do aviso de água. Varre só as linhas do item — são uma por dia.
-  const primeiraCreatina = useLiveQuery(
-    async () => primeiraMarcacao(await db.routineChecks.filter((c) => c.itemId === CREATINA_ITEM_ID).toArray()),
-    [],
-  );
+  // do aviso de água. Dia da primeira marcação, gravado uma vez no toque (antes varria a tabela
+  // inteira de marcações a cada toque em qualquer caixinha do Hoje).
+  const creatinaInicio = useSetting("creatinaInicio");
 
   // Quantas práticas DA PROGRESSÃO ela já concluiu — define em que fase ela
   // está (identificar o músculo -> soltura -> Kegel -> variações). Mesmo
@@ -275,6 +274,9 @@ export function Today() {
   // 60 + 60 = 120 min com a caixinha desmarcada, sem caminho de volta ao zero.
   async function handleToggle(item: RoutineItem) {
     const marcado = await toggle(item.id);
+    if (item.id === CREATINA_ITEM_ID && marcado && !creatinaInicio) {
+      await setSetting("creatinaInicio", todayISO);
+    }
     if (item.control === "walk") {
       // O passeio dos cães tem ids diferentes por tipo de dia (`caes` na
       // semana, `caes-fds` no fim de semana — ver today-routine.ts). Em dia
@@ -326,8 +328,8 @@ export function Today() {
     if (item.control === "walk") {
       return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
     }
-    if (item.id === CREATINA_ITEM_ID && mostrarAvisoAgua(primeiraCreatina ?? null, todayISO)) {
-      return SUBTITULO_AVISO_AGUA;
+    if (item.id === CREATINA_ITEM_ID) {
+      return subtituloCreatina(item.subtitle ?? "", creatinaInicio || null, todayISO);
     }
     return item.subtitle;
   };

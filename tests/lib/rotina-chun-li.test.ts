@@ -27,3 +27,11 @@ describe("rotina da Chun-Li macia", () => {
     expect(itens(1).find((i) => i.id === "dormir")?.subtitle).toMatch(/7/);
   });
 });
+
+describe("início da creatina gravado", () => {
+  it("o Hoje grava a data da primeira marcação da creatina — sem varrer a tabela a cada toque", () => {
+    const fonte = Object.entries(import.meta.glob("../../src/pages/Today.tsx", { query: "?raw", import: "default", eager: true }) as Record<string, string>)[0][1];
+    expect(fonte).toMatch(/creatinaInicio/);
+    expect(fonte).not.toMatch(/routineChecks\.filter/);
+  });
+});

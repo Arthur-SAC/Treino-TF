@@ -53,6 +53,8 @@ export interface Settings {
    *  — ver `vitalidade-adesao.ts` para o porquê de não ser derivado do
    *  `dailyLog`. */
   vitalidadeDesde: string;
+  /** Dia da primeira marcação da creatina ("" = ainda não começou). */
+  creatinaInicio: string;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -121,6 +123,7 @@ export const DEFAULTS: Settings = {
   // acompanhamento nenhum — e um padrão com data faria o app contar dias que
   // ninguém acompanhou.
   vitalidadeDesde: "",
+  creatinaInicio: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
