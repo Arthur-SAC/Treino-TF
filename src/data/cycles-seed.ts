@@ -1,12 +1,14 @@
 import type { WorkoutTemplate } from "../lib/db";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Todos os ciclos mantêm glúteo como PRIORIDADE Nº 1 (4 estímulos/semana) e
-// vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
+// Fase 1 (adaptação/variação) foi reescrita pra Chun-Li macia em 2026-09-23:
+// 3 inferiores + 2 superiores, glúteo médio 3x (ver docs/OBJETIVO.md). A fase 2
+// (hipertrofia em diante) será reescrita pra Smartfit quando ela trocar.
+// Os ciclos vão progredindo: variação (estímulo novo) → hipertrofia (volume/superávit) →
 // refinamento (alta rep/densidade) → manutenção (segura a forma quando o
 // objetivo do momento é consolidar, não crescer).
 // Regras fixas: dias de força (seg/ter/qui/sex) começam com cardio + articular;
-// quarta começa com articular e tem o circuito de glúteo médio (ponte + abdução).
+// quarta começa com articular e tem ponte + abdução deitada.
 // ZONA 2 NÃO ENTRA AQUI: ela caminha 5 km do trabalho para casa todo dia, o
 // que já é zona 2 e em dose melhor (diária, não 3x/semana). Prescrever de novo
 // no fim do treino alongava a sessão em 20 min e empurrava o jantar para as
@@ -154,7 +156,7 @@ const HYPERTROPHY: WorkoutTemplate[] = [
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5-7min", restSec: 0 },
       { exerciseId: "aquecimento-articular", sets: 1, repsTarget: "5min", restSec: 0 },
-      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "12 (LEVE)", restSec: 60, notes: "Leve de propósito: peitoral leve dá base que projeta o busto, pesado constrói um peito que lê como masculino" },
+      { exerciseId: "supino-inclinado-halteres", sets: 3, repsTarget: "10-12", restSec: 60, notes: "Inclinado e controlado: enche o peito de cima. O que lê como masculino é supino reto ou declinado pesado — este progride" },
       { exerciseId: "carregamento-frontal", sets: 3, repsTarget: "20-30m", restSec: 60, notes: "Padrão de levantar — carga à frente do corpo" },
       { exerciseId: "remada-baixa-maquina", sets: 4, repsTarget: "10-12", restSec: 75 },
       { exerciseId: "face-pull-polia", sets: 3, repsTarget: "15-20", restSec: 45, notes: "Postura ereta = busto mais cheio" },

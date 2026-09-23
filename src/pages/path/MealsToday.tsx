@@ -6,23 +6,42 @@ import { getActiveMealPlan, variantEscolhida, EFFORT_LABEL } from "../../lib/mea
 import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
 import { hojeISO } from "../../lib/today-date";
 
+/** O item da rotina do Hoje que corresponde a cada refeição. */
+const ITEM_DO_HOJE: Record<Meal["mealType"], string> = {
+  cafe: "cafe-marmita",
+  almoco: "almoco",
+  lanche: "lanche-saida",
+  jantar: "jantar",
+};
+
 export function MealsToday() {
   const today = hojeISO();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
+  // O Hoje marca refeição em routineChecks; esta tela contava só db.meals, e o
+  // "Consumido hoje" nunca andava (auditoria 2026-09-23). Agora as duas leem e
+  // gravam os dois lados.
+  const checksHoje = useLiveQuery(() => db.routineChecks.where("date").equals(today).toArray(), [today]);
   const [recipeOf, setRecipeOf] = useState<Meal["mealType"] | null>(null);
 
   // Marcar a refeição grava exatamente os `foods` que o card está mostrando.
   // Antes gravava `plan.defaultMeals[i]` — a opção 1, em silêncio: o card não
   // dizia qual das três opções estava ali, e o registro do dia saía com uma
   // escolha que ela nunca fez.
+  const feitaNoHoje = (type: Meal["mealType"]) =>
+    Boolean(checksHoje?.find((c) => c.itemId === ITEM_DO_HOJE[type])?.done);
+  const feita = (type: Meal["mealType"]) =>
+    Boolean(meals?.find((m) => m.mealType === type)?.checked) || feitaNoHoje(type);
+
   async function toggleMeal(type: Meal["mealType"], foods: Meal["foods"]) {
+    const novo = !feita(type);
     const existing = meals?.find((m) => m.mealType === type);
     if (existing && existing.id !== undefined) {
-      await db.meals.update(existing.id, { checked: !existing.checked });
+      await db.meals.update(existing.id, { checked: novo });
     } else {
-      await db.meals.add({ date: today, mealType: type, foods, checked: true } as Meal);
+      await db.meals.add({ date: today, mealType: type, foods, checked: novo } as Meal);
     }
+    await db.routineChecks.put({ date: today, itemId: ITEM_DO_HOJE[type], done: novo });
   }
 
   if (!plan) return <div className="p-4 text-muted text-sm">Carregando…</div>;
@@ -34,9 +53,14 @@ export function MealsToday() {
     { type: "jantar", index: 3 },
   ];
 
-  const totalKcal = meals
-    ?.filter((m) => m.checked)
-    .reduce((s, m) => s + m.foods.reduce((sf, f) => sf + f.kcal, 0), 0) ?? 0;
+  // Refeição feita no Hoje sem registro aqui conta pela opção mostrada no card.
+  const kcalDe = (type: Meal["mealType"], index: number) => {
+    const meal = meals?.find((m) => m.mealType === type);
+    const variants = plan.slots.find((s) => s.mealType === type)?.variants ?? [];
+    const foods = meal?.foods ?? (variantEscolhida(variants, meal) ?? variants[0])?.foods ?? plan.defaultMeals[index] ?? [];
+    return foods.reduce((s, f) => s + f.kcal, 0);
+  };
+  const totalKcal = MEAL_ORDER.filter(({ type }) => feita(type)).reduce((s, { type, index }) => s + kcalDe(type, index), 0);
 
   return (
     <div className="p-4 pb-24">
@@ -69,7 +93,7 @@ export function MealsToday() {
           // com o mesmo selo de esforço das outras duas telas de refeição.
           const exibida = escolhida ?? variants[0];
           const foods = meal?.foods ?? exibida?.foods ?? plan.defaultMeals[index] ?? [];
-          const checked = Boolean(meal?.checked);
+          const checked = feita(type);
           const kcal = foods.reduce((s, f) => s + f.kcal, 0);
           return (
             <div key={type} className="card">
@@ -103,7 +127,10 @@ export function MealsToday() {
               )}
               <ul className="space-y-1 text-sm text-muted ml-9">
                 {foods.map((f, j) => (
-                  <li key={j}>{f.name}</li>
+                  <li key={j} className="flex justify-between gap-2">
+                    <span>{f.name}</span>
+                    {f.qtyG ? <span className="text-nude-warm tabular-nums whitespace-nowrap">{f.qtyG} g</span> : null}
+                  </li>
                 ))}
               </ul>
               <button

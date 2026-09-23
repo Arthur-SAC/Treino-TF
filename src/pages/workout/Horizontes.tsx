@@ -6,7 +6,7 @@ import { linhaDoTempo } from "../../lib/linha-do-tempo";
 
 export function Horizontes() {
   // A linha do tempo sai da medição de partida dela (entrega 2, 2026-09-23).
-  const { projecao } = usePartida();
+  const { projecao, carregando } = usePartida();
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
@@ -18,7 +18,9 @@ export function Horizontes() {
         então nada aqui espera por ela: <span className="text-nude-warm">perder a barriga e construir a Chun-Li agora</span> tem
         teto sem hormônio, e ainda assim é o que mais aproxima o corpo do que você quer, vestida e na cama.
       </p>
-      <GuideAccordion sections={[...HORIZONTES, linhaDoTempo(projecao)]} />
+      {/* Enquanto o banco responde, sem a linha do tempo — senão pisca
+          "aparece depois da sua primeira medição" pra quem já mediu. */}
+      <GuideAccordion sections={carregando ? HORIZONTES : [...HORIZONTES, linhaDoTempo(projecao)]} />
       <p className="text-muted text-[0.7rem] mt-4">
         Os números de WHR são estimativas pra dar um norte — cada corpo responde do seu jeito.
       </p>

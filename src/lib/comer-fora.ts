@@ -38,7 +38,7 @@ export const VERBA_SEMANAL_KCAL = CONSUMO.discricionariaKcal * 7;
 
 /** Quanto uma refeição fora custa A MAIS que a refeição do plano que ela
  *  substitui. É a única conta que importa: a pessoa não come o jantar do plano
- *  E o restaurante, ela troca um pelo outro. Um jantar do plano são 700 kcal e
+ *  E o restaurante, ela troca um pelo outro. Um jantar do plano são 650 kcal e
  *  um prato de restaurante fica na faixa de 1.200 a 1.600 — a diferença é isto.
  *  Valor conservador da faixa, porque errar pra cima aqui só deixa a
  *  estimativa mais segura. */

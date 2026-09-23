@@ -46,7 +46,7 @@ const GUIDE_SILHUETA: GuideSection[] = [
       "WHR é a razão cintura ÷ quadril. Quanto menor o número, mais afunilada (ampulheta) é a silhueta — porque a cintura é estreita em relação ao quadril.",
     tips: [
       "Faixas de referência femininas: ~0,80 ou menos lê como bem ampulheta; ~0,80–0,85 é uma silhueta feminina equilibrada; acima de ~0,85 a cintura está marcada demais em relação ao quadril.",
-      `Você parte de 0,87. Com treino e dieta o destino é 0,75–0,78 no fim da fase 2 — 0,72–0,74 se a execução for muito boa. Quem entrega isso é a cintura saindo de ${MEDIDAS_PARTIDA.cinturaCm} para ${FASE_1.cinturaCm} e o glúteo crescendo por baixo.`,
+      `Em maio você estava em 0,87. Com treino e dieta o destino é 0,75–0,78 no fim da fase 2 — 0,72–0,74 se a execução for muito boa. Quem entrega isso é a cintura saindo de ${MEDIDAS_PARTIDA.cinturaCm} para ${FASE_1.cinturaCm} e o glúteo crescendo por baixo.`,
       "O que treino nenhum faz é mudar PARA ONDE a gordura vai: sem estrogênio ela fica na barriga e não migra pro quadril e pra coxa. Isso é impossível, não difícil. A razão cai do mesmo jeito — mas por cintura seca e glúteo grande, que é outro material, não outro esforço. Veja a tela «Até onde dá pra chegar» no Treino.",
     ],
   },

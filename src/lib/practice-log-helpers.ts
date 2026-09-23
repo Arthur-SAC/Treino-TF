@@ -12,6 +12,23 @@ import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
 import { SEQUENCIAS_REBOLADO } from "./rebolado-progression";
 import { ultimosDiasISO } from "./today-date";
+import type { PracticeLog } from "./db";
+
+/** A sequência do dia foi praticada hoje? É o que marca sozinho o item do Hoje
+ *  (assoalho, alongamentos, rebolado) quando ela conclui a sequência — antes
+ *  ela concluía e ainda tinha que voltar e marcar a caixinha. Puro: quem busca
+ *  os logs é a tela. */
+export function praticadaHoje(
+  logs: ReadonlyArray<Pick<PracticeLog, "date" | "sequenceId">>,
+  sequenceId: string | readonly string[],
+  hoje: string,
+): boolean {
+  // Aceita a TRILHA inteira: a sequência "do dia" sai da contagem de práticas,
+  // e registrar a de hoje sobe a contagem — na virada de fase o id do dia muda
+  // no mesmo instante e a prática recém-feita deixaria de contar.
+  const ids = typeof sequenceId === "string" ? [sequenceId] : sequenceId;
+  return logs.some((l) => l.date === hoje && ids.includes(l.sequenceId));
+}
 
 /** Quantas práticas DA PROGRESSÃO ela concluiu. Move as fases, e é lida por
  *  duas telas — por isso mora aqui e não inline em cada uma: critério

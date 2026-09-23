@@ -11,7 +11,7 @@ export const HORIZONTES: GuideSection[] = [
     intro: "O que treino e dieta constroem, e onde está o teto.",
     tips: [
       "O norte é a Chun-Li macia com glúteo destacado: perna forte e grossa, glúteo redondo que passa da linha da coxa, costas com postura, peito cheio em cima, pele lisa com o músculo aparecendo quando você contrai.",
-      "Vem: cintura de 99 para 84, glúteo grande e denso, e a razão cintura÷quadril saindo de 0,87 para 0,75-0,78 — 0,72-0,74 se a execução for muito boa.",
+      "Vem: cintura de 99 (a medição de maio) para 84, glúteo grande e denso, e a razão cintura÷quadril saindo de 0,87 para 0,75-0,78 — 0,72-0,74 se a execução for muito boa.",
       "Destreinada com gordura na faixa de 25-30% é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha — começar agora vale mais do que começar perfeito.",
       "Seu ombro nunca foi o problema: ombro÷quadril já está em 1,06, que é faixa feminina (homem cis típico fica entre 1,15 e 1,25). A cintura é o problema inteiro.",
       "NÃO vem sem hormônio: gordura macia no quadril e na coxa, mama, pele mais fina, menos pelo no corpo, mudança na gordura do rosto. Isso é impossível, não difícil — nenhum treino do mundo entrega.",

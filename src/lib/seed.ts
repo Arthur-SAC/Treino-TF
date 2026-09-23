@@ -23,7 +23,8 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // carga, o oposto do objetivo), subiu de exposureLevel 2 → 3, e os dois
 // exercícios novos ganharam vídeo de demonstração.
 // v11: nove exercícios da Chun-Li macia (coxa, braço, costas médias) e as categorias Pernas e Braços.
-export const EXERCISE_SEED_VERSION = 11;
+// v12: peito de cima progride — o catálogo para de mandar manter LEVE (auditoria 2026-09-23).
+export const EXERCISE_SEED_VERSION = 12;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.
@@ -34,7 +35,8 @@ export const EXERCISE_SEED_VERSION = 11;
 // sem isso o padrão de levantar só chegaria nela daqui a ~48 sessões. A Fase
 // de Entrada continua de fora de propósito (rampa de exposição).
 // v13: fase 1 reescrita para a Chun-Li macia (3 inferiores + 2 superiores, abdutora 3x, braço e peito de cima).
-export const TEMPLATE_SEED_VERSION = 13;
+// v14: nota do supino da hipertrofia concorda com a progressão do peito.
+export const TEMPLATE_SEED_VERSION = 14;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -127,6 +129,42 @@ export async function seedDatabase(): Promise<void> {
       await db.settings.put({ key: "cycleStartSessionCount", value: 0 });
     }
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
+  }
+
+  // Lembretes que ainda estão no padrão antigo passam pros horários da rotina
+  // (auditoria 2026-09-23: 8h e 22h, com silêncio 22h-8h, nenhum tocava). Só
+  // troca valor igual ao padrão antigo — o que ela ajustou fica.
+  const ANTIGOS: Array<[string, unknown, unknown]> = [
+    ["morningReminderTime", "08:00", "06:25"],
+    ["eveningReminderTime", "22:00", "20:00"],
+    ["workoutReminderTime", "18:00", "18:15"],
+    ["hydrationGoalMl", 2000, 3000],
+    ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
+  ];
+  // Uma vez só: se depois ela escolher um valor antigo de propósito (é tudo
+  // editável em Configurações), a próxima abertura não pode desfazer.
+  const LEMBRETES_MIGRACAO = 1;
+  const lembretesFeita = await db.settings.get("lembretesMigracao");
+  if (((lembretesFeita?.value as number) ?? 0) < LEMBRETES_MIGRACAO) {
+    for (const [key, antigo, novo] of ANTIGOS) {
+      const atual = await db.settings.get(key);
+      if (atual && JSON.stringify(atual.value) === JSON.stringify(antigo)) {
+        await db.settings.put({ key, value: novo });
+      }
+    }
+    await db.settings.put({ key: "lembretesMigracao", value: LEMBRETES_MIGRACAO });
+  }
+
+  // Quem já marcava a creatina antes do início ser gravado: o início é a
+  // primeira marcação que já existe, não a próxima (as 2 semanas recomeçariam).
+  const inicio = await db.settings.get("creatinaInicio");
+  if (!inicio?.value) {
+    const marcadas = (await db.routineChecks.toArray())
+      .filter((c) => c.itemId === "creatina")
+      .filter((c) => c.done)
+      .map((c) => c.date)
+      .sort();
+    if (marcadas.length > 0) await db.settings.put({ key: "creatinaInicio", value: marcadas[0] });
   }
 
   await seedMedidasPartida();

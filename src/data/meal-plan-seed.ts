@@ -2,8 +2,8 @@ import type { MealPlan, MealSlot, MealVariant, Ingredient } from "../lib/db";
 import { deriveDefaultMeals } from "../lib/meal-plan";
 
 // 2200 kcal pra déficit moderado — 96kg, 27 anos, 1,73m (spec Chun-Li macia,
-// 2026-09-23). Contra o gasto real de 2.600-2.800 (CONSUMO em objetivo.ts) dá
-// ~400-600 de déficit: ela escolheu 2.200 e não 2.000 porque déficit maior
+// 2026-09-23). Contra o gasto real de 2.700-2.900 (CONSUMO em objetivo.ts) dá
+// ~500-700 de déficit: ela escolheu 2.200 e não 2.000 porque déficit maior
 // derruba testosterona, e firmeza, libido e força são metade dos objetivos.
 // Proteína ~211g · Gordura ~57g · Carbo ~207g · ~0,45-0,6 kg/semana
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
@@ -613,7 +613,7 @@ const SLOTS: MealSlot[] = [
     ],
   },
 
-  // ─── LANCHE (~500 kcal) ───────────────────────────────────────────────────
+  // ─── LANCHE (~450 kcal) ───────────────────────────────────────────────────
   // Ela come às 15h30, caminha 5 km do trabalho pra casa, passeia 1h com os cães
   // e treina 18h15 — tudo depois deste lanche e antes do jantar. Duas regras
   // saem daí, e nenhuma é preferência:
@@ -653,7 +653,7 @@ const SLOTS: MealSlot[] = [
             preparation: "Direto do pote, gelado — sem preparo.",
           },
           {
-            // Era "Banana média" 150g/125kcal — subiu pra uma banana grande
+            // Voltou a ser banana média em 2026-09-23 (meta 2.200). Histórico: era "Banana média" 150g/125kcal, subiu pra uma banana grande
             // pra ajudar a fechar a conta dos 2200 kcal do plano (ver
             // comentário de SLOTS acima).
             name: "Banana média",
@@ -665,7 +665,7 @@ const SLOTS: MealSlot[] = [
             preparation: "Ao natural, picada por cima do iogurte ou à parte.",
           },
           {
-            // Dose inteira de whey (30 g) e aveia dobrada com o slot indo de 350 pra 500
+            // Dose inteira de whey (30 g) e aveia dobrada desde quando o slot foi de 350 pra 500 (hoje 450)
             // kcal: o acréscimo entra aqui, e não na banana, porque é o único
             // item da opção que carrega proteína junto. Mesmo zero preparo — o
             // pó vai no potinho de casa e mistura na hora.
@@ -727,7 +727,7 @@ const SLOTS: MealSlot[] = [
             preparation: "Ao natural.",
           },
           {
-            // Entra com o slot indo pra 500 kcal. Gordura zero: o teto de 5g
+            // Entrou quando o slot foi pra 500 kcal (hoje 450). Gordura zero: o teto de 5g
             // do lanche não relaxa, porque a caminhada de 5 km vem logo depois.
             name: "Iogurte natural desnatado (170g)",
             qtyG: 170,
@@ -785,7 +785,7 @@ const SLOTS: MealSlot[] = [
             preparation: "Cortada em cubos no domingo, num pote fechado — dura 3 dias na geladeira. Come gelada no lanche.",
           },
           {
-            // Entra com o slot indo pra 500 kcal. Era a opção mais pobre do
+            // Entrou quando o slot foi pra 500 kcal (hoje 450). Era a opção mais pobre do
             // lanche em proteína (21g); com a dose inteira de 30 g de whey e o iogurte, passa
             // o piso de 30g sem levar gordura nenhuma pra janela do treino.
             name: "Iogurte natural desnatado (170g)",
@@ -807,7 +807,7 @@ const SLOTS: MealSlot[] = [
     ],
   },
 
-  // ─── JANTAR (~700 kcal) ───────────────────────────────────────────────────
+  // ─── JANTAR (~650 kcal) ───────────────────────────────────────────────────
   {
     mealType: "jantar",
     targetKcal: 650,

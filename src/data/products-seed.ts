@@ -75,35 +75,45 @@ export const PRODUCTS: Omit<Product, "id">[] = [
     category: "skincare",
     notes: "Mantém maciez da região. Aplica após banho.",
   },
-  // === HAIRCARE (pixie cacheado) ===
+  // === HAIRCARE (corte cacheado + rotina Juba — ver hair-guide-seed.ts) ===
   {
-    name: "Shampoo Salon Line Meu Cacho Minha Vida hidratação",
+    name: "Shampoo Juba (Widi Care)",
     category: "haircare",
-    notes: "Sem sulfato agressivo. Mantém cachos. Use 2-3x/semana, alterna com co-wash.",
+    notes: "Só no couro cabeludo, 2-3x por semana. O comprimento se limpa na espuma que escorre.",
   },
   {
-    name: "Co-wash Salon Line / Lola",
+    name: "Condicionador Juba",
     category: "haircare",
-    notes: "Limpa cachos sem espumar. Use nos dias entre shampoo.",
+    notes: "Do meio às pontas; desembaraça no chuveiro com os dedos. Alterna com a máscara.",
   },
   {
-    name: "Máscara de hidratação Lola My Curls",
+    name: "Máscara Juba (hidratação/nutrição)",
     category: "haircare",
-    notes: "Hidratação semanal. Deixa 20min antes de enxaguar.",
+    notes: "1-2x por semana, 5-15 min com touca ou toalha morna.",
   },
   {
-    name: "Máscara de nutrição (manteiga de karité)",
+    name: "Leave-in Juba",
     category: "haircare",
-    notes: "Nutrição quinzenal. Repõe lipídios.",
+    notes: "Primeira camada da finalização, com o cabelo encharcado.",
   },
   {
-    name: "Máscara de reconstrução (queratina/hidrolisado)",
+    name: "Geleia/finalizador Juba",
     category: "haircare",
-    notes: "Reconstrução mensal. Repõe proteína. NÃO USE toda semana — proteína em excesso quebra fios.",
+    notes: "Segunda camada: define o cacho sem pesar. Amassa de baixo pra cima.",
   },
   {
-    name: "Creme de pentear leve pra cachos curtos",
+    name: "Gel de fixação",
     category: "haircare",
-    notes: "Aplica em mecha úmida pra definir cachos do pixie. Não usa muito — pixie cacheado fica leve.",
+    notes: "Última camada; forma a casquinha que o óleo quebra depois de seco.",
+  },
+  {
+    name: "Óleo (blend Juba)",
+    category: "haircare",
+    notes: "1 gota com o cabelo 100% seco, pra quebrar a casquinha do gel (SOTC).",
+  },
+  {
+    name: "Máscara de reconstrução leve (queratina)",
+    category: "haircare",
+    notes: "1x a cada 15-30 dias — a Juba é fraca em reconstrução. Em excesso, endurece e quebra o fio.",
   },
 ];

@@ -42,6 +42,7 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
   });
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [errors, setErrors] = useState<string[]>([]);
+  const [salva, setSalva] = useState(false);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -58,12 +59,28 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
       }
     }
     if (notes.trim()) m.notes = notes.trim();
+    // Cintura no umbigo é sempre maior que o pescoço: se não é, os dois campos
+    // ficaram trocados — o erro mais provável no teclado do celular, e o que
+    // mais estraga a conta de gordura e a partida.
+    if (FIELDS.every(({ key }) => values[key].trim() === "")) {
+      errs.push("Preencha pelo menos uma medida.");
+    }
+    if (m.waistCm !== undefined && m.neckCm !== undefined && m.waistCm <= m.neckCm) {
+      errs.push("Cintura menor que o pescoço: confere se os dois campos não ficaram trocados.");
+    }
     if (errs.length) {
       setErrors(errs);
       return;
     }
     setErrors([]);
     void onSubmit(m);
+    // Limpa e confirma: antes o formulário ficava cheio depois de salvar, e um
+    // segundo toque gravava a mesma medida de novo.
+    if (!initial) {
+      setValues(Object.fromEntries(FIELDS.map(({ key }) => [key, ""])));
+      setNotes("");
+      setSalva(true);
+    }
   }
 
   return (
@@ -86,7 +103,10 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
                 type="text"
                 inputMode="decimal"
                 value={values[key]}
-                onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
+                onChange={(e) => {
+                  setSalva(false);
+                  setValues((v) => ({ ...v, [key]: e.target.value }));
+                }}
                 placeholder="—"
                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 pr-10 text-nude-warm"
               />
@@ -111,6 +131,7 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
           ))}
         </ul>
       )}
+      {salva && <p className="text-nude-warm text-sm">Medida salva — está no histórico abaixo.</p>}
       <button
         type="submit"
         className="w-full bg-wine-light text-nude-warm rounded-md py-3 font-medium hover:bg-wine transition"

@@ -7,7 +7,10 @@ import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
-import { contarPraticasDaProgressao, contarPraticasFlex } from "../lib/practice-log-helpers";
+import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
+import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
+import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
+import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
 import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
@@ -34,7 +37,10 @@ import { hojeISO, diaDoAno } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
-import { primeiraMarcacao, mostrarAvisoAgua, SUBTITULO_AVISO_AGUA, CREATINA_ITEM_ID } from "../lib/creatina";
+import { SemanaCard } from "../components/SemanaCard";
+import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
+import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
+import { setSetting } from "../lib/settings-helpers";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -80,11 +86,9 @@ export function Today() {
   const goalMl = useSetting("hydrationGoalMl");
   const dailyLog = useLiveQuery(async () => db.dailyLog.get(todayISO), [todayISO]);
   // Primeira vez que ela marcou a creatina: é daqui que contam as 2 semanas
-  // do aviso de água. Varre só as linhas do item — são uma por dia.
-  const primeiraCreatina = useLiveQuery(
-    async () => primeiraMarcacao(await db.routineChecks.filter((c) => c.itemId === CREATINA_ITEM_ID).toArray()),
-    [],
-  );
+  // do aviso de água. Dia da primeira marcação, gravado uma vez no toque (antes varria a tabela
+  // inteira de marcações a cada toque em qualquer caixinha do Hoje).
+  const creatinaInicio = useSetting("creatinaInicio");
 
   // Quantas práticas DA PROGRESSÃO ela já concluiu — define em que fase ela
   // está (identificar o músculo -> soltura -> Kegel -> variações). Mesmo
@@ -112,6 +116,12 @@ export function Today() {
   const flexNoiteHoje = flexDoDia("noite", praticasFlexNoite ?? 0);
   const flexManhaRotulo = rotuloFlexDoDia("Alongamento manhã", flexManhaHoje);
   const flexNoiteRotulo = rotuloFlexDoDia("Alongamento noite", flexNoiteHoje);
+  // Rebolado de sábado com a progressão de resistência (auditoria 2026-09-23:
+  // a trilha existia e nenhuma tela a servia).
+  const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
+  const reboladoHoje = reboladoDoDia(praticasRebolado ?? 0);
+  // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
+  const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
   const walkGoalMin = useSetting("walkGoalMin");
 
@@ -247,8 +257,22 @@ export function Today() {
     return false;
   };
 
+  // Assoalho, alongamentos e rebolado: feitos também quando qualquer prática
+  // da trilha foi concluída hoje (revisão da auditoria 2026-09-23).
+  const trilhaDoItem: Partial<Record<string, readonly string[]>> = {
+    pelvic: PROGRESSAO_PELVICA,
+    flexManha: SEQUENCIAS_FLEX.manha,
+    flexNoite: SEQUENCIAS_FLEX.noite,
+    rebolado: SEQUENCIAS_REBOLADO,
+  };
+  const praticadaNaTrilha = (item: RoutineItem): boolean => {
+    const trilha = item.linkKey ? trilhaDoItem[item.linkKey] : undefined;
+    return !!trilha && praticadaHoje(praticasDeHoje ?? [], trilha, todayISO);
+  };
   const isDone = (item: RoutineItem): boolean =>
-    item.control === "link" || item.control === "skincare" ? linkDone(item) : done.has(item.id);
+    item.control === "link" || item.control === "skincare"
+      ? linkDone(item)
+      : done.has(item.id) || praticadaNaTrilha(item);
 
   // Passear com os cães credita (ou devolve, se desmarcado) 1h de movimento;
   // marcar "Dormir" registra a hora real do relógio como hora de deitar, e
@@ -261,6 +285,9 @@ export function Today() {
   // 60 + 60 = 120 min com a caixinha desmarcada, sem caminho de volta ao zero.
   async function handleToggle(item: RoutineItem) {
     const marcado = await toggle(item.id);
+    if (item.id === CREATINA_ITEM_ID && marcado && !creatinaInicio) {
+      await setSetting("creatinaInicio", todayISO);
+    }
     if (item.control === "walk") {
       // O passeio dos cães tem ids diferentes por tipo de dia (`caes` na
       // semana, `caes-fds` no fim de semana — ver today-routine.ts). Em dia
@@ -299,6 +326,7 @@ export function Today() {
     if (item.linkKey === "pelvic") return pelvicRotulo.subtitle;
     if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
+    if (item.linkKey === "rebolado") return reboladoHoje.etapa;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -311,8 +339,8 @@ export function Today() {
     if (item.control === "walk") {
       return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
     }
-    if (item.id === CREATINA_ITEM_ID && mostrarAvisoAgua(primeiraCreatina ?? null, todayISO)) {
-      return SUBTITULO_AVISO_AGUA;
+    if (item.id === CREATINA_ITEM_ID) {
+      return subtituloCreatina(item.subtitle ?? "", creatinaInicio || null, todayISO);
     }
     return item.subtitle;
   };
@@ -333,11 +361,19 @@ export function Today() {
     if (item.linkKey === "pelvic") return `/treino/movimento/${pelvicHoje.sequenceId}`;
     if (item.linkKey === "flexManha") return `/treino/movimento/${flexManhaHoje.sequenceId}`;
     if (item.linkKey === "flexNoite") return `/treino/movimento/${flexNoiteHoje.sequenceId}`;
+    if (item.linkKey === "rebolado") return `/treino/movimento/${reboladoHoje.sequenceId}`;
     return item.to;
   };
 
   const activeFocus = focus ?? timeBlockFocus(today.getHours(), dayOfWeek);
   const { projecao, invalida: partidaInvalida, carregando: partidaCarregando } = usePartida();
+  const datasDeTreino = useLiveQuery(async () => (await db.workoutSessions.toArray()).map((x) => x.date), []);
+  const treinosSemana = treinosNaSemana(datasDeTreino ?? [], todayISO);
+  const ultimaMedida = measurementsAsc?.at(-1);
+  const variacaoSemana =
+    projecao && ultimaMedida && ultimaMedida.date > projecao.partida.data
+      ? variacaoDesdePartida(projecao.partida, ultimaMedida)
+      : null;
 
   return (
     <div className="p-4 pb-24 space-y-3">
@@ -352,13 +388,14 @@ export function Today() {
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
+      <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
           `.card` com padding e borda próprios — em 4 colunas numa tela
           estreita "Skincare" e "Vitalidade" espremem contra a borda do
           próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
       <div className="grid grid-cols-2 gap-2">
-        <StreakCard label="Treino" count={last7DaysTraining ?? 0} total={7} />
+        <StreakCard label="Treino" count={Math.min(last7DaysTraining ?? 0, 5)} total={5} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Sono" count={last7DaysSleep} total={7} />
         {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele

@@ -68,4 +68,33 @@ describe("MealsToday", () => {
     expect(await screen.findByText(escolhida.label)).toBeInTheDocument();
     expect(screen.queryByText(`${escolhida.label} · sugestão`)).not.toBeInTheDocument();
   });
+
+  // Auditoria de 2026-09-23: o Hoje marca em routineChecks, esta tela contava
+  // só db.meals — o "Consumido hoje" nunca andava. E a regra é grama em toda
+  // tela de comida.
+  describe("uma fonte só com o Hoje, e com gramas", () => {
+    beforeEach(async () => {
+      await db.routineChecks.clear();
+    });
+
+    it("refeição marcada no Hoje aparece feita aqui e conta no consumido", async () => {
+      await db.routineChecks.put({ date: hojeISO(), itemId: "almoco", done: true });
+      render(<MemoryRouter><MealsToday /></MemoryRouter>);
+      await waitFor(() => expect(screen.getAllByRole("button", { name: "Feito" })).toHaveLength(1));
+      expect(screen.queryByText(/^0 \//)).toBeNull();
+    });
+
+    it("marcar aqui marca também o item do Hoje", async () => {
+      render(<MemoryRouter><MealsToday /></MemoryRouter>);
+      const nao = await screen.findAllByRole("button", { name: "Não feito" });
+      fireEvent.click(nao[0]); // café
+      await waitFor(async () => expect((await db.routineChecks.get([hojeISO(), "cafe-marmita"]))?.done).toBe(true));
+    });
+
+    it("cada alimento mostra a grama", async () => {
+      render(<MemoryRouter><MealsToday /></MemoryRouter>);
+      await screen.findAllByRole("button", { name: /modo de preparo/i });
+      expect(screen.getAllByText(/\d+ g$/).length).toBeGreaterThan(4);
+    });
+  });
 });

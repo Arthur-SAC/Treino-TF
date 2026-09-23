@@ -16,14 +16,14 @@ describe("seedPath", () => {
     expect((await db.milestones.toArray()).length).toBe(a);
   });
 
-  it("migra o marco de pixie pro de crescimento", async () => {
+  it("migra o marco de pixie pro marco de cabelo atual (o corte)", async () => {
     await db.milestones.add({ datePlanned: "2026-12-01", title: "Marco visual: pixie cacheado formato definido", category: "fisico" } as never);
     await db.settings.put({ key: "pathSeeded", value: true });
     await db.settings.put({ key: "milestoneSeedVersion", value: 3 });
     await seedPath();
     const titles = (await db.milestones.toArray()).map((m) => m.title);
     expect(titles.some((t) => t.includes("pixie"))).toBe(false);
-    expect(titles.some((t) => t.includes("transição"))).toBe(true);
+    expect(titles.some((t) => t.startsWith("✂") && t.includes("corte"))).toBe(true);
   });
 
   it("plano alimentar é de déficit com slots", async () => {

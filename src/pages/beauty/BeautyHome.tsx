@@ -14,7 +14,7 @@ export function BeautyHome() {
       </Link>
       <Link to="/beleza/pele-cabelo/haircare" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Cabelo</h3>
-        <p className="text-muted text-sm mt-1">Jornada de crescimento dos cachos</p>
+        <p className="text-muted text-sm mt-1">Corte do cacho · rotina Juba</p>
       </Link>
       <Link to="/beleza/pele-cabelo/unhas" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Unhas</h3>
@@ -26,7 +26,7 @@ export function BeautyHome() {
       </Link>
       <Link to="/beleza/pele-cabelo/clareamento" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Clareamento</h3>
-        <p className="text-muted text-sm mt-1">Manchas de sol, axila, virilha, perianal — ativos seguros, prazo, FPS</p>
+        <p className="text-muted text-sm mt-1">Manchas de sol, axila e áreas escurecidas — ativos seguros, prazo, FPS</p>
       </Link>
       <Link to="/beleza/depilacao" className="card block hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Depilação</h3>

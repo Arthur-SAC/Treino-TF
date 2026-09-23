@@ -32,7 +32,9 @@ export const MEAL_PLAN_VERSION = 16;
 // v9: os meses e pesos dos marcos saem das fases (entrega 2). A regravação
 // reancora as datas dos marcos não concluídos no dia da atualização — o que
 // coincide com o recomeço dela (23/09/2026).
-const MILESTONE_SEED_VERSION = 9;
+// v10: o marco de cabelo fala do corte (wolf cut) e o de razão deixa de citar
+// os números de maio.
+const MILESTONE_SEED_VERSION = 10;
 
 const TODOS_OS_MARCOS = [
   ...MILESTONES,
@@ -68,6 +70,8 @@ const RENOMEADOS_V7: ReadonlyArray<readonly [string, string]> = [
   ["▣Check-in 6 meses — quadril/bunda crescendo", "▣Check-in 18 meses — comparar com a foto de partida"],
   ["▱WHR rumo a 0,75 (cintura fina + quadril cheio)", "▱Cintura 84 — a silhueta vira"],
   ["♡ Busto sem TH — avaliar começar a usar bralette", "♡ Busto sem hormônio — avaliar começar a usar bralette"],
+  // v10 (2026-09-23): a meta de cabelo é o corte, não o comprimento.
+  ["✂ Cabelo na fase de transição — manter forma e saúde crescendo", "✂ Cabelo — o corte do cacho no lugar"],
 ];
 
 /** Marcos que a v7 tira da linha do tempo. Os dois de fertilidade tinham data
@@ -209,8 +213,9 @@ export async function seedPath(): Promise<void> {
         for (const m of BUST_MILESTONES) await db.milestones.add({ ...m } as never);
       }
       if (msVersion < 4) {
-        // Atualiza o marco antigo de "pixie" pro de crescimento (ou adiciona se faltar).
-        const novo = MILESTONES.find((m) => m.title.includes("transição"));
+        // Atualiza o marco antigo de "pixie" pro marco de cabelo atual (ou
+        // adiciona se faltar). Acha pelo "✂": o título mudou em 2026-09-23.
+        const novo = MILESTONES.find((m) => m.title.startsWith("✂"));
         if (novo) {
           const fisicos = await db.milestones.where("category").equals("fisico").toArray();
           const pixie = fisicos.find((m) => m.title.includes("pixie"));
@@ -256,6 +261,9 @@ export async function seedPath(): Promise<void> {
         await regravaMarcosV7();
       }
       if (msVersion < 9) {
+        await regravaMarcosV7();
+      }
+      if (msVersion < 10) {
         await regravaMarcosV7();
       }
       await db.settings.put({ key: "milestoneSeedVersion", value: MILESTONE_SEED_VERSION });

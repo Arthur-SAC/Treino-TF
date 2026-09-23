@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
@@ -177,4 +177,29 @@ describe("Today: o item de assoalho pélvico não promete o que a sequência nã
       unmount();
     }
   });
+
+// Revisão da auditoria (2026-09-23): concluir a sequência do alongamento,
+// assoalho ou rebolado tem que marcar o item do Hoje sozinho. Os itens não têm
+// `control`, e a sequência "do dia" muda no instante em que a prática entra
+// (a contagem sobe) — por isso vale qualquer prática da trilha, hoje.
+describe("prática concluída marca o item do Hoje", () => {
+  it("alongamento da noite aparece marcado depois de uma prática da trilha hoje", async () => {
+    await db.practiceLogs.clear();
+    await db.practiceLogs.add({ date: hojeISO(), sequenceId: "flexibilidade-intima", completed: true } as never);
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    await waitFor(() => {
+      const box = screen.getAllByRole("checkbox").find((c) => /^marcar Alongamento noite/.test(c.getAttribute("aria-label") ?? ""));
+      expect(box?.getAttribute("aria-checked")).toBe("true");
+    });
+  });
+
+  it("prática de outro dia não marca", async () => {
+    await db.practiceLogs.clear();
+    await db.practiceLogs.add({ date: "2020-01-01", sequenceId: "flexibilidade-intima", completed: true } as never);
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    await screen.findByText("Noite");
+    const box = screen.getAllByRole("checkbox").find((c) => /^marcar Alongamento noite/.test(c.getAttribute("aria-label") ?? ""));
+    expect(box?.getAttribute("aria-checked")).toBe("false");
+  });
+});
 });

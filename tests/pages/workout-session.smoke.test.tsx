@@ -16,6 +16,7 @@ describe("Workout session smoke", () => {
         <Routes>
           <Route path="/treino/sessao/:templateId" element={<SessionDetail />} />
           <Route path="/treino" element={<div>treino home</div>} />
+          <Route path="/" element={<div>hoje home</div>} />
         </Routes>
       </MemoryRouter>,
     );
@@ -28,8 +29,15 @@ describe("Workout session smoke", () => {
 
     await waitFor(() => expect(screen.getByText(/Aquecimento . esteira ou bike \(5 min\) ✓/)).toBeInTheDocument());
 
-    // Finaliza a sessão
+    // Registrou errado? "Corrigir" reabre o exercício (auditoria 2026-09-23).
+    fireEvent.click(screen.getByRole("button", { name: /corrigir aquecimento/i }));
+    await waitFor(() => expect(screen.queryByText(/Aquecimento . esteira ou bike \(5 min\) ✓/)).toBeNull());
+    fireEvent.click((await screen.findAllByRole("button", { name: /marcar feito/i }))[0]);
+    await waitFor(() => expect(screen.getByText(/Aquecimento . esteira ou bike \(5 min\) ✓/)).toBeInTheDocument());
+
+    // Finaliza a sessão — e volta pro Hoje, que é de onde ela veio
     fireEvent.click(screen.getByRole("button", { name: /finalizar treino/i }));
+    await waitFor(() => expect(screen.getByText("hoje home")).toBeInTheDocument());
 
     await waitFor(async () => {
       const sessions = await db.workoutSessions.toArray();
@@ -37,5 +45,24 @@ describe("Workout session smoke", () => {
       expect(sessions[0].templateId).toBe("seg-gluteo-mobilidade");
       expect(sessions[0].exercises).toHaveLength(1);
     });
+  });
+});
+
+// Revisão da auditoria: "Corrigir" no único exercício deixava uma sessão sem
+// nenhum exercício gravada — e ela contava como treino feito na semana.
+describe("Corrigir o único exercício", () => {
+  it("não deixa sessão vazia contando como treino", async () => {
+    await db.workoutSessions.clear();
+    render(
+      <MemoryRouter initialEntries={["/treino/sessao/seg-gluteo-mobilidade"]}>
+        <Routes>
+          <Route path="/treino/sessao/:templateId" element={<SessionDetail />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click((await screen.findAllByRole("button", { name: /marcar feito/i }))[0]);
+    await waitFor(async () => expect(await db.workoutSessions.count()).toBe(1));
+    fireEvent.click(await screen.findByRole("button", { name: /corrigir aquecimento/i }));
+    await waitFor(async () => expect(await db.workoutSessions.count()).toBe(0));
   });
 });

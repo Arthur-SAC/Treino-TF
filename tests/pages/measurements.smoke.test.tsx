@@ -66,4 +66,45 @@ describe("Measurements smoke", () => {
       expect(await db.measurements.count()).toBe(1);
     });
   });
+
+  describe("formulário e gráficos (auditoria 2026-09-23)", () => {
+    beforeEach(async () => {
+      await db.measurements.clear();
+    });
+
+    const campo = (labelText: string) => {
+      const labels = screen.getAllByText(labelText);
+      return labels[labels.length - 1].parentElement!.querySelector("input") as HTMLInputElement;
+    };
+
+    it("depois de salvar, confirma e limpa — o segundo toque não duplica", async () => {
+      renderWithRouter();
+      fireEvent.change(campo("Cintura"), { target: { value: "99" } });
+      fireEvent.change(campo("Pescoço"), { target: { value: "40" } });
+      fireEvent.click(screen.getByRole("button", { name: /salvar medida/i }));
+      await waitFor(() => expect(screen.getByText(/medida salva/i)).toBeInTheDocument());
+      expect(campo("Cintura").value).toBe("");
+      fireEvent.click(screen.getByRole("button", { name: /salvar medida/i }));
+      await new Promise((r) => setTimeout(r, 50));
+      expect(await db.measurements.count()).toBe(1);
+    });
+
+    it("cintura menor ou igual ao pescoço é recusada — é o erro de digitação mais provável", async () => {
+      renderWithRouter();
+      fireEvent.change(campo("Cintura"), { target: { value: "40" } });
+      fireEvent.change(campo("Pescoço"), { target: { value: "99" } });
+      fireEvent.click(screen.getByRole("button", { name: /salvar medida/i }));
+      expect(await screen.findByText(/cintura.*pescoço/i)).toBeInTheDocument();
+      expect(await db.measurements.count()).toBe(0);
+    });
+
+    it("o peso entra no gráfico de evolução", async () => {
+      await db.measurements.bulkAdd([
+        { date: "2026-09-24", weightKg: 96, waistCm: 99 },
+        { date: "2026-10-24", weightKg: 94, waistCm: 97 },
+      ] as never);
+      renderWithRouter();
+      expect(await screen.findByRole("button", { name: "Peso" })).toBeInTheDocument();
+    });
+  });
 });

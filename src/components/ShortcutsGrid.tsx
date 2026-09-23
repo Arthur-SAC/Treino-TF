@@ -10,7 +10,7 @@ export const SHORTCUTS: Shortcut[] = [
   { icon: "✚", label: "Saúde · planos", sub: "consultas · perguntas pro médico", to: "/trilha/fertilidade" },
   { icon: "♡", label: "Apoio", sub: "dia difícil · rede de apoio", to: "/trilha/apoio" },
   { icon: "❋", label: "Cabelo", sub: "corte do cacho · cuidados", to: "/beleza/pele-cabelo/haircare" },
-  { icon: "❖", label: "Estilo", sub: "discreto · combinações", to: "/beleza/estilo/pecas" },
+  { icon: "❖", label: "Estilo", sub: "peças · combinações", to: "/beleza/estilo/pecas" },
   { icon: "◈", label: "Corpo", sub: "medidas · fotos", to: "/corpo/medidas" },
   { icon: "❀", label: "Maquiagem", sub: "rotinas", to: "/beleza/maquiagem" },
 ];

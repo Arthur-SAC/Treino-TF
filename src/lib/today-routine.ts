@@ -5,7 +5,7 @@
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
-export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite";
+export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite" | "rebolado";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
@@ -88,7 +88,7 @@ function manhaItems(dayOfYear: number, fimDeSemana: boolean): RoutineItem[] {
     { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning", defaultTime: "06:25" },
     { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
     CREATINA,
-    { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — ataca o cansaço/vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
+    { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — a pele produz vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   );
   if (fimDeSemana) items.push(CAMINHADA_FDS);
   return items;
@@ -237,6 +237,19 @@ function tardeSemana(): RoutineItem[] {
   ];
 }
 
+/** Sexta e sábado ela sai com a noiva (e domingo, de 15 em 15): o jantar
+ *  lembra que existe plano pra isso, no lugar de fingir que ela janta a
+ *  marmita (auditoria 2026-09-23). */
+function noiteDoDia(dayOfWeek: number): RoutineItem[] {
+  const fora = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0;
+  if (!fora) return NOITE;
+  return NOITE.map((i) =>
+    i.id === "jantar"
+      ? { ...i, note: "Vai jantar fora? A verba da semana cobre — o que pedir está em Alimentação, no plano de comer fora." }
+      : i,
+  );
+}
+
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
@@ -268,7 +281,7 @@ function buildBlocks(
         // colocar dois itens de movimento somando na mesma meta.
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
-          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", defaultTime: "17:30" },
+          { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", linkKey: "rebolado", defaultTime: "17:30" },
           caes("sabado"),
         ],
       }
@@ -303,14 +316,14 @@ function buildBlocks(
     // dia de folga. Agora aponta pro roteiro com a ordem do fogo.
     semanaItems.unshift({ id: "marmita-domingo", block: "semana", label: "Marmita da semana", subtitle: "Roteiro de 62 min com a ordem do fogo — depois dele, a semana é só esquentar", to: "/trilha/alimentacao/domingo" });
     // Vitamina D semanal: tomada no domingo junto da marmita (refeição com gordura).
-    semanaItems.push({ id: "vitamina-d", block: "semana", label: "Vitamina D · 10.000 UI (semanal)", subtitle: "Toma junto de uma refeição com gordura — resolve o cansaço" });
+    semanaItems.push({ id: "vitamina-d", block: "semana", label: "Vitamina D · 10.000 UI (semanal)", subtitle: "Toma junto de uma refeição com gordura — é a dose semanal de manutenção que você escolheu" });
   }
 
   return [
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: NOITE },
+    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }

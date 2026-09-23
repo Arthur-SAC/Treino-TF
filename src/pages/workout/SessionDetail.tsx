@@ -97,6 +97,13 @@ export function SessionDetail() {
     const tplId = template.id;
     const durationMin = template.durationMin;
     saveChain.current = saveChain.current.then(async () => {
+      // Sem nenhum exercício (o "Corrigir" tirou o único), a sessão some: vazia,
+      // ela contava como treino feito na semana.
+      if (nextRecorded.length === 0) {
+        if (sessionIdRef.current !== undefined) await db.workoutSessions.delete(sessionIdRef.current);
+        sessionIdRef.current = undefined;
+        return;
+      }
       const id = (await db.workoutSessions.put({
         id: sessionIdRef.current,
         date: todayISO,
@@ -111,14 +118,24 @@ export function SessionDetail() {
   }
 
   function handleSave(entry: WorkoutSession["exercises"][number]) {
-    const next = [...recorded, entry];
+    // Substitui se o exercício já estava registrado (veio do "Corrigir").
+    const next = [...recorded.filter((r) => r.exerciseId !== entry.exerciseId), entry];
+    setRecorded(next);
+    void persist(next, feedback);
+  }
+
+  // Registrou errado? Tira o exercício da sessão e reabre o registro dele
+  // (auditoria 2026-09-23: antes, salvo era salvo pra sempre).
+  function corrigir(exerciseId: string) {
+    const next = recorded.filter((r) => r.exerciseId !== exerciseId);
     setRecorded(next);
     void persist(next, feedback);
   }
 
   async function finishSession() {
     await persist(recorded, feedback);
-    navigate("/treino", { replace: true });
+    // Volta pro Hoje: é de lá que ela abre o treino, e é lá que o dia continua.
+    navigate("/", { replace: true });
   }
 
   return (
@@ -190,7 +207,17 @@ export function SessionDetail() {
             {alreadyRecorded ? (
               <div className="card mb-3 border-nude">
                 <h3 className="text-nude-warm font-medium">{ex.name} ✓</h3>
-                <p className="text-muted text-xs">Registrado</p>
+                <div className="flex justify-between items-baseline">
+                  <p className="text-muted text-xs">Registrado</p>
+                  <button
+                    type="button"
+                    onClick={() => corrigir(ex.id)}
+                    aria-label={`Corrigir ${ex.name}`}
+                    className="text-muted text-xs underline"
+                  >
+                    Corrigir
+                  </button>
+                </div>
               </div>
             ) : (
               <SessionRecorder

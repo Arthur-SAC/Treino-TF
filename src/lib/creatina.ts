@@ -19,3 +19,9 @@ export function mostrarAvisoAgua(primeira: string | null, hoje: string): boolean
   const dias = Math.round((Date.parse(hoje) - Date.parse(primeira)) / 86_400_000);
   return dias < DIAS_AVISO_AGUA;
 }
+
+/** Dose e aviso juntos nas 2 primeiras semanas — antes o aviso SUBSTITUÍA a
+ *  dose, justamente quando ela mais precisava das duas. */
+export function subtituloCreatina(dose: string, primeira: string | null, hoje: string): string {
+  return mostrarAvisoAgua(primeira, hoje) ? `${dose} · ${SUBTITULO_AVISO_AGUA}` : dose;
+}

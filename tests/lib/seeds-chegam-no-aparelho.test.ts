@@ -60,11 +60,11 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(11);
+    expect(EXERCISE_SEED_VERSION).toBe(12);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(13);
+    expect(TEMPLATE_SEED_VERSION).toBe(14);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele

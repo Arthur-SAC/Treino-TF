@@ -53,6 +53,8 @@ export interface Settings {
    *  — ver `vitalidade-adesao.ts` para o porquê de não ser derivado do
    *  `dailyLog`. */
   vitalidadeDesde: string;
+  /** Dia da primeira marcação da creatina ("" = ainda não começou). */
+  creatinaInicio: string;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -69,9 +71,11 @@ export const DEFAULTS: Settings = {
   movementVersion: 1,
   makeupSeeded: false,
   voiceSeeded: false,
-  morningReminderTime: "08:00",
-  eveningReminderTime: "22:00",
-  workoutReminderTime: "18:00",
+  // Os horários dos itens de skincare e treino da rotina do Hoje (auditoria
+  // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
+  morningReminderTime: "06:25",
+  eveningReminderTime: "20:00",
+  workoutReminderTime: "18:15",
   activeBreakIntervalMin: 90,
   // Expediente real dela: 7h-16h. Vinha 9h-18h, um padrão genérico que punha a
   // primeira pausa duas horas depois de ela já estar trabalhando e a última
@@ -79,8 +83,10 @@ export const DEFAULTS: Settings = {
   activeBreakStartHour: 7,
   activeBreakEndHour: 16,
   hydrationIntervalMin: 60,
-  hydrationGoalMl: 2000,
-  quietHours: { from: "22:00", to: "08:00" },
+  // 96 kg, 5 km a pé e treino em Aracaju: 2 L ficava curto (~35 ml/kg ≈ 3,4 L).
+  hydrationGoalMl: 3000,
+  // O dia dela começa às 6h e ela deita às 22h30.
+  quietHours: { from: "22:30", to: "06:00" },
   routineTimes: {},
   focusModeUntil: null,
   notificationsEnabled: true,
@@ -99,8 +105,8 @@ export const DEFAULTS: Settings = {
   // min fixos via `creditarPasseio`. A meta existe pra avisar quando um dos
   // dois NÃO aconteceu; se ficasse em 75, batia sozinha antes de ela chegar
   // em casa e o medidor "X / Y min" parava de informar qualquer coisa. No
-  // fim de semana só há o passeio, então o medidor mostra 60/120 — verdade,
-  // não falha: o fim de semana é mesmo mais parado.
+  // fim de semana, desde 2026-09-23, também são duas: os 5 km da manhã e o
+  // passeio, e as duas juntas fecham os 120.
   walkGoalMin: 120,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
@@ -117,6 +123,7 @@ export const DEFAULTS: Settings = {
   // acompanhamento nenhum — e um padrão com data faria o app contar dias que
   // ninguém acompanhou.
   vitalidadeDesde: "",
+  creatinaInicio: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

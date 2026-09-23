@@ -7,6 +7,7 @@ import { WhrChart } from "../../components/WhrChart";
 import { MeasurementChart } from "../../components/MeasurementChart";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { formatCm, formatDateBR } from "../../lib/format";
+import { useSetting } from "../../hooks/useSetting";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
 // Exportado para o teste que prende a régua: cintura no umbigo e ombro em
@@ -34,12 +35,14 @@ const CATEGORY_LABEL: Record<ReturnType<typeof classifyWhr>, string> = {
   "ampulheta-forte": "Ampulheta forte",
   "ampulheta-moderada": "Ampulheta moderada",
   transicao: "Transição",
-  "perfil-masculino": "Perfil masculino",
+  "perfil-masculino": "Perfil reto",
 };
 
 export function Measurements() {
   const items = useLiveQuery(() => db.measurements.orderBy("date").reverse().toArray(), []);
   const [selectedMetric, setSelectedMetric] = useState<keyof Measurement>("waistCm");
+  // O alvo é o mesmo da Silhueta (fim da fase 2), não o 0,68 antigo do gráfico.
+  const targetWhr = useSetting("targetWhr");
 
   async function handleSave(m: Omit<Measurement, "id">) {
     await db.measurements.add(m as Measurement);
@@ -52,6 +55,7 @@ export function Measurements() {
     ?? [];
 
   const metricOptions: Array<{ key: keyof Measurement; label: string }> = [
+    { key: "weightKg", label: "Peso" },
     { key: "waistCm", label: "Cintura" },
     { key: "hipCm", label: "Quadril" },
     { key: "chestCm", label: "Busto" },
@@ -82,7 +86,7 @@ export function Measurements() {
       {chartData.length > 0 && (
         <div className="card mb-4">
           <h2 className="text-nude-warm font-medium mb-2">Evolução cintura/quadril</h2>
-          <WhrChart data={chartData} />
+          <WhrChart data={chartData} target={targetWhr} />
           <p className="text-muted text-xs mt-2">
             Linha caindo rumo ao alvo = silhueta mais ampulheta (cintura afinando e/ou quadril
             crescendo). Variação de poucos centésimos entre medidas é normal — água, intestino,
@@ -110,7 +114,7 @@ export function Measurements() {
               ))}
             </div>
           </div>
-          <MeasurementChart data={metricData} />
+          <MeasurementChart data={metricData} unit={selectedMetric === "weightKg" ? "kg" : "cm"} />
           <p className="text-muted text-xs mt-2">
             Leia pela direção, não pelo valor de um dia: quadril/coxa/glúteo subindo é ganho;
             cintura/pescoço/barriga descendo é afinamento. Pequenos sobe-e-desce entre medidas são

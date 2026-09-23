@@ -1,6 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
-import { useSetting } from "./useSetting";
 import { partidaPlausivel, type Partida, type Projecao } from "../lib/partida";
 import { MEDIDAS_PARTIDA } from "../lib/objetivo";
 
@@ -10,9 +9,14 @@ import { MEDIDAS_PARTIDA } from "../lib/objetivo";
  *  do banco responder. */
 export function usePartida(): { partida: Partida | null; projecao: Projecao | null; invalida: boolean; carregando: boolean } {
   const medidas = useLiveQuery(() => db.measurements.toArray(), []);
-  const alturaSetting = useSetting("heightCm");
-  if (medidas === undefined) return { partida: null, projecao: null, invalida: false, carregando: true };
-  const altura = alturaSetting > 0 ? alturaSetting : Math.round(MEDIDAS_PARTIDA.alturaM * 100);
+  // `null` = não existe o setting; `undefined` = o banco ainda não respondeu.
+  // O useSetting devolveria o padrão (0) enquanto carrega, e o card calcularia
+  // um frame com a altura padrão antes de pular pra dela.
+  const alturaSalva = useLiveQuery(async () => ((await db.settings.get("heightCm"))?.value as number | undefined) ?? null, []);
+  if (medidas === undefined || alturaSalva === undefined) {
+    return { partida: null, projecao: null, invalida: false, carregando: true };
+  }
+  const altura = alturaSalva && alturaSalva > 0 ? alturaSalva : Math.round(MEDIDAS_PARTIDA.alturaM * 100);
   const { resultado, invalida } = partidaPlausivel(medidas, altura);
   return { partida: resultado?.partida ?? null, projecao: resultado, invalida, carregando: false };
 }

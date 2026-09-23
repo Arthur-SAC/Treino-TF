@@ -446,20 +446,20 @@ export const EXERCISES: Exercise[] = [
   // === PEITORAL SUPERIOR LEVE (busto) ===
   {
     id: "supino-inclinado-halteres",
-    name: "Supino inclinado com halteres (LEVE)",
+    name: "Supino inclinado com halteres",
     category: "peitoral",
     equipment: ["halteres", "banco-inclinado"],
     difficulty: "iniciante",
-    description: "Banco inclinado 30-45°, halteres LEVES. Foco peitoral superior pra ajudar busto. Cargas baixas — buscar tônus, não hipertrofia.",
+    description: "Banco inclinado 30-45°, halteres. Foco no peitoral de cima, que enche o decote. Carga moderada, 10-12 reps com controle — sobe o peso quando todas as séries saem limpas. O que deixa o peito quadrado é supino reto ou declinado pesado, não este.",
     commonMistakes: [
-      "Pegar peso pesado demais (queremos LEVE)",
+      "Pegar um peso que tira a técnica (cotovelo abre, ombro sobe)",
       "Banco muito inclinado (vira ombro)",
       "Descer pouco",
     ],
     exposureLevel: 2,
     startLoadKg: 4,
     proTips: [
-      "Leve e controlado: a meta é a 'prateleira' do busto, não peitão masculino",
+      "Controle acima de carga: a meta é a 'prateleira' do peito de cima, não peitão reto",
       "Inclinado joga o estímulo pra parte de cima do peito, que levanta o visual do busto",
       "Desce devagar sentindo o alongamento; sobe sem estufar os ombros",
     ],
@@ -470,9 +470,9 @@ export const EXERCISES: Exercise[] = [
     category: "peitoral",
     equipment: ["halteres", "banco-inclinado"],
     difficulty: "iniciante",
-    description: "Banco inclinado 30-45°, halteres LEVES. Braços levemente flexionados, abre num arco amplo até sentir o peitoral alongar, fecha apertando o peito superior. Foco em busto. 12-15 reps, carga leve.",
+    description: "Banco inclinado 30-45°, halteres. Braços levemente flexionados, abre num arco amplo até sentir o peitoral alongar, fecha apertando o peito superior. Foco em busto. 12-15 reps, carga moderada que progride devagar.",
     commonMistakes: [
-      "Carga pesada (queremos tônus, não volume)",
+      "Carga que obriga a dobrar os cotovelos (vira supino e perde o alongamento)",
       "Esticar e dobrar os cotovelos (vira supino)",
       "Descer demais e forçar o ombro",
     ],
@@ -481,7 +481,7 @@ export const EXERCISES: Exercise[] = [
     proTips: [
       "Imagina abraçar um barril e apertar o centro do peito no fim",
       "Cotovelos com ângulo fixo e leve — não dobra e estica (isso vira supino)",
-      "Carga leve, muitas reps: redondo e macio, nunca quadrado",
+      "Reps altas e controle: redondo e cheio em cima, nunca quadrado",
     ],
   },
   // === MOBILIDADE & ALONGAMENTO ===
@@ -1063,7 +1063,7 @@ export const EXERCISES: Exercise[] = [
     category: "peitoral",
     equipment: ["maquina-voador"],
     difficulty: "iniciante",
-    description: "Sentada na multiestação, antebraços/mãos nos apoios. Fecha os braços à frente apertando o centro do peito, controla a abertura. Desenha a linha interna do peito. CARGA LEVE, 12-15 reps.",
+    description: "Sentada na multiestação, antebraços/mãos nos apoios. Fecha os braços à frente apertando o centro do peito, controla a abertura. Desenha a linha interna do peito. Carga moderada, 12-15 reps.",
     commonMistakes: ["Carga pesada demais", "Estufar/curvar para ganhar amplitude com o tronco", "Soltar rápido na volta"],
     easierVariation: "Crucifixo na polia leve",
     harderVariation: "Pausa de 1-2s no fechamento",
@@ -1071,7 +1071,7 @@ export const EXERCISES: Exercise[] = [
     startLoadKg: 10,
     proTips: [
       "Aperta e segura 1s no centro — a contração é onde mora a linha do colo",
-      "Leve sempre: o objetivo é redondo e macio, não quadrado",
+      "Controle sempre: o objetivo é redondo e cheio, não quadrado",
       "Costas coladas no encosto, ombros baixos",
     ],
   },

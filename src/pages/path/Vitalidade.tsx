@@ -77,7 +77,8 @@ export function Vitalidade() {
   const pelvicHoje = pelvicDoDia(praticasDaProgressao ?? 0);
 
   // As três sequências sexuais explícitas ou pré-íntimas saem POR AQUI, não
-  // pela rotina do Hoje, que toca às 10h no trabalho. A contagem da semana
+  // pela rotina do Hoje: pedem privacidade e tempo, e o Hoje fica aberto na
+  // tela (o assoalho diário mora às 21h20 desde agosto). A contagem da semana
   // existe pro alvo declarado no topo desta tela ("pelo menos uma sessão de
   // start-stop") ser medido contra o registro real; a de soltura existe porque
   // o preparo pra receber só pode abrir depois de soltura TREINADA.
@@ -163,11 +164,11 @@ export function Vitalidade() {
       </div>
 
       {/* As três sequências que precisam de privacidade. Ficam aqui, e não na
-          rotina do Hoje, porque aquele item cai às 10h — no trabalho. */}
+          rotina do Hoje, que fica aberta na tela. */}
       <div className="card my-3">
         <h2 className="text-nude font-medium mb-1">Sessões desta tela</h2>
         <p className="text-muted text-xs mb-2">
-          Precisam de privacidade — por isso não entram na rotina do Hoje, que cai no meio do expediente.
+          Precisam de privacidade e de tempo — por isso não entram na rotina do Hoje, que fica aberta na tela.
         </p>
         <ul className="space-y-3">
           {ofertas.map((oferta) => (

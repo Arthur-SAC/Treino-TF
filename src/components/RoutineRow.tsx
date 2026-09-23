@@ -57,7 +57,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
   if (item.control === "recipe" && onOpen) {
     return (
       <div className={cls}>
-        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none p-3 -m-3">
           <Box done={done} />
         </button>
         <button type="button" onClick={onOpen} aria-label={item.label} className="flex-1 min-w-0 text-left">
@@ -74,7 +74,7 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
   if (item.control === "breaks" && onOpen) {
     return (
       <div className={cls}>
-        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none p-3 -m-3">
           <Box done={done} />
         </button>
         <button type="button" onClick={onOpen} aria-label={item.label} className="flex-1 min-w-0 text-left">
@@ -101,16 +101,18 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
   // na borda. A usuária foi abrir o alongamento da noite, tocou no nome e o
   // item só ficou riscado. Mesmo padrão do jantar e do skincare, que já abrem
   // ao toque no corpo.
-  if (item.to && !rightSlot) {
+  // Com botão no canto (a caminhada tem "+10 min"), o nome continua abrindo o
+  // destino — antes o botão ganhava e a prescrição de zona 2 ficava sem porta.
+  if (item.to) {
     return (
       <div className={cls}>
-        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none">
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={onToggle} className="flex-none p-3 -m-3">
           <Box done={done} />
         </button>
         <Link to={item.to} aria-label={item.label} className="flex-1 min-w-0">
           <Body item={item} done={done} hora={hora} />
         </Link>
-        <span className="flex-none self-center text-xs text-nude">ver →</span>
+        {rightSlot ? <span className="flex-none self-center">{rightSlot}</span> : <span className="flex-none self-center text-xs text-nude">ver →</span>}
       </div>
     );
   }
