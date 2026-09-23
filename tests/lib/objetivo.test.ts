@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   MEDIDAS_PARTIDA, FASES, CONSUMO, MARCOS_CINTURA, CINTURA_PISO_CM,
   razaoCinturaQuadril, razaoOmbroQuadril, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2,
+  RECOMECO_DATA, PCT_GORDURA_FIM_FASE1,
 } from "../../src/lib/objetivo";
 
 describe("derivadas das medidas de partida", () => {
@@ -96,5 +97,25 @@ describe("marcos de cintura", () => {
   it("o último marco fecha na cintura da fase 1", () => {
     const ultimo = MARCOS_CINTURA[MARCOS_CINTURA.length - 1];
     expect(ultimo.cinturaCm).toBe(FASES.find((f) => f.id === "fase-1")!.cinturaCm);
+  });
+});
+
+describe("recomeço e fase 3 (2026-09-23)", () => {
+  it("a data do recomeço é 23/09/2026", () => {
+    expect(RECOMECO_DATA).toBe("2026-09-23");
+  });
+  it("o gasto conta a caminhada de 5 km nos sete dias", () => {
+    expect([CONSUMO.gastoEstimadoKcalMin, CONSUMO.gastoEstimadoKcalMax]).toEqual([2700, 2900]);
+  });
+  it("existe a fase 3 (marcar de leve), encadeada depois da fase 2", () => {
+    const f2 = FASES.find((f) => f.id === "fase-2")!;
+    const f3 = FASES.find((f) => f.id === "fase-3")!;
+    expect(f3.mesInicio).toBe(f2.mesFim);
+    expect(f3.pesoKgMax).toBeLessThan(f2.pesoKgMax);
+  });
+  it("a faixa de gordura do fim da fase 1 reproduz os 80-82 kg da partida de maio", () => {
+    const magra = MEDIDAS_PARTIDA.pesoKg * (1 - 0.257);
+    expect(Math.round(magra / (1 - PCT_GORDURA_FIM_FASE1[0]))).toBe(80);
+    expect(Math.round(magra / (1 - PCT_GORDURA_FIM_FASE1[1]))).toBe(82);
   });
 });
