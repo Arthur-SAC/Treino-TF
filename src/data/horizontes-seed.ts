@@ -7,14 +7,27 @@ import { HORIZONTE_FLEX } from "../lib/flex-progression";
 export const HORIZONTES: GuideSection[] = [
   {
     id: "trilha-vestida",
-    title: "Trilha 1 — o corpo vestida",
+    title: "Trilha 1 — o corpo vestida: Chun-Li macia",
     intro: "O que treino e dieta constroem, e onde está o teto.",
     tips: [
+      "O norte é a Chun-Li macia com glúteo destacado: perna forte e grossa, glúteo redondo que passa da linha da coxa, costas com postura, peito cheio em cima, pele lisa com o músculo aparecendo quando você contrai.",
       "Vem: cintura de 99 para 84, glúteo grande e denso, e a razão cintura÷quadril saindo de 0,87 para 0,75-0,78 — 0,72-0,74 se a execução for muito boa.",
+      "Destreinada com gordura na faixa de 25-30% é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha — começar agora vale mais do que começar perfeito.",
       "Seu ombro nunca foi o problema: ombro÷quadril já está em 1,06, que é faixa feminina (homem cis típico fica entre 1,15 e 1,25). A cintura é o problema inteiro.",
       "NÃO vem sem hormônio: gordura macia no quadril e na coxa, mama, pele mais fina, menos pelo no corpo, mudança na gordura do rosto. Isso é impossível, não difícil — nenhum treino do mundo entrega.",
       "Então o contorno que você constrói é ampulheta ATLÉTICA: cintura seca sobre glúteo grande, em esqueleto estreito. Não é a mesma linha das referências que você guardou — o degrau de quadril delas é gordura estrogênica na lateral do quadril, e glúteo cresce para trás e para cima, não para o lado. É outro material, não outro esforço.",
       "Seu quadril termina nos mesmos 114 cm de hoje, feito de outra coisa. Mesmo número, corpo irreconhecível — por isso a fita sozinha engana e a foto lado a lado não.",
+    ],
+  },
+  {
+    id: "peito",
+    title: "Peito — o que dá e o que não dá",
+    intro: "Sem estrogênio não existe mama: é tecido glandular, e ele só cresce com hormônio. Isso é impossível, não difícil.",
+    tips: [
+      "O que dá: peitoral de cima e do meio (supino inclinado, crucifixo) enche a parte de cima e aproxima o decote. Com sutiã e roupa, faz diferença de verdade.",
+      "Sem roupa, isso lê como peitoral firme, não como seio — dito pra não ter surpresa.",
+      "Na fase 1 o peito pode diminuir antes de o músculo compensar: a gordura sai dele também.",
+      "Mama de verdade vem de implante (no mesmo horizonte cirúrgico do BBL) ou de TRH — as duas são decisões suas, sem data.",
     ],
   },
   {
@@ -37,25 +50,15 @@ export const HORIZONTES: GuideSection[] = [
   },
   {
     id: "cirurgia",
-    title: "Se um dia quiser cirurgia",
-    intro: "BBL é a única alavanca que dá volume de gordura macia no quadril sem hormônio.",
+    title: "O horizonte cirúrgico",
+    intro: "Lipo 360 com lombar + BBL com preenchimento lateral é o que leva a razão do máximo natural (0,72-0,76) para ~0,62-0,66. O implante de mama entra no mesmo horizonte, se você quiser.",
     tips: [
-      "Precisa de gordura corporal para colher — não dá para fazer no auge da secura.",
-      "É historicamente a cirurgia estética com maior mortalidade, por embolia gordurosa. A técnica subfascial reduziu muito esse risco, mas ele não é zero. Isso entra na conta.",
-      "Feita sobre glúteo já treinado, rende muito mais: o cirurgião tem estrutura para trabalhar e o resultado dura.",
-      "A ordem certa é a que você já está seguindo: treino agora, cirurgia depois dos 30 se ainda quiser. Treinar não atrasa — prepara.",
-    ],
-  },
-  {
-    id: "linha-do-tempo",
-    title: "Linha do tempo",
-    intro: "Prazos contados a partir da medição de 13/05/2026. O que define o ritmo é adesão, não idade.",
-    tips: [
-      "Semana 8-10: a primeira mudança que aparece em foto.",
-      "Mês 3-4: cintura em 88. É a trava que destrava o superávit no app.",
-      "Mês 6-8: cintura em 84, peso por volta de 81 kg. É aqui que a silhueta vira.",
-      "Mês 8-30: fase 2. A balança SOBE de propósito, até 85-88 kg, e o quadril volta aos mesmos 114 cm de hoje, agora feitos de músculo. Ver 85 kg nessa fase é o sinal de que deu certo, não de que falhou.",
-      "Destreinada com gordura na faixa de 25-30% é a configuração que responde mais rápido que existe: dá para perder gordura e ganhar músculo ao mesmo tempo. Essa janela fecha.",
+      "Quando: depois dos 30, por decisão sua — e depois do máximo natural, com peso estável por ~6 meses.",
+      "Precisa de gordura pra colher: não faça a fase de marcar de leve se a cirurgia estiver marcada.",
+      "É historicamente a cirurgia estética de maior mortalidade, por embolia gordurosa. A injeção só na camada acima do músculo reduziu muito o risco, mas ele não é zero. Cirurgião membro da SBCP, em hospital, e você pergunta em que camada ele injeta.",
+      "Feita sobre glúteo já treinado, rende muito mais: treinar agora não atrasa, prepara.",
+      "2 a 3 semanas sem sentar sobre o glúteo: planeje afastamento do trabalho.",
+      "O BBL marca o fim da fase discreta — de propósito. É escolha sua, não espera de nada.",
     ],
   },
   {
