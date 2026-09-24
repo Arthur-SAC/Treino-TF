@@ -7,6 +7,8 @@ import { encryptBackup, decryptBackup } from "../lib/backup";
 import { coletarBackup, restaurarBackup, type BackupPayload } from "../lib/backup-io";
 import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
+import { isNativo } from "../lib/plataforma";
+import { ativarLembretes } from "../lib/lembretes/permissao";
 
 export function Settings() {
   const notif = useSetting("notificationsEnabled");
@@ -14,6 +16,10 @@ export function Settings() {
   const evening = useSetting("eveningReminderTime");
   const workout = useSetting("workoutReminderTime");
   const presenca = useSetting("presencaReminderTime");
+  const alongManha = useSetting("alongamentoManhaTime");
+  const alongNoite = useSetting("alongamentoNoiteTime");
+  const dormir = useSetting("dormirReminderTime");
+  const vitD = useSetting("vitaminaDTime");
   const quietHours = useSetting("quietHours");
   const breakInterval = useSetting("activeBreakIntervalMin");
   const hydrInterval = useSetting("hydrationIntervalMin");
@@ -30,6 +36,13 @@ export function Settings() {
   const [error, setError] = useState<string | null>(null);
 
   async function toggleNotifs() {
+    if (!notif && isNativo()) {
+      // No APK a permissão é do Android, não do navegador.
+      if ((await ativarLembretes()) === "sem-notificacao") {
+        setError("O Android bloqueou as notificações do Treino. Ative em Configurações > Apps > Treino > Notificações.");
+      }
+      return;
+    }
     if (!notif) {
       const granted = await requestNotificationPermission();
       if (!granted) {
@@ -133,6 +146,26 @@ export function Settings() {
         <div>
           <label className="block text-muted text-xs uppercase tracking-wider mb-1">Noite</label>
           <input type="time" value={evening} onChange={(e) => void setSetting("eveningReminderTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Alongamento manhã</label>
+          <input type="time" value={alongManha} onChange={(e) => void setSetting("alongamentoManhaTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Alongamento noite</label>
+          <input type="time" value={alongNoite} onChange={(e) => void setSetting("alongamentoNoiteTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Hora de desligar</label>
+          <input type="time" value={dormir} onChange={(e) => void setSetting("dormirReminderTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Vitamina D (domingo)</label>
+          <input type="time" value={vitD} onChange={(e) => void setSetting("vitaminaDTime", e.target.value)}
                  className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
         </div>
         <div>
@@ -243,7 +276,11 @@ export function Settings() {
 
       <div className="card space-y-2">
         <h2 className="text-nude-warm font-medium">Sistema</h2>
-        <p className="text-muted text-xs">No Android, adicione o app na lista "Não otimizar bateria" pra notificações chegarem em tempo.</p>
+        {isNativo() ? (
+          <p className="text-muted text-xs">No Poco/Xiaomi: Configurações → Apps → Treino → Economia de bateria: "Sem restrições", e ative "Início automático". Sem isso a HyperOS pode segurar os lembretes.</p>
+        ) : (
+          <p className="text-muted text-xs">No Android, adicione o app na lista "Não otimizar bateria" pra notificações chegarem em tempo.</p>
+        )}
         <button onClick={() => void wipeAll()} className="w-full bg-red-900/40 border border-red-900 text-red-200 rounded-md py-2 text-sm">
           Apagar TUDO
         </button>
