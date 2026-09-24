@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
-import { encryptBackup, decryptBackup } from "../lib/backup";
-import { coletarBackup, restaurarBackup, type BackupPayload } from "../lib/backup-io";
+import { encryptBackup } from "../lib/backup";
+import { coletarBackup } from "../lib/backup-io";
+import { exportarArquivo } from "../lib/exportar-arquivo";
+import { RestaurarBackup } from "../components/RestaurarBackup";
 import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
 import { isNativo } from "../lib/plataforma";
@@ -75,36 +77,11 @@ export function Settings() {
     try {
       const payload = await coletarBackup();
       const encrypted = await encryptBackup(payload, password);
-      const blob = new Blob([encrypted], { type: "application/octet-stream" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `trein-final-${hojeISO()}.trein-backup`;
-      link.click();
-      URL.revokeObjectURL(url);
+      // No APK o download do navegador não existe: vai pelo compartilhar do Android.
+      await exportarArquivo(`trein-final-${hojeISO()}.trein-backup`, encrypted);
       setInfo("Backup baixado.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha no backup.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function importBackup(file: File) {
-    setBusy(true);
-    setError(null);
-    const password = prompt("Senha do backup:");
-    if (!password) {
-      setBusy(false);
-      return;
-    }
-    try {
-      const encrypted = await file.text();
-      const payload = await decryptBackup<BackupPayload>(encrypted, password);
-      await restaurarBackup(payload);
-      setInfo("Backup importado.");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Falha na importação (senha errada ou arquivo corrompido?).");
     } finally {
       setBusy(false);
     }
@@ -268,10 +245,7 @@ export function Settings() {
         <button onClick={() => void exportBackup()} disabled={busy} className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm disabled:opacity-50">
           {busy ? "Processando..." : "Exportar backup criptografado"}
         </button>
-        <label className="block w-full bg-bg-deep border border-bg-border text-nude-warm text-center rounded-md py-2 text-sm cursor-pointer">
-          Importar backup
-          <input type="file" accept=".trein-backup" onChange={(e) => e.target.files?.[0] && void importBackup(e.target.files[0])} className="hidden" disabled={busy} />
-        </label>
+        <RestaurarBackup />
       </div>
 
       <div className="card space-y-2">
