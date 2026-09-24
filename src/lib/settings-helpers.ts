@@ -55,6 +55,11 @@ export interface Settings {
   vitalidadeDesde: string;
   /** Dia da primeira marcação da creatina ("" = ainda não começou). */
   creatinaInicio: string;
+  /** Lembretes do APK (2026-09-24). */
+  alongamentoManhaTime: string;
+  alongamentoNoiteTime: string;
+  dormirReminderTime: string;
+  vitaminaDTime: string;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -124,6 +129,11 @@ export const DEFAULTS: Settings = {
   // ninguém acompanhou.
   vitalidadeDesde: "",
   creatinaInicio: "",
+  alongamentoManhaTime: "06:00",
+  alongamentoNoiteTime: "21:30",
+  // 22h e não 22h30: às 22h30 o silêncio já começou e engoliria o lembrete.
+  dormirReminderTime: "22:00",
+  vitaminaDTime: "12:00",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
