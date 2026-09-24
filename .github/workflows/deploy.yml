@@ -21,10 +21,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
+      # O app (APK) compara latest.version com a versão embutida no próprio
+      # código: os dois lados usam o mesmo sha curto.
+      - run: echo "VITE_BUNDLE_VERSION=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
       - run: npm run build
+      - run: npm run build:app
+      - name: Pacote de atualização do APK
+        run: |
+          NATIVA=$(grep -oP '^export const NATIVE_VERSION = \K\d+' src/lib/versao-nativa.ts)
+          mkdir -p dist/android
+          (cd dist-app && zip -qr "../dist/android/bundle-$VITE_BUNDLE_VERSION.zip" .)
+          SOMA=$(sha256sum "dist/android/bundle-$VITE_BUNDLE_VERSION.zip" | cut -d' ' -f1)
+          URL="https://arthur-sac.github.io/Treino-TF/android/bundle-$VITE_BUNDLE_VERSION.zip"
+          printf '{"version":"%s","url":"%s","checksum":"%s","nativeVersion":%s}\n' "$VITE_BUNDLE_VERSION" "$URL" "$SOMA" "$NATIVA" > dist/android/latest.json
+          cat dist/android/latest.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
