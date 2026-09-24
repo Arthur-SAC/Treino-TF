@@ -79,18 +79,22 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
       add(TIPO.alongManha, dia, 0, naHora(dia, cfg.alongamentoManhaTime), "Alongamento", "5 min de manhã");
 
     if (util) {
+      // Campo apagado em Configurações grava 0: `m += 0` travava o app. Menos
+      // de 30 min também não: vira barulho e estoura a sequência do id.
+      const passoAgua = Math.max(30, cfg.hydrationIntervalMin || 60);
+      const passoPausa = Math.max(30, cfg.activeBreakIntervalMin || 90);
       const ini = cfg.activeBreakStartHour * 60;
       const fim = cfg.activeBreakEndHour * 60;
       const bateuAgua = ehHoje && estado.aguaHojeMl >= cfg.hydrationGoalMl;
       if (!bateuAgua) {
         let seq = 0;
-        for (let m = ini + cfg.hydrationIntervalMin; m < fim; m += cfg.hydrationIntervalMin) {
+        for (let m = ini + passoAgua; m < fim; m += passoAgua) {
           const corpo = ehHoje ? `${estado.aguaHojeMl} de ${cfg.hydrationGoalMl} ml` : "Um copo agora";
           add(TIPO.agua, dia, seq++, minutosNaHora(dia, m), "Água", corpo);
         }
       }
       let seq = 0;
-      for (let m = ini + cfg.activeBreakIntervalMin; m < fim; m += cfg.activeBreakIntervalMin) {
+      for (let m = ini + passoPausa; m < fim; m += passoPausa) {
         add(TIPO.pausa, dia, seq++, minutosNaHora(dia, m), "Levanta um pouco", "2 min de quadril");
       }
     }

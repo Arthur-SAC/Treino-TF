@@ -28,3 +28,15 @@ describe("o APK", () => {
     expect(CAP).toMatch(/autoUpdate:\s*false/);
   });
 });
+
+describe("o APK — revisão final", () => {
+  it("o updater não manda estatística pra servidor de terceiro (dados só no celular)", () => {
+    expect(CAP).toMatch(/statsUrl:\s*""/);
+  });
+  it("o botão de tirar foto enxerga o app de câmera (visibilidade de pacotes)", () => {
+    expect(MANIFEST).toMatch(/<queries>[\s\S]*android\.media\.action\.IMAGE_CAPTURE[\s\S]*<\/queries>/);
+  });
+  it("o Android não copia os dados do app pro Drive sozinho", () => {
+    expect(MANIFEST).toMatch(/android:allowBackup="false"/);
+  });
+});

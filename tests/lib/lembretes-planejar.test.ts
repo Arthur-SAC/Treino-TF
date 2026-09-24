@@ -159,3 +159,19 @@ describe("os padrões batem com os horários do Hoje", () => {
     expect(DEFAULTS.dormirReminderTime < DEFAULTS.quietHours.from).toBe(true);
   });
 });
+
+// Revisão final: campo de intervalo apagado em Configurações grava 0, e
+// `m += 0` travava o app a cada abertura. Intervalo minúsculo estourava o id.
+describe("planejar — intervalos inválidos", () => {
+  it("intervalo 0 não trava: vale o padrão", () => {
+    const l = planejar(QUINTA_5H, { ...cfg, hydrationIntervalMin: 0, activeBreakIntervalMin: 0 }, vazio);
+    expect(doDia(l, "2026-09-25").filter((x) => x.titulo === "Água")).toHaveLength(8);
+    expect(doDia(l, "2026-09-25").filter((x) => x.titulo === "Levanta um pouco")).toHaveLength(5);
+  });
+  it("intervalo de 5 min vira o mínimo de 30, com ids válidos e únicos", () => {
+    const l = planejar(QUINTA_5H, { ...cfg, hydrationIntervalMin: 5 }, vazio);
+    expect(doDia(l, "2026-09-25").filter((x) => x.titulo === "Água")).toHaveLength(17);
+    expect(new Set(l.map((x) => x.id)).size).toBe(l.length);
+    expect(l.every((x) => x.id < 2 ** 31)).toBe(true);
+  });
+});

@@ -6,9 +6,10 @@ import { planejar, type Lembrete } from "./planejar";
 import { carregarConfig, carregarEstado } from "./estado";
 
 export interface PluginNotificacoes {
+  checkExactNotificationSetting(): Promise<{ exact_alarm: string }>;
   getPending(): Promise<{ notifications: Array<{ id: number }> }>;
   cancel(o: { notifications: Array<{ id: number }> }): Promise<void>;
-  schedule(o: { notifications: Array<{ id: number; title: string; body: string; schedule: { at: Date; allowWhileIdle: boolean }; smallIcon?: string; extra: { rota: string } }> }): Promise<unknown>;
+  schedule(o: { notifications: Array<{ id: number; title: string; body: string; schedule: { at: Date; allowWhileIdle: boolean }; smallIcon?: string; isExactNotification?: boolean; extra: { rota: string } }> }): Promise<unknown>;
 }
 
 const nativo = LocalNotifications as unknown as PluginNotificacoes;
@@ -17,11 +18,16 @@ export async function agendar(lista: Lembrete[], plugin: PluginNotificacoes = na
   const { notifications } = await plugin.getPending();
   if (notifications.length > 0) await plugin.cancel({ notifications: notifications.map((n) => ({ id: n.id })) });
   if (lista.length === 0) return;
+  // Sem a permissão de alarme exato, schedule() com exato (o padrão do plugin)
+  // abre sozinho a tela do sistema — e cada volta pro app reagendava e abria de
+  // novo. Aqui agenda inexato; quem pede a permissão é o card do Hoje.
+  const exato = (await plugin.checkExactNotificationSetting()).exact_alarm === "granted";
   await plugin.schedule({
     notifications: lista.map((l) => ({
       id: l.id, title: l.titulo, body: l.corpo,
       schedule: { at: l.quando, allowWhileIdle: true },
       smallIcon: "ic_stat_treino",
+      isExactNotification: exato,
       extra: { rota: l.rota },
     })),
   });

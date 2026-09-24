@@ -16,6 +16,8 @@ export interface DepsAtualizacao {
   buscarManifesto(): Promise<Pacote>;
   baixar(p: Pacote): Promise<{ id: string }>;
   agendarProxima(id: string): Promise<unknown>;
+  /** O pacote agendado só entra quando o app é fechado de verdade. */
+  adiarParaFechar(): Promise<unknown>;
   versaoNativaInstalada(): Promise<number>;
 }
 
@@ -27,6 +29,9 @@ export async function verificarAtualizacao(deps: DepsAtualizacao, versaoAtual: s
     if (p.version === versaoAtual) return { apkNovo: false };
     const { id } = await deps.baixar(p);
     await deps.agendarProxima(id);
+    // Sem isso o capgo aplica em qualquer ida pro segundo plano — abrir o
+    // seletor de arquivo ou a câmera recarregava o app no meio do que ela fazia.
+    await deps.adiarParaFechar();
   } catch {
     // Sem internet ou pacote ruim: o app segue na versão que já roda.
   }
@@ -45,6 +50,7 @@ export function iniciarAtualizacao(): void {
     buscarManifesto: async () => (await fetch(`${URL_MANIFESTO}?t=${Date.now()}`, { cache: "no-store" })).json(),
     baixar: (p) => CapacitorUpdater.download({ url: p.url, version: p.version, checksum: p.checksum }),
     agendarProxima: (id) => CapacitorUpdater.next({ id }),
+    adiarParaFechar: () => CapacitorUpdater.setMultiDelay({ delayConditions: [{ kind: "kill" }] }),
     versaoNativaInstalada: async () => Number((await CapApp.getInfo()).build) || NATIVE_VERSION,
   };
   void verificarAtualizacao(deps, BUNDLE_VERSION).then((r) => {

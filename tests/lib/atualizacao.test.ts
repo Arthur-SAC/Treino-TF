@@ -7,6 +7,7 @@ const deps = (over: Partial<DepsAtualizacao> = {}) => {
     buscarManifesto: vi.fn(async () => ({ version: "abc1234", url: "https://x/b.zip", checksum: "f00", nativeVersion: 1 })),
     baixar: vi.fn(async () => ({ id: "b1" })),
     agendarProxima: vi.fn(async () => ({})),
+    adiarParaFechar: vi.fn(async () => ({})),
     versaoNativaInstalada: vi.fn(async () => 1),
   };
   return { ...d, ...over } as typeof d;
@@ -43,5 +44,22 @@ describe("verificarAtualizacao", () => {
     const d = deps({ baixar: vi.fn(async () => { throw new Error("checksum"); }) });
     await expect(verificarAtualizacao(d, "old0000")).resolves.toEqual({ apkNovo: false });
     expect(d.agendarProxima).not.toHaveBeenCalled();
+  });
+});
+
+// Revisão final: o capgo aplica o next() em qualquer ida pro segundo plano —
+// abrir o seletor de arquivo (Restaurar backup) ou a câmera recarregava o app
+// no meio. O pacote novo espera o app ser fechado.
+describe("verificarAtualizacao — quando o pacote entra", () => {
+  it("depois de agendar, adia pra quando o app for fechado", async () => {
+    const d = deps();
+    await verificarAtualizacao(d, "old0000");
+    expect(d.adiarParaFechar).toHaveBeenCalled();
+    expect(d.agendarProxima.mock.invocationCallOrder[0]).toBeLessThan(d.adiarParaFechar.mock.invocationCallOrder[0]);
+  });
+  it("sem pacote novo, não mexe no atraso", async () => {
+    const d = deps();
+    await verificarAtualizacao(d, "abc1234");
+    expect(d.adiarParaFechar).not.toHaveBeenCalled();
   });
 });
