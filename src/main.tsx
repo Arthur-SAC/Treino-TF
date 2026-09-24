@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
+import { isNativo } from "./lib/plataforma";
+import { iniciarAtualizacao } from "./lib/atualizacao";
 import { Today } from "./pages/Today";
 import { RoutineTimes } from "./pages/RoutineTimes";
 import { WorkoutHome } from "./pages/workout/WorkoutHome";
@@ -152,6 +154,10 @@ const router = createBrowserRouter(
   ],
   { basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" },
 );
+
+// Antes dos seeds: o updater desfaz o pacote novo se o app não avisar que
+// abriu em ~10 s, e um seed pesado não pode contar como "abriu quebrado".
+if (isNativo()) iniciarAtualizacao();
 
 Promise.all([seedDatabase(), seedBeauty(), seedStyle(), seedPath(), seedMovement(), seedMakeup(), seedVoice()]).then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
