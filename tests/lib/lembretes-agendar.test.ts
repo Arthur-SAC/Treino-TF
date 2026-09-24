@@ -1,0 +1,35 @@
+import { describe, it, expect, vi } from "vitest";
+import { agendar, type PluginNotificacoes } from "../../src/lib/lembretes/agendar";
+
+const fake = (pendentes: number[]) => {
+  const p = {
+    getPending: vi.fn(async () => ({ notifications: pendentes.map((id) => ({ id })) })),
+    cancel: vi.fn(async (_o: { notifications: Array<{ id: number }> }) => {}),
+    schedule: vi.fn(async (_o: { notifications: unknown[] }) => ({})),
+  };
+  return p as typeof p & PluginNotificacoes;
+};
+
+describe("agendar", () => {
+  it("cancela os pendentes antes de agendar a lista nova", async () => {
+    const p = fake([1, 2]);
+    const quando = new Date(2026, 8, 25, 6, 0);
+    await agendar([{ id: 125092500, quando, titulo: "Alongamento", corpo: "5 min de manhã", rota: "/" }], p);
+    expect(p.cancel).toHaveBeenCalledWith({ notifications: [{ id: 1 }, { id: 2 }] });
+    expect(p.cancel.mock.invocationCallOrder[0]).toBeLessThan(p.schedule.mock.invocationCallOrder[0]);
+    expect(p.schedule.mock.calls[0][0].notifications[0]).toMatchObject({
+      id: 125092500, title: "Alongamento", body: "5 min de manhã", schedule: { at: quando, allowWhileIdle: true }, extra: { rota: "/" },
+    });
+  });
+  it("lista vazia (notificações desligadas) só cancela", async () => {
+    const p = fake([7]);
+    await agendar([], p);
+    expect(p.cancel).toHaveBeenCalled();
+    expect(p.schedule).not.toHaveBeenCalled();
+  });
+  it("sem pendentes não chama cancel", async () => {
+    const p = fake([]);
+    await agendar([], p);
+    expect(p.cancel).not.toHaveBeenCalled();
+  });
+});
