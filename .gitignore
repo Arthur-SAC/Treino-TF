@@ -24,3 +24,9 @@ objetivo/
 *.jpg
 *.jpeg
 *.png
+
+# APK (2026-09-24)
+dist-app/
+*.jks
+*.keystore
+android/app/release/
