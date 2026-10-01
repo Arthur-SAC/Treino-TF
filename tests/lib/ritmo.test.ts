@@ -91,6 +91,59 @@ describe("veredito do ritmo", () => {
   });
 });
 
+describe("correções da revisão", () => {
+  it("abaixo com rotina cheia não culpa o treino e lista as três alavancas", () => {
+    const v = avaliarRitmo(PR, [partida, em(95.6, 98.6)], BOA, "caminhada");
+    expect(v.estado).toBe("abaixo");
+    expect(textos(v)).not.toMatch(/Treino: 10 em 14/);
+    expect(textos(v)).toMatch(/cumpriu/);
+    expect(textos(v)).toMatch(/treino 10 de 10 · cardio 14 de 14 · sono 14 de 14 noites no horário/);
+  });
+
+  it("pausada mostra cardio pausado na linha das alavancas", () => {
+    const v = avaliarRitmo(projetar(P, 173, "pausada")!, [partida, em(97, 99.5)], BOA, "pausada");
+    expect(textos(v)).toMatch(/cardio pausado/);
+  });
+
+  it("cintura que subiu diz subiu, sem sinal negativo", () => {
+    const v = avaliarRitmo(PR, [partida, em(97, 99.5)], BOA, "caminhada");
+    expect(textos(v)).toMatch(/subiu/);
+    expect(textos(v)).not.toMatch(/-\d/);
+  });
+
+  it("cintura parada diz que não desceu", () => {
+    const v = avaliarRitmo(PR, [partida, em(95.6, 99)], BOA, "caminhada");
+    expect(textos(v)).toMatch(/não desceu/);
+  });
+
+  it("na pausada, perder mais que a projeção lenta não é rápido demais", () => {
+    const v = avaliarRitmo(projetar(P, 173, "pausada")!, [partida, em(93.5, 96)], BOA, "pausada");
+    expect(v.estado).not.toBe("rapido");
+  });
+
+  it("rápido só pelo 1% do peso diz isso, sem citar teto do plano", () => {
+    const largo = { ...PR, ritmoKgSemana: [0.9, 1.2] as [number, number] };
+    const v = avaliarRitmo(largo, [partida, em(91.6, 95)], BOA, "caminhada");
+    expect(textos(v)).toMatch(/mais de 1% do seu peso/);
+    expect(textos(v)).not.toMatch(/teto de/);
+  });
+
+  it("balança que subiu com a cintura no ritmo não diz que quase parou", () => {
+    const v = avaliarRitmo(PR, [partida, em(96.4, 97)], BOA, "caminhada");
+    expect(v.estado).toBe("no-ritmo");
+    expect(textos(v)).toMatch(/subiu um pouco/);
+    expect(textos(v)).not.toMatch(/quase parou/);
+  });
+
+  it("já no peso da fase 1 com a cintura atrasada: sem mês, diz que falta a cintura", () => {
+    const pesoFim = PR.pesoAlvoFase1[0];
+    const v = avaliarRitmo(PR, [partida, em(pesoFim, 99, 2, "2027-09-25")], BOA, "caminhada");
+    expect(v.estado).toBe("abaixo");
+    expect(textos(v)).toMatch(/Você já está no peso da fase 1; falta a cintura chegar lá/);
+    expect(textos(v)).not.toMatch(/termina em/);
+  });
+});
+
 describe("alavanca mais fraca", () => {
   it("aponta a menor fração; empate fica com treino", () => {
     expect(alavancaMaisFraca({ dias: 14, treinos: 10, diasCardio: 5, noitesNoAlvo: 12 }, "caminhada").alavanca).toBe("cardio");
@@ -107,7 +160,7 @@ describe("alavanca mais fraca", () => {
 
 describe("nunca sugere cortar comida (decisão dela, 2026-10-01)", () => {
   // Proíbe a AFIRMAÇÃO. Se a palavra aparecer, tem que estar negando (lição 5.2).
-  const CORTE = /\b(cort|reduz|diminu|tir)\w*[^.]{0,40}(kcal|calori|comida)|comer menos|comendo menos/i;
+  const CORTE = /\b(cort|reduz|diminu|tir)\w*(?:[^.]|(?<=\d)\.(?=\d)){0,40}(kcal|calori|comida)|comer menos|comendo menos/i;
   const NEGA = /\b(não|nunca|nem)\b/i;
   const cenarios: Veredito[] = [];
   const fracas: Adesao[] = [
@@ -135,5 +188,6 @@ describe("nunca sugere cortar comida (decisão dela, 2026-10-01)", () => {
   it("a rede morde: uma frase de corte sem negação seria pega", () => {
     expect(CORTE.test("Corte 200 kcal do jantar.")).toBe(true);
     expect(NEGA.test("Corte 200 kcal do jantar.")).toBe(false);
+    expect(CORTE.test("Reduza para 2.000 kcal por dia.")).toBe(true);
   });
 });
