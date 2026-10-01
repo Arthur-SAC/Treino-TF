@@ -1,0 +1,70 @@
+name: APK Android
+
+# Gera o APK assinado. Só precisa rodar quando muda a parte nativa: o resto do
+# app chega no celular pelo pacote de atualização que o deploy.yml publica.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feat/apk-android]
+    paths:
+      - "android/**"
+      - "capacitor.config.ts"
+      - "src/lib/versao-nativa.ts"
+      - "package.json"
+      - ".github/workflows/android.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      # O padrão da action instala o pacote "tools", que não existe mais no
+      # cmdline-tools 16 do runner — e o sdkmanager derruba o job com isso.
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - run: npm ci
+      - run: echo "VITE_BUNDLE_VERSION=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+      - run: npm run build:app
+      - run: npx cap sync android
+      - name: Chave de assinatura
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/treino.keystore"
+      - name: Gerar APK assinado
+        working-directory: android
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/treino.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          NATIVA=$(grep -oP '^export const NATIVE_VERSION = \K\d+' ../src/lib/versao-nativa.ts)
+          echo "NATIVA=$NATIVA" >> "$GITHUB_ENV"
+          chmod +x gradlew
+          ./gradlew assembleRelease -PnativeVersion="$NATIVA"
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Treino.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Treino-apk
+          path: ${{ runner.temp }}/Treino.apk
+      - name: Release (só da main)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="apk-v$NATIVA"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$RUNNER_TEMP/Treino.apk" --clobber
+          else
+            gh release create "$TAG" "$RUNNER_TEMP/Treino.apk" --title "Treino (app) v$NATIVA" --notes "Instale por cima: os dados ficam."
+          fi

@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
-import { encryptBackup, decryptBackup } from "../lib/backup";
-import { coletarBackup, restaurarBackup, type BackupPayload } from "../lib/backup-io";
+import { encryptBackup } from "../lib/backup";
+import { coletarBackup } from "../lib/backup-io";
+import { exportarArquivo } from "../lib/exportar-arquivo";
+import { RestaurarBackup } from "../components/RestaurarBackup";
 import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
+import { isNativo } from "../lib/plataforma";
+import { ativarLembretes } from "../lib/lembretes/permissao";
 
 export function Settings() {
   const notif = useSetting("notificationsEnabled");
@@ -14,6 +18,10 @@ export function Settings() {
   const evening = useSetting("eveningReminderTime");
   const workout = useSetting("workoutReminderTime");
   const presenca = useSetting("presencaReminderTime");
+  const alongManha = useSetting("alongamentoManhaTime");
+  const alongNoite = useSetting("alongamentoNoiteTime");
+  const dormir = useSetting("dormirReminderTime");
+  const vitD = useSetting("vitaminaDTime");
   const quietHours = useSetting("quietHours");
   const breakInterval = useSetting("activeBreakIntervalMin");
   const hydrInterval = useSetting("hydrationIntervalMin");
@@ -30,6 +38,13 @@ export function Settings() {
   const [error, setError] = useState<string | null>(null);
 
   async function toggleNotifs() {
+    if (!notif && isNativo()) {
+      // No APK a permissão é do Android, não do navegador.
+      if ((await ativarLembretes()) === "sem-notificacao") {
+        setError("O Android bloqueou as notificações do Treino. Ative em Configurações > Apps > Treino > Notificações.");
+      }
+      return;
+    }
     if (!notif) {
       const granted = await requestNotificationPermission();
       if (!granted) {
@@ -62,36 +77,11 @@ export function Settings() {
     try {
       const payload = await coletarBackup();
       const encrypted = await encryptBackup(payload, password);
-      const blob = new Blob([encrypted], { type: "application/octet-stream" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `trein-final-${hojeISO()}.trein-backup`;
-      link.click();
-      URL.revokeObjectURL(url);
+      // No APK o download do navegador não existe: vai pelo compartilhar do Android.
+      await exportarArquivo(`trein-final-${hojeISO()}.trein-backup`, encrypted);
       setInfo("Backup baixado.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha no backup.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function importBackup(file: File) {
-    setBusy(true);
-    setError(null);
-    const password = prompt("Senha do backup:");
-    if (!password) {
-      setBusy(false);
-      return;
-    }
-    try {
-      const encrypted = await file.text();
-      const payload = await decryptBackup<BackupPayload>(encrypted, password);
-      await restaurarBackup(payload);
-      setInfo("Backup importado.");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Falha na importação (senha errada ou arquivo corrompido?).");
     } finally {
       setBusy(false);
     }
@@ -133,6 +123,26 @@ export function Settings() {
         <div>
           <label className="block text-muted text-xs uppercase tracking-wider mb-1">Noite</label>
           <input type="time" value={evening} onChange={(e) => void setSetting("eveningReminderTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Alongamento manhã</label>
+          <input type="time" value={alongManha} onChange={(e) => void setSetting("alongamentoManhaTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Alongamento noite</label>
+          <input type="time" value={alongNoite} onChange={(e) => void setSetting("alongamentoNoiteTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Hora de desligar</label>
+          <input type="time" value={dormir} onChange={(e) => void setSetting("dormirReminderTime", e.target.value)}
+                 className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
+        </div>
+        <div>
+          <label className="block text-muted text-xs uppercase tracking-wider mb-1">Vitamina D (domingo)</label>
+          <input type="time" value={vitD} onChange={(e) => void setSetting("vitaminaDTime", e.target.value)}
                  className="w-full bg-bg-deep border border-bg-border rounded-md px-3 py-2 text-nude-warm" />
         </div>
         <div>
@@ -235,15 +245,16 @@ export function Settings() {
         <button onClick={() => void exportBackup()} disabled={busy} className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm disabled:opacity-50">
           {busy ? "Processando..." : "Exportar backup criptografado"}
         </button>
-        <label className="block w-full bg-bg-deep border border-bg-border text-nude-warm text-center rounded-md py-2 text-sm cursor-pointer">
-          Importar backup
-          <input type="file" accept=".trein-backup" onChange={(e) => e.target.files?.[0] && void importBackup(e.target.files[0])} className="hidden" disabled={busy} />
-        </label>
+        <RestaurarBackup />
       </div>
 
       <div className="card space-y-2">
         <h2 className="text-nude-warm font-medium">Sistema</h2>
-        <p className="text-muted text-xs">No Android, adicione o app na lista "Não otimizar bateria" pra notificações chegarem em tempo.</p>
+        {isNativo() ? (
+          <p className="text-muted text-xs">No Poco/Xiaomi: Configurações → Apps → Treino → Economia de bateria: "Sem restrições", e ative "Início automático". Sem isso a HyperOS pode segurar os lembretes.</p>
+        ) : (
+          <p className="text-muted text-xs">No Android, adicione o app na lista "Não otimizar bateria" pra notificações chegarem em tempo.</p>
+        )}
         <button onClick={() => void wipeAll()} className="w-full bg-red-900/40 border border-red-900 text-red-200 rounded-md py-2 text-sm">
           Apagar TUDO
         </button>

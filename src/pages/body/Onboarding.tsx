@@ -5,6 +5,7 @@ import { MeasurementForm } from "../../components/MeasurementForm";
 import { compressImage } from "../../lib/image-compress";
 import { hojeISO } from "../../lib/today-date";
 import { MEDIDAS_PARTIDA } from "../../lib/objetivo";
+import { RestaurarBackup } from "../../components/RestaurarBackup";
 
 // Derivado da fonte única. Antebraço e panturrilha não existem em
 // MEDIDAS_PARTIDA — são campos que só este formulário pede, então continuam
@@ -68,6 +69,13 @@ export function Onboarding() {
     <div className="p-4 pb-24 max-w-md mx-auto">
       <p className="text-muted text-xs uppercase tracking-wider mb-2">Passo {step} de 4</p>
       <h1 className="font-serif text-2xl text-nude mb-4">Bem-vinda ao Trein-Final</h1>
+
+      {step === 1 && (
+        <div className="card mb-4">
+          <p className="text-muted text-sm mb-2">Já usava o app no navegador? Restaure o backup e continue de onde parou.</p>
+          <RestaurarBackup rotulo="Veio do app do Chrome? Restaurar backup" onPronto={() => navigate("/", { replace: true })} />
+        </div>
+      )}
 
       {step === 1 && (
         <div className="card">

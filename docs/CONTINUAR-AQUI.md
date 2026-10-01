@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-09-23
+**Última atualização:** 2026-09-24
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -21,6 +21,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ no ar (`1a40bc6`) |
 | 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ no ar (`f90f351`), 985 testes |
 | Auditoria | achados de 2026-09-23 (seção 9) | ✅ tudo menos a fase 2 — plano `docs/superpowers/plans/2026-09-23-auditoria.md` |
+| APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | plano `docs/superpowers/plans/2026-09-24-apk-android.md`; passo a passo dela em `docs/APK.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -101,6 +102,15 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 - Faixas de resultado sempre **duplas** (provável × execução excelente).
 - **Nenhuma sequência propõe strap-on** — a noiva recusou; repropor é não escutar.
 - `npm run test` verde e `npm run build` limpo são condição de commit.
+- **APK (desde 2026-09-24):** mudança NATIVA (plugin novo, permissão nova) sobe
+  `NATIVE_VERSION` em `src/lib/versao-nativa.ts` — senão o pacote novo chega num APK que
+  não tem o plugin. Todo o resto chega sozinho pelo pacote que o `deploy.yml` publica.
+- **Lembrete novo** entra em `src/lib/lembretes/planejar.ts`, com teste; o texto aparece na
+  tela de bloqueio e passa pelo filtro de discrição.
+- **Tabela nova no `db`** entra no backup (`backup-io.ts`) ou em `TABELAS_SO_SEED` — o teste
+  `backup-cobre-tudo` falha se ficar de fora.
+- **A chave de assinatura do APK** mora em `Documentos\treino-chave-apk` no PC dela e nos
+  secrets do GitHub. Nunca no repositório.
 
 ---
 

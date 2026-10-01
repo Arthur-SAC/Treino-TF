@@ -60,7 +60,17 @@ export interface BackupPayload {
   products?: unknown[];
   mealPlans?: unknown[];
   hairRemovalSessions?: unknown[];
+  // Desde 2026-09-24 (migração pro APK): tabelas semeadas que a interface
+  // edita — links de vídeo colados, rotinas de skincare e maquiagem.
+  exercises?: unknown[];
+  skincareRoutines?: unknown[];
+  danceSequences?: unknown[];
+  makeupRoutines?: unknown[];
 }
+
+/** Tabelas que só o seed escreve: nenhuma tela grava nelas, então o seed do
+ *  aparelho novo as recria iguais. O teste backup-cobre-tudo confere isso. */
+export const TABELAS_SO_SEED: readonly string[] = ["workoutTemplates", "voiceExercises"];
 
 export async function coletarBackup(): Promise<BackupPayload> {
   return {
@@ -85,6 +95,10 @@ export async function coletarBackup(): Promise<BackupPayload> {
     products: await db.products.toArray(),
     mealPlans: await db.mealPlans.toArray(),
     hairRemovalSessions: await db.hairRemovalSessions.toArray(),
+    exercises: await db.exercises.toArray(),
+    skincareRoutines: await db.skincareRoutines.toArray(),
+    danceSequences: await db.danceSequences.toArray(),
+    makeupRoutines: await db.makeupRoutines.toArray(),
   };
 }
 
@@ -101,6 +115,8 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     const semeadas = [
       [p.milestones, db.milestones], [p.products, db.products], [p.mealPlans, db.mealPlans],
       [p.stylePalette, db.stylePalette], [p.outfits, db.outfits], [p.garments, db.garments],
+      [p.skincareRoutines, db.skincareRoutines], [p.makeupRoutines, db.makeupRoutines],
+      [p.danceSequences, db.danceSequences],
     ] as const;
     for (const [dados, tabela] of semeadas) {
       if (dados) await tabela.clear();
@@ -126,5 +142,11 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     await db.products.bulkPut((p.products ?? []) as never);
     await db.mealPlans.bulkPut((p.mealPlans ?? []) as never);
     await db.hairRemovalSessions.bulkPut((p.hairRemovalSessions ?? []) as never);
+    // exercises fica fora de `semeadas`: o id é texto e igual ao do seed, então
+    // o put sobrescreve sem duplicar, e exercício novo de um seed mais novo fica.
+    await db.exercises.bulkPut((p.exercises ?? []) as never);
+    await db.skincareRoutines.bulkPut((p.skincareRoutines ?? []) as never);
+    await db.danceSequences.bulkPut((p.danceSequences ?? []) as never);
+    await db.makeupRoutines.bulkPut((p.makeupRoutines ?? []) as never);
   });
 }

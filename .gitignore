@@ -24,3 +24,12 @@ objetivo/
 *.jpg
 *.jpeg
 *.png
+# Exceção: ícone e tela de abertura do APK (gerados do ícone do PWA). Sem eles
+# o CI não acha @drawable/splash e o build do APK quebra.
+!android/app/src/main/res/**/*.png
+
+# APK (2026-09-24)
+dist-app/
+*.jks
+*.keystore
+android/app/release/
