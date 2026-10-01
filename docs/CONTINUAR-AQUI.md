@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-09-24
+**Última atualização:** 2026-10-01
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | 1 | treino da fase 1 reescrito, 9 exercícios, cardápio 2.200, creatina, caminhada fds | ✅ no ar (`1a40bc6`) |
 | 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ no ar (`f90f351`), 985 testes |
 | Auditoria | achados de 2026-09-23 (seção 9) | ✅ tudo menos a fase 2 — plano `docs/superpowers/plans/2026-09-23-auditoria.md` |
-| APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | plano `docs/superpowers/plans/2026-09-24-apk-android.md`; passo a passo dela em `docs/APK.md` |
+| APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | ✅ na main (`c0b44a4`, 2026-10-01), release `apk-v1`; **falta ela migrar no celular** (`docs/APK.md`) e confirmar câmera e lembrete com o app fechado no Poco |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
