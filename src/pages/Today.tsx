@@ -17,7 +17,7 @@ import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
-import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
+import { buildDayRoutine, metaCaminhadaMin, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
 import { resolveRoutineTime, resolverAlvoSono, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import {
@@ -126,6 +126,7 @@ export function Today() {
   const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
   const walkGoalMin = useSetting("walkGoalMin");
+  const modoCaminhada = useSetting("modoCaminhada");
 
   // Alvo de micro-pausas derivado da mesma configuração que dispara os
   // lembretes — 7h→16h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
@@ -176,7 +177,7 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas);
+  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada);
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
@@ -339,7 +340,7 @@ export function Today() {
     // Todo item que soma movimento (cães, caminhadas) abre com o total do dia
     // contra a meta — uma meta que não aparece na tela não existe.
     if (item.control === "walk") {
-      return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
+      return [`${dailyLog?.walkMin ?? 0} / ${metaCaminhadaMin(walkGoalMin, modoCaminhada)} min`, item.subtitle].filter(Boolean).join(" · ");
     }
     if (item.id === CREATINA_ITEM_ID) {
       return subtituloCreatina(item.subtitle ?? "", creatinaInicio || null, todayISO);
