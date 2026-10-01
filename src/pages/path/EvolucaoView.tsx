@@ -5,7 +5,14 @@ import { PathTabs } from "../../components/PathTabs";
 import { StreakCard } from "../../components/StreakCard";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { daysInLast, currentStreak } from "../../lib/evolution";
-import { hojeISO } from "../../lib/today-date";
+import { hojeISO, diaDoAno } from "../../lib/today-date";
+import { usePartida } from "../../hooks/usePartida";
+import { useAdesao } from "../../hooks/useAdesao";
+import { useSetting } from "../../hooks/useSetting";
+import { avaliarRitmo } from "../../lib/ritmo";
+import { RitmoCard } from "../../components/RitmoCard";
+import { buildDayRoutine } from "../../lib/today-routine";
+import { resolverAlvoSono } from "../../lib/routine-times";
 
 const WHR_LABEL: Record<string, string> = {
   "ampulheta-forte": "ampulheta forte",
@@ -23,6 +30,14 @@ export function EvolucaoView() {
   const milestones = useLiveQuery(() => db.milestones.toArray(), []);
 
   const t = hojeISO();
+  const { projecao } = usePartida();
+  const modoCaminhada = useSetting("modoCaminhada");
+  const routineTimes = useSetting("routineTimes");
+  // Mesmo alvo de sono do Hoje e da Vitalidade — `resolverAlvoSono` é a regra única.
+  const agora = new Date();
+  const alvoSono = resolverAlvoSono(buildDayRoutine(agora.getDay(), diaDoAno(agora)).blocks, routineTimes);
+  const adesao14 = useAdesao(t, 14, alvoSono);
+  const veredito = adesao14 ? avaliarRitmo(projecao, measurements ?? [], adesao14, modoCaminhada) : null;
   const voiceDates = (voiceLogs ?? []).map((l) => l.date);
   const moveDates = (practiceLogs ?? []).map((l) => l.date);
   const skinDates = (skincareLogs ?? []).filter((l) => l.completed).map((l) => l.date);
@@ -39,6 +54,8 @@ export function EvolucaoView() {
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
       </div>
       <PathTabs />
+
+      {veredito && <div className="mb-4"><RitmoCard veredito={veredito} /></div>}
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Evolução · últimos 30 dias</h2>
       <div className="grid grid-cols-2 gap-2 mb-4">

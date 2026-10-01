@@ -33,10 +33,13 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
-import { hojeISO, diaDoAno } from "../lib/today-date";
+import { hojeISO, diaDoAno, somarDiasISO } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
+import { RitmoCard } from "../components/RitmoCard";
+import { avaliarRitmo } from "../lib/ritmo";
+import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
 import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
@@ -373,6 +376,15 @@ export function Today() {
   const datasDeTreino = useLiveQuery(async () => (await db.workoutSessions.toArray()).map((x) => x.date), []);
   const treinosSemana = treinosNaSemana(datasDeTreino ?? [], todayISO);
   const ultimaMedida = measurementsAsc?.at(-1);
+  // 14 dias de adesão pro treinador: a mesma janela do lembrete de medir.
+  const adesao14 = useAdesao(todayISO, 14, alvoSono);
+  const veredito = adesao14 ? avaliarRitmo(projecao, measurementsAsc ?? [], adesao14, modoCaminhada) : null;
+  // O card aparece por 14 dias depois de cada medida — é quando o número é
+  // novo — e sempre enquanto ainda é cedo pra comparar.
+  const mostrarRitmo =
+    !!veredito &&
+    (veredito.estado === "cedo" ||
+      (veredito.estado !== "sem-partida" && !!ultimaMedida && todayISO <= somarDiasISO(ultimaMedida.date, 14)));
   const variacaoSemana =
     projecao && ultimaMedida && ultimaMedida.date > projecao.partida.data
       ? variacaoDesdePartida(projecao.partida, ultimaMedida)
@@ -393,6 +405,7 @@ export function Today() {
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
+      {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
       <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
