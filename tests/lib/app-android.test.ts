@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { spawnSync } from "node:child_process";
 
 const raw = (glob: Record<string, unknown>) => Object.values(glob)[0] as string;
 const MANIFEST = raw(import.meta.glob("../../android/app/src/main/AndroidManifest.xml", { query: "?raw", import: "default", eager: true }));
@@ -38,5 +39,13 @@ describe("o APK — revisão final", () => {
   });
   it("o Android não copia os dados do app pro Drive sozinho", () => {
     expect(MANIFEST).toMatch(/android:allowBackup="false"/);
+  });
+  it("ícone e tela de abertura vão pro repositório — o *.png das fotos não pode engolir", () => {
+    // O CI compila do que está no git. Ignorado aqui, o recurso existe na
+    // máquina dela e falta no build: "resource drawable/splash not found".
+    const pngs = ["drawable/splash.png", "drawable-port-xxhdpi/splash.png", "mipmap-xxxhdpi/ic_launcher.png", "mipmap-hdpi/ic_launcher_foreground.png"]
+      .map((f) => `android/app/src/main/res/${f}`);
+    const r = spawnSync("git", ["check-ignore", ...pngs], { encoding: "utf8" });
+    expect(r.stdout.trim()).toBe("");
   });
 });
