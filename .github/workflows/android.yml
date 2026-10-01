@@ -29,7 +29,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      # O padrão da action instala o pacote "tools", que não existe mais no
+      # cmdline-tools 16 do runner — e o sdkmanager derruba o job com isso.
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
       - run: npm ci
       - run: echo "VITE_BUNDLE_VERSION=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
       - run: npm run build:app
