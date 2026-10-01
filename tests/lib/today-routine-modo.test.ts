@@ -28,6 +28,16 @@ describe("rotina pelo modo das caminhadas", () => {
     }
   });
 
+  it("pausada não cita a caminhada das 16h em nenhum item, e a esteira a troca", () => {
+    for (const dow of [0, 1, 2, 6]) {
+      for (const i of itens(dow, "pausada")) expect(i.subtitle ?? "").not.toMatch(/caminhada das 16h|5 km da manhã/);
+      for (const i of itens(dow, "esteira")) expect(i.subtitle ?? "").not.toMatch(/caminhada das 16h/);
+    }
+    expect(itens(1, "pausada").find((i) => i.id === "treino")!.subtitle).toMatch(/caminhada está pausada/);
+    expect(itens(1, "pausada").find((i) => i.id === "caes")!.subtitle).toMatch(/único passeio do dia/);
+    expect(itens(1, "esteira").find((i) => i.id === "caes")!.subtitle).toMatch(/em cima da esteira/);
+  });
+
   it("sem modo, a rotina é a de antes", () => {
     expect(itens(1)).toEqual(itens(1, "caminhada"));
   });

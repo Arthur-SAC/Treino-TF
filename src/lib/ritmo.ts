@@ -27,6 +27,10 @@ const TOLERANCIA_CINTURA = 0.75;
 const FATOR_RAPIDO = 1.3;
 const TETO_FRACAO_PESO_SEMANA = 0.01;
 
+/** Passando de 3 anos, a "data" sai de um ritmo minúsculo e vira número
+ *  absurdo (décadas); melhor dizer que não é data do que imprimir um mês de 2050. */
+const SEMANAS_MAX_PRAZO = 156;
+
 const CINTURA_FIM_FASE1 = FASES.find((f) => f.id === "fase-1")!.cinturaCm;
 
 export interface Adesao {
@@ -41,7 +45,7 @@ export type Alavanca = "treino" | "cardio" | "sono";
 
 export type Veredito =
   | { estado: "sem-partida" }
-  | { estado: "cedo"; primeiraComparacao: string }
+  | { estado: "cedo"; primeiraComparacao: string; jaPode?: true }
   | {
       estado: "rapido" | "no-ritmo" | "abaixo";
       kgSemana: number;
@@ -82,7 +86,7 @@ export function alavancaMaisFraca(a: Adesao, modo: ModoCaminhada): { alavanca: A
 
 /** A última medida com peso E cintura; no mesmo dia, a de maior id (a correção
  *  que ela digitou por último). */
-function ultimaValida(medidas: readonly Measurement[], desde: string): Measurement | null {
+export function ultimaMedidaValida(medidas: readonly Measurement[], desde = ""): Measurement | null {
   const ok = medidas
     .filter((m) => m.date >= desde && !!m.weightKg && !!m.waistCm)
     .sort((a, b) => (a.date === b.date ? (a.id ?? 0) - (b.id ?? 0) : a.date < b.date ? -1 : 1));
@@ -98,12 +102,20 @@ export function avaliarRitmo(
   medidas: readonly Measurement[],
   adesao: Adesao,
   modo: ModoCaminhada,
+  /** Hoje, em ISO — entra como argumento pra o módulo continuar puro. */
+  hoje?: string,
 ): Veredito {
   if (!projecao) return { estado: "sem-partida" };
   const p = projecao.partida;
   const primeiraComparacao = somarDiasISO(p.data, DIAS_PARA_COMPARAR);
-  const u = ultimaValida(medidas, primeiraComparacao);
-  if (!u) return { estado: "cedo", primeiraComparacao };
+  const u = ultimaMedidaValida(medidas, primeiraComparacao);
+  if (!u) {
+    // Sem medida válida depois da data, mas a data já passou: falar da primeira
+    // comparação no futuro seria falso — o que falta é ela medir.
+    return hoje && hoje >= primeiraComparacao
+      ? { estado: "cedo", primeiraComparacao, jaPode: true }
+      : { estado: "cedo", primeiraComparacao };
+  }
 
   const semanas = diasEntre(p.data, u.date) / 7;
   const kgSemana = r2((p.pesoKg - u.weightKg!) / semanas);
@@ -157,7 +169,7 @@ export function avaliarRitmo(
   const dias = Math.max(1, adesao.dias);
   const planoTreinos = Math.round((5 * dias) / 7);
   const cardioTxt = modo === "pausada" ? "cardio pausado" : `cardio ${adesao.diasCardio} de ${dias}`;
-  const tresAlavancas = `Últimas ${dias} dias: treino ${adesao.treinos} de ${planoTreinos} · ${cardioTxt} · sono ${adesao.noitesNoAlvo} de ${dias} noites no horário.`;
+  const tresAlavancas = `Últimos ${dias} dias: treino ${adesao.treinos} de ${planoTreinos} · ${cardioTxt} · sono ${adesao.noitesNoAlvo} de ${dias} noites no horário.`;
   // Só culpa uma alavanca se ela de fato ficou abaixo do plano; com tudo
   // cumprido, o erro provável está na conta de gasto, não nela.
   const causa =
@@ -173,6 +185,8 @@ export function avaliarRitmo(
   const prazo =
     restante === 0
       ? "Você já está no peso da fase 1; falta a cintura chegar lá."
+      : kgSemana > 0 && restante / kgSemana > SEMANAS_MAX_PRAZO
+      ? "Nesse ritmo a fase 1 leva mais de 3 anos — não dá pra chamar de data."
       : kgSemana > 0
       ? `Nesse ritmo, a fase 1 termina em ${mesAno(somaSemanas(u.date, restante / kgSemana))}. A projeção dizia até ${mesAno(projecao.fimFase1[1])}.`
       : "Nesse ritmo a balança não desce, e a fase 1 não tem data.";

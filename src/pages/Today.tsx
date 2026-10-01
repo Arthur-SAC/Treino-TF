@@ -40,7 +40,7 @@ import { PartidaCard } from "../components/PartidaCard";
 import { RitmoCard } from "../components/RitmoCard";
 import { RevisaoDomingoCard } from "../components/RevisaoDomingoCard";
 import { revisarSemana } from "../lib/revisao-semanal";
-import { avaliarRitmo } from "../lib/ritmo";
+import { avaliarRitmo, ultimaMedidaValida } from "../lib/ritmo";
 import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
@@ -383,13 +383,18 @@ export function Today() {
   // Domingo fecha a semana de segunda a domingo: 7 dias terminando hoje.
   const adesao7 = useAdesao(todayISO, 7, alvoSono);
   const cinturas = (measurementsAsc ?? []).filter((m) => !!m.waistCm).map((m) => m.waistCm!);
-  const veredito = adesao14 ? avaliarRitmo(projecao, measurementsAsc ?? [], adesao14, modoCaminhada) : null;
+  // Só avalia com a lista de medidas resolvida: com `?? []` o card piscava
+  // "cedo" antes de a consulta voltar.
+  const veredito = adesao14 && measurementsAsc ? avaliarRitmo(projecao, measurementsAsc, adesao14, modoCaminhada, todayISO) : null;
+  // A janela de 14 dias conta da última medida com peso E cintura — a mesma que
+  // o veredito usa; uma medida só de peso não renova o card.
+  const medidaDoRitmo = measurementsAsc ? ultimaMedidaValida(measurementsAsc) : null;
   // O card aparece por 14 dias depois de cada medida — é quando o número é
   // novo — e sempre enquanto ainda é cedo pra comparar.
   const mostrarRitmo =
     !!veredito &&
     (veredito.estado === "cedo" ||
-      (veredito.estado !== "sem-partida" && !!ultimaMedida && todayISO <= somarDiasISO(ultimaMedida.date, 14)));
+      (veredito.estado !== "sem-partida" && !!medidaDoRitmo && todayISO <= somarDiasISO(medidaDoRitmo.date, 14)));
   const variacaoSemana =
     projecao && ultimaMedida && ultimaMedida.date > projecao.partida.data
       ? variacaoDesdePartida(projecao.partida, ultimaMedida)

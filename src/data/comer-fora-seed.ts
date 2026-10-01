@@ -33,6 +33,10 @@ export function comerForaDoModo(modo: ModoCaminhada): GuideSection[] {
   const duasNoites = ritmoComNoitesFora(2, modo);
   const tresNoites = ritmoComNoitesFora(3, modo);
   const zeraAlguma = tresNoites.kgPorSemana === 0;
+  // Quantas noites fora já zeram a perda: a frase diz o número verdadeiro do
+  // modo, não "três" fixo (na pausada duas já bastam).
+  const noitesQueZeram = [umaNoite, duasNoites, tresNoites].findIndex((r) => r.kgPorSemana === 0) + 1;
+  const porExtenso = ["", "uma noite", "duas noites", "três noites"][noitesQueZeram];
   // "0 kg — 100% mais devagar" é jeito torto de dizer que a perda zerou; quando
   // o cenário zera, a linha diz isso com todas as letras.
   const linha = (rotulo: string, r: typeof semNoite, comPct: boolean) =>
@@ -52,7 +56,7 @@ export function comerForaDoModo(modo: ModoCaminhada): GuideSection[] {
       `A verba não é de graça, e chamar de "livre" seria mentira: o cardápio já ocupa as ${CONSUMO.metaKcal} kcal inteiras da meta, então o que entra por cima sai direto do déficit. O preço se paga em TEMPO, não em fracasso.`,
       `Seguindo o plano à risca, o déficit da semana é de ${deficitSemanalKcal(modo)} kcal — cerca de ${semNoite.kgPorSemana} kg por semana.`,
       ritmoDaSemana(VERBA_SEMANAL_KCAL, modo).kgPorSemana === 0
-        ? "Com a caminhada pausada, gastar a verba inteira toda semana zera a perda: ela é maior que o déficit da semana inteiro."
+        ? "Com a caminhada pausada, gastar a verba inteira toda semana zera a perda: ela é maior que o déficit inteiro da semana."
         : `Gastar a verba inteira toda semana continua sendo emagrecimento, só que ${ritmoDaSemana(VERBA_SEMANAL_KCAL, modo).perdaDeRitmoPct}% mais devagar. Isso é uma escolha legítima com preço conhecido, não uma recaída.`,
     ],
   },
@@ -66,7 +70,7 @@ export function comerForaDoModo(modo: ModoCaminhada): GuideSection[] {
       linha("Duas noites", duasNoites, true),
       linha("Três noites", tresNoites, true),
       zeraAlguma
-        ? "Com a caminhada pausada o déficit da semana é tão pequeno que três noites fora zeram a perda. A verba inteira não cabe nele: religar a caminhada (ou a esteira) é o que devolve a folga."
+        ? `Com a caminhada pausada o déficit da semana é tão pequeno que ${porExtenso} fora ${noitesQueZeram === 1 ? "zera" : "zeram"} a perda. A verba inteira não cabe nele: religar a caminhada (ou a esteira) é o que devolve a folga.`
         : "Repare no formato da conta: você continua emagrecendo em todos os cenários. O plano não quebra com uma noite fora — ele anda mais devagar, e você escolhe a velocidade.",
       "O que quebra de verdade não é a pizza de sexta: é decidir que a sexta estragou tudo e soltar o sábado, o domingo e a segunda junto. A unidade é a SEMANA, não o dia.",
     ],

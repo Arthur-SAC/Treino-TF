@@ -226,7 +226,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
  *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
-function caes(dia: TipoDeDia): RoutineItem {
+function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
   const base = {
     id: fimDeSemana ? "caes-fds" : "caes",
@@ -238,10 +238,22 @@ function caes(dia: TipoDeDia): RoutineItem {
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
   }
+  // Com a caminhada pausada não houve caminhada pra "somar em cima": o texto
+  // não pode afirmar um passeio que o modo tirou da rotina.
   if (dia === "domingo") {
-    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã" };
+    return {
+      ...base,
+      subtitle:
+        modo === "pausada"
+          ? "NEAT — eles não sabem que é domingo; com a caminhada pausada, é o único passeio do dia"
+          : "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã",
+    };
   }
-  return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
+  if (modo === "pausada") {
+    return { ...base, subtitle: "Movimento leve — com a caminhada pausada, é o único passeio do dia." };
+  }
+  const base16 = modo === "esteira" ? "esteira" : "caminhada das 16h";
+  return { ...base, subtitle: `NEAT — lento, com paradas; é o movimento fácil que soma em cima da ${base16}` };
 }
 
 /** A caminhada de 5 km do trabalho para casa, todos os dias úteis. São ~370
@@ -259,11 +271,17 @@ const CAMINHADA_TRABALHO: RoutineItem = {
   defaultTime: "16:00",
 };
 
+/** O "sem cardio no fim" só vale se houve cardio antes: na pausada não houve. */
+function subtituloTreino(modo: ModoCaminhada): string {
+  if (modo === "pausada") return "Sem cardio no fim — a caminhada está pausada; se quiser compensar, 20–30 min de esteira inclinada depois da força.";
+  return `Sem cardio no fim — ${modo === "esteira" ? "a esteira" : "a caminhada das 16h"} já cobriu`;
+}
+
 function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
   return [
     ...[noModo(CAMINHADA_TRABALHO, modo)].filter((i): i is RoutineItem => i !== null),
-    caes("semana"),
-    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "Sem cardio no fim — a caminhada das 16h já cobriu", to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
+    caes("semana", modo),
+    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
   ];
 }
 
@@ -313,13 +331,13 @@ function buildBlocks(
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", linkKey: "rebolado", defaultTime: "17:30" },
-          caes("sabado"),
+          caes("sabado", modo),
         ],
       }
     : isSunday
       ? { id: "tarde", label: "Fim de tarde", items: [
           lanche("domingo"),
-          caes("domingo"),
+          caes("domingo", modo),
           // Sem control:"walk" de propósito: é descanso, não movimento. Desde
           // 2026-09-23 (spec Chun-Li macia) o domingo tem DUAS caminhadas reais
           // — os 5 km da manhã (`caminhada-fds`) e o passeio — e cada uma

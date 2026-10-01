@@ -277,3 +277,7 @@ comentários com LANCHE ~500 / JANTAR ~700.
   largura de dorsal, que o programa evita; `face-pull-polia` cobre a postura).
 - `cross-over-cabo` virou órfão do catálogo.
 - Textos fixos que dizem que a caminhada entrega a zona 2 (`SessionDetail.tsx` ~l.170, `exercises-seed.ts` `cardio-zona2`) não acompanham o modo das caminhadas (entrega A deixou de fora).
+- Números-alvo que, depois da entrega A, moram fora de `objetivo.ts`: 5 treinos por
+  semana (em `ritmo.ts` e `revisao-semanal.ts`); "+40 g de arroz / +1 ovo / 200 kcal"
+  (texto do "rápido demais"); `SEMANA_CHEIA` 0,85; e os 60 min dos cães em
+  `metaCaminhadaMin`. Mudar um deles exige procurar os outros.

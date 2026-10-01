@@ -21,6 +21,9 @@ describe("comer fora pelo modo das caminhadas", () => {
     // de dizer que a perda zerou.
     expect(texto).not.toMatch(/100% mais devagar/);
     expect(texto).toMatch(/Três noites: zera a perda da semana/);
+    // Duas noites já zeram na pausada: a frase não pode dizer "três".
+    expect(texto).toMatch(/duas noites fora zeram a perda/);
+    expect(texto).not.toMatch(/déficit da semana inteiro/);
   });
 
   it("com caminhada, a frase original continua", () => {

@@ -15,6 +15,23 @@ describe("card Seu ritmo", () => {
     expect(screen.getByText("Frase dois.")).toBeInTheDocument();
   });
 
+  it("cedo com a data já passada convida a medir agora, sem falar do futuro", () => {
+    render(<RitmoCard veredito={{ estado: "cedo", primeiraComparacao: "2026-10-05", jaPode: true }} />);
+    expect(screen.getByText("Já dá pra comparar: meça peso e cintura em jejum.")).toBeInTheDocument();
+    expect(screen.queryByText(/sai em/)).not.toBeInTheDocument();
+  });
+
+  it("ganhou peso: os números têm verbo e nenhum sinal de menos", () => {
+    const { container } = render(<RitmoCard veredito={{ estado: "abaixo", kgSemana: -0.25, cmSemana: -0.13, titulo: "Abaixo do ritmo", texto: ["Frase."] }} />);
+    expect(screen.getByText(/Peso: sobe 0,25 kg\/sem · Cintura: sobe 0,13 cm\/sem/)).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/-\d/);
+  });
+
+  it("perdeu e parado: desce e parado, sem -0", () => {
+    render(<RitmoCard veredito={{ estado: "no-ritmo", kgSemana: 0.5, cmSemana: 0, titulo: "No ritmo", texto: ["Frase."] }} />);
+    expect(screen.getByText(/Peso: desce 0,5 kg\/sem · Cintura: parado/)).toBeInTheDocument();
+  });
+
   it("sem partida não renderiza nada", () => {
     const { container } = render(<RitmoCard veredito={{ estado: "sem-partida" }} />);
     expect(container).toBeEmptyDOMElement();

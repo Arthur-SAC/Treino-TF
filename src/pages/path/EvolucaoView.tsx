@@ -37,7 +37,7 @@ export function EvolucaoView() {
   const agora = new Date();
   const alvoSono = resolverAlvoSono(buildDayRoutine(agora.getDay(), diaDoAno(agora)).blocks, routineTimes);
   const adesao14 = useAdesao(t, 14, alvoSono);
-  const veredito = adesao14 ? avaliarRitmo(projecao, measurements ?? [], adesao14, modoCaminhada) : null;
+  const veredito = adesao14 && measurements ? avaliarRitmo(projecao, measurements, adesao14, modoCaminhada, t) : null;
   const voiceDates = (voiceLogs ?? []).map((l) => l.date);
   const moveDates = (practiceLogs ?? []).map((l) => l.date);
   const skinDates = (skincareLogs ?? []).filter((l) => l.completed).map((l) => l.date);
@@ -55,7 +55,7 @@ export function EvolucaoView() {
       </div>
       <PathTabs />
 
-      {veredito && <div className="mb-4"><RitmoCard veredito={veredito} /></div>}
+      {veredito && veredito.estado !== "sem-partida" && <div className="mb-4"><RitmoCard veredito={veredito} /></div>}
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Evolução · últimos 30 dias</h2>
       <div className="grid grid-cols-2 gap-2 mb-4">

@@ -1,6 +1,6 @@
 // tests/lib/ritmo.test.ts
 import { describe, it, expect } from "vitest";
-import { avaliarRitmo, alavancaMaisFraca, type Adesao, type Veredito } from "../../src/lib/ritmo";
+import { avaliarRitmo, alavancaMaisFraca, ultimaMedidaValida, type Adesao, type Veredito } from "../../src/lib/ritmo";
 import { projetar } from "../../src/lib/partida";
 import { somarDiasISO } from "../../src/lib/today-date";
 import type { Measurement } from "../../src/lib/db";
@@ -30,6 +30,36 @@ describe("veredito do ritmo", () => {
   it("antes de 10 dias diz quando sai a primeira comparação", () => {
     expect(avaliarRitmo(PR, [partida, em(95.5, 98.5, 2, "2026-10-01")], BOA, "caminhada"))
       .toEqual({ estado: "cedo", primeiraComparacao: "2026-10-05" });
+  });
+
+  it("cedo com a data já passada diz que já dá pra comparar (jaPode)", () => {
+    expect(avaliarRitmo(PR, [partida], BOA, "caminhada", "2026-10-20"))
+      .toEqual({ estado: "cedo", primeiraComparacao: "2026-10-05", jaPode: true });
+    const antes = avaliarRitmo(PR, [partida], BOA, "caminhada", "2026-10-01");
+    expect(antes).toEqual({ estado: "cedo", primeiraComparacao: "2026-10-05" });
+    expect("jaPode" in antes).toBe(false);
+  });
+
+  it("ritmo minúsculo não vira data de décadas: passa de 3 anos, não é data", () => {
+    const v = avaliarRitmo(PR, [partida, em(95.9, 98.5)], BOA, "caminhada");
+    expect(v.estado).toBe("abaixo");
+    expect(textos(v)).toMatch(/mais de 3 anos — não dá pra chamar de data/);
+    expect(textos(v)).not.toMatch(/termina em/);
+  });
+
+  it("concordância: Últimos 14 dias", () => {
+    const fraca: Adesao = { dias: 14, treinos: 4, diasCardio: 13, noitesNoAlvo: 12 };
+    const v = avaliarRitmo(PR, [partida, em(95.6, 98.6)], fraca, "caminhada");
+    expect(textos(v)).toMatch(/Últimos 14 dias/);
+    expect(textos(v)).not.toMatch(/Últimas 14/);
+  });
+
+  it("ultimaMedidaValida ignora medida sem peso ou sem cintura e usa o maior id no mesmo dia", () => {
+    const soPeso: Measurement = { id: 5, date: "2026-10-30", weightKg: 94, neckCm: 40 };
+    const a = em(95, 98, 3, "2026-10-23");
+    const b = em(94.5, 97.5, 4, "2026-10-23");
+    expect(ultimaMedidaValida([partida, a, b, soPeso])?.id).toBe(4);
+    expect(ultimaMedidaValida([soPeso])).toBeNull();
   });
 
   it("peso e cintura descendo no plano = no ritmo", () => {
