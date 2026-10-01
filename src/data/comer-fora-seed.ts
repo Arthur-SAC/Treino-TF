@@ -1,6 +1,6 @@
 import type { GuideSection } from "../components/GuideAccordion";
 import {
-  DEFICIT_SEMANAL_KCAL,
+  deficitSemanalKcal,
   VERBA_SEMANAL_KCAL,
   CUSTO_MARGINAL_REFEICAO_FORA_KCAL,
   NOITES_QUE_A_VERBA_COBRE,
@@ -8,6 +8,7 @@ import {
   ritmoDaSemana,
 } from "../lib/comer-fora";
 import { CONSUMO } from "../lib/objetivo";
+import type { ModoCaminhada } from "../lib/objetivo";
 
 // Este arquivo NARRA — quem decide os números é src/lib/comer-fora.ts. Nenhum
 // valor daqui pode ser digitado à mão: é a regra que impede a tela e a conta de
@@ -23,12 +24,25 @@ import { CONSUMO } from "../lib/objetivo";
 // Encher a tela de ressalva sobre uma coisa que não acontece é ruído, e ruído
 // é o que faz uma tela deixar de ser lida.
 
-const semNoite = ritmoDaSemana(0);
-const umaNoite = ritmoComNoitesFora(1);
-const duasNoites = ritmoComNoitesFora(2);
-const tresNoites = ritmoComNoitesFora(3);
+/** A tela narra a conta do modo atual. Com a caminhada pausada o déficit fica
+ *  menor que a verba, e a frase "você continua emagrecendo em todos os
+ *  cenários" viraria mentira — então ela troca pelo número verdadeiro. */
+export function comerForaDoModo(modo: ModoCaminhada): GuideSection[] {
+  const semNoite = ritmoDaSemana(0, modo);
+  const umaNoite = ritmoComNoitesFora(1, modo);
+  const duasNoites = ritmoComNoitesFora(2, modo);
+  const tresNoites = ritmoComNoitesFora(3, modo);
+  const zeraAlguma = tresNoites.kgPorSemana === 0;
+  // "0 kg — 100% mais devagar" é jeito torto de dizer que a perda zerou; quando
+  // o cenário zera, a linha diz isso com todas as letras.
+  const linha = (rotulo: string, r: typeof semNoite, comPct: boolean) =>
+    r.kgPorSemana === 0
+      ? `${rotulo}: zera a perda da semana.`
+      : comPct
+        ? `${rotulo}: ${r.kgPorSemana} kg — ${r.perdaDeRitmoPct}% mais devagar.`
+        : `${rotulo}: ${r.kgPorSemana} kg.`;
+  return [
 
-export const COMER_FORA: GuideSection[] = [
   {
     id: "a-verba",
     title: "Sim, você tem verba — e ela já estava no plano",
@@ -36,8 +50,10 @@ export const COMER_FORA: GuideSection[] = [
     tips: [
       `Guardadas para uma ocasião só, essas ${VERBA_SEMANAL_KCAL} kcal cobrem ${NOITES_QUE_A_VERBA_COBRE} noites fora por semana. Espalhadas em sete dias não compram nada memorável: ${CONSUMO.discricionariaKcal} kcal por dia é meio pacote de biscoito, e você paga o mesmo preço.`,
       `A verba não é de graça, e chamar de "livre" seria mentira: o cardápio já ocupa as ${CONSUMO.metaKcal} kcal inteiras da meta, então o que entra por cima sai direto do déficit. O preço se paga em TEMPO, não em fracasso.`,
-      `Seguindo o plano à risca, o déficit da semana é de ${DEFICIT_SEMANAL_KCAL} kcal — cerca de ${semNoite.kgPorSemana} kg por semana.`,
-      `Gastar a verba inteira toda semana continua sendo emagrecimento, só que ${ritmoDaSemana(VERBA_SEMANAL_KCAL).perdaDeRitmoPct}% mais devagar. Isso é uma escolha legítima com preço conhecido, não uma recaída.`,
+      `Seguindo o plano à risca, o déficit da semana é de ${deficitSemanalKcal(modo)} kcal — cerca de ${semNoite.kgPorSemana} kg por semana.`,
+      ritmoDaSemana(VERBA_SEMANAL_KCAL, modo).kgPorSemana === 0
+        ? "Com a caminhada pausada, gastar a verba inteira toda semana zera a perda: ela é maior que o déficit da semana inteiro."
+        : `Gastar a verba inteira toda semana continua sendo emagrecimento, só que ${ritmoDaSemana(VERBA_SEMANAL_KCAL, modo).perdaDeRitmoPct}% mais devagar. Isso é uma escolha legítima com preço conhecido, não uma recaída.`,
     ],
   },
   {
@@ -45,11 +61,13 @@ export const COMER_FORA: GuideSection[] = [
     title: "O preço de cada noite, em número",
     intro: `Uma refeição de restaurante custa cerca de ${CUSTO_MARGINAL_REFEICAO_FORA_KCAL} kcal A MAIS que o jantar do plano que ela substitui. Você não come os dois — troca um pelo outro, e é só a diferença que conta.`,
     tips: [
-      `Nenhuma noite fora na semana: ${semNoite.kgPorSemana} kg.`,
-      `Uma noite: ${umaNoite.kgPorSemana} kg — ${umaNoite.perdaDeRitmoPct}% mais devagar.`,
-      `Duas noites: ${duasNoites.kgPorSemana} kg — ${duasNoites.perdaDeRitmoPct}% mais devagar.`,
-      `Três noites: ${tresNoites.kgPorSemana} kg — ${tresNoites.perdaDeRitmoPct}% mais devagar.`,
-      "Repare no formato da conta: você continua emagrecendo em todos os cenários. O plano não quebra com uma noite fora — ele anda mais devagar, e você escolhe a velocidade.",
+      linha("Nenhuma noite fora na semana", semNoite, false),
+      linha("Uma noite", umaNoite, true),
+      linha("Duas noites", duasNoites, true),
+      linha("Três noites", tresNoites, true),
+      zeraAlguma
+        ? "Com a caminhada pausada o déficit da semana é tão pequeno que três noites fora zeram a perda. A verba inteira não cabe nele: religar a caminhada (ou a esteira) é o que devolve a folga."
+        : "Repare no formato da conta: você continua emagrecendo em todos os cenários. O plano não quebra com uma noite fora — ele anda mais devagar, e você escolhe a velocidade.",
       "O que quebra de verdade não é a pizza de sexta: é decidir que a sexta estragou tudo e soltar o sábado, o domingo e a segunda junto. A unidade é a SEMANA, não o dia.",
     ],
   },
@@ -67,3 +85,7 @@ export const COMER_FORA: GuideSection[] = [
     ],
   },
 ];
+}
+
+/** O modo padrão — quem importava a constante continua funcionando. */
+export const COMER_FORA: GuideSection[] = comerForaDoModo("caminhada");

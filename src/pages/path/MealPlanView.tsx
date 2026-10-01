@@ -5,7 +5,7 @@ import type { MealSlot, MealVariant } from "../../lib/db";
 import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
 import { RecomendadaBadge } from "../../components/RecomendadaBadge";
 import { GuideAccordion } from "../../components/GuideAccordion";
-import { COMER_FORA } from "../../data/comer-fora-seed";
+import { comerForaDoModo } from "../../data/comer-fora-seed";
 import { useSetting } from "../../hooks/useSetting";
 import { PathTabs } from "../../components/PathTabs";
 import { buildWeeklyShoppingList } from "../../lib/shopping-list";
@@ -81,6 +81,7 @@ function VariantDetails({ v }: { v: MealVariant }) {
 export function MealPlanView() {
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const activeCycle = useSetting("activeCycle");
+  const modoCaminhada = useSetting("modoCaminhada");
 
   if (!plan) {
     return <div className="p-4 text-muted text-sm">Carregando…</div>;
@@ -207,7 +208,7 @@ export function MealPlanView() {
           dela. Conteúdo que existe no fim de uma página longa é conteúdo que
           ela não encontra (a lição da frente 4). */}
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Quando você come fora</h2>
-      <GuideAccordion sections={COMER_FORA} className="mb-4" />
+      <GuideAccordion sections={comerForaDoModo(modoCaminhada)} className="mb-4" />
 
       <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Refeições e opções</h2>
       <div className="space-y-3">
