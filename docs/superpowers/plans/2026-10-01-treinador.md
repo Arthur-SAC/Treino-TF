@@ -726,7 +726,7 @@ describe("alavanca mais fraca", () => {
 
 describe("nunca sugere cortar comida (decisão dela, 2026-10-01)", () => {
   // Proíbe a AFIRMAÇÃO. Se a palavra aparecer, tem que estar negando (lição 5.2).
-  const CORTE = /(cort|reduz|diminu|tir)\w*[^.]{0,40}(kcal|calori|comida)|comer menos|comendo menos/i;
+  const CORTE = /\b(cort|reduz|diminu|tir)\w*[^.]{0,40}(kcal|calori|comida)|comer menos|comendo menos/i;
   const NEGA = /\b(não|nunca|nem)\b/i;
   const cenarios: Veredito[] = [];
   const fracas: Adesao[] = [
