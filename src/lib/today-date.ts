@@ -52,3 +52,11 @@ export function diaDoAno(date: Date): number {
   const inicioDoAno = new Date(date.getFullYear(), 0, 0);
   return Math.floor((date.getTime() - inicioDoAno.getTime()) / 86400000);
 }
+
+/** "YYYY-MM-DD" + n dias (n pode ser negativo). UTC puro, sem fuso local —
+ *  a mesma conta de `somaSemanas` em partida.ts, em dias. */
+export function somarDiasISO(data: string, dias: number): string {
+  const d = new Date(`${data}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + dias);
+  return d.toISOString().slice(0, 10);
+}
