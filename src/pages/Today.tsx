@@ -38,6 +38,8 @@ import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
 import { RitmoCard } from "../components/RitmoCard";
+import { RevisaoDomingoCard } from "../components/RevisaoDomingoCard";
+import { revisarSemana } from "../lib/revisao-semanal";
 import { avaliarRitmo } from "../lib/ritmo";
 import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
@@ -378,6 +380,9 @@ export function Today() {
   const ultimaMedida = measurementsAsc?.at(-1);
   // 14 dias de adesão pro treinador: a mesma janela do lembrete de medir.
   const adesao14 = useAdesao(todayISO, 14, alvoSono);
+  // Domingo fecha a semana de segunda a domingo: 7 dias terminando hoje.
+  const adesao7 = useAdesao(todayISO, 7, alvoSono);
+  const cinturas = (measurementsAsc ?? []).filter((m) => !!m.waistCm).map((m) => m.waistCm!);
   const veredito = adesao14 ? avaliarRitmo(projecao, measurementsAsc ?? [], adesao14, modoCaminhada) : null;
   // O card aparece por 14 dias depois de cada medida — é quando o número é
   // novo — e sempre enquanto ainda é cedo pra comparar.
@@ -406,6 +411,11 @@ export function Today() {
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
       {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
+      {dayOfWeek === 0 && adesao7 && (
+        <RevisaoDomingoCard
+          revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}
+        />
+      )}
       <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
