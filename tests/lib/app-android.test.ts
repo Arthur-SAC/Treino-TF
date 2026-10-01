@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { spawnSync } from "node:child_process";
 
 const raw = (glob: Record<string, unknown>) => Object.values(glob)[0] as string;
 const MANIFEST = raw(import.meta.glob("../../android/app/src/main/AndroidManifest.xml", { query: "?raw", import: "default", eager: true }));
+const GITIGNORE = raw(import.meta.glob("../../.gitignore", { query: "?raw", import: "default", eager: true }));
 const CAP = raw(import.meta.glob("../../capacitor.config.ts", { query: "?raw", import: "default", eager: true }));
 const EXPOE = /\bTRH\b|horm|fertilidade|disforia|transi[çc][ãa]o|intimidade|[íi]ntim|firmeza|sexo|sexual|safad/i;
 
@@ -43,9 +43,12 @@ describe("o APK — revisão final", () => {
   it("ícone e tela de abertura vão pro repositório — o *.png das fotos não pode engolir", () => {
     // O CI compila do que está no git. Ignorado aqui, o recurso existe na
     // máquina dela e falta no build: "resource drawable/splash not found".
-    const pngs = ["drawable/splash.png", "drawable-port-xxhdpi/splash.png", "mipmap-xxxhdpi/ic_launcher.png", "mipmap-hdpi/ic_launcher_foreground.png"]
-      .map((f) => `android/app/src/main/res/${f}`);
-    const r = spawnSync("git", ["check-ignore", ...pngs], { encoding: "utf8" });
-    expect(r.stdout.trim()).toBe("");
+    // No .gitignore vale a ÚLTIMA regra que casa: a exceção tem de vir depois
+    // de todo "*.png" — e só para a pasta de recursos, pra fotos seguirem fora.
+    const linhas = GITIGNORE.split(/\r?\n/).map((l) => l.trim());
+    const ultimoPng = linhas.lastIndexOf("*.png");
+    const excecao = linhas.lastIndexOf("!android/app/src/main/res/**/*.png");
+    expect({ temExcecao: excecao >= 0, depoisDoPng: excecao > ultimoPng }).toEqual({ temExcecao: true, depoisDoPng: true });
+    expect(linhas.filter((l) => l.startsWith("!") && /png|jpe?g/.test(l))).toEqual(["!android/app/src/main/res/**/*.png"]);
   });
 });
