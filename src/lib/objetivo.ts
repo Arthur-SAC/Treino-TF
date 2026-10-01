@@ -179,6 +179,22 @@ export const CONSUMO = {
   discricionariaKcal: 250,
 } as const;
 
+/** Como as caminhadas estão agora. Em 2026-09-28 ela parou os 5 km "por
+ *  agora", e o gasto acima continuava contando a caminhada todo dia — a
+ *  projeção prometia um ritmo que ela já sabia que não ia bater. */
+export type ModoCaminhada = "caminhada" | "esteira" | "pausada";
+
+/** Os 5 km do trabalho para casa (~1h em zona 2) para o corpo dela. É o mesmo
+ *  número que `CAMINHADA_TRABALHO` em today-routine.ts sempre citou. */
+export const KCAL_CAMINHADA_DIA = 370;
+
+/** Gasto diário estimado [mínimo, máximo] no modo atual. Esteira inclinada no
+ *  mesmo tempo e ritmo gasta o mesmo que a rua — só a pausa muda a conta. */
+export function gastoEstimado(modo: ModoCaminhada): [number, number] {
+  const tira = modo === "pausada" ? KCAL_CAMINHADA_DIA : 0;
+  return [CONSUMO.gastoEstimadoKcalMin - tira, CONSUMO.gastoEstimadoKcalMax - tira];
+}
+
 export interface MarcoCintura {
   cinturaCm: number;
   mesMin: number;

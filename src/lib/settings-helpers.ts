@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2 } from "./objetivo";
+import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -41,6 +41,7 @@ export interface Settings {
   cyclesSeeded: boolean;
   entradaMigration: number;
   walkGoalMin: number;
+  modoCaminhada: ModoCaminhada;
   presencaReminderTime: string;
   lastPresencaReminderAt: string;
   heightCm: number; // altura em cm; 0 = não informada
@@ -113,6 +114,9 @@ export const DEFAULTS: Settings = {
   // fim de semana, desde 2026-09-23, também são duas: os 5 km da manhã e o
   // passeio, e as duas juntas fecham os 120.
   walkGoalMin: 120,
+  // Padrão = a rotina que o app sempre supôs. Ela troca em Configurações quando
+  // a caminhada muda; o gasto, a projeção e o Hoje acompanham.
+  modoCaminhada: "caminhada",
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,

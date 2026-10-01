@@ -2,7 +2,7 @@ import type { Measurement } from "./db";
 import { estimateBodyFatNavy } from "./body-composition";
 import {
   RECOMECO_DATA, PCT_GORDURA_FIM_FASE1, CONSUMO, FIM_FASE2_MESES,
-  DISTRIBUICAO_GORDURA_ATUAL, FASES, MARCOS_CINTURA,
+  DISTRIBUICAO_GORDURA_ATUAL, FASES, MARCOS_CINTURA, gastoEstimado, type ModoCaminhada,
 } from "./objetivo";
 import { KCAL_POR_KG_GORDURA } from "./comer-fora";
 
@@ -67,18 +67,19 @@ export function partidaPlausivel(
   ms: readonly Measurement[],
   alturaCm: number,
   recomeco: string = RECOMECO_DATA,
+  modo: ModoCaminhada = "caminhada",
 ): { resultado: Projecao | null; invalida: boolean } {
   const cs = candidatas(ms, recomeco);
   for (const c of cs) {
     if (c.cinturaCm <= c.pescocoCm) continue;
-    const pr = projetar(c, alturaCm);
+    const pr = projetar(c, alturaCm, modo);
     if (pr && pr.gorduraPct > 0 && pr.pesoAlvoFase1[1] < c.pesoKg) return { resultado: pr, invalida: false };
   }
   return { resultado: null, invalida: cs.length > 0 };
 }
 
 /** "YYYY-MM-DD" + semanas → "YYYY-MM". Conta em UTC puro, sem fuso local. */
-function somaSemanas(data: string, semanas: number): string {
+export function somaSemanas(data: string, semanas: number): string {
   const d = new Date(`${data}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + Math.round(semanas * 7));
   return d.toISOString().slice(0, 7);
@@ -95,7 +96,7 @@ export function mesAno(yyyyMm: string): string {
   return `${MESES[m - 1]}/${a}`;
 }
 
-export function projetar(p: Partida, alturaCm: number): Projecao | null {
+export function projetar(p: Partida, alturaCm: number, modo: ModoCaminhada = "caminhada"): Projecao | null {
   const pct = estimateBodyFatNavy({
     heightCm: alturaCm,
     neckCm: p.pescocoCm,
@@ -110,9 +111,10 @@ export function projetar(p: Partida, alturaCm: number): Projecao | null {
     Math.round(magra / (1 - PCT_GORDURA_FIM_FASE1[1])),
   ];
   const r2 = (n: number) => Math.round(n * 100) / 100;
+  const [gastoMin, gastoMax] = gastoEstimado(modo);
   const ritmo: [number, number] = [
-    r2(((CONSUMO.gastoEstimadoKcalMin - CONSUMO.metaKcal) * 7) / KCAL_POR_KG_GORDURA),
-    r2(((CONSUMO.gastoEstimadoKcalMax - CONSUMO.metaKcal) * 7) / KCAL_POR_KG_GORDURA),
+    r2(((gastoMin - CONSUMO.metaKcal) * 7) / KCAL_POR_KG_GORDURA),
+    r2(((gastoMax - CONSUMO.metaKcal) * 7) / KCAL_POR_KG_GORDURA),
   ];
   // Mais cedo: menos quilos a perder no ritmo mais rápido. Mais tarde: o contrário.
   const semCedo = Math.max(0, p.pesoKg - alvo[1]) / ritmo[1];
