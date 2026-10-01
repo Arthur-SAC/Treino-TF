@@ -47,4 +47,12 @@ describe("sequências de flexibilidade", () => {
     const f3 = SEQUENCES.find((s) => s.id === "flex-noite-sustentacao")!;
     expect(f3.durationMin).toBeGreaterThanOrEqual(f2.durationMin);
   });
+
+  it("toda fase da noite nivela a pelve — a fase avança sozinha e o alongamento não pode sumir", () => {
+    for (const id of SEQUENCIAS_FLEX.noite) {
+      const nomes = SEQUENCES.find((x) => x.id === id)!.moves.map((m) => m.name);
+      expect({ id, lateral: nomes.some((n) => /inclina[çc][ãa]o lateral/i.test(n)), flexor: nomes.some((n) => /flexor do quadril/i.test(n)) })
+        .toEqual({ id, lateral: true, flexor: true });
+    }
+  });
 });

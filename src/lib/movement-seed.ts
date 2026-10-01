@@ -16,7 +16,10 @@ import { SEQUENCES } from "../data/sequences-seed";
 // num dia por ciclo de treino — ela apontou a contradição em 2026-08-17. A
 // sessão de academia não cresce, então o caminho diário tinha que ser fora
 // dela, e de manhã em jejum é quando o vacuum é mais fácil.
-export const MOVEMENT_VERSION = 11;
+// v12: nivelar a pelve (inclinação lateral + flexor ajoelhada) nas TRÊS fases
+// do alongamento da noite — a "perna maior" dela era a pelve, não o osso
+// (2026-10-01).
+export const MOVEMENT_VERSION = 12;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

@@ -1,4 +1,15 @@
-import type { DanceSequence } from "../lib/db";
+import type { DanceMove, DanceSequence } from "../lib/db";
+
+// Nivelar a pelve. Em 2026-10-01 ela achou que uma perna era maior e o teste
+// (deitada × sentada) mostrou que não: é a pelve subindo de um lado, puxada
+// por músculo encurtado — e isso travava o andar e o 8 com o quadril. Mora nas
+// TRÊS fases da noite, e não numa sequência à parte, porque a fase avança
+// sozinha e um alongamento que só existe na fase 1 some sem aviso. Noite e não
+// manhã: às 21h30 o corpo está morno e o flexor passou o dia sentado.
+const NIVELAR_PELVE: DanceMove[] = [
+  { name: "Inclinação lateral (nivelar a pelve)", description: "Em pé, cruza a perna do lado bom por trás da outra, sobe o braço do lado puxado e inclina o tronco pro lado bom. Estica a lateral da cintura, sem torcer. 30s no lado bom, 60s no puxado — o puxado é o da perna que pareceu mais curta no teste deitada. Respira fundo, para antes da dor.", durationSec: 90 },
+  { name: "Flexor do quadril ajoelhada", description: "Joelho do lado puxado no chão (almofada embaixo), outro pé à frente. Aperta o glúteo e leva a pelve pra frente SEM arquear a lombar — se arqueou, recua. 30s no lado bom, 60s no puxado.", durationSec: 90 },
+];
 
 export const SEQUENCES: DanceSequence[] = [
   // === MOBILIDADE ===
@@ -66,10 +77,11 @@ export const SEQUENCES: DanceSequence[] = [
     name: "Flexibilidade pra vida íntima (adutor + pélvico)",
     category: "mobilidade",
     level: "intermediario",
-    durationMin: 12,
+    durationMin: 15,
     focus: "Abrir quadril, soltar adutor, mobilizar pélvico. Aumenta amplitude de movimento. Pode ser feito antes de momentos íntimos pra reduzir tensão.",
     moves: [
       { name: "Aquecimento de quadril (em pé)", description: "Círculos grandes de quadril, 8x cada sentido. Solta a região.", durationSec: 60 },
+      ...NIVELAR_PELVE,
       { name: "Posição do gafanhoto (alongamento adutor)", description: "Em pé, pés bem afastados. Inclina tronco pra um lado, dobra o joelho, sente alongar a parte interna da coxa oposta. 30s cada lado.", durationSec: 60, repeat: 2 },
       { name: "Borboleta com cotovelo (pressão suave)", description: "Sentada, planta dos pés juntas. Cotovelos pressionam joelhos pra baixo bem suavemente. Respira fundo. 2 min.", durationSec: 120 },
       { name: "Agachamento profundo com pausa", description: "Agacha bem profundo, pés afastados, mãos juntas. Pausa 30-60s sentindo abertura. Levanta lentamente.", durationSec: 90, repeat: 3 },
@@ -121,10 +133,11 @@ export const SEQUENCES: DanceSequence[] = [
     name: "Noite · flexão profunda e rotação",
     category: "mobilidade",
     level: "intermediario",
-    durationMin: 12,
+    durationMin: 15,
     focus: "Fase 2 da noite: abre o que as posições que ela quer pedem — flexão profunda de quadril, rotação interna e externa, adutor solto. Espacate não entra aqui e não é necessário para nada disso. Para antes da dor.",
     moves: [
       { name: "Aquecimento", description: "Círculos de quadril e balanço de perna, 90s. Corpo já morno do dia, mas nunca pular.", durationSec: 90 },
+      ...NIVELAR_PELVE,
       { name: "Joelho ao peito profundo", description: "Deitada, puxa um joelho ao peito e depois leva pro lado de fora do ombro, mantendo o quadril no chão. 60s cada lado. É a flexão profunda com rotação externa.", durationSec: 120, repeat: 2 },
       { name: "Rotação interna 90/90", description: "Sentada em 90/90, leva o tronco sobre a perna DE TRÁS — é a rotação interna, a que quase ninguém treina e a que trava primeiro. 45s cada lado.", durationSec: 90, repeat: 2 },
       { name: "Borboleta com respiração", description: "Plantas juntas, joelhos pros lados. Deixa descer pelo peso, sem empurrar com as mãos, 2 min. Empurrar aqui fecha.", durationSec: 120 },
@@ -137,10 +150,11 @@ export const SEQUENCES: DanceSequence[] = [
     name: "Noite · sustentação e conforto",
     category: "mobilidade",
     level: "intermediario",
-    durationMin: 14,
+    durationMin: 17,
     focus: "Fase 3 da noite: ficar nas posições com conforto e por tempo. É a fase que serve diretamente ao que ela quer — durar na posição sem tensão, não alcançar mais. Para antes da dor.",
     moves: [
       { name: "Aquecimento", description: "Círculos de quadril e balanço de perna, 90s.", durationSec: 90 },
+      ...NIVELAR_PELVE,
       { name: "Flexão profunda sustentada", description: "Joelho ao peito por fora do ombro, 2 min cada lado, respirando fundo. O alvo é o minuto 2 ser tão confortável quanto o minuto 1.", durationSec: 240, repeat: 2 },
       { name: "Rotação interna sustentada", description: "90/90 sobre a perna de trás, 90s cada lado.", durationSec: 180, repeat: 2 },
       { name: "Borboleta longa", description: "3 min, sem empurrar, respirando. Se a virilha tensionar, recua um pouco e fica.", durationSec: 180 },
