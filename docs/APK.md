@@ -39,6 +39,8 @@ Seus dados continuam só no celular.
 
 Nada toca entre 22h30 e 6h. Todos os horários mudam em Configurações.
 
+Alguns lembretes têm botão: **Feito** (alongamento e vitamina D), **Bebi 200 ml** (água) e **Deitei** (hora de desligar). O Android abre o app por um instante quando você toca — é normal; o registro já fica feito. Se você tocar em **Deitei** depois da meia-noite, a noite conta como fora do horário — é o que aconteceu.
+
 ## Atualizações
 
 Chegam sozinhas: ao abrir o app, ele baixa a versão nova em segundo plano, e ela vale na
@@ -56,4 +58,4 @@ por cima da antiga, e seria preciso desinstalar e restaurar o backup.
 ## Backup daqui pra frente
 
 Configurações → Exportar backup abre o "compartilhar" do Android. Mande para o Drive ou
-salve em Arquivos. Vale fazer de vez em quando: se o celular sumir, é o que traz tudo de volta.
+salve em Arquivos. Vale fazer de vez em quando: se o celular sumir, é o que traz tudo de volta. O app lembra a cada 15 dias (notificação ao meio-dia e um aviso no Hoje) até você exportar.
