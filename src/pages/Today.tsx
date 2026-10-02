@@ -497,6 +497,7 @@ export function Today() {
       {pausaAberta !== null && (
         <MicroPausaModal
           n={pausaAberta}
+          diaDoAno={diaDoAno(today)}
           onClose={() => setPausaAberta(null)}
           onFeito={() => void addBreak()}
         />

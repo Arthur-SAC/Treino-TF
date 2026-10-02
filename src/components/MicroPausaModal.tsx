@@ -1,4 +1,5 @@
 import { pausaDaVez } from "../lib/micro-pausas";
+import { sentarDaVez } from "../lib/sentar";
 import type { MicroPausa } from "../data/micro-pausas-seed";
 
 const DISCRICAO_LABEL: Record<MicroPausa["discricao"], string> = {
@@ -11,8 +12,9 @@ const DISCRICAO_LABEL: Record<MicroPausa["discricao"], string> = {
  *  micro-pausa de postura. Segue o mesmo padrão visual de RecipeModal e
  *  SkincareRoutineModal. "Feito" grava a pausa (incrementa o contador do dia)
  *  e fecha. */
-export function MicroPausaModal({ n, onClose, onFeito }: { n: number; onClose: () => void; onFeito: () => void }) {
+export function MicroPausaModal({ n, diaDoAno, onClose, onFeito }: { n: number; diaDoAno: number; onClose: () => void; onFeito: () => void }) {
   const movimentos = pausaDaVez(n);
+  const sentar = sentarDaVez(n, diaDoAno);
 
   function feito() {
     onFeito();
@@ -45,6 +47,15 @@ export function MicroPausaModal({ n, onClose, onFeito }: { n: number; onClose: (
             </li>
           ))}
         </ol>
+
+        {/* Sentar se treina na cadeira — a dica vem na volta da pausa. O
+            rótulo do item no Hoje continua "Micro-pausa": isto só aparece
+            quando ela toca. */}
+        <div className="border-t border-bg-border pt-3 mb-4">
+          <p className="text-muted text-xs uppercase tracking-wider">Ao voltar pra cadeira</p>
+          <p className="text-nude-warm text-sm font-medium mt-1">{sentar.titulo}</p>
+          <p className="text-muted text-xs mt-1 leading-relaxed">{sentar.como}</p>
+        </div>
 
         <button
           type="button"
