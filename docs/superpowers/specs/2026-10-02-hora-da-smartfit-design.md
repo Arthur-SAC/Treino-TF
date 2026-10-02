@@ -18,9 +18,8 @@ do prédio, então o app aprende no uso. Na mesma conversa ela abriu a porta par
 | Lado fraco | O app pergunta no primeiro exercício unilateral e guarda. |
 | Cardio | Esteira inclinada ~6% a 5 km/h, 1 h, **depois do treino** (modo `esteira`, já existe — nada a mudar no código). |
 
-Decisões do assistente (registradas para ela poder mudar): o búlgaro entra **leve na adaptação**
-(2 × 8 cada, na quarta, para aprender) e **substitui o goblet na variação** (quarta); os exercícios
-que decidem a hora da Smartfit são **hip thrust com barra, leg press, abdutora e búlgaro**.
+Decisões do assistente (registradas para ela poder mudar): o búlgaro **substitui o goblet na variação**
+(quarta); os exercícios que decidem a hora da Smartfit são **hip thrust com barra, leg press, abdutora e búlgaro**.
 
 ## 1. Búlgaro
 
@@ -28,8 +27,7 @@ que decidem a hora da Smartfit são **hip thrust com barra, leg press, abdutora 
   levemente inclinado pra frente, peso no calcanhar da frente; "lado fraco primeiro". O erro
   "Inclinar tronco demais pra frente" vira "Tronco ereto demais (vira coxa) ou inclinado demais
   (lombar reclama)".
-- Adaptação, `qua-mobilidade-danca`: + `agachamento-bulgaro` 2 × "8 cada", bloco `solo`, nota de
-  aprendizado (sem peso ou halter leve).
+- Fica fora da adaptação: a revisão de 2026-07-27 o considera avançado demais pra iniciante a 96 kg (tests/data/correcoes-ciclo.test.ts).
 - Variação, `v-qua-mobilidade-danca`: `agachamento-goblet` → `agachamento-bulgaro` 3 × "10-12 cada".
   O goblet continua no Inferior A (padrão de levantar a noiva).
 - `durationMin` = estimador; nenhuma sessão passa de 60. Faixas de volume da fase 1 continuam

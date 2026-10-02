@@ -24,6 +24,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | ✅ na main (`c0b44a4`, 2026-10-01), release `apk-v1`; **falta ela migrar no celular** (`docs/APK.md`) e confirmar câmera e lembrete com o app fechado no Poco |
 | A · Treinador | modo das caminhadas (gasto, projeção, comer fora, Hoje), card Seu ritmo (a cintura decide, nunca cortar comida), revisão de domingo | spec `docs/superpowers/specs/2026-10-01-treinador-design.md` · plano `docs/superpowers/plans/2026-10-01-treinador.md` |
 | B · Apresentação no Hoje | item Postura 20:15 (andar → 8 → gingado depois de 14 práticas), dica de sentar em cada micro-pausa, sentar/andar reescritos e 8 com o quadril novos (MOVEMENT_VERSION 13) | spec `docs/superpowers/specs/2026-10-02-apresentacao-no-hoje-design.md` · plano `docs/superpowers/plans/2026-10-02-apresentacao-no-hoje.md` |
+| C · Hora da Smartfit | búlgaro (no lugar do goblet na variação), lado fraco primeiro, "não tem mais peso aqui" + táticas no teto, aviso da Smartfit quando hip thrust/leg press/abdutora/búlgaro estão no teto | spec `docs/superpowers/specs/2026-10-02-hora-da-smartfit-design.md` · plano `docs/superpowers/plans/2026-10-02-hora-da-smartfit.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -93,6 +94,8 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | "Rápido demais / coma mais" só vale a partir de **3 semanas** da partida — antes disso a queda é água e glicogênio, e o card explica isso. |
 | 10-02 | Apresentação **separada por momento**: sentar nas micro-pausas do trabalho; andar, 8 e gingado num item "Postura" às 20:15. Gingado só depois de 14 práticas. |
 | 10-02 | Andar: pé **perto da linha, sem cruzar** — a "perna maior" dela é pelve desnivelada (teste de 10-01). |
+| 10-02 | Cardio: esteira ~6% a 5 km/h por 1 h **depois do treino**, no lugar da caminhada (modo `esteira`). Jantar passa pra ~20h30. |
+| 10-02 | Estrutura do treino mantida; entram búlgaro, lado fraco primeiro e táticas no teto. Teto do prédio é aprendido no uso. |
 
 ---
 
