@@ -277,6 +277,8 @@ comentários com LANCHE ~500 / JANTAR ~700.
 
 **Anteriores:**
 
+- Quando ela trocar pra Smartfit, a reescrita da fase 2 tem que limpar o setting `tetoPredio`
+  (senão o card e as táticas continuam ligados nos 4 exercícios).
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e
   `Vitalidade.tsx` — a regra foi extraída, a montagem não.
 - `session-order.test.ts` usa fixtures locais, então não pega regressão nos templates reais.

@@ -64,7 +64,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(15);
+    expect(TEMPLATE_SEED_VERSION).toBe(16);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele

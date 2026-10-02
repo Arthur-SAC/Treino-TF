@@ -26,6 +26,11 @@ describe("teto do prédio", () => {
     expect(taticasNoTeto("10-12").join(" ")).toMatch(/2 s/);
   });
 
+  it("abdutora: uma perna só não existe na máquina, então só as três táticas", () => {
+    expect(taticasNoTeto("15-20", "abdutor-maquina")).toHaveLength(3);
+    expect(taticasNoTeto("10-12", "hip-thrust-barra")).toHaveLength(4);
+  });
+
   it("unilateral = 'cada', menos as trocas da prancha", () => {
     expect(ehUnilateral("12 cada")).toBe(true);
     expect(ehUnilateral("10-12 cada")).toBe(true);

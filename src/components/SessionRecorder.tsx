@@ -7,7 +7,7 @@ import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
 import { useSetting } from "../hooks/useSetting";
-import { setSetting } from "../lib/settings-helpers";
+import { getSetting, setSetting } from "../lib/settings-helpers";
 import { noTeto, taticasNoTeto, ehUnilateral } from "../lib/teto-predio";
 
 interface Props {
@@ -66,6 +66,20 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         setLast(lastPerf);
         if (timeBased) return;
         const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
+        // Teto velho: ela já treinou ACIMA dele (achou mais anilha, halter mais
+        // pesado), então o prédio tem mais do que o app aprendeu. Apaga o teto
+        // em vez de subir: ele volta a ser aprendido se ela tocar o botão de
+        // novo. Roda uma vez por exercício (some na primeira passada, então não
+        // há laço de escrita) e relê o setting fresco dentro da transação.
+        await db.transaction("rw", db.settings, async () => {
+          const atual = await getSetting("tetoPredio");
+          const teto = atual[exercise.id];
+          if (teto !== undefined && lastSet.weight > teto) {
+            const { [exercise.id]: _, ...resto } = atual;
+            await setSetting("tetoPredio", resto);
+          }
+        });
+        if (!mounted) return;
         // Completou = toda série no mínimo da faixa; topo = toda série no
         // máximo (antes, qualquer rep > 0 contava como completar).
         // Contra o alvo que ela treinou DAQUELA vez: o mesmo exercício tem 15
@@ -160,14 +174,23 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const cargaAnterior = last ? last.sets[last.sets.length - 1].weight : 0;
   // Só faz sentido dizer "não tem mais peso" quando o app pede pra SUBIR.
   const podeMarcarTeto = suggested !== null && cargaAnterior > 0 && suggested > cargaAnterior && teto === undefined;
+  // Dead bug é "cada" mas alterna braço e perna na mesma série: não tem lado fraco por onde começar.
+  const perguntaLado = ehUnilateral(repsTarget) && exercise.id !== "dead-bug";
   const travado = suggested !== null && noTeto(suggested, teto);
 
+  // Lê o setting na hora de escrever: o `tetos` da render pode estar velho e
+  // regravá-lo apagaria o teto de outro exercício gravado nesse meio-tempo.
   async function marcarTeto() {
-    await setSetting("tetoPredio", { ...tetos, [exercise.id]: cargaAnterior });
+    await db.transaction("rw", db.settings, async () => {
+      const atual = await getSetting("tetoPredio");
+      await setSetting("tetoPredio", { ...atual, [exercise.id]: cargaAnterior });
+    });
   }
   async function desfazerTeto() {
-    const { [exercise.id]: _, ...resto } = tetos;
-    await setSetting("tetoPredio", resto);
+    await db.transaction("rw", db.settings, async () => {
+      const { [exercise.id]: _, ...resto } = await getSetting("tetoPredio");
+      await setSetting("tetoPredio", resto);
+    });
   }
 
   function handleSave() {
@@ -243,14 +266,14 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-xs text-muted mb-2">Postura: carga leve e controle — aqui o ganho é a posição, não o peso.</p>
       )}
       {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mb-2">{notes}</p>}
-      {ehUnilateral(repsTarget) && (ladoFraco ? (
+      {perguntaLado && (ladoFraco ? (
         <p className="text-xs text-nude/80 mb-2">
           Comece pelo lado {ladoFraco}. O lado forte faz as mesmas repetições — nem uma a mais.{" "}
           <button type="button" onClick={() => void setSetting("ladoFraco", "")} className="underline text-muted">trocar</button>
         </p>
       ) : (
         <div className="text-xs mb-2">
-          <p className="text-nude/80">Qual lado é o mais fraco? O da perna que pareceu mais curta deitada, ou o que cansa primeiro.</p>
+          <p className="text-nude/80">Qual lado é o mais fraco? O lado que faz menos repetições ou treme primeiro.</p>
           <div className="flex gap-2 mt-1">
             <button type="button" onClick={() => void setSetting("ladoFraco", "esquerdo")} className="px-2 py-1 rounded-md bg-bg-deep border border-bg-border">Esquerdo</button>
             <button type="button" onClick={() => void setSetting("ladoFraco", "direito")} className="px-2 py-1 rounded-md bg-bg-deep border border-bg-border">Direito</button>
@@ -269,7 +292,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <div className="text-xs mb-3">
           <p className="text-nude-warm">No teto do prédio ({teto} kg)</p>
           <ul className="text-muted list-disc pl-4 mt-1 space-y-0.5">
-            {taticasNoTeto(repsTarget).map((t) => <li key={t}>{t}</li>)}
+            {taticasNoTeto(repsTarget, exercise.id).map((t) => <li key={t}>{t}</li>)}
           </ul>
           <button type="button" onClick={() => void desfazerTeto()} className="text-muted underline mt-1">o aparelho tem mais peso</button>
         </div>

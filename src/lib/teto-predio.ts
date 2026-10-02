@@ -22,8 +22,10 @@ export const TATICAS_NO_TETO = [
 
 const TATICA_UNILATERAL = "Troca pela versão de uma perna (ou um braço): a mesma carga vira quase o dobro.";
 
-export function taticasNoTeto(repsTarget: string): string[] {
-  return ehUnilateral(repsTarget) ? [...TATICAS_NO_TETO] : [...TATICAS_NO_TETO, TATICA_UNILATERAL];
+/** Abdutora não tem versão de uma perna: oferecer a troca seria dica impossível. */
+export function taticasNoTeto(repsTarget: string, exerciseId?: string): string[] {
+  const semUnilateral = ehUnilateral(repsTarget) || exerciseId === "abdutor-maquina";
+  return semUnilateral ? [...TATICAS_NO_TETO] : [...TATICAS_NO_TETO, TATICA_UNILATERAL];
 }
 
 export function progressoTeto(tetos: Record<string, number>): { noTeto: number; total: number; todos: boolean } {

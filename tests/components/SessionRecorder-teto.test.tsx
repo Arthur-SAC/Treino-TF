@@ -64,4 +64,26 @@ describe("SessionRecorder — teto do prédio", () => {
     await screen.findByText(/Última vez/);
     expect(screen.queryByText("Não tem mais peso aqui")).toBeNull();
   });
+
+  it("teto velho (carga anterior acima dele) é apagado e a sugestão volta", async () => {
+    await semearHistorico(); // 40 kg
+    await setSetting("tetoPredio", { "hip-thrust-barra": 30, "leg-press-pes-medios": 100 });
+    montar();
+    expect(await screen.findByText(/Sugestão: 42 kg/)).toBeInTheDocument();
+    await waitFor(async () => {
+      const t = await getSetting("tetoPredio");
+      expect(t["hip-thrust-barra"]).toBeUndefined();
+      expect(t["leg-press-pes-medios"]).toBe(100);
+    });
+  });
+
+  it("marcar o teto relê o setting: não apaga o que outro exercício gravou no meio", async () => {
+    await semearHistorico();
+    montar();
+    const botao = await screen.findByText("Não tem mais peso aqui");
+    await setSetting("tetoPredio", { "leg-press-pes-medios": 100 });
+    fireEvent.click(botao);
+    await waitFor(async () => expect((await getSetting("tetoPredio"))["hip-thrust-barra"]).toBe(40));
+    expect((await getSetting("tetoPredio"))["leg-press-pes-medios"]).toBe(100);
+  });
 });

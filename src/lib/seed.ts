@@ -38,7 +38,8 @@ export const EXERCISE_SEED_VERSION = 13;
 // v13: fase 1 reescrita para a Chun-Li macia (3 inferiores + 2 superiores, abdutora 3x, braço e peito de cima).
 // v14: nota do supino da hipertrofia concorda com a progressão do peito.
 // v15: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
-export const TEMPLATE_SEED_VERSION = 15;
+// v16: nota do búlgaro na quarta da Entrada diz com que peso começar (revisão final da entrega C).
+export const TEMPLATE_SEED_VERSION = 16;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");

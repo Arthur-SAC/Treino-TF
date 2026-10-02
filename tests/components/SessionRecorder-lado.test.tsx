@@ -42,4 +42,16 @@ describe("SessionRecorder — lado fraco", () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(screen.queryByText(/Qual lado/)).toBeNull();
   });
+
+  it("dead-bug (core alternado) não pergunta lado", async () => {
+    render(<SessionRecorder exercise={{ ...ex, id: "dead-bug", category: "cintura", equipment: ["peso-corporal"] }} setsTarget={3} repsTarget="12 cada" restSec={0} onSave={() => {}} />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.queryByText(/Qual lado/)).toBeNull();
+    expect(screen.queryByText(/Comece pelo lado/)).toBeNull();
+  });
+
+  it("a dica do lado fraco fala de repetições e tremor", async () => {
+    montar("12 cada");
+    expect(await screen.findByText(/menos repetições ou treme primeiro/)).toBeInTheDocument();
+  });
 });

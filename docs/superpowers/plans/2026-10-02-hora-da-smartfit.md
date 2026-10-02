@@ -1,5 +1,7 @@
 # Hora da Smartfit (entrega C) Implementation Plan
 
+> **Nota (execução):** o búlgaro ficou fora da adaptação (regra da revisão de 2026-07-27); onde este plano fala em 'leve na adaptação', vale a spec.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** o app aprende o teto de carga do prédio no uso, ensina o que fazer no teto, avisa a hora da Smartfit, põe o lado fraco primeiro nos unilaterais e coloca o agachamento búlgaro no treino.

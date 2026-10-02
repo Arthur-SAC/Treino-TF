@@ -81,7 +81,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 4, repsTarget: "15-20", restSec: 45, block: "maquina", notes: "Tronco inclinado pra frente" },
       { exerciseId: "cadeira-extensora", sets: 3, repsTarget: "12-15", restSec: 60, block: "maquina" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "10-12 cada", restSec: 75, block: "solo", notes: "Metade da carga do goblet e o dobro do trabalho por perna — e o prédio dura mais antes do teto" },
+      { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "10-12 cada", restSec: 75, block: "solo", notes: "Comece com 2 halteres de 6 kg. Passada longa, peso no calcanhar da frente, lado mais fraco primeiro." },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
     ],
