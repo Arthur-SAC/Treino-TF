@@ -11,6 +11,15 @@ import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
 import { isNativo } from "../lib/plataforma";
 import { ativarLembretes } from "../lib/lembretes/permissao";
+import type { ModoCaminhada } from "../lib/objetivo";
+
+// Uma frase por opção dizendo o que muda — ela escolhe sabendo o efeito, e não
+// descobre depois que o Hoje mudou.
+const OPCOES_CAMINHADA: { modo: ModoCaminhada; rotulo: string; efeito: string }[] = [
+  { modo: "caminhada", rotulo: "Caminhada", efeito: "Os 5 km do trabalho e os do fim de semana, como sempre." },
+  { modo: "esteira", rotulo: "Esteira ou bike", efeito: "Os itens viram esteira inclinada 45–60 min. A conta do ritmo não muda." },
+  { modo: "pausada", rotulo: "Pausada", efeito: "Os itens de caminhada somem do Hoje e o ritmo esperado da fase 1 fica mais lento — o app para de cobrar uma meta que você já sabe que não vai bater." },
+];
 
 export function Settings() {
   const notif = useSetting("notificationsEnabled");
@@ -32,6 +41,7 @@ export function Settings() {
   const targetShr = useSetting("targetShoulderHipRatio");
   const pitchLow = useSetting("voicePitchTargetLowHz");
   const pitchHigh = useSetting("voicePitchTargetHighHz");
+  const modoCaminhada = useSetting("modoCaminhada");
 
   const [busy, setBusy] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
@@ -103,6 +113,26 @@ export function Settings() {
 
       {info && <p className="text-nude text-sm">{info}</p>}
       {error && <p className="text-red-300 text-sm">{error}</p>}
+
+      <div className="card space-y-3">
+        <h2 className="text-nude-warm font-medium">Caminhadas agora</h2>
+        <p className="text-muted text-xs">Muda os itens de caminhada do Hoje e a conta do seu ritmo.</p>
+        {OPCOES_CAMINHADA.map((o) => (
+          <label key={o.modo} className="flex items-start gap-2">
+            <input
+              type="radio"
+              name="modoCaminhada"
+              checked={modoCaminhada === o.modo}
+              onChange={() => void setSetting("modoCaminhada", o.modo)}
+              className="mt-1"
+            />
+            <span>
+              <span className="text-sm">{o.rotulo}</span>
+              <span className="block text-muted text-xs">{o.efeito}</span>
+            </span>
+          </label>
+        ))}
+      </div>
 
       <div className="card space-y-3">
         <h2 className="text-nude-warm font-medium">Notificações</h2>

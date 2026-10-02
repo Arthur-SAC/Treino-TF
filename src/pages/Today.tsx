@@ -17,7 +17,7 @@ import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
 import { computeFocus, timeBlockFocus } from "../lib/today-priority";
 import { waistGuard } from "../lib/silhouette";
-import { buildDayRoutine, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
+import { buildDayRoutine, metaCaminhadaMin, type RoutineItem, type RoutineMealType } from "../lib/today-routine";
 import { resolveRoutineTime, resolverAlvoSono, formatHora } from "../lib/routine-times";
 import { useRoutineChecks } from "../hooks/useRoutineChecks";
 import {
@@ -33,10 +33,15 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
-import { hojeISO, diaDoAno } from "../lib/today-date";
+import { hojeISO, diaDoAno, somarDiasISO } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
+import { RitmoCard } from "../components/RitmoCard";
+import { RevisaoDomingoCard } from "../components/RevisaoDomingoCard";
+import { revisarSemana } from "../lib/revisao-semanal";
+import { avaliarRitmo, ultimaMedidaValida } from "../lib/ritmo";
+import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
 import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
@@ -126,6 +131,7 @@ export function Today() {
   const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
   const walkGoalMin = useSetting("walkGoalMin");
+  const modoCaminhada = useSetting("modoCaminhada");
 
   // Alvo de micro-pausas derivado da mesma configuração que dispara os
   // lembretes — 7h→16h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
@@ -176,7 +182,7 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas);
+  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada);
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
@@ -339,7 +345,7 @@ export function Today() {
     // Todo item que soma movimento (cães, caminhadas) abre com o total do dia
     // contra a meta — uma meta que não aparece na tela não existe.
     if (item.control === "walk") {
-      return [`${dailyLog?.walkMin ?? 0} / ${walkGoalMin} min`, item.subtitle].filter(Boolean).join(" · ");
+      return [`${dailyLog?.walkMin ?? 0} / ${metaCaminhadaMin(walkGoalMin, modoCaminhada)} min`, item.subtitle].filter(Boolean).join(" · ");
     }
     if (item.id === CREATINA_ITEM_ID) {
       return subtituloCreatina(item.subtitle ?? "", creatinaInicio || null, todayISO);
@@ -372,6 +378,23 @@ export function Today() {
   const datasDeTreino = useLiveQuery(async () => (await db.workoutSessions.toArray()).map((x) => x.date), []);
   const treinosSemana = treinosNaSemana(datasDeTreino ?? [], todayISO);
   const ultimaMedida = measurementsAsc?.at(-1);
+  // 14 dias de adesão pro treinador: a mesma janela do lembrete de medir.
+  const adesao14 = useAdesao(todayISO, 14, alvoSono);
+  // Domingo fecha a semana de segunda a domingo: 7 dias terminando hoje.
+  const adesao7 = useAdesao(todayISO, 7, alvoSono);
+  const cinturas = (measurementsAsc ?? []).filter((m) => !!m.waistCm).map((m) => m.waistCm!);
+  // Só avalia com a lista de medidas resolvida: com `?? []` o card piscava
+  // "cedo" antes de a consulta voltar.
+  const veredito = adesao14 && measurementsAsc ? avaliarRitmo(projecao, measurementsAsc, adesao14, modoCaminhada, todayISO) : null;
+  // A janela de 14 dias conta da última medida com peso E cintura — a mesma que
+  // o veredito usa; uma medida só de peso não renova o card.
+  const medidaDoRitmo = measurementsAsc ? ultimaMedidaValida(measurementsAsc) : null;
+  // O card aparece por 14 dias depois de cada medida — é quando o número é
+  // novo — e sempre enquanto ainda é cedo pra comparar.
+  const mostrarRitmo =
+    !!veredito &&
+    (veredito.estado === "cedo" ||
+      (veredito.estado !== "sem-partida" && !!medidaDoRitmo && todayISO <= somarDiasISO(medidaDoRitmo.date, 14)));
   const variacaoSemana =
     projecao && ultimaMedida && ultimaMedida.date > projecao.partida.data
       ? variacaoDesdePartida(projecao.partida, ultimaMedida)
@@ -392,6 +415,12 @@ export function Today() {
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
+      {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
+      {dayOfWeek === 0 && adesao7 && (
+        <RevisaoDomingoCard
+          revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}
+        />
+      )}
       <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
 
       {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um

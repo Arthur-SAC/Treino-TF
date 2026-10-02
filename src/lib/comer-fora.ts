@@ -17,7 +17,7 @@
 // atrasa. Este módulo devolve esse atraso em número, para ela decidir com o
 // dado na mão em vez de decidir com culpa.
 
-import { CONSUMO } from "./objetivo";
+import { CONSUMO, gastoEstimado, type ModoCaminhada } from "./objetivo";
 
 /** Energia de um quilo de gordura corporal. É a constante clássica (~7.700
  *  kcal) e é aproximação: parte do peso que sai em déficit é água e glicogênio,
@@ -25,11 +25,17 @@ import { CONSUMO } from "./objetivo";
  *  o uso aqui — não pra prever a balança de uma semana específica. */
 export const KCAL_POR_KG_GORDURA = 7700;
 
-const GASTO_MEDIO_KCAL = (CONSUMO.gastoEstimadoKcalMin + CONSUMO.gastoEstimadoKcalMax) / 2;
+/** Déficit da semana com o plano seguido à risca, no modo de caminhada dado.
+ *  Com a caminhada pausada ele encolhe ~2.600 kcal na semana, e a verba deixa
+ *  de caber nele inteira. */
+export function deficitSemanalKcal(modo: ModoCaminhada = "caminhada"): number {
+  const [min, max] = gastoEstimado(modo);
+  return ((min + max) / 2 - CONSUMO.metaKcal) * 7;
+}
 
-/** Déficit do plano seguido à risca, sem tocar na verba. */
-export const DEFICIT_DIARIO_KCAL = GASTO_MEDIO_KCAL - CONSUMO.metaKcal;
-export const DEFICIT_SEMANAL_KCAL = DEFICIT_DIARIO_KCAL * 7;
+/** Déficit do plano seguido à risca, sem tocar na verba (modo caminhada). */
+export const DEFICIT_SEMANAL_KCAL = deficitSemanalKcal("caminhada");
+export const DEFICIT_DIARIO_KCAL = DEFICIT_SEMANAL_KCAL / 7;
 
 /** A verba de besteira acumulada na semana. Guardar pra uma ocasião só, em vez
  *  de espalhar em sete dias, é o que a torna útil: 250 kcal por dia não compram
@@ -59,18 +65,20 @@ const arredonda2 = (n: number) => Math.round(n * 100) / 100;
  *  Nunca devolve déficit negativo como "ganho": acima do gasto o resultado é
  *  superávit, e a conta de perda semanal deixa de significar alguma coisa —
  *  por isso o piso em zero, com a perda de ritmo saturando em 100%. */
-export function ritmoDaSemana(kcalGastas: number): RitmoDaSemana {
-  const deficitSemanalKcal = Math.max(0, DEFICIT_SEMANAL_KCAL - kcalGastas);
+export function ritmoDaSemana(kcalGastas: number, modo: ModoCaminhada = "caminhada"): RitmoDaSemana {
+  const total = deficitSemanalKcal(modo);
+  // Local com outro nome pra não sombrear a função de mesmo nome acima.
+  const sobra = Math.max(0, total - kcalGastas);
   return {
-    deficitSemanalKcal,
-    kgPorSemana: arredonda2(deficitSemanalKcal / KCAL_POR_KG_GORDURA),
-    perdaDeRitmoPct: Math.round((1 - deficitSemanalKcal / DEFICIT_SEMANAL_KCAL) * 100),
+    deficitSemanalKcal: sobra,
+    kgPorSemana: arredonda2(sobra / KCAL_POR_KG_GORDURA),
+    perdaDeRitmoPct: Math.round((1 - sobra / total) * 100),
   };
 }
 
 /** O mesmo, contado em noites fora em vez de calorias. */
-export function ritmoComNoitesFora(noites: number): RitmoDaSemana {
-  return ritmoDaSemana(noites * CUSTO_MARGINAL_REFEICAO_FORA_KCAL);
+export function ritmoComNoitesFora(noites: number, modo: ModoCaminhada = "caminhada"): RitmoDaSemana {
+  return ritmoDaSemana(noites * CUSTO_MARGINAL_REFEICAO_FORA_KCAL, modo);
 }
 
 /** Quantas noites fora a verba declarada cobre por semana, inteiras. É o número

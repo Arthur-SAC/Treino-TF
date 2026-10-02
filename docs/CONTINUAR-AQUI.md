@@ -22,6 +22,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | 2 | partida automática pela 1ª medição, fases (com fase 3), horizontes com tetos/BBL/implante, marcos pelas fases, advisor pela cintura 84 | ✅ no ar (`f90f351`), 985 testes |
 | Auditoria | achados de 2026-09-23 (seção 9) | ✅ tudo menos a fase 2 — plano `docs/superpowers/plans/2026-09-23-auditoria.md` |
 | APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | ✅ na main (`c0b44a4`, 2026-10-01), release `apk-v1`; **falta ela migrar no celular** (`docs/APK.md`) e confirmar câmera e lembrete com o app fechado no Poco |
+| A · Treinador | modo das caminhadas (gasto, projeção, comer fora, Hoje), card Seu ritmo (a cintura decide, nunca cortar comida), revisão de domingo | spec `docs/superpowers/specs/2026-10-01-treinador-design.md` · plano `docs/superpowers/plans/2026-10-01-treinador.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -86,6 +87,9 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-13 | **Vitalidade ganha aba própria** na barra de baixo (6 abas), reunindo sequências a dois + streak + lingerie. Rótulo "Vitalidade" — nunca descreve o que tem dentro, porque a barra fica visível pra quem olhar o celular dela. |
 | 09-23 | Objetivo: **Chun-Li macia com glúteo destacado** (ver `OBJETIVO.md`). 2.200 kcal; treino 5 × ≤60 min redistribuído; fase 1 no prédio, fase 2 na Smartfit; BBL depois dos 30 marca o fim da fase discreta. |
 | 08-13 | Ela **gosta da tela Hoje** ("tudo que tenho que fazer no dia") e acha as outras abas confusas. Ao acrescentar tela, perguntar antes se cabe no Hoje. |
+| 10-01 | Abaixo do ritmo o app **nunca sugere cortar comida** — só adesão e prazo. Acima: comer mais, em gramas. |
+| 10-01 | Caminhada muda por **modo** em Configurações (caminhada / esteira / pausada), não por escolha diária. |
+| 10-02 | "Rápido demais / coma mais" só vale a partir de **3 semanas** da partida — antes disso a queda é água e glicogênio, e o card explica isso. |
 
 ---
 
@@ -273,3 +277,8 @@ comentários com LANCHE ~500 / JANTAR ~700.
 - Adaptação ficou sem remada por 4-8 semanas (decisão consciente: remada constrói
   largura de dorsal, que o programa evita; `face-pull-polia` cobre a postura).
 - `cross-over-cabo` virou órfão do catálogo.
+- Textos fixos que dizem que a caminhada entrega a zona 2 (`SessionDetail.tsx` ~l.170, `exercises-seed.ts` `cardio-zona2`) não acompanham o modo das caminhadas (entrega A deixou de fora).
+- Números-alvo que, depois da entrega A, moram fora de `objetivo.ts`: 5 treinos por
+  semana (em `ritmo.ts` e `revisao-semanal.ts`); "+40 g de arroz / +1 ovo / 200 kcal"
+  (texto do "rápido demais"); `SEMANA_CHEIA` 0,85; e os 60 min dos cães em
+  `metaCaminhadaMin`. Mudar um deles exige procurar os outros.

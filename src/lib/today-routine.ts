@@ -2,6 +2,7 @@
 // Define o dia como blocos por horário. Módulo puro — Today.tsx só apresenta.
 // Itens com estado próprio (skincare/treino) usam control:"link" + linkKey e
 // NÃO são marcados aqui; refletem o estado do módulo correspondente.
+import type { ModoCaminhada } from "./objetivo";
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
@@ -42,6 +43,34 @@ export interface DayRoutine {
   blocks: RoutineBlockGroup[];
 }
 
+/** Os dois itens que mudam com o modo das caminhadas. Exportado porque a
+ *  adesão (src/lib/adesao.ts) conta os dias de cardio por estes ids — e um
+ *  teste prende os dois aqui, pra renomear um não zerar a conta em silêncio. */
+export const ITENS_CAMINHADA = ["caminhada-trabalho", "caminhada-fds"] as const;
+
+/** O item de caminhada no modo atual: igual, trocado pela esteira, ou fora do
+ *  dia. Esteira mantém `control: "walk"` e o mesmo `to` — é a mesma zona 2,
+ *  só que parada no lugar. */
+function noModo(item: RoutineItem, modo: ModoCaminhada): RoutineItem | null {
+  if (modo === "pausada") return null;
+  if (modo === "esteira") {
+    return {
+      ...item,
+      label: item.id === "caminhada-fds" ? "Esteira inclinada · 45–60 min (fim de semana)" : "Esteira inclinada · 45–60 min",
+      subtitle: "6–10% a 4,5–5,5 km/h, ou bike nível 5–6 · ofegante, mas falando em frases curtas",
+    };
+  }
+  return item;
+}
+
+/** A meta de minutos de caminhada do dia. Ela soma duas caminhadas de 60 min
+ *  (ver `walkGoalMin` em settings-helpers.ts); com a caminhada pausada sobra
+ *  só o passeio com os cães, e a meta cheia ficaria vermelha todo dia por uma
+ *  coisa que ela decidiu não fazer. */
+export function metaCaminhadaMin(walkGoalMin: number, modo: ModoCaminhada): number {
+  return modo === "pausada" ? Math.max(0, walkGoalMin - 60) : walkGoalMin;
+}
+
 const BARBA: RoutineItem = {
   id: "barba", block: "manha", label: "Barba", subtitle: "Rente, no sentido do pelo · depois o corretivo alaranjado se precisar", to: "/beleza/depilacao", defaultTime: "06:15",
 };
@@ -79,7 +108,7 @@ const CAMINHADA_FDS: RoutineItem = {
   control: "walk", to: "/treino/exercicio/cardio-zona2", defaultTime: "07:30",
 };
 
-function manhaItems(dayOfYear: number, fimDeSemana: boolean): RoutineItem[] {
+function manhaItems(dayOfYear: number, fimDeSemana: boolean, modo: ModoCaminhada): RoutineItem[] {
   const items: RoutineItem[] = [
     { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
   ];
@@ -90,7 +119,8 @@ function manhaItems(dayOfYear: number, fimDeSemana: boolean): RoutineItem[] {
     CREATINA,
     { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — a pele produz vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   );
-  if (fimDeSemana) items.push(CAMINHADA_FDS);
+  const fds = fimDeSemana ? noModo(CAMINHADA_FDS, modo) : null;
+  if (fds) items.push(fds);
   return items;
 }
 
@@ -196,7 +226,7 @@ function lanche(dia: TipoDeDia): RoutineItem {
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
  *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
-function caes(dia: TipoDeDia): RoutineItem {
+function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
   const base = {
     id: fimDeSemana ? "caes-fds" : "caes",
@@ -208,10 +238,24 @@ function caes(dia: TipoDeDia): RoutineItem {
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
   }
+  // Com a caminhada pausada não houve caminhada pra "somar em cima": o texto
+  // não pode afirmar um passeio que o modo tirou da rotina.
   if (dia === "domingo") {
-    return { ...base, subtitle: "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã" };
+    return {
+      ...base,
+      subtitle:
+        modo === "pausada"
+          ? "NEAT — eles não sabem que é domingo; com a caminhada pausada, é o único passeio do dia"
+          : modo === "esteira"
+            ? "NEAT — eles não sabem que é domingo; soma em cima da esteira da manhã"
+            : "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã",
+    };
   }
-  return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da caminhada das 16h" };
+  if (modo === "pausada") {
+    return { ...base, subtitle: "Movimento leve — com a caminhada pausada, é o único passeio do dia." };
+  }
+  const base16 = modo === "esteira" ? "esteira" : "caminhada das 16h";
+  return { ...base, subtitle: `NEAT — lento, com paradas; é o movimento fácil que soma em cima da ${base16}` };
 }
 
 /** A caminhada de 5 km do trabalho para casa, todos os dias úteis. São ~370
@@ -229,11 +273,17 @@ const CAMINHADA_TRABALHO: RoutineItem = {
   defaultTime: "16:00",
 };
 
-function tardeSemana(): RoutineItem[] {
+/** O "sem cardio no fim" só vale se houve cardio antes: na pausada não houve. */
+function subtituloTreino(modo: ModoCaminhada): string {
+  if (modo === "pausada") return "Sem cardio no fim — a caminhada está pausada; se quiser compensar, 20–30 min de esteira inclinada depois da força.";
+  return `Sem cardio no fim — ${modo === "esteira" ? "a esteira" : "a caminhada das 16h"} já cobriu`;
+}
+
+function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
   return [
-    CAMINHADA_TRABALHO,
-    caes("semana"),
-    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: "Sem cardio no fim — a caminhada das 16h já cobriu", to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
+    ...[noModo(CAMINHADA_TRABALHO, modo)].filter((i): i is RoutineItem => i !== null),
+    caes("semana", modo),
+    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
   ];
 }
 
@@ -270,6 +320,7 @@ function buildBlocks(
   dayOfWeek: number,
   dayOfYear: number,
   horariosDePausa: readonly string[],
+  modo: ModoCaminhada,
 ): RoutineBlockGroup[] {
   const isSaturday = dayOfWeek === 6;
   const isSunday = dayOfWeek === 0;
@@ -282,13 +333,13 @@ function buildBlocks(
         id: "tarde", label: "Fim de tarde", items: [
           lanche("sabado"),
           { id: "danca-sabado", block: "tarde", label: "Dança / rebolado", subtitle: "A sessão divertida da semana", to: "/treino/movimento", linkKey: "rebolado", defaultTime: "17:30" },
-          caes("sabado"),
+          caes("sabado", modo),
         ],
       }
     : isSunday
       ? { id: "tarde", label: "Fim de tarde", items: [
           lanche("domingo"),
-          caes("domingo"),
+          caes("domingo", modo),
           // Sem control:"walk" de propósito: é descanso, não movimento. Desde
           // 2026-09-23 (spec Chun-Li macia) o domingo tem DUAS caminhadas reais
           // — os 5 km da manhã (`caminhada-fds`) e o passeio — e cada uma
@@ -301,7 +352,7 @@ function buildBlocks(
           // de `walkGoalMin` ter subido para 120 (ver settings-helpers.ts).
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana()] };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana(modo)] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
@@ -320,7 +371,7 @@ function buildBlocks(
   }
 
   return [
-    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday) },
+    { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday, modo) },
     trabalho,
     tarde,
     { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek) },
@@ -331,11 +382,13 @@ function buildBlocks(
 /** `dayOfYear` decide itens em dias alternados (ex.: barba). `horariosDePausa`
  *  vira uma linha de micro-pausa cada, com caixinha própria — vem de fora
  *  porque depende da configuração de expediente dela, e este módulo é puro.
- *  Quem calcula os dois é a tela; a função continua determinística. */
+ *  Quem calcula os dois é a tela; a função continua determinística.
+ *  `modo` vem do setting `modoCaminhada` — a tela lê, este módulo continua puro. */
 export function buildDayRoutine(
   dayOfWeek: number,
   dayOfYear: number,
   horariosDePausa: readonly string[] = [],
+  modo: ModoCaminhada = "caminhada",
 ): DayRoutine {
-  return { dayOfWeek, blocks: buildBlocks(dayOfWeek, dayOfYear, horariosDePausa) };
+  return { dayOfWeek, blocks: buildBlocks(dayOfWeek, dayOfYear, horariosDePausa, modo) };
 }

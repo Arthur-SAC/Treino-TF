@@ -5,6 +5,7 @@ import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
+import { RECOMECO_DATA } from "../../src/lib/objetivo";
 import {
   ATE_ROTACAO,
   ATE_FASE_3,
@@ -75,6 +76,14 @@ describe("Today (backbone)", () => {
     fireEvent.click(cafe);
     // a receita do café localizado (cuscuz sem manteiga) abre no próprio card
     expect((await screen.findAllByText(/Cuscuz de milho/i)).length).toBeGreaterThan(0);
+  });
+
+  it("com partida medida, mostra o card Seu ritmo", async () => {
+    await db.measurements.clear();
+    await db.settings.put({ key: "heightCm", value: 173 });
+    await db.measurements.add({ date: RECOMECO_DATA, weightKg: 96, waistCm: 99, neckCm: 40 });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    expect(await screen.findByText("Seu ritmo")).toBeInTheDocument();
   });
 });
 
