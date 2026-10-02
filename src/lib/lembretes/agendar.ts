@@ -26,7 +26,10 @@ export async function agendar(lista: Lembrete[], plugin: PluginNotificacoes = na
   const exato = (await plugin.checkExactNotificationSetting()).exact_alarm === "granted";
   // Registrar os botões toda vez é barato e idempotente; precisa vir antes do
   // schedule, senão a notificação nasce sem botão.
-  await plugin.registerActionTypes({ types: TIPOS_DE_ACAO.map((t) => ({ id: t.id, actions: t.acoes.map((a) => ({ ...a })) })) });
+  // Se falhar, agenda mesmo assim: lembrete sem botão é melhor que sem lembrete.
+  try {
+    await plugin.registerActionTypes({ types: TIPOS_DE_ACAO.map((t) => ({ id: t.id, actions: t.acoes.map((a) => ({ ...a })) })) });
+  } catch { /* segue sem botões */ }
   await plugin.schedule({
     notifications: lista.map((l) => ({
       id: l.id, title: l.titulo, body: l.corpo,

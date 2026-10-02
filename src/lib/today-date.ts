@@ -60,3 +60,8 @@ export function somarDiasISO(data: string, dias: number): string {
   d.setUTCDate(d.getUTCDate() + dias);
   return d.toISOString().slice(0, 10);
 }
+
+/** Hora local "HH:MM" — o formato de `sleepAt`. */
+export function horaMinuto(d: Date): string {
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}

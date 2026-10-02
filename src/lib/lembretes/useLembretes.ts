@@ -9,9 +9,7 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { db } from "../db";
 import { isNativo } from "../plataforma";
 import { reagendar } from "./agendar";
-import { efeitoDaAcao } from "./acao";
-import { marcarFeito } from "../../hooks/useRoutineChecks";
-import { addWater, registrarSono } from "../daily-log-helpers";
+import { aplicarAcao } from "./aplicar-acao";
 
 export function useLembretes(): void {
   const navigate = useNavigate();
@@ -32,17 +30,9 @@ export function useLembretes(): void {
     }).subscribe({ next: agendarLogo });
     const resume = CapApp.addListener("appStateChange", ({ isActive }) => { if (isActive) agendarLogo(); });
     const toque = LocalNotifications.addListener("localNotificationActionPerformed", (a) => {
-      // No Android o botão abre o app por um instante; o registro acontece aqui,
-      // no dia do lembrete (extra.dia). Notificação antiga, sem extra, não faz nada.
-      const ef = efeitoDaAcao(a.actionId, a.notification.extra);
-      if (!ef) return;
-      if (ef.tipo === "marcar") void marcarFeito(ef.dia, ef.itemId);
-      else if (ef.tipo === "agua") void addWater(ef.dia, ef.ml);
-      else if (ef.tipo === "sono") {
-        const agora = new Date();
-        const hhmm = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
-        void registrarSono(ef.dia, hhmm);
-      } else navigate(ef.rota);
+      // No Android o botão abre o app por um instante; o registro acontece em
+      // aplicarAcao, no dia do lembrete, sem repetir se o evento voltar.
+      void aplicarAcao(a, { navigate, agora: new Date() }).catch(() => {});
     });
     return () => {
       clearTimeout(timer);

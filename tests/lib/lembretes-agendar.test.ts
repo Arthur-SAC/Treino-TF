@@ -79,3 +79,12 @@ describe("agendar — botões de ação", () => {
     expect(b.extra).toEqual({ rota: "/configuracoes", dia: "2026-09-25" });
   });
 });
+
+describe("agendar — registerActionTypes falha", () => {
+  it("agenda mesmo assim", async () => {
+    const p = fake([]);
+    p.registerActionTypes.mockRejectedValueOnce(new Error("boom"));
+    await agendar([{ id: 1, quando: new Date(2026, 8, 25, 6, 0), titulo: "A", corpo: "x", rota: "/", dia: "2026-09-25" }], p);
+    expect(p.schedule).toHaveBeenCalled();
+  });
+});

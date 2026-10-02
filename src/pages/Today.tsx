@@ -34,7 +34,7 @@ import { RecipeModal } from "../components/RecipeModal";
 import { SkincareRoutineModal } from "../components/SkincareRoutineModal";
 import { MicroPausaModal } from "../components/MicroPausaModal";
 import { ShortcutsGrid } from "../components/ShortcutsGrid";
-import { hojeISO, diaDoAno, somarDiasISO } from "../lib/today-date";
+import { hojeISO, diaDoAno, somarDiasISO, horaMinuto } from "../lib/today-date";
 import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
@@ -320,8 +320,7 @@ export function Today() {
       await creditarPasseio(todayISO, marcado);
     } else if (item.id === "dormir") {
       const agora = new Date();
-      const hhmm = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
-      await registrarSono(todayISO, marcado ? hhmm : undefined);
+      await registrarSono(todayISO, marcado ? horaMinuto(agora) : undefined);
     }
   }
 

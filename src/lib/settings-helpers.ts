@@ -64,6 +64,9 @@ export interface Settings {
   vitaminaDTime: string;
   /** Data (ISO) do último backup exportado; "" = nunca. Gravado quando o export termina. */
   ultimoBackupEm: string;
+  /** Ações de notificação já aplicadas (id da notificação:ação, só as últimas 50):
+   *  o Android refaz o evento ao reabrir pelo Recentes; sem isso "Bebi" somava de novo. */
+  acoesTratadas: string[];
   /** Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio. */
   tetoPredio: Record<string, number>;
   /** Perguntado no primeiro exercício de um lado só. */
@@ -147,6 +150,7 @@ export const DEFAULTS: Settings = {
   vitaminaDTime: "12:00",
   // Gravado quando o export termina.
   ultimoBackupEm: "",
+  acoesTratadas: [],
   // Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio.
   tetoPredio: {},
   // Perguntado no primeiro exercício de um lado só.
