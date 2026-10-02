@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { pausaDaVez } from "../lib/micro-pausas";
 import { sentarDaVez } from "../lib/sentar";
 import type { MicroPausa } from "../data/micro-pausas-seed";
@@ -55,6 +56,9 @@ export function MicroPausaModal({ n, diaDoAno, onClose, onFeito }: { n: number; 
           <p className="text-muted text-xs uppercase tracking-wider">Ao voltar pra cadeira</p>
           <p className="text-nude-warm text-sm font-medium mt-1">{sentar.titulo}</p>
           <p className="text-muted text-xs mt-1 leading-relaxed">{sentar.como}</p>
+          <Link to="/treino/movimento/corporal-postura-sentar" className="inline-block text-nude-warm text-xs underline mt-2">
+            Como sentar · 6 min
+          </Link>
         </div>
 
         <button

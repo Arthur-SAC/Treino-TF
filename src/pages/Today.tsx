@@ -129,8 +129,9 @@ export function Today() {
   const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
   const reboladoHoje = reboladoDoDia(praticasRebolado ?? 0);
   // Postura (andar → 8 → gingado), com o gingado liberado pela contagem —
-  // mesmo padrão dos alongamentos.
-  const praticasPostura = useLiveQuery(() => contarPraticasPostura(), []);
+  // mesmo padrão dos alongamentos. Conta até ONTEM: a prática de hoje não
+  // pode virar o item do dia depois de marcada.
+  const praticasPostura = useLiveQuery(() => contarPraticasPostura(todayISO), [todayISO]);
   const posturaHoje = posturaDoDia(diaDoAno(today), praticasPostura ?? 0);
   const posturaRotulo = rotuloFlexDoDia("Postura", posturaHoje);
   // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
@@ -271,7 +272,7 @@ export function Today() {
     return false;
   };
 
-  // Assoalho, alongamentos e rebolado: feitos também quando qualquer prática
+  // Assoalho, alongamentos, rebolado e postura: feitos também quando qualquer prática
   // da trilha foi concluída hoje (revisão da auditoria 2026-09-23).
   const trilhaDoItem: Partial<Record<string, readonly string[]>> = {
     pelvic: PROGRESSAO_PELVICA,
@@ -361,8 +362,8 @@ export function Today() {
     return item.subtitle;
   };
 
-  // Rótulo e destino dos itens com progressão (pélvico + os dois
-  // alongamentos): today-routine.ts guarda só o fallback honesto, quem sabe a
+  // Rótulo e destino dos itens com progressão (pélvico, os dois
+  // alongamentos e a postura): today-routine.ts guarda só o fallback honesto, quem sabe a
   // sequência do dia é esta camada — mesmo motivo do subtitleFor acima.
   const labelFor = (item: RoutineItem): string => {
     if (item.linkKey === "pelvic") return pelvicRotulo.label;

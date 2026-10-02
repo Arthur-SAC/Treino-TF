@@ -36,6 +36,7 @@ export const PRESENCE_ITEMS: PresenceItem[] = [
   { id: "postura-silhueta-diaria", label: "Postura & silhueta", to: "/treino/movimento/postura-silhueta-diaria" },
   { id: "corporal-caminhada", label: "Caminhada feminina", to: "/treino/movimento/corporal-caminhada" },
   { id: "sensual-andar-gingado", label: "Andar com gingado", to: "/treino/movimento/sensual-andar-gingado" },
+  { id: "corporal-oito-quadril", label: "8 com o quadril", to: "/treino/movimento/corporal-oito-quadril" },
   { id: "soltura-tronco-quadril", label: "Soltura de tronco e quadril", to: "/treino/movimento/soltura-tronco-quadril" },
   { id: "intimidade-flex-passiva", label: "Flexibilidade passiva a dois", to: "/treino/movimento/intimidade-flex-passiva" },
   { id: "intimidade-grinding", label: "Grinding pélvico · por cima", to: "/treino/movimento/intimidade-grinding" },

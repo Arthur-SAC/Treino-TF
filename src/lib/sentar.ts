@@ -38,11 +38,11 @@ export function sentarDaVez(n: number, diaDoAno: number): DicaSentar {
     },
     {
       titulo: "Tornozelos cruzados",
-      como: `Cruza os tornozelos (hoje o ${lado === "esquerda" ? "esquerdo" : "direito"} por cima), joelhos próximos sem colar. Aperta bem menos que cruzar no joelho. ${TROCA}`,
+      como: `Cruza os tornozelos (desta vez o ${lado === "esquerda" ? "esquerdo" : "direito"} por cima), joelhos próximos sem colar. Aperta bem menos que cruzar no joelho. ${TROCA}`,
     },
     {
       titulo: "Joelhos próximos",
-      como: `Joelhos a um palmo ou menos, pés um pouco afastados, pés no chão. De fora, lê como pernas juntas. ${TROCA}`,
+      como: `Joelhos a poucos dedos um do outro, pés um pouco afastados, pés no chão. De fora, lê como pernas fechadas e relaxadas. ${TROCA}`,
     },
   ];
   return opcoes[(i + d) % opcoes.length];

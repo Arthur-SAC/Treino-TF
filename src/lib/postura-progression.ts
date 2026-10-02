@@ -10,6 +10,11 @@
 /** Ordem didática: a base (andar), o mecanismo (8) e o resultado (gingado). */
 export const SEQUENCIAS_POSTURA = ["corporal-caminhada", "corporal-oito-quadril", "sensual-andar-gingado"] as const;
 
+/** Dia em que a trilha nova entrou no ar. As versões antigas de andar e gingado
+ *  mandavam pisar NA linha; práticas daquelas versões não ensinaram o que a
+ *  trilha de agora ensina, então não contam pra liberar o gingado. */
+export const DESDE_ENTREGA_B = "2026-10-02";
+
 /** ~2 semanas de prática diária alternando andar e 8. */
 export const ATE_GINGADO = 14;
 
