@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
 import { useSetting } from "../../hooks/useSetting";
+import { progressoTeto } from "../../lib/teto-predio";
 
 export function WorkoutHome() {
   // A aba abre pelo treino de hoje (auditoria 2026-09-23: eram seis cartões e
   // nenhum dizia o que fazer hoje). Mesma regra do Hoje: dia da semana + ciclo.
   const activeCycle = useSetting("activeCycle");
   const modoCaminhada = useSetting("modoCaminhada");
+  const teto = progressoTeto(useSetting("tetoPredio"));
   const dayOfWeek = new Date().getDay();
   const deHoje = useLiveQuery(
     async () => (await db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).toArray()).find((t) => (t.cycle ?? "adaptacao") === activeCycle) ?? null,
@@ -26,6 +28,9 @@ export function WorkoutHome() {
           <h3 className="text-nude-warm font-medium">Hoje é descanso da academia</h3>
           <p className="text-muted text-sm mt-1">{modoCaminhada === "pausada" ? "A mobilidade do Hoje continua." : modoCaminhada === "esteira" ? "A esteira e a mobilidade do Hoje continuam." : "A caminhada e a mobilidade do Hoje continuam."}</p>
         </div>
+      )}
+      {teto.noTeto > 0 && (
+        <p className="text-muted text-xs px-1">Teto do prédio: {teto.noTeto} de {teto.total} exercícios principais{teto.todos ? " — hora da Smartfit" : ""}</p>
       )}
       <Link to="/treino/horizontes" className="card block hover:border-nude/40 transition border-nude/40">
         <h3 className="text-nude-warm font-medium">Até onde dá pra chegar ✦</h3>
