@@ -7,6 +7,7 @@ const fake = (pendentes: number[], exato = "granted") => {
     getPending: vi.fn(async () => ({ notifications: pendentes.map((id) => ({ id })) })),
     cancel: vi.fn(async (_o: { notifications: Array<{ id: number }> }) => {}),
     schedule: vi.fn(async (_o: { notifications: unknown[] }) => ({})),
+    registerActionTypes: vi.fn(async (_o: { types: Array<{ id: string; actions: Array<{ id: string; title: string }> }> }) => {}),
   };
   return p as typeof p & PluginNotificacoes;
 };
@@ -51,5 +52,30 @@ describe("agendar — alarme exato", () => {
     const p = fake([]);
     await agendar(um, p);
     expect(exatos(p)).toEqual([true]);
+  });
+});
+
+describe("agendar — botões de ação", () => {
+  const quando = new Date(2026, 8, 25, 6, 0);
+  it("registra os três tipos de ação antes de agendar", async () => {
+    const p = fake([]);
+    await agendar([{ id: 1, quando, titulo: "Alongamento", corpo: "x", rota: "/", dia: "2026-09-25" }], p);
+    expect(p.registerActionTypes).toHaveBeenCalledWith({ types: [
+      { id: "feito", actions: [{ id: "feito", title: "Feito" }] },
+      { id: "bebi", actions: [{ id: "bebi", title: "Bebi 200 ml" }] },
+      { id: "deitei", actions: [{ id: "deitei", title: "Deitei" }] },
+    ] });
+    expect(p.registerActionTypes.mock.invocationCallOrder[0]).toBeLessThan(p.schedule.mock.invocationCallOrder[0]);
+  });
+  it("lembrete com ação sai com actionTypeId e extra completo; sem ação, sem actionTypeId", async () => {
+    const p = fake([]);
+    await agendar([
+      { id: 1, quando, titulo: "Alongamento", corpo: "x", rota: "/", dia: "2026-09-25", acao: "feito", itemId: "alongamento-manha" },
+      { id: 2, quando, titulo: "Backup", corpo: "y", rota: "/configuracoes", dia: "2026-09-25" },
+    ], p);
+    const [a, b] = p.schedule.mock.calls[0][0].notifications as Array<Record<string, unknown>>;
+    expect(a).toMatchObject({ actionTypeId: "feito", extra: { rota: "/", dia: "2026-09-25", itemId: "alongamento-manha" } });
+    expect(b).not.toHaveProperty("actionTypeId");
+    expect(b.extra).toEqual({ rota: "/configuracoes", dia: "2026-09-25" });
   });
 });
