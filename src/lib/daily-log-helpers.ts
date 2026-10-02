@@ -62,7 +62,9 @@ export async function registrarSono(date: string, hhmm?: string): Promise<void> 
  *  na contagem, nem a favor nem contra. */
 export function noitesNoAlvo(logs: DailyLog[], alvo: string): number {
   // Madrugada ("00:00"–"05:59") compara MENOR que o alvo como texto, mas é quem
-  // foi dormir depois da meia-noite: não conta como noite no alvo.
+  // foi dormir depois da meia-noite: não conta como noite no alvo. Vale também
+  // quando o próprio alvo é pós-meia-noite (ex.: "00:30"): nada antes das 06:00
+  // conta, então a janela é vazia e o resultado é sempre 0 — travado em teste.
   return logs.filter((l) => l.sleepAt !== undefined && l.sleepAt >= "06:00" && l.sleepAt <= alvo).length;
 }
 

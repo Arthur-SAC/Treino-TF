@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { hojeISO } from "./today-date";
 
 // O que entra no backup e como volta. Saiu de Settings.tsx (auditoria de
 // 2026-09-23) porque o backup deixava de fora as configurações — ciclo atual,
@@ -148,5 +149,8 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     await db.skincareRoutines.bulkPut((p.skincareRoutines ?? []) as never);
     await db.danceSequences.bulkPut((p.danceSequences ?? []) as never);
     await db.makeupRoutines.bulkPut((p.makeupRoutines ?? []) as never);
+    // Depois do bulkPut das configurações (senão ele sobrescreve): o arquivo que
+    // ela acabou de restaurar É um backup, então o aviso de 15 dias recomeça hoje.
+    await db.settings.put({ key: "ultimoBackupEm", value: hojeISO() });
   });
 }

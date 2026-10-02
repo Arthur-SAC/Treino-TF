@@ -49,6 +49,11 @@ describe("sono", () => {
     expect(noitesNoAlvo([log("05:59")], "22:30")).toBe(0);
   });
 
+  it("alvo depois da meia-noite: nada antes das 06:00 conta (comportamento travado)", () => {
+    const log = (sleepAt: string) => ({ date: "2026-07-28", waterMl: 0, activeBreakCount: 0, sleepAt });
+    expect(noitesNoAlvo([log("00:10"), log("00:30"), log("23:00")], "00:30")).toBe(0);
+  });
+
   it("noite sem registro não conta nem a favor nem contra", async () => {
     await registrarSono("2026-07-28", "22:00");
     expect(noitesNoAlvo(await db.dailyLog.toArray(), "22:30")).toBe(1);

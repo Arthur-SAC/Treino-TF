@@ -12,7 +12,8 @@ beforeEach(async () => { await db.settings.clear(); });
 describe("AvisoBackup", () => {
   it("nunca fez: avisa e leva a Configurações", async () => {
     montar();
-    expect(await screen.findByText(/seus dados só existem neste celular/i)).toBeTruthy();
+    expect(await screen.findByText(/Nenhum backup registrado neste aparelho/)).toBeTruthy();
+    expect(screen.getByText(/seus dados só existem neste celular/i)).toBeTruthy();
     expect(screen.getByRole("link", { name: "Fazer backup" }).getAttribute("href")).toBe("/configuracoes");
   });
 

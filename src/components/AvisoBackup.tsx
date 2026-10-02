@@ -17,7 +17,7 @@ export function AvisoBackup() {
   return (
     <div className="card border-wine-light mb-3">
       <p className="text-nude-warm text-sm">
-        {n === null ? "Você ainda não fez backup" : `Faz ${n} dias sem backup`} — seus dados só existem neste celular.
+        {n === null ? "Nenhum backup registrado neste aparelho" : `Faz ${n} dias sem backup`} — seus dados só existem neste celular.
       </p>
       <Link to="/configuracoes" className="mt-2 block w-full bg-wine text-nude-warm rounded-md py-2 text-sm text-center">Fazer backup</Link>
     </div>

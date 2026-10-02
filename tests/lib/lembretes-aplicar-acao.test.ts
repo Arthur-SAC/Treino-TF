@@ -40,4 +40,30 @@ describe("aplicarAcao", () => {
     const row = await db.settings.get("acoesTratadas");
     expect((row?.value as string[]).length).toBe(50);
   });
+
+  // Android pode reentregar o intent de partida a frio por dias (singleTask sem
+  // setIntent; a HyperOS mata o processo): a lista de 50 chaves só cobre ~5 dias.
+  it("replay tardio: bebi de 3 dias antes não soma água", async () => {
+    await aplicarAcao(ev(10, "bebi", { dia: "2026-09-28", rota: "/" }), deps(10, 0));
+    expect(await db.dailyLog.get("2026-09-28")).toBeUndefined();
+  });
+  it("feito de ontem ainda aplica", async () => {
+    await aplicarAcao(ev(11, "feito", { dia: "2026-09-30", itemId: "vitamina-d", rota: "/" }), deps(9, 0));
+    expect(await db.routineChecks.get(["2026-09-30", "vitamina-d"])).toMatchObject({ done: true });
+  });
+  it("deitei na manhã seguinte (depois das 06:00) é ignorado", async () => {
+    await aplicarAcao(ev(12, "deitei", { dia: "2026-09-30", rota: "/" }), deps(7, 0));
+    expect(await db.dailyLog.get("2026-09-30")).toBeUndefined();
+    expect(await db.routineChecks.get(["2026-09-30", "dormir"])).toBeUndefined();
+  });
+  it("deitei na madrugada seguinte (antes das 06:00) ainda vale", async () => {
+    await aplicarAcao(ev(13, "deitei", { dia: "2026-09-30", rota: "/" }), deps(0, 40));
+    expect((await db.dailyLog.get("2026-09-30"))?.sleepAt).toBe("00:40");
+  });
+  it("deitei não sobrescreve a hora que ela já registrou, mas marca dormir", async () => {
+    await db.dailyLog.put({ date: D, waterMl: 0, activeBreakCount: 0, sleepAt: "21:50" });
+    await aplicarAcao(ev(14, "deitei"), deps(22, 30));
+    expect((await db.dailyLog.get(D))?.sleepAt).toBe("21:50");
+    expect(await db.routineChecks.get([D, "dormir"])).toMatchObject({ done: true });
+  });
 });
