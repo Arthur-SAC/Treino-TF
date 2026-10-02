@@ -6,6 +6,7 @@ import { WorkoutHome } from "../../src/pages/workout/WorkoutHome";
 
 beforeEach(async () => {
   await db.settings.clear();
+  await db.measurements.clear();
   await db.settings.put({ key: "activeCycle", value: "adaptacao" });
 });
 
@@ -22,5 +23,13 @@ describe("WorkoutHome: progresso do teto do prédio", () => {
     await screen.findByText("Plano semanal");
     await new Promise((r) => setTimeout(r, 100));
     await waitFor(() => expect(screen.queryByText(/Teto do prédio/)).not.toBeInTheDocument());
+  });
+
+  it("os 4 no teto na fase 1: diz que fica no prédio até a cintura chegar em 84", async () => {
+    await db.measurements.add({ date: "2026-09-30", weightKg: 92, waistCm: 95, neckCm: 40 });
+    await db.settings.put({ key: "tetoPredio", value: { "hip-thrust-barra": 1, "leg-press-pes-medios": 1, "abdutor-maquina": 1, "agachamento-bulgaro": 1 } });
+    render(<MemoryRouter><WorkoutHome /></MemoryRouter>);
+    expect(await screen.findByText(/fica no prédio com as táticas até a cintura chegar em 84/)).toBeInTheDocument();
+    expect(screen.queryByText(/hora da Smartfit/)).not.toBeInTheDocument();
   });
 });

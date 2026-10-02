@@ -2,14 +2,21 @@ import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
 import { useSetting } from "../../hooks/useSetting";
-import { progressoTeto } from "../../lib/teto-predio";
+import { progressoTeto, horaDaSmartfit, CINTURA_PRA_SMARTFIT } from "../../lib/teto-predio";
 
 export function WorkoutHome() {
   // A aba abre pelo treino de hoje (auditoria 2026-09-23: eram seis cartões e
   // nenhum dizia o que fazer hoje). Mesma regra do Hoje: dia da semana + ciclo.
   const activeCycle = useSetting("activeCycle");
   const modoCaminhada = useSetting("modoCaminhada");
-  const teto = progressoTeto(useSetting("tetoPredio"));
+  const tetos = useSetting("tetoPredio");
+  const teto = progressoTeto(tetos);
+  // A troca só vem na fase 2 (decisão dela, 2026-10-02): a última cintura medida decide.
+  const cinturaAtual = useLiveQuery(
+    async () => (await db.measurements.orderBy("date").toArray()).filter((m) => !!m.waistCm).at(-1)?.waistCm,
+    [],
+  );
+  const hora = horaDaSmartfit(tetos, cinturaAtual);
   const dayOfWeek = new Date().getDay();
   const deHoje = useLiveQuery(
     async () => (await db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).toArray()).find((t) => (t.cycle ?? "adaptacao") === activeCycle) ?? null,
@@ -30,7 +37,10 @@ export function WorkoutHome() {
         </div>
       )}
       {teto.noTeto > 0 && (
-        <p className="text-muted text-xs px-1">Teto do prédio: {teto.noTeto} de {teto.total} exercícios principais{teto.todos ? " — hora da Smartfit" : ""}</p>
+        <p className="text-muted text-xs px-1">
+          Teto do prédio: {teto.noTeto} de {teto.total} exercícios principais
+          {hora ? " — hora da Smartfit" : teto.todos ? ` — fica no prédio com as táticas até a cintura chegar em ${CINTURA_PRA_SMARTFIT}` : ""}
+        </p>
       )}
       <Link to="/treino/horizontes" className="card block hover:border-nude/40 transition border-nude/40">
         <h3 className="text-nude-warm font-medium">Até onde dá pra chegar ✦</h3>

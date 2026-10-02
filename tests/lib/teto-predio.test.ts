@@ -43,3 +43,27 @@ describe("teto do prédio", () => {
     expect(DEFAULTS.ladoFraco).toBe("");
   });
 });
+
+// Decisão dela (2026-10-02): mesmo com o teto batido, a troca de academia só
+// vem na fase 2 — cintura em 84 ou menos. Antes disso, táticas no prédio.
+import { horaDaSmartfit, CINTURA_PRA_SMARTFIT } from "../../src/lib/teto-predio";
+
+describe("hora da Smartfit", () => {
+  const todos = Object.fromEntries(EXERCICIOS_CHAVE.map((id) => [id, 40]));
+  it("os quatro no teto e a cintura na fase 2 → sim", () => {
+    expect(horaDaSmartfit(todos, CINTURA_PRA_SMARTFIT)).toBe(true);
+    expect(horaDaSmartfit(todos, CINTURA_PRA_SMARTFIT - 1)).toBe(true);
+  });
+  it("teto batido com a cintura acima de 84 → ainda não", () => {
+    expect(horaDaSmartfit(todos, CINTURA_PRA_SMARTFIT + 0.5)).toBe(false);
+  });
+  it("sem medida de cintura → ainda não", () => {
+    expect(horaDaSmartfit(todos, undefined)).toBe(false);
+  });
+  it("cintura boa mas falta teto → não", () => {
+    expect(horaDaSmartfit({ "hip-thrust-barra": 40 }, 80)).toBe(false);
+  });
+  it("a cintura vem do objetivo (fim da fase 1)", () => {
+    expect(CINTURA_PRA_SMARTFIT).toBe(84);
+  });
+});

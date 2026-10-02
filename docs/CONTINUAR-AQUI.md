@@ -96,6 +96,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Andar: pé **perto da linha, sem cruzar** — a "perna maior" dela é pelve desnivelada (teste de 10-01). |
 | 10-02 | Cardio: esteira ~6% a 5 km/h por 1 h **depois do treino**, no lugar da caminhada (modo `esteira`). Jantar passa pra ~20h30. |
 | 10-02 | Estrutura do treino mantida; entram búlgaro, lado fraco primeiro e táticas no teto. Teto do prédio é aprendido no uso. |
+| 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
 
 ---
 
