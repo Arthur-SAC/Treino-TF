@@ -51,6 +51,7 @@ import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
 import { setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
+import { AvisoBackup } from "../components/AvisoBackup";
 
 /** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
  *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
@@ -418,6 +419,7 @@ export function Today() {
     <div className="p-4 pb-24 space-y-3">
       <AvisoLembretes />
       <AvisoApkNovo />
+      <AvisoBackup />
       <div className="flex justify-between items-start">
         <div>
           <p className="text-muted text-xs uppercase tracking-wider">Hoje · {formatDateBR(today)}</p>
