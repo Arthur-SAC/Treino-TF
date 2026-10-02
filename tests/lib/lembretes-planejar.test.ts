@@ -207,3 +207,22 @@ describe("planejar — intervalos inválidos", () => {
     expect(l.every((x) => x.id < 2 ** 31)).toBe(true);
   });
 });
+
+describe("planejar — botões de ação e dia do lembrete", () => {
+  const lista = planejar(QUINTA_5H, cfg, { ...vazio, ultimaMedida: "2026-09-01", ultimoBackupEm: "" });
+  const por = (titulo: string, h?: string) => lista.filter((x) => x.titulo === titulo && (!h || hhmm(x.quando) === h));
+  it("alongamento, vitamina D, água e dormir têm ação; o resto não", () => {
+    expect(por("Alongamento", "06:00")[0]).toMatchObject({ acao: "feito", itemId: "alongamento-manha" });
+    expect(por("Alongamento", "21:30")[0]).toMatchObject({ acao: "feito", itemId: "alongamento-noite" });
+    expect(por("Vitamina D")[0]).toMatchObject({ acao: "feito", itemId: "vitamina-d" });
+    expect(por("Água")[0].acao).toBe("bebi");
+    expect(por("Hora de desligar")[0].acao).toBe("deitei");
+    for (const t of ["Levanta um pouco", "Treino", "Medidas", "Backup"]) {
+      expect(por(t).length).toBeGreaterThan(0);
+      for (const l of por(t)) expect(l.acao).toBeUndefined();
+    }
+  });
+  it("todo lembrete leva o ISO do dia em que toca", () => {
+    for (const l of lista) expect(l.dia).toBe(hojeISO(l.quando));
+  });
+});

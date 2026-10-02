@@ -6,7 +6,15 @@ import { isWithinQuietHours } from "../notifications";
 import { hojeISO } from "../today-date";
 import { backupVencido } from "../backup-lembrete";
 
-export interface Lembrete { id: number; quando: Date; titulo: string; corpo: string; rota: string }
+export interface Lembrete {
+  id: number; quando: Date; titulo: string; corpo: string; rota: string;
+  /** ISO do dia em que toca: o botão da notificação registra NESSE dia, não no de hoje. */
+  dia: string;
+  /** Botão da notificação (ausente = só abre o app). */
+  acao?: "feito" | "bebi" | "deitei";
+  /** Item da rotina que o "Feito" marca. */
+  itemId?: string;
+}
 
 export interface ConfigLembretes {
   notificationsEnabled: boolean;
@@ -66,8 +74,8 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
   const hoje = hojeISO(agora);
   const limite = agora.getTime() + JANELA_DIAS * 86400000;
   const saida: Lembrete[] = [];
-  const add = (tipo: number, dia: Date, seq: number, quando: Date, titulo: string, corpo: string, rota = "/") =>
-    saida.push({ id: idDe(tipo, dia, seq), quando, titulo, corpo, rota });
+  const add = (tipo: number, dia: Date, seq: number, quando: Date, titulo: string, corpo: string, rota = "/", extra: { acao?: Lembrete["acao"]; itemId?: string } = {}) =>
+    saida.push({ id: idDe(tipo, dia, seq), quando, titulo, corpo, rota, dia: hojeISO(dia), ...extra });
 
   const medirDesde = estado.ultimaMedida ? somarDias(estado.ultimaMedida, 14) : somarDias(hoje, 0);
 
@@ -79,7 +87,7 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
     const util = dow >= 1 && dow <= 5;
 
     if (!(ehHoje && estado.feitosHoje.has("alongamento-manha")))
-      add(TIPO.alongManha, dia, 0, naHora(dia, cfg.alongamentoManhaTime), "Alongamento", "5 min de manhã");
+      add(TIPO.alongManha, dia, 0, naHora(dia, cfg.alongamentoManhaTime), "Alongamento", "5 min de manhã", "/", { acao: "feito", itemId: "alongamento-manha" });
 
     if (util) {
       // Campo apagado em Configurações grava 0: `m += 0` travava o app. Menos
@@ -93,7 +101,7 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
         let seq = 0;
         for (let m = ini + passoAgua; m < fim; m += passoAgua) {
           const corpo = ehHoje ? `${estado.aguaHojeMl} de ${cfg.hydrationGoalMl} ml` : "Um copo agora";
-          add(TIPO.agua, dia, seq++, minutosNaHora(dia, m), "Água", corpo);
+          add(TIPO.agua, dia, seq++, minutosNaHora(dia, m), "Água", corpo, "/", { acao: "bebi" });
         }
       }
       let seq = 0;
@@ -107,9 +115,9 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
       add(TIPO.treino, dia, 0, naHora(dia, cfg.workoutReminderTime), "Treino", treino);
 
     if (!(ehHoje && estado.feitosHoje.has("alongamento-noite")))
-      add(TIPO.alongNoite, dia, 0, naHora(dia, cfg.alongamentoNoiteTime), "Alongamento", "Antes de deitar");
+      add(TIPO.alongNoite, dia, 0, naHora(dia, cfg.alongamentoNoiteTime), "Alongamento", "Antes de deitar", "/", { acao: "feito", itemId: "alongamento-noite" });
 
-    add(TIPO.dormir, dia, 0, naHora(dia, cfg.dormirReminderTime), "Hora de desligar", "Tela longe, deitar às 22h30");
+    add(TIPO.dormir, dia, 0, naHora(dia, cfg.dormirReminderTime), "Hora de desligar", "Tela longe, deitar às 22h30", "/", { acao: "deitei" });
 
     if (iso >= medirDesde && estado.ultimaMedida !== iso)
       add(TIPO.medir, dia, 0, naHora(dia, "06:05"), "Medidas", "Em jejum, antes do café", "/corpo/medidas");
@@ -117,7 +125,7 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
     if (dow === 0) {
       const segunda = somarDias(iso, -6);
       const tomou = estado.vitaminaDFeitaEm.some((d) => d >= segunda && d <= iso);
-      if (!tomou) add(TIPO.vitD, dia, 0, naHora(dia, cfg.vitaminaDTime), "Vitamina D", "Com uma refeição com gordura");
+      if (!tomou) add(TIPO.vitD, dia, 0, naHora(dia, cfg.vitaminaDTime), "Vitamina D", "Com uma refeição com gordura", "/", { acao: "feito", itemId: "vitamina-d" });
     }
 
     // Backup: no dia em que vence e nos seguintes, até ela exportar.

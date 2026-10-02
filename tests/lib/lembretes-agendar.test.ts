@@ -15,7 +15,7 @@ describe("agendar", () => {
   it("cancela os pendentes antes de agendar a lista nova", async () => {
     const p = fake([1, 2]);
     const quando = new Date(2026, 8, 25, 6, 0);
-    await agendar([{ id: 125092500, quando, titulo: "Alongamento", corpo: "5 min de manhã", rota: "/" }], p);
+    await agendar([{ id: 125092500, quando, titulo: "Alongamento", corpo: "5 min de manhã", rota: "/", dia: "2026-09-25" }], p);
     expect(p.cancel).toHaveBeenCalledWith({ notifications: [{ id: 1 }, { id: 2 }] });
     expect(p.cancel.mock.invocationCallOrder[0]).toBeLessThan(p.schedule.mock.invocationCallOrder[0]);
     expect(p.schedule.mock.calls[0][0].notifications[0]).toMatchObject({
@@ -39,7 +39,7 @@ describe("agendar", () => {
 // (padrão true) e sem a permissão abre sozinho a tela "Alarmes e lembretes" do
 // Android — e o reagendamento ao voltar pro app abria de novo, em loop.
 describe("agendar — alarme exato", () => {
-  const um = [{ id: 125092500, quando: new Date(2026, 8, 25, 6, 0), titulo: "Alongamento", corpo: "5 min de manhã", rota: "/" }];
+  const um = [{ id: 125092500, quando: new Date(2026, 8, 25, 6, 0), titulo: "Alongamento", corpo: "5 min de manhã", rota: "/", dia: "2026-09-25" }];
   const exatos = (p: ReturnType<typeof fake>) =>
     (p.schedule.mock.calls[0][0].notifications as Array<{ isExactNotification?: boolean }>).map((n) => n.isExactNotification);
   it("sem a permissão, agenda inexato — quem pede a permissão é o card do Hoje", async () => {
