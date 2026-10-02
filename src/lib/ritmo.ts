@@ -12,10 +12,9 @@
 // testosterona de que firmeza, libido e força dependem. Sobram adesão e prazo.
 
 import type { Measurement } from "./db";
-import { TREINOS_POR_SEMANA } from "./objetivo";
 import { mesAno, somaSemanas, type Projecao } from "./partida";
 import { KCAL_POR_KG_GORDURA } from "./comer-fora";
-import { CONSUMO, FASES, KCAL_CAMINHADA_DIA, gastoEstimado, type ModoCaminhada } from "./objetivo";
+import { CONSUMO, FASES, TREINOS_POR_SEMANA, KCAL_CAMINHADA_DIA, gastoEstimado, type ModoCaminhada } from "./objetivo";
 import { somarDiasISO } from "./today-date";
 
 /** Antes disso a fita e a balança oscilam mais do que ela perde. */

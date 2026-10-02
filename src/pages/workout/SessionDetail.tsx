@@ -193,7 +193,7 @@ export function SessionDetail() {
           {
             id: "ao-terminar",
             title: "Ao terminar",
-            intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
+            intro: "Ao fechar (o alongamento fica pro da noite):",
             tips: [
               ...dicasZona2(modoCaminhada),
             ],

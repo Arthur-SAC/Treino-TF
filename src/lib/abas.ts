@@ -7,11 +7,11 @@
 
 export type Aba = "hoje" | "progresso" | "guia" | "vitalidade";
 
-const PROGRESSO = [/^\/progresso/, /^\/corpo(\/|$)/, /^\/trilha$/, /^\/trilha\/marcos/, /^\/trilha\/evolucao/, /^\/trilha\/diario/, /^\/treino\/horizontes/, /^\/treino\/progressao/];
-const GUIA = [/^\/guia/, /^\/treino(\/|$)/, /^\/beleza(\/|$)/, /^\/trilha\/(alimentacao|apoio|fertilidade|direitos)/, /^\/refeicoes-hoje/];
+const PROGRESSO = [/^\/progresso(\/|$)/, /^\/corpo(\/|$)/, /^\/trilha$/, /^\/trilha\/marcos/, /^\/trilha\/evolucao/, /^\/trilha\/diario/, /^\/treino\/horizontes/, /^\/treino\/progressao/];
+const GUIA = [/^\/guia(\/|$)/, /^\/treino(\/|$)/, /^\/beleza(\/|$)/, /^\/trilha\/(alimentacao|apoio|fertilidade|direitos)/, /^\/refeicoes-hoje/];
 
 export function abaDaRota(pathname: string): Aba {
-  if (/^\/(trilha\/)?vitalidade/.test(pathname)) return "vitalidade";
+  if (/^\/(trilha\/)?vitalidade(\/|$)/.test(pathname)) return "vitalidade";
   if (PROGRESSO.some((r) => r.test(pathname))) return "progresso";
   if (GUIA.some((r) => r.test(pathname))) return "guia";
   return "hoje";

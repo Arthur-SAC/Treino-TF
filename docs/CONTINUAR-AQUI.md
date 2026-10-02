@@ -282,6 +282,8 @@ comentários com LANCHE ~500 / JANTAR ~700.
 
 **Anteriores:**
 
+- PathTabs (Trilha) mistura telas de Progresso e de Guia — reorganizar as telas internas é a próxima arrumação.
+- O lembrete das 21h do PWA só conta practiceLogs de postura (não o check do Hoje); o APK não usa esse agendador.
 - Quando ela trocar pra Smartfit, a reescrita da fase 2 tem que limpar o setting `tetoPredio`
   (senão o card e as táticas continuam ligados nos 4 exercícios).
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e

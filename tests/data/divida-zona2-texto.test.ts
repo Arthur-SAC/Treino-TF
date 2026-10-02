@@ -11,6 +11,11 @@ describe("cardio-zona2 vale pros dois modos", () => {
     expect(z2.description).not.toContain("É a caminhada de 5 km do trabalho para casa");
     expect(z2.description).toContain("esteira");
   });
+  it("nenhum texto do exercício fixa a caminhada das 16h nem proíbe outro cardio", () => {
+    // A rede cobre tudo o que a tela mostra, não só a descrição.
+    expect(JSON.stringify(z2)).not.toMatch(/caminhada das 16h|não precisa de mais cardio contínuo depois/);
+    expect(JSON.stringify(EXERCISES.find((e) => e.id === "bike-reclinada")!)).not.toMatch(/caminhada das 16h/);
+  });
 });
 
 describe("treinos por semana tem fonte única", () => {
