@@ -215,7 +215,7 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
   // Fora do modo caminhada não há caminhada de 5 km antes dos cães: o texto não
   // pode afirmar uma que o modo trocou ou tirou.
   if (modo !== "caminhada") {
-    return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes do treino" };
+    return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho — é o combustível até o treino das 18h15" };
   }
   return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes da caminhada de 5 km — depois vêm os cães e o treino" };
 }

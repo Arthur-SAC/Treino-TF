@@ -93,8 +93,10 @@ describe("rotina pelo modo das caminhadas", () => {
 
   it("o lanche da semana não cita a caminhada fora do modo caminhada", () => {
     const l = (m: Parameters<typeof buildDayRoutine>[3]) => bloco(2, "tarde", m).find((i) => i.id === "lanche-saida")!.subtitle;
-    expect(l("esteira")).toMatch(/meia hora antes do treino/);
-    expect(l("pausada")).toMatch(/meia hora antes do treino/);
+    expect(l("esteira")).toMatch(/combustível até o treino/);
+    expect(l("esteira")).not.toMatch(/meia hora antes do treino/);
+    expect(l("pausada")).toMatch(/combustível até o treino/);
+    expect(l("pausada")).not.toMatch(/meia hora antes do treino/);
     expect(l("caminhada")).toMatch(/caminhada de 5 km/);
   });
 });
