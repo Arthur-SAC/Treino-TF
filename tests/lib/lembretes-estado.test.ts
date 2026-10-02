@@ -31,6 +31,12 @@ describe("carregarEstado", () => {
     expect(e.vitaminaDFeitaEm).toEqual(["2026-09-27"]);
   });
 
+  it("último backup: vazio se nunca, senão a data gravada", async () => {
+    expect((await carregarEstado(AGORA)).ultimoBackupEm).toBe("");
+    await db.settings.put({ key: "ultimoBackupEm", value: "2026-09-20" });
+    expect((await carregarEstado(AGORA)).ultimoBackupEm).toBe("2026-09-20");
+  });
+
   it("treino por dia vem só do ciclo ativo", async () => {
     await db.settings.put({ key: "activeCycle", value: "entrada-1" });
     await db.workoutTemplates.bulkPut([

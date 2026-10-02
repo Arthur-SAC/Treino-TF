@@ -37,7 +37,7 @@ export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
   const vitD = await db.routineChecks.where("date").anyOf(ultimos).toArray();
   const vitaminaDFeitaEm = vitD.filter((c) => c.itemId === "vitamina-d" && c.done).map((c) => c.date).sort();
 
-  return { feitosHoje, aguaHojeMl: log?.waterMl ?? 0, treinouHoje, treinoPorDia, ultimaMedida, vitaminaDFeitaEm };
+  return { feitosHoje, aguaHojeMl: log?.waterMl ?? 0, treinouHoje, treinoPorDia, ultimaMedida, vitaminaDFeitaEm, ultimoBackupEm: await getSetting("ultimoBackupEm") };
 }
 
 export async function carregarConfig(): Promise<ConfigLembretes> {

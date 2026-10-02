@@ -4,6 +4,7 @@
 // Android é agendar.ts. Toda a regra mora aqui, e só aqui.
 import { isWithinQuietHours } from "../notifications";
 import { hojeISO } from "../today-date";
+import { backupVencido } from "../backup-lembrete";
 
 export interface Lembrete { id: number; quando: Date; titulo: string; corpo: string; rota: string }
 
@@ -30,6 +31,8 @@ export interface EstadoLembretes {
   treinoPorDia: ReadonlyMap<number, string>;
   ultimaMedida: string | null;
   vitaminaDFeitaEm: readonly string[];
+  /** Data (ISO) do último backup exportado; "" = nunca. */
+  ultimoBackupEm: string;
 }
 
 export const JANELA_DIAS = 14;
@@ -37,7 +40,7 @@ export const JANELA_DIAS = 14;
 // Um dígito por tipo, no começo do id: tipo · yyMMdd · sequência (2 dígitos).
 // 9 26 09 24 99 = 926092499 < 2^31. Mesmo tipo, dia e sequência dão o mesmo
 // id, então reagendar não duplica.
-const TIPO = { alongManha: 1, alongNoite: 2, agua: 3, pausa: 4, treino: 5, dormir: 6, medir: 7, vitD: 8 } as const;
+const TIPO = { alongManha: 1, alongNoite: 2, agua: 3, pausa: 4, treino: 5, dormir: 6, medir: 7, vitD: 8, backup: 9 } as const;
 
 function idDe(tipo: number, dia: Date, seq: number): number {
   const yy = dia.getFullYear() % 100;
@@ -116,6 +119,10 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
       const tomou = estado.vitaminaDFeitaEm.some((d) => d >= segunda && d <= iso);
       if (!tomou) add(TIPO.vitD, dia, 0, naHora(dia, cfg.vitaminaDTime), "Vitamina D", "Com uma refeição com gordura");
     }
+
+    // Backup: no dia em que vence e nos seguintes, até ela exportar.
+    if (backupVencido(estado.ultimoBackupEm, iso))
+      add(TIPO.backup, dia, 0, naHora(dia, "12:05"), "Backup", "Seus dados só existem no celular", "/configuracoes");
   }
 
   return saida
