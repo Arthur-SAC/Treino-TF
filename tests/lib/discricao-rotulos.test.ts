@@ -3,6 +3,8 @@ import { SHORTCUTS } from "../../src/components/ShortcutsGrid";
 import { buildDayRoutine } from "../../src/lib/today-routine";
 import { posturaDoDia, ATE_GINGADO } from "../../src/lib/postura-progression";
 import { NOTIFICACAO_NOITE } from "../../src/lib/notification-scheduler";
+import { ITENS_PROGRESSO } from "../../src/pages/ProgressoHome";
+import { BLOCOS_GUIA } from "../../src/pages/GuiaHome";
 
 // Lê fonte como texto pelo Vite (?raw) — o tsconfig do projeto não tem tipos do Node.
 const MANIFEST = Object.values(import.meta.glob("../../vite.config.ts", { query: "?raw", import: "default", eager: true }))[0] as string;
@@ -56,5 +58,14 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
 
   it("o atalho da Vitalidade abre a aba Vitalidade, não a rota antiga da Trilha", () => {
     expect(SHORTCUTS.find((s) => s.label === "Vitalidade")?.to).toBe("/vitalidade");
+  });
+
+  it("as abas de baixo e as telas-índice Progresso e Guia", () => {
+    const rotulos = [
+      "Hoje", "Progresso", "Guia", "Vitalidade",
+      ...ITENS_PROGRESSO.flatMap((i) => [i.label, i.sub]),
+      ...BLOCOS_GUIA.flatMap((b) => [b.titulo, ...b.itens.map((i) => i.label)]),
+    ];
+    expect(rotulos.filter((r) => EXPOE.test(r))).toEqual([]);
   });
 });

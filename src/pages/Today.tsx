@@ -11,6 +11,7 @@ import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, 
 import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
 import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
 import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
+import { TREINOS_POR_SEMANA } from "../lib/objetivo";
 import { posturaDoDia, SEQUENCIAS_POSTURA } from "../lib/postura-progression";
 import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
@@ -445,7 +446,7 @@ export function Today() {
           estreita "Skincare" e "Vitalidade" espremem contra a borda do
           próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
       <div className="grid grid-cols-2 gap-2">
-        <StreakCard label="Treino" count={Math.min(last7DaysTraining ?? 0, 5)} total={5} />
+        <StreakCard label="Treino" count={Math.min(last7DaysTraining ?? 0, TREINOS_POR_SEMANA)} total={TREINOS_POR_SEMANA} />
         <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
         <StreakCard label="Sono" count={last7DaysSleep} total={7} />
         {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele

@@ -24,6 +24,13 @@ describe("apresentação — o que conversamos em 2026-09-30/10-01", () => {
     }
   });
 
+  // Rede do andar (dívida 4): as três frases são o "pisar na linha" por outro nome.
+  it("nenhuma sequência de andar usa 'sobre a linha', 'na frente do outro' ou 'linha única'", () => {
+    for (const id of ANDAR) {
+      expect({ id, proibido: /sobre a linha|na frente do outro|linha única/i.test(texto(id)) }).toEqual({ id, proibido: false });
+    }
+  });
+
   it("sentar não manda 'nunca abertas' nem cruzar no joelho como padrão, e fala em blocos e em trocar", () => {
     const t = texto("corporal-postura-sentar");
     expect(t).not.toMatch(/nunca abertas/i);

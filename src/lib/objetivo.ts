@@ -6,6 +6,11 @@
 // prometia um superávit que o plano alimentar negava. Toda tela que AFIRMA algo
 // sobre o objetivo lê daqui.
 
+/** Treinos de força por semana no plano (3 inferiores + 2 superiores). Ritmo,
+ *  revisão semanal, SemanaCard e o streak do Hoje leem daqui — antes cada um
+ *  tinha o próprio 5 e mudar o plano exigiria achar todos. */
+export const TREINOS_POR_SEMANA = 5;
+
 /** A medição real de 13/05/2026 — o ponto de partida de tudo. */
 export const MEDIDAS_PARTIDA = {
   data: "2026-05-13",

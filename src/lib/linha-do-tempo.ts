@@ -15,7 +15,7 @@ export function linhaDoTempo(pr: Projecao | null): GuideSection {
       id: "linha-do-tempo",
       title: "Linha do tempo",
       intro: `Os prazos aparecem depois da sua primeira medição — peso, cintura no umbigo e pescoço. ${intro}`,
-      tips: ["Mede na aba Corpo e volta aqui: cada data sai da sua medição, não de uma conta genérica."],
+      tips: ["Mede em Progresso → Medidas e volta aqui: cada data sai da sua medição, não de uma conta genérica."],
     };
   }
   const tips = [

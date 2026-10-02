@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-10-01
+**Última atualização:** 2026-10-02
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -26,6 +26,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | B · Apresentação no Hoje | item Postura 20:15 (andar → 8 → gingado depois de 14 práticas), dica de sentar em cada micro-pausa, sentar/andar reescritos e 8 com o quadril novos (MOVEMENT_VERSION 13) | spec `docs/superpowers/specs/2026-10-02-apresentacao-no-hoje-design.md` · plano `docs/superpowers/plans/2026-10-02-apresentacao-no-hoje.md` |
 | C · Hora da Smartfit | búlgaro (no lugar do goblet na variação), lado fraco primeiro, "não tem mais peso aqui" + táticas no teto, aviso da Smartfit quando hip thrust/leg press/abdutora/búlgaro estão no teto | spec `docs/superpowers/specs/2026-10-02-hora-da-smartfit-design.md` · plano `docs/superpowers/plans/2026-10-02-hora-da-smartfit.md` |
 | D · Nativo | botões Feito/Bebi 200 ml/Deitei nos lembretes (com dedupe ao reabrir), lembrete e aviso de backup a cada 15 dias; NATIVE_VERSION continua 1 | spec `docs/superpowers/specs/2026-10-02-nativo-design.md` · plano `docs/superpowers/plans/2026-10-02-nativo.md` |
+| E · Navegação + dívidas | 4 abas (Hoje · Progresso · Guia · Vitalidade) sem mudar rota, aba acesa por abaDaRota; zona 2 pelo modo; TREINOS_POR_SEMANA no objetivo; lista antiga de presença removida | spec `docs/superpowers/specs/2026-10-02-navegacao-e-dividas-design.md` · plano `docs/superpowers/plans/2026-10-02-navegacao-e-dividas.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -99,6 +100,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Estrutura do treino mantida; entram búlgaro, lado fraco primeiro e táticas no teto. Teto do prédio é aprendido no uso. |
 | 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
+| 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |
 
 ---
 
@@ -280,6 +282,8 @@ comentários com LANCHE ~500 / JANTAR ~700.
 
 **Anteriores:**
 
+- PathTabs (Trilha) mistura telas de Progresso e de Guia — reorganizar as telas internas é a próxima arrumação.
+- O lembrete das 21h do PWA só conta practiceLogs de postura (não o check do Hoje); o APK não usa esse agendador.
 - Quando ela trocar pra Smartfit, a reescrita da fase 2 tem que limpar o setting `tetoPredio`
   (senão o card e as táticas continuam ligados nos 4 exercícios).
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e
@@ -288,9 +292,6 @@ comentários com LANCHE ~500 / JANTAR ~700.
 - Adaptação ficou sem remada por 4-8 semanas (decisão consciente: remada constrói
   largura de dorsal, que o programa evita; `face-pull-polia` cobre a postura).
 - `cross-over-cabo` virou órfão do catálogo.
-- Textos fixos que dizem que a caminhada entrega a zona 2 (`SessionDetail.tsx` ~l.170, `exercises-seed.ts` `cardio-zona2`) não acompanham o modo das caminhadas (entrega A deixou de fora).
-- Números-alvo que, depois da entrega A, moram fora de `objetivo.ts`: 5 treinos por
-  semana (em `ritmo.ts` e `revisao-semanal.ts`); "+40 g de arroz / +1 ovo / 200 kcal"
+- Números-alvo que, depois da entrega A, moram fora de `objetivo.ts`: "+40 g de arroz / +1 ovo / 200 kcal"
   (texto do "rápido demais"); `SEMANA_CHEIA` 0,85; e os 60 min dos cães em
   `metaCaminhadaMin`. Mudar um deles exige procurar os outros.
-- `PRESENCE_ITEMS`/`presenceSuggestionForDay` (`src/lib/daily-routine.ts`) não aparecem em tela nenhuma — só o agendador antigo do PWA os lê; o rodízio de postura da entrega B substituiu a parte de apresentação. Remover ou realocar na entrega E.

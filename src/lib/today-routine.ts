@@ -54,9 +54,21 @@ export const ITENS_CAMINHADA = ["caminhada-trabalho", "caminhada-fds"] as const;
 function noModo(item: RoutineItem, modo: ModoCaminhada): RoutineItem | null {
   if (modo === "pausada") return null;
   if (modo === "esteira") {
+    // Dia útil: a esteira é logo depois da força (decisão dela, 2026-10-02:
+    // treino 18:15 → 1 h de esteira → jantar ~20:30). Quem monta o bloco da
+    // noite é `buildBlocks`; aqui só o texto e o horário do item.
+    if (item.id === "caminhada-trabalho") {
+      return {
+        ...item,
+        block: "noite",
+        label: "Esteira inclinada · 1 h",
+        subtitle: "Logo depois da força: ~6% a 5 km/h, 1 h, ofegante mas falando em frases curtas",
+        defaultTime: "19:15",
+      };
+    }
     return {
       ...item,
-      label: item.id === "caminhada-fds" ? "Esteira inclinada · 45–60 min (fim de semana)" : "Esteira inclinada · 45–60 min",
+      label: "Esteira inclinada · 45–60 min (fim de semana)",
       subtitle: "6–10% a 4,5–5,5 km/h, ou bike nível 5–6 · ofegante, mas falando em frases curtas",
     };
   }
@@ -183,7 +195,7 @@ type TipoDeDia = "semana" | "sabado" | "domingo";
  *  da caminhada das 16h; no fim de semana é às 16h — no sábado é antes da
  *  dança, no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
-function lanche(dia: TipoDeDia): RoutineItem {
+function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
   const base = {
     id: "lanche-saida",
     block: "tarde",
@@ -199,6 +211,11 @@ function lanche(dia: TipoDeDia): RoutineItem {
   }
   if (dia === "domingo") {
     return { ...base, label: "Lanche da tarde", subtitle: "Toque pra ver a receita · segura a fome até o jantar, mesmo num dia parado" };
+  }
+  // Fora do modo caminhada não há caminhada de 5 km antes dos cães: o texto não
+  // pode afirmar uma que o modo trocou ou tirou.
+  if (modo !== "caminhada") {
+    return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho — é o combustível até o treino das 18h15" };
   }
   return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes da caminhada de 5 km — depois vêm os cães e o treino" };
 }
@@ -275,13 +292,18 @@ const CAMINHADA_TRABALHO: RoutineItem = {
 
 /** O "sem cardio no fim" só vale se houve cardio antes: na pausada não houve. */
 function subtituloTreino(modo: ModoCaminhada): string {
-  if (modo === "pausada") return "Sem cardio no fim — a caminhada está pausada; se quiser compensar, 20–30 min de esteira inclinada depois da força.";
-  return `Sem cardio no fim — ${modo === "esteira" ? "a esteira" : "a caminhada das 16h"} já cobriu`;
+  if (modo === "esteira") return "Força primeiro; a esteira vem logo depois";
+  if (modo === "pausada") return "A caminhada está pausada; se quiser compensar, 20–30 min de esteira inclinada depois da força.";
+  return "Sem cardio no fim — a caminhada das 16h já cobriu";
 }
 
 function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
+  const caminhada = noModo(CAMINHADA_TRABALHO, modo);
   return [
-    ...[noModo(CAMINHADA_TRABALHO, modo)].filter((i): i is RoutineItem => i !== null),
+    ...(caminhada && caminhada.block === "tarde" ? [caminhada] : []),
+    // Esteira: ela chega em casa ~16:30 sem a caminhada, então a postura sai da
+    // noite (20:15 cairia em cima da esteira/jantar) e vem pra cá.
+    ...(modo === "esteira" ? [POSTURA_ESTEIRA] : []),
     caes("semana", modo),
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
   ];
@@ -290,15 +312,30 @@ function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
 /** Sexta e sábado ela sai com a noiva (e domingo, de 15 em 15): o jantar
  *  lembra que existe plano pra isso, no lugar de fingir que ela janta a
  *  marmita (auditoria 2026-09-23). */
-function noiteDoDia(dayOfWeek: number): RoutineItem[] {
+function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const fora = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0;
-  if (!fora) return NOITE;
-  return NOITE.map((i) =>
+  const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
+  let base = NOITE;
+  if (modo === "esteira" && diaUtil) {
+    // Treino 18:15 → esteira 19:15 → jantar 20:30. A ordem do array segue o horário.
+    const horario: Record<string, string> = { jantar: "20:30", "skincare-noite": "21:00", voz: "21:10" };
+    base = [
+      noModo(CAMINHADA_TRABALHO, modo)!,
+      ...NOITE.filter((i) => i.id !== "postura").map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
+    ];
+  }
+  if (!fora) return base;
+  return base.map((i) =>
     i.id === "jantar"
       ? { ...i, note: "Vai jantar fora? A verba da semana cobre — o que pedir está em Alimentação, no plano de comer fora." }
       : i,
   );
 }
+
+/** A postura do dia útil no modo esteira: ~16:45, com ela já em casa. */
+const POSTURA_ESTEIRA: RoutineItem = {
+  id: "postura", block: "tarde", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "16:45",
+};
 
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
@@ -356,7 +393,7 @@ function buildBlocks(
           // de `walkGoalMin` ter subido para 120 (ver settings-helpers.ts).
           { id: "descanso-domingo", block: "tarde", label: "Descanso", subtitle: "Dia livre — o passeio já conta; o resto do dia é seu" },
         ] }
-      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana"), ...tardeSemana(modo)] };
+      : { id: "tarde", label: "Saída", timeHint: "a partir das 15h30", items: [lanche("semana", modo), ...tardeSemana(modo)] };
 
   const trabalho: RoutineBlockGroup = isSaturday || isSunday
     ? { id: "trabalho", label: "Durante o dia", items: [ALMOCO, AGUA] }
@@ -378,7 +415,7 @@ function buildBlocks(
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday, modo) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek) },
+    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek, modo) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }

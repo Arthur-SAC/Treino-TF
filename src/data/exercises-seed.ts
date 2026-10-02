@@ -660,15 +660,15 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: [
       "Começar muito intenso",
       "Pular essa fase",
-      "Esticar pra 15-20 min aqui — o cardio contínuo é a caminhada das 16h, não o aquecimento; esticar rouba energia do glúteo",
+      "Esticar pra 15-20 min aqui — o cardio contínuo é a caminhada ou a esteira do dia, não o aquecimento; esticar rouba energia do glúteo",
     ],
     easierVariation: "Inclinação 0% e 4 km/h, mesmos 5 min",
     harderVariation: "Inclinação 2-3% e 5 km/h, mantendo a conversa tranquila",
     exposureLevel: 1,
     successCue: "Fez certo se terminou os 5 min respirando um pouco mais forte, mas SEM cansar e falando normal.",
     proTips: [
-      "Teste da conversa: aqui no aquecimento você fala tranquila. Na caminhada das 16h você fala em frases curtas, ofegante. Se você já está ofegante nos 5 min, baixou a inclinação ou a velocidade",
-      "Não confunda com a caminhada do trabalho: esse aqui abre a sessão em 5 min leves; a caminhada das 16h dura ~1h num ritmo mais forte, e são coisas diferentes do seu dia",
+      "Teste da conversa: aqui no aquecimento você fala tranquila. Na caminhada ou na esteira do dia você fala em frases curtas, ofegante. Se você já está ofegante nos 5 min, baixou a inclinação ou a velocidade",
+      "Não confunda com a caminhada do trabalho: esse aqui abre a sessão em 5 min leves; a caminhada ou a esteira do dia dura ~1h num ritmo mais forte, e são coisas diferentes do seu dia",
       "A bike reclinada é ótima pra poupar os joelhos e é mais discreta que a esteira",
     ],
   },
@@ -1190,7 +1190,7 @@ export const EXERCISES: Exercise[] = [
     commonMistakes: [
       "Banco perto demais — joelho dobra muito e sobrecarrega a frente da coxa",
       "Resistência tão alta que vira treino de perna em vez de cardio",
-      "Confundir o aquecimento (5 min, nível 2-3) com o ritmo da caminhada das 16h (nível 5-6, se precisar trocar a caminhada pela bike)",
+      "Confundir o aquecimento (5 min, nível 2-3) com o ritmo da caminhada ou da esteira do dia (nível 5-6, se precisar trocar uma delas pela bike)",
     ],
     easierVariation: "Nível 1-2, mesmos 5 min",
     harderVariation: "Nível 3-4, mantendo a conversa tranquila",
@@ -1198,23 +1198,23 @@ export const EXERCISES: Exercise[] = [
     successCue: "Fez certo se terminou os 5 min respirando um pouco mais forte, mas SEM cansar e falando normal.",
     proTips: [
       "É o cardio mais confortável que você tem: sentada, com apoio nas costas e sem impacto no joelho",
-      "Referência de nível: 2-3 é aquecimento (conversa tranquila) · 5-6 é o ritmo da zona 2 da caminhada das 16h (ofegante, frases curtas) — útil se um dia de chuva trocar a caminhada pela bike. Se a sua bike tiver mais de 8 níveis, use a proporção",
+      "Referência de nível: 2-3 é aquecimento (conversa tranquila) · 5-6 é o ritmo da zona 2 da caminhada ou da esteira do dia (ofegante, frases curtas) — útil se um dia de chuva trocar uma delas pela bike. Se a sua bike tiver mais de 8 níveis, use a proporção",
       "Se em 5 min você não esquentou, sobe um nível — não aumenta o tempo, pra não roubar energia do glúteo",
     ],
   },
   {
     id: "cardio-zona2",
-    name: "Cardio zona 2 (caminhada do trabalho)",
+    name: "Cardio zona 2 (caminhada ou esteira)",
     category: "cardio",
     equipment: ["esteira", "bike-reclinada"],
     difficulty: "iniciante",
     // Não fica mais no fim do treino: a caminhada de 5 km do trabalho para
-    // casa, às 16h, já entrega os ~60 min contínuos nesse ritmo — todo dia
-    // útil, não só 3-4x/semana. Prescrever de novo no treino alongava a
+    // casa (ou a esteira logo depois da força) já entrega os ~60 min contínuos
+    // nesse ritmo — todo dia útil, não só 3-4x/semana. Prescrever de novo no treino alongava a
     // sessão e empurrava o jantar pra depois das 20h (ver cycles-seed.ts). A
     // esteira/bike ficam como alternativa pra dia de chuva ou viagem, quando
     // a caminhada real não rola.
-    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas. É a caminhada de 5 km do trabalho para casa: passada firme, sem parar, pelos ~60 min que ela já dura. Sem a caminhada (chuva, viagem), substitui por esteira em inclinação 6-10% a 4,5-5,5 km/h, ou bike reclinada em resistência nível 5-6 de 8.",
+    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas: a caminhada do trabalho pra casa ou a esteira inclinada (6–10%, 4,5–5,5 km/h), uns 45–60 min sem parar. Sem nenhuma das duas, bike reclinada nível 5-6 de 8.",
     commonMistakes: [
       "Ir rápido demais — se não dá pra falar, saiu da zona 2",
       "Confundir com o passeio dos cães, que é mais lento — aqui o ritmo é o que tira o fôlego",
@@ -1225,7 +1225,7 @@ export const EXERCISES: Exercise[] = [
     exposureLevel: 1,
     successCue: "Fez certo se conseguiu falar uma frase inteira sem engasgar, mas não cantaria.",
     proTips: [
-      "É a caminhada das 16h que fecha essa conta — não precisa de mais cardio contínuo depois da sessão de força",
+      "É a caminhada do trabalho ou a esteira logo depois da força que fecha essa conta — não precisa de outro bloco de cardio além dela",
       "A caminhada inclinada (ou o percurso com subida) recruta mais glúteo que andar plano",
       "O passeio lento com os cães, depois dela, é movimento bônus em cima disso — não é o mesmo estímulo",
     ],
