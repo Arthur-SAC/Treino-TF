@@ -73,7 +73,7 @@ const VARIATION: WorkoutTemplate[] = [
     id: "v-qua-mobilidade-danca",
     name: "◆Inferior B · Glúteo médio + coxa",
     dayOfWeek: 3,
-    durationMin: 46,
+    durationMin: 48,
     cycle: "variacao",
     purpose: "A lateral do quadril com carga e a coxa por dentro e pela frente: é o que alarga a silhueta vista de frente.",
     exercises: [
@@ -81,7 +81,7 @@ const VARIATION: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 4, repsTarget: "15-20", restSec: 45, block: "maquina", notes: "Tronco inclinado pra frente" },
       { exerciseId: "cadeira-extensora", sets: 3, repsTarget: "12-15", restSec: 60, block: "maquina" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina" },
-      { exerciseId: "agachamento-goblet", sets: 3, repsTarget: "10-12", restSec: 75, block: "solo" },
+      { exerciseId: "agachamento-bulgaro", sets: 3, repsTarget: "10-12 cada", restSec: 75, block: "solo", notes: "Metade da carga do goblet e o dobro do trabalho por perna — e o prédio dura mais antes do teto" },
       { exerciseId: "abdutor-deitada", sets: 3, repsTarget: "20 cada", restSec: 30, block: "solo" },
       { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
     ],
