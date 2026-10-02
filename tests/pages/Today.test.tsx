@@ -34,6 +34,12 @@ describe("Today (backbone)", () => {
     expect(screen.getByText("Noite")).toBeInTheDocument();
   });
 
+  it("o item Postura leva pra sequência do dia e mostra a duração", async () => {
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    const link = await screen.findByRole("link", { name: /Postura · \d+ min/ });
+    expect(link.getAttribute("href")).toMatch(/^\/treino\/movimento\/(corporal-caminhada|corporal-oito-quadril)$/);
+  });
+
   it("mostra o item Seu tempo (desenho + leitura)", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
     expect(await screen.findByText(/Seu tempo/i)).toBeInTheDocument();

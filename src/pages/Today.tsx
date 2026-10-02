@@ -7,10 +7,11 @@ import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
-import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
+import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
 import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
 import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
 import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
+import { posturaDoDia, SEQUENCIAS_POSTURA } from "../lib/postura-progression";
 import { rotuloDaSequencia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
@@ -127,6 +128,11 @@ export function Today() {
   // a trilha existia e nenhuma tela a servia).
   const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
   const reboladoHoje = reboladoDoDia(praticasRebolado ?? 0);
+  // Postura (andar → 8 → gingado), com o gingado liberado pela contagem —
+  // mesmo padrão dos alongamentos.
+  const praticasPostura = useLiveQuery(() => contarPraticasPostura(), []);
+  const posturaHoje = posturaDoDia(diaDoAno(today), praticasPostura ?? 0);
+  const posturaRotulo = rotuloFlexDoDia("Postura", posturaHoje);
   // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
   const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
@@ -272,6 +278,7 @@ export function Today() {
     flexManha: SEQUENCIAS_FLEX.manha,
     flexNoite: SEQUENCIAS_FLEX.noite,
     rebolado: SEQUENCIAS_REBOLADO,
+    postura: SEQUENCIAS_POSTURA,
   };
   const praticadaNaTrilha = (item: RoutineItem): boolean => {
     const trilha = item.linkKey ? trilhaDoItem[item.linkKey] : undefined;
@@ -335,6 +342,7 @@ export function Today() {
     if (item.linkKey === "flexManha") return flexManhaRotulo.subtitle;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.subtitle;
     if (item.linkKey === "rebolado") return reboladoHoje.etapa;
+    if (item.linkKey === "postura") return posturaRotulo.subtitle;
     if (item.id === "agua") return `${dailyLog?.waterMl ?? 0} ml de ${goalMl} ml`;
     if (item.id === "dormir") {
       const alvo = `alvo ${alvoSono}`;
@@ -360,6 +368,7 @@ export function Today() {
     if (item.linkKey === "pelvic") return pelvicRotulo.label;
     if (item.linkKey === "flexManha") return flexManhaRotulo.label;
     if (item.linkKey === "flexNoite") return flexNoiteRotulo.label;
+    if (item.linkKey === "postura") return posturaRotulo.label;
     return item.label;
   };
 
@@ -370,6 +379,7 @@ export function Today() {
     if (item.linkKey === "flexManha") return `/treino/movimento/${flexManhaHoje.sequenceId}`;
     if (item.linkKey === "flexNoite") return `/treino/movimento/${flexNoiteHoje.sequenceId}`;
     if (item.linkKey === "rebolado") return `/treino/movimento/${reboladoHoje.sequenceId}`;
+    if (item.linkKey === "postura") return `/treino/movimento/${posturaHoje.sequenceId}`;
     return item.to;
   };
 

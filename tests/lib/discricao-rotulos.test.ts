@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { SHORTCUTS } from "../../src/components/ShortcutsGrid";
 import { buildDayRoutine } from "../../src/lib/today-routine";
+import { posturaDoDia, ATE_GINGADO } from "../../src/lib/postura-progression";
 import { NOTIFICACAO_NOITE } from "../../src/lib/notification-scheduler";
 
 // Lê fonte como texto pelo Vite (?raw) — o tsconfig do projeto não tem tipos do Node.
@@ -24,6 +25,15 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
       buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items)
         .filter((i) => EXPOE.test(`${i.label} ${i.subtitle ?? ""}`))
         .map((i) => `${dow}: ${i.id}`),
+    );
+    expect(expostos).toEqual([]);
+  });
+
+  it("as etapas da Postura, que viram o subtítulo do item na hora de desenhar", () => {
+    const expostos = [1, 2, 3, 4, 5, 6].flatMap((d) =>
+      [0, ATE_GINGADO]
+        .map((p) => ({ d, p, etapa: posturaDoDia(d, p).etapa }))
+        .filter((x) => EXPOE.test(x.etapa)),
     );
     expect(expostos).toEqual([]);
   });
