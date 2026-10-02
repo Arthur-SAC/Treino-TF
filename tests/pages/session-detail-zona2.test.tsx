@@ -27,12 +27,15 @@ describe("SessionDetail · 'Ao terminar' segue o modo da caminhada", () => {
   it("pausada: diz que está pausada e não afirma que a caminhada entrega a zona 2", async () => {
     await abrir("pausada");
     await waitFor(() => expect(document.body.textContent).toMatch(/caminhada está pausada/));
+    expect(document.body.textContent).toMatch(/O passeio com os cães continua, mas é movimento leve — não substitui a zona 2\./);
+    expect(document.body.textContent).not.toMatch(/Sem pressão/);
     expect(document.body.textContent).not.toMatch(/já entrega/);
   });
 
   it("esteira: aponta a esteira inclinada do dia", async () => {
     await abrir("esteira");
-    await waitFor(() => expect(document.body.textContent).toMatch(/esteira inclinada do dia/));
+    await waitFor(() => expect(document.body.textContent).toMatch(/É ela a zona 2 de hoje/));
+    expect(document.body.textContent).not.toMatch(/Sem cardio/);
     expect(document.body.textContent).not.toMatch(/caminhada de 5 km do trabalho para casa, às 16h/);
   });
 

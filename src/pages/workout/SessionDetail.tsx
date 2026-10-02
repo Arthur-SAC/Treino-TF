@@ -17,18 +17,21 @@ function dicasZona2(modo: ModoCaminhada): string[] {
   if (modo === "pausada") {
     return [
       "A caminhada está pausada — a zona 2 de hoje não vem de lugar nenhum. Se quiser compensar, 20–30 min de esteira inclinada depois da força.",
-      "Sem pressão: pausa é pausa. O alongamento da noite continua valendo.",
+      "O passeio com os cães continua, mas é movimento leve — não substitui a zona 2.",
+      "Bebe água — você sua mais no calor de Aracaju.",
     ];
   }
   if (modo === "esteira") {
+    // Sem a dica de água compartilhada: a segunda frase já manda levar água.
     return [
-      "Sem cardio de zona 2 aqui no fim — a esteira inclinada do dia já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
-      "Qualquer passeio lento com os cães é movimento bônus (bom pra saúde) em cima disso.",
+      "Agora a esteira inclinada: ~6% a 5 km/h, 1 h sem parar, ofegante mas falando em frases curtas. É ela a zona 2 de hoje.",
+      "Leva água, não se segura no corrimão, e deixa o jantar pronto pra comer em até 30 min depois.",
     ];
   }
   return [
     "Sem cardio de zona 2 aqui no fim — a caminhada de 5 km do trabalho para casa, às 16h, já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
     "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
+    "Bebe água — você sua mais no calor de Aracaju.",
   ];
 }
 
@@ -193,7 +196,6 @@ export function SessionDetail() {
             intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
               ...dicasZona2(modoCaminhada),
-              "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },
         ]}
