@@ -6,6 +6,9 @@ import { formatDateBR } from "../lib/format";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
+import { useSetting } from "../hooks/useSetting";
+import { setSetting } from "../lib/settings-helpers";
+import { noTeto, taticasNoTeto } from "../lib/teto-predio";
 
 interface Props {
   exercise: Exercise;
@@ -45,6 +48,8 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const [restRunning, setRestRunning] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tetos = useSetting("tetoPredio");
+  const teto = tetos[exercise.id];
 
   useEffect(() => {
     let mounted = true;
@@ -151,6 +156,19 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
     setSets((prev) => prev.map((s) => ({ ...s, weight: String(suggested) })));
   }
 
+  const cargaAnterior = last ? last.sets[last.sets.length - 1].weight : 0;
+  // Só faz sentido dizer "não tem mais peso" quando o app pede pra SUBIR.
+  const podeMarcarTeto = suggested !== null && cargaAnterior > 0 && suggested > cargaAnterior && teto === undefined;
+  const travado = suggested !== null && noTeto(suggested, teto);
+
+  async function marcarTeto() {
+    await setSetting("tetoPredio", { ...tetos, [exercise.id]: cargaAnterior });
+  }
+  async function desfazerTeto() {
+    const { [exercise.id]: _, ...resto } = tetos;
+    await setSetting("tetoPredio", resto);
+  }
+
   function handleSave() {
     // Só as séries marcadas como feitas: as outras vêm pré-preenchidas da
     // última vez e entrariam no histórico sem terem acontecido. Se nenhuma foi
@@ -232,14 +250,25 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           Última vez ({formatDateBR(new Date(last.date))}): {describeLast(last)}
         </p>
       )}
-      {suggested !== null ? (
-        <button
-          type="button"
-          onClick={applySuggestion}
-          className="text-xs text-nude underline mb-3 block"
-        >
-          Sugestão: {suggested} kg (aplicar em todas)
-        </button>
+      {suggested !== null && travado ? (
+        <div className="text-xs mb-3">
+          <p className="text-nude-warm">No teto do prédio ({teto} kg)</p>
+          <ul className="text-muted list-disc pl-4 mt-1 space-y-0.5">
+            {taticasNoTeto(repsTarget).map((t) => <li key={t}>{t}</li>)}
+          </ul>
+          <button type="button" onClick={() => void desfazerTeto()} className="text-muted underline mt-1">o aparelho tem mais peso</button>
+        </div>
+      ) : suggested !== null ? (
+        <div className="mb-3">
+          <button type="button" onClick={applySuggestion} className="text-xs text-nude underline block">
+            Sugestão: {suggested} kg (aplicar em todas)
+          </button>
+          {podeMarcarTeto && (
+            <button type="button" onClick={() => void marcarTeto()} className="text-xs text-muted underline block mt-1">
+              Não tem mais peso aqui
+            </button>
+          )}
+        </div>
       ) : exercise.startLoadKg ? (
         <button
           type="button"
