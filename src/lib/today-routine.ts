@@ -6,7 +6,7 @@ import type { ModoCaminhada } from "./objetivo";
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
-export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite" | "rebolado";
+export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite" | "rebolado" | "postura";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
 export interface RoutineItem {
@@ -303,6 +303,10 @@ function noiteDoDia(dayOfWeek: number): RoutineItem[] {
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
   { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
+  // Sentar ficou nas micro-pausas; aqui é andar, 8 e gingado (decisão dela,
+  // 2026-10-02: cada prática no momento em que ela é usada). Rótulo neutro de
+  // propósito — o Hoje fica aberto em ambiente não receptivo.
+  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:15" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   ASSOALHO,
   // Mesma progressão do alongamento da manhã, trilha própria (ver

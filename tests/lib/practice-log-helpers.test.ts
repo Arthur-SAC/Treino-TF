@@ -3,8 +3,10 @@ import { db } from "../../src/lib/db";
 import {
   contarPraticasDaProgressao,
   contarPraticasDaSequencia,
+  contarPraticasPostura,
   contarPraticasRecentes,
 } from "../../src/lib/practice-log-helpers";
+import { DESDE_ENTREGA_B } from "../../src/lib/postura-progression";
 import { OFERTA_VITALIDADE, SEQUENCIA_DE_SOLTURA } from "../../src/lib/pelvic-progression";
 
 beforeEach(async () => {
@@ -63,5 +65,32 @@ describe("contarPraticasRecentes", () => {
     await db.practiceLogs.add({ date: "2026-08-11", sequenceId: "pelvic-kegel-rapido", completed: true });
     await db.practiceLogs.add({ date: "2026-08-11", sequenceId: "pelvic-start-stop", completed: false });
     expect(await contarPraticasRecentes("pelvic-start-stop", "2026-08-11")).toBe(0);
+  });
+});
+
+describe("contarPraticasPostura", () => {
+  const ANTES = "2026-10-01";
+  const DEPOIS = "2026-10-05";
+
+  // As versões antigas de andar/gingado mandavam pisar NA linha; contá-las
+  // abriria o gingado no dia 1, contra a decisão de 14 práticas novas.
+  it("ignora práticas anteriores à entrega B", async () => {
+    await db.practiceLogs.add({ date: ANTES, sequenceId: "corporal-caminhada", completed: true });
+    await db.practiceLogs.add({ date: ANTES, sequenceId: "sensual-andar-gingado", completed: true });
+    await db.practiceLogs.add({ date: DESDE_ENTREGA_B, sequenceId: "corporal-caminhada", completed: true });
+    await db.practiceLogs.add({ date: DEPOIS, sequenceId: "corporal-oito-quadril", completed: true });
+    await db.practiceLogs.add({ date: DEPOIS, sequenceId: "corporal-oito-quadril", completed: false });
+    await db.practiceLogs.add({ date: DEPOIS, sequenceId: "corporal-postura-sentar", completed: true });
+    expect(await contarPraticasPostura()).toBe(2);
+  });
+
+  // Sem isto o item do dia virava de andar/8 pra gingado logo depois de ela
+  // marcar a 14ª prática.
+  it("com antesDe, exclui o dia informado e os seguintes", async () => {
+    await db.practiceLogs.add({ date: "2026-10-03", sequenceId: "corporal-caminhada", completed: true });
+    await db.practiceLogs.add({ date: DEPOIS, sequenceId: "corporal-caminhada", completed: true });
+    await db.practiceLogs.add({ date: "2026-10-06", sequenceId: "corporal-oito-quadril", completed: true });
+    expect(await contarPraticasPostura(DEPOIS)).toBe(1);
+    expect(await contarPraticasPostura()).toBe(3);
   });
 });

@@ -23,6 +23,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | Auditoria | achados de 2026-09-23 (seção 9) | ✅ tudo menos a fase 2 — plano `docs/superpowers/plans/2026-09-23-auditoria.md` |
 | APK Android | Capacitor, lembretes agendados no Android (tocam com o app fechado), atualização automática do conteúdo, backup completo pra migração | ✅ na main (`c0b44a4`, 2026-10-01), release `apk-v1`; **falta ela migrar no celular** (`docs/APK.md`) e confirmar câmera e lembrete com o app fechado no Poco |
 | A · Treinador | modo das caminhadas (gasto, projeção, comer fora, Hoje), card Seu ritmo (a cintura decide, nunca cortar comida), revisão de domingo | spec `docs/superpowers/specs/2026-10-01-treinador-design.md` · plano `docs/superpowers/plans/2026-10-01-treinador.md` |
+| B · Apresentação no Hoje | item Postura 20:15 (andar → 8 → gingado depois de 14 práticas), dica de sentar em cada micro-pausa, sentar/andar reescritos e 8 com o quadril novos (MOVEMENT_VERSION 13) | spec `docs/superpowers/specs/2026-10-02-apresentacao-no-hoje-design.md` · plano `docs/superpowers/plans/2026-10-02-apresentacao-no-hoje.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -90,6 +91,8 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-01 | Abaixo do ritmo o app **nunca sugere cortar comida** — só adesão e prazo. Acima: comer mais, em gramas. |
 | 10-01 | Caminhada muda por **modo** em Configurações (caminhada / esteira / pausada), não por escolha diária. |
 | 10-02 | "Rápido demais / coma mais" só vale a partir de **3 semanas** da partida — antes disso a queda é água e glicogênio, e o card explica isso. |
+| 10-02 | Apresentação **separada por momento**: sentar nas micro-pausas do trabalho; andar, 8 e gingado num item "Postura" às 20:15. Gingado só depois de 14 práticas. |
+| 10-02 | Andar: pé **perto da linha, sem cruzar** — a "perna maior" dela é pelve desnivelada (teste de 10-01). |
 
 ---
 
@@ -282,3 +285,4 @@ comentários com LANCHE ~500 / JANTAR ~700.
   semana (em `ritmo.ts` e `revisao-semanal.ts`); "+40 g de arroz / +1 ovo / 200 kcal"
   (texto do "rápido demais"); `SEMANA_CHEIA` 0,85; e os 60 min dos cães em
   `metaCaminhadaMin`. Mudar um deles exige procurar os outros.
+- `PRESENCE_ITEMS`/`presenceSuggestionForDay` (`src/lib/daily-routine.ts`) não aparecem em tela nenhuma — só o agendador antigo do PWA os lê; o rodízio de postura da entrega B substituiu a parte de apresentação. Remover ou realocar na entrega E.

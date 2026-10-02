@@ -19,7 +19,10 @@ import { SEQUENCES } from "../data/sequences-seed";
 // v12: nivelar a pelve (inclinação lateral + flexor ajoelhada) nas TRÊS fases
 // do alongamento da noite — a "perna maior" dela era a pelve, não o osso
 // (2026-10-01).
-export const MOVEMENT_VERSION = 12;
+// v13: entrega B (2026-10-02) — sentar e andar reescritos (sem "nunca abertas",
+// sem pisar na linha: a pelve dela é desnivelada), o 8 com o quadril novo e o
+// gingado "perto da linha, sem cruzar os pés".
+export const MOVEMENT_VERSION = 13;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

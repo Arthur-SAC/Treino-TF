@@ -11,6 +11,7 @@ import { db } from "./db";
 import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
 import { SEQUENCIAS_REBOLADO } from "./rebolado-progression";
+import { DESDE_ENTREGA_B, SEQUENCIAS_POSTURA } from "./postura-progression";
 import { ultimosDiasISO } from "./today-date";
 import type { PracticeLog } from "./db";
 
@@ -55,6 +56,22 @@ export async function contarPraticasFlex(momento: MomentoFlex): Promise<number> 
   const ids = SEQUENCIAS_FLEX[momento] as readonly string[];
   const logs = await db.practiceLogs.toArray();
   return logs.filter((l) => l.completed && ids.includes(l.sequenceId)).length;
+}
+
+/** Práticas concluídas da trilha de postura (andar, 8, gingado). Decide quando
+ *  o gingado entra no rodízio — e conta também o que ela abrir pelo Movimento,
+ *  porque praticar é praticar, venha de onde vier.
+ *
+ *  Só conta de `DESDE_ENTREGA_B` em diante (as versões antigas não valem).
+ *  `antesDe` (ISO) exclui esse dia e os seguintes: o Hoje passa a data de hoje
+ *  pra trilha ser decidida pelas práticas até ontem — senão o item trocaria de
+ *  andar/8 pra gingado no instante em que ela marca a 14ª prática. */
+export async function contarPraticasPostura(antesDe?: string): Promise<number> {
+  const ids = SEQUENCIAS_POSTURA as readonly string[];
+  const logs = await db.practiceLogs.toArray();
+  return logs.filter(
+    (l) => l.completed && ids.includes(l.sequenceId) && l.date >= DESDE_ENTREGA_B && (!antesDe || l.date < antesDe),
+  ).length;
 }
 
 /** Práticas concluídas da trilha de resistência do rebolado. Mesmo motivo de
