@@ -11,6 +11,7 @@ import { db } from "./db";
 import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
 import { SEQUENCIAS_REBOLADO } from "./rebolado-progression";
+import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { ultimosDiasISO } from "./today-date";
 import type { PracticeLog } from "./db";
 
@@ -53,6 +54,15 @@ export async function contarPraticasDaProgressao(): Promise<number> {
  *  profunda e rotação) e misturar a contagem faria uma mascarar a outra. */
 export async function contarPraticasFlex(momento: MomentoFlex): Promise<number> {
   const ids = SEQUENCIAS_FLEX[momento] as readonly string[];
+  const logs = await db.practiceLogs.toArray();
+  return logs.filter((l) => l.completed && ids.includes(l.sequenceId)).length;
+}
+
+/** Práticas concluídas da trilha de postura (andar, 8, gingado). Decide quando
+ *  o gingado entra no rodízio — e conta também o que ela abrir pelo Movimento,
+ *  porque praticar é praticar, venha de onde vier. */
+export async function contarPraticasPostura(): Promise<number> {
+  const ids = SEQUENCIAS_POSTURA as readonly string[];
   const logs = await db.practiceLogs.toArray();
   return logs.filter((l) => l.completed && ids.includes(l.sequenceId)).length;
 }
