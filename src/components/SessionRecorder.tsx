@@ -8,7 +8,7 @@ import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
-import { noTeto, taticasNoTeto } from "../lib/teto-predio";
+import { noTeto, taticasNoTeto, ehUnilateral } from "../lib/teto-predio";
 
 interface Props {
   exercise: Exercise;
@@ -50,6 +50,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tetos = useSetting("tetoPredio");
   const teto = tetos[exercise.id];
+  const ladoFraco = useSetting("ladoFraco");
 
   useEffect(() => {
     let mounted = true;
@@ -242,6 +243,20 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-xs text-muted mb-2">Postura: carga leve e controle — aqui o ganho é a posição, não o peso.</p>
       )}
       {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mb-2">{notes}</p>}
+      {ehUnilateral(repsTarget) && (ladoFraco ? (
+        <p className="text-xs text-nude/80 mb-2">
+          Comece pelo lado {ladoFraco}. O lado forte faz as mesmas repetições — nem uma a mais.{" "}
+          <button type="button" onClick={() => void setSetting("ladoFraco", "")} className="underline text-muted">trocar</button>
+        </p>
+      ) : (
+        <div className="text-xs mb-2">
+          <p className="text-nude/80">Qual lado é o mais fraco? O da perna que pareceu mais curta deitada, ou o que cansa primeiro.</p>
+          <div className="flex gap-2 mt-1">
+            <button type="button" onClick={() => void setSetting("ladoFraco", "esquerdo")} className="px-2 py-1 rounded-md bg-bg-deep border border-bg-border">Esquerdo</button>
+            <button type="button" onClick={() => void setSetting("ladoFraco", "direito")} className="px-2 py-1 rounded-md bg-bg-deep border border-bg-border">Direito</button>
+          </div>
+        </div>
+      ))}
       {exercise.successCue && (
         <p className="text-xs text-nude/80 mb-2">✦ {exercise.successCue}</p>
       )}
