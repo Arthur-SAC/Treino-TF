@@ -25,7 +25,8 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // v11: nove exercícios da Chun-Li macia (coxa, braço, costas médias) e as categorias Pernas e Braços.
 // v12: peito de cima progride — o catálogo para de mandar manter LEVE (auditoria 2026-09-23).
 // v13: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
-export const EXERCISE_SEED_VERSION = 13;
+// v14: cardio-zona2 vale pra caminhada e pra esteira (dívida da entrega E, 2026-10-02).
+export const EXERCISE_SEED_VERSION = 14;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.

@@ -1,4 +1,6 @@
-// Uma linha que responde "estou progredindo?": treinos da semana contra os 5 do
+import { TREINOS_POR_SEMANA } from "../lib/objetivo";
+
+// Uma linha que responde "estou progredindo?": treinos da semana contra os do
 // plano, e peso e cintura contra a partida. Na fase 1 os dois números descem;
 // na fase 2 o peso sobe de propósito — por isso o card mostra o número, não um
 // julgamento.
@@ -18,7 +20,7 @@ export function SemanaCard({
   return (
     <div className="card">
       <p className="text-muted text-xs uppercase tracking-wider">Esta semana</p>
-      <p className="text-nude-warm text-sm mt-1">{Math.min(treinos, 5)}/5 treinos</p>
+      <p className="text-nude-warm text-sm mt-1">{Math.min(treinos, TREINOS_POR_SEMANA)}/{TREINOS_POR_SEMANA} treinos</p>
       {partes.length > 0 && <p className="text-muted text-xs mt-1">Desde a partida: {partes.join(" · ")}</p>}
     </div>
   );

@@ -6,7 +6,7 @@
 
 import { alavancaMaisFraca } from "./ritmo";
 import type { AdesaoDetalhada } from "./adesao";
-import type { ModoCaminhada } from "./objetivo";
+import { TREINOS_POR_SEMANA, type ModoCaminhada } from "./objetivo";
 
 export interface DadosDaSemana extends AdesaoDetalhada {
   cinturaUltima?: number;
@@ -26,7 +26,7 @@ const num = (n: number) => n.toLocaleString("pt-BR", { maximumFractionDigits: 1 
 const sinal = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${num(Math.abs(n))}`;
 
 export function revisarSemana(d: DadosDaSemana, modo: ModoCaminhada): Revisao {
-  const linhas = [`Treinos: ${Math.min(d.treinos, 5)} de 5`];
+  const linhas = [`Treinos: ${Math.min(d.treinos, TREINOS_POR_SEMANA)} de ${TREINOS_POR_SEMANA}`];
   if (modo !== "pausada") linhas.push(`Caminhada ou esteira: ${d.diasCardio} de ${d.dias} dias`);
   linhas.push(`Sono no horário: ${d.noitesNoAlvo} de ${d.dias} noites`);
   linhas.push(`Alongamento da noite: ${d.alongamentosNoite} de ${d.dias}`);

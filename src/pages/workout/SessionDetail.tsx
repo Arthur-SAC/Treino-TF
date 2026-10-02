@@ -7,8 +7,33 @@ import { textoDeAquecimento } from "../../lib/session-warmup";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { hojeISO } from "../../lib/today-date";
+import { useSetting } from "../../hooks/useSetting";
+import type { ModoCaminhada } from "../../lib/objetivo";
+
+// Os dois primeiros textos de "Ao terminar" dependem de a zona 2 vir de algum
+// lugar hoje. Em "pausada" não vem — afirmar que a caminhada "já entrega" seria
+// mentir sobre um dia em que ela não acontece.
+function dicasZona2(modo: ModoCaminhada): string[] {
+  if (modo === "pausada") {
+    return [
+      "A caminhada está pausada — a zona 2 de hoje não vem de lugar nenhum. Se quiser compensar, 20–30 min de esteira inclinada depois da força.",
+      "Sem pressão: pausa é pausa. O alongamento da noite continua valendo.",
+    ];
+  }
+  if (modo === "esteira") {
+    return [
+      "Sem cardio de zona 2 aqui no fim — a esteira inclinada do dia já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
+      "Qualquer passeio lento com os cães é movimento bônus (bom pra saúde) em cima disso.",
+    ];
+  }
+  return [
+    "Sem cardio de zona 2 aqui no fim — a caminhada de 5 km do trabalho para casa, às 16h, já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
+    "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
+  ];
+}
 
 export function SessionDetail() {
+  const modoCaminhada = useSetting("modoCaminhada");
   const { templateId } = useParams<{ templateId: string }>();
   const navigate = useNavigate();
   const template = useLiveQuery(
@@ -167,8 +192,7 @@ export function SessionDetail() {
             title: "Ao terminar",
             intro: "Duas coisas rápidas ao fechar (o alongamento fica pro da noite).",
             tips: [
-              "Sem cardio de zona 2 aqui no fim — a caminhada de 5 km do trabalho para casa, às 16h, já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
-              "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
+              ...dicasZona2(modoCaminhada),
               "Bebe água — você sua mais no calor de Aracaju.",
             ],
           },

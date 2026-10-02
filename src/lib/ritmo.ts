@@ -12,6 +12,7 @@
 // testosterona de que firmeza, libido e força dependem. Sobram adesão e prazo.
 
 import type { Measurement } from "./db";
+import { TREINOS_POR_SEMANA } from "./objetivo";
 import { mesAno, somaSemanas, type Projecao } from "./partida";
 import { KCAL_POR_KG_GORDURA } from "./comer-fora";
 import { CONSUMO, FASES, KCAL_CAMINHADA_DIA, gastoEstimado, type ModoCaminhada } from "./objetivo";
@@ -64,7 +65,7 @@ const r2 = (n: number) => Math.round(n * 100) / 100;
 const num = (n: number) => n.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 
 function frase(a: Adesao, modo: ModoCaminhada, alavanca: Alavanca): string {
-  const planoTreinos = Math.round((5 * a.dias) / 7);
+  const planoTreinos = Math.round((TREINOS_POR_SEMANA * a.dias) / 7);
   if (alavanca === "treino") {
     return `Treino: ${a.treinos} em ${a.dias} dias, de ${planoTreinos} do plano. É o músculo que segura o gasto enquanto o peso cai.`;
   }
@@ -82,7 +83,7 @@ function frase(a: Adesao, modo: ModoCaminhada, alavanca: Alavanca): string {
 export function alavancaMaisFraca(a: Adesao, modo: ModoCaminhada): { alavanca: Alavanca; fracao: number; frase: string } {
   const dias = Math.max(1, a.dias);
   const fracoes: [Alavanca, number][] = [
-    ["treino", a.treinos / ((5 * dias) / 7)],
+    ["treino", a.treinos / ((TREINOS_POR_SEMANA * dias) / 7)],
     ["cardio", modo === "pausada" ? 0 : a.diasCardio / dias],
     ["sono", a.noitesNoAlvo / dias],
   ];
@@ -182,7 +183,7 @@ export function avaliarRitmo(
   const fraca = alavancaMaisFraca(adesao, modo);
   const restante = Math.max(0, u.weightKg! - projecao.pesoAlvoFase1[0]);
   const dias = Math.max(1, adesao.dias);
-  const planoTreinos = Math.round((5 * dias) / 7);
+  const planoTreinos = Math.round((TREINOS_POR_SEMANA * dias) / 7);
   const cardioTxt = modo === "pausada" ? "cardio pausado" : `cardio ${adesao.diasCardio} de ${dias}`;
   const tresAlavancas = `Últimos ${dias} dias: treino ${adesao.treinos} de ${planoTreinos} · ${cardioTxt} · sono ${adesao.noitesNoAlvo} de ${dias} noites no horário.`;
   // Só culpa uma alavanca se ela de fato ficou abaixo do plano; com tudo

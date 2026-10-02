@@ -1204,7 +1204,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: "cardio-zona2",
-    name: "Cardio zona 2 (caminhada do trabalho)",
+    name: "Cardio zona 2 (caminhada ou esteira)",
     category: "cardio",
     equipment: ["esteira", "bike-reclinada"],
     difficulty: "iniciante",
@@ -1214,7 +1214,7 @@ export const EXERCISES: Exercise[] = [
     // sessão e empurrava o jantar pra depois das 20h (ver cycles-seed.ts). A
     // esteira/bike ficam como alternativa pra dia de chuva ou viagem, quando
     // a caminhada real não rola.
-    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas. É a caminhada de 5 km do trabalho para casa: passada firme, sem parar, pelos ~60 min que ela já dura. Sem a caminhada (chuva, viagem), substitui por esteira em inclinação 6-10% a 4,5-5,5 km/h, ou bike reclinada em resistência nível 5-6 de 8.",
+    description: "Minutos contínuos num ritmo em que você fica ofegante mas ainda consegue conversar em frases curtas: a caminhada do trabalho pra casa ou a esteira inclinada (6–10%, 4,5–5,5 km/h), uns 45–60 min sem parar. Sem nenhuma das duas, bike reclinada nível 5-6 de 8.",
     commonMistakes: [
       "Ir rápido demais — se não dá pra falar, saiu da zona 2",
       "Confundir com o passeio dos cães, que é mais lento — aqui o ritmo é o que tira o fôlego",

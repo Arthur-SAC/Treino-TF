@@ -23,6 +23,7 @@ beforeEach(async () => {
   await db.settings.clear();
   await db.mealPlans.clear();
   await db.meals.clear();
+  await db.measurements.clear();
   await db.settings.put({ key: "activeCycle", value: "adaptacao" });
   await db.mealPlans.add({ ...INITIAL_PLAN });
 });

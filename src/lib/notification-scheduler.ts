@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
 import { getSetting, setSetting } from "./settings-helpers";
-import { PRESENCE_ITEMS } from "./daily-routine";
+import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { hojeISO } from "./today-date";
 
 /** Aparece na tela de bloqueio — visível pra quem pegar o celular dela. Não
@@ -10,6 +10,20 @@ export const NOTIFICACAO_NOITE = {
   titulo: "Antes de dormir",
   corpo: "Um pouco de movimento: postura, alongamento ou dança",
 } as const;
+
+/** O lembrete das 21h só vale se ela ainda não fez a trilha de postura hoje —
+ *  a mesma que o Hoje apresenta. Antes olhava uma lista antiga de presença, e o
+ *  lembrete disparava mesmo depois de ela fazer a Postura do dia. */
+export async function praticouPosturaHoje(hoje: string): Promise<boolean> {
+  const ids: readonly string[] = SEQUENCIAS_POSTURA;
+  return (
+    (await db.practiceLogs
+      .where("date")
+      .equals(hoje)
+      .and((p) => ids.includes(p.sequenceId))
+      .count()) > 0
+  );
+}
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -88,13 +102,7 @@ async function tick() {
   const [prH, prM] = presencaTime.split(":").map(Number);
   const presencaMin = prH * 60 + prM;
   if (!Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
-    const presenceIds = PRESENCE_ITEMS.map((p) => p.id);
-    const presencaDone =
-      (await db.practiceLogs
-        .where("date")
-        .equals(todayISO)
-        .and((p) => presenceIds.includes(p.sequenceId))
-        .count()) > 0;
+    const presencaDone = await praticouPosturaHoje(todayISO);
     if (shouldRemindOncePerDay({ currentMin, targetMin: presencaMin, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
       notify(NOTIFICACAO_NOITE.titulo, NOTIFICACAO_NOITE.corpo);
       await setSetting("lastPresencaReminderAt", todayISO);
