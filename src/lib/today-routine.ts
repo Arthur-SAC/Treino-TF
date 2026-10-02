@@ -246,7 +246,9 @@ function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
       subtitle:
         modo === "pausada"
           ? "NEAT — eles não sabem que é domingo; com a caminhada pausada, é o único passeio do dia"
-          : "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã",
+          : modo === "esteira"
+            ? "NEAT — eles não sabem que é domingo; soma em cima da esteira da manhã"
+            : "NEAT — eles não sabem que é domingo; soma em cima dos 5 km da manhã",
     };
   }
   if (modo === "pausada") {

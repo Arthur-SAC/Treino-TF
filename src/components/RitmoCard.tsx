@@ -2,8 +2,9 @@ import type { Veredito } from "../lib/ritmo";
 
 const dataBR = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
 // Valor absoluto com verbo: "-0,25 kg" lido sozinho parece perda quando foi ganho.
-const direcao = (n: number, unidade: string) =>
-  n > 0 ? `desce ${num(n)} ${unidade}/sem` : n < 0 ? `sobe ${num(Math.abs(n))} ${unidade}/sem` : "parado";
+// `parado` concorda com o nome: "Peso: parado", "Cintura: parada".
+const direcao = (n: number, unidade: string, parado: string) =>
+  n > 0 ? `desce ${num(n)} ${unidade}/sem` : n < 0 ? `sobe ${num(Math.abs(n))} ${unidade}/sem` : parado;
 const num = (n: number) => n.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 
 /** Seu ritmo da fase 1 contra o plano. O título é o veredito; os textos vêm
@@ -27,7 +28,7 @@ export function RitmoCard({ veredito }: { veredito: Veredito }) {
     <div className="card">
       <p className="text-muted text-xs uppercase tracking-wider">Seu ritmo</p>
       <p className="text-nude-warm text-sm mt-1">{veredito.titulo}</p>
-      <p className="text-muted text-xs mt-1">Peso: {direcao(veredito.kgSemana, "kg")} · Cintura: {direcao(veredito.cmSemana, "cm")}</p>
+      <p className="text-muted text-xs mt-1">Peso: {direcao(veredito.kgSemana, "kg", "parado")} · Cintura: {direcao(veredito.cmSemana, "cm", "parada")}</p>
       {veredito.texto.map((t) => (
         <p key={t} className="text-xs mt-1">{t}</p>
       ))}

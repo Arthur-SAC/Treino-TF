@@ -29,7 +29,7 @@ describe("card Seu ritmo", () => {
 
   it("perdeu e parado: desce e parado, sem -0", () => {
     render(<RitmoCard veredito={{ estado: "no-ritmo", kgSemana: 0.5, cmSemana: 0, titulo: "No ritmo", texto: ["Frase."] }} />);
-    expect(screen.getByText(/Peso: desce 0,5 kg\/sem · Cintura: parado/)).toBeInTheDocument();
+    expect(screen.getByText(/Peso: desce 0,5 kg\/sem · Cintura: parada/)).toBeInTheDocument();
   });
 
   it("sem partida não renderiza nada", () => {

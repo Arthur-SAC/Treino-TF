@@ -89,6 +89,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 08-13 | Ela **gosta da tela Hoje** ("tudo que tenho que fazer no dia") e acha as outras abas confusas. Ao acrescentar tela, perguntar antes se cabe no Hoje. |
 | 10-01 | Abaixo do ritmo o app **nunca sugere cortar comida** — só adesão e prazo. Acima: comer mais, em gramas. |
 | 10-01 | Caminhada muda por **modo** em Configurações (caminhada / esteira / pausada), não por escolha diária. |
+| 10-02 | "Rápido demais / coma mais" só vale a partir de **3 semanas** da partida — antes disso a queda é água e glicogênio, e o card explica isso. |
 
 ---
 

@@ -26,6 +26,12 @@ const TOLERANCIA_CINTURA = 0.75;
  *  junto — e o músculo é o que faz o glúteo da fase 2. */
 const FATOR_RAPIDO = 1.3;
 const TETO_FRACAO_PESO_SEMANA = 0.01;
+/** Decisão dela (2026-10-02): nas primeiras semanas de déficit a balança perde
+ *  água e glicogênio, não músculo. Antes de 3 semanas da partida, queda rápida
+ *  não dispara "coma mais" — vira uma nota explicando a água. */
+const DIAS_MINIMOS_ALERTA_RAPIDO = 21;
+const NOTA_AGUA =
+  "A balança caiu rápido, e nas primeiras semanas de déficit boa parte disso é água e glicogênio, não gordura. O alerta de velocidade só passa a valer depois de 3 semanas.";
 
 /** Passando de 3 anos, a "data" sai de um ritmo minúsculo e vira número
  *  absurdo (décadas); melhor dizer que não é data do que imprimir um mês de 2050. */
@@ -117,7 +123,8 @@ export function avaliarRitmo(
       : { estado: "cedo", primeiraComparacao };
   }
 
-  const semanas = diasEntre(p.data, u.date) / 7;
+  const diasDesdePartida = diasEntre(p.data, u.date);
+  const semanas = diasDesdePartida / 7;
   const kgSemana = r2((p.pesoKg - u.weightKg!) / semanas);
   const cmSemana = r2((p.cinturaCm - u.waistCm!) / semanas);
   const [rMin, rMax] = projecao.ritmoKgSemana;
@@ -130,8 +137,14 @@ export function avaliarRitmo(
   const rMaxCaminhada = ((gastoEstimado("caminhada")[1] - CONSUMO.metaKcal) * 7) / KCAL_POR_KG_GORDURA;
   const teto = Math.max(rMax, rMaxCaminhada);
   const acimaDoPlano = kgSemana > teto * FATOR_RAPIDO;
+  const rapido = acimaDoPlano || kgSemana > u.weightKg! * TETO_FRACAO_PESO_SEMANA;
+  const rapidoCedo = rapido && diasDesdePartida < DIAS_MINIMOS_ALERTA_RAPIDO;
 
-  if (acimaDoPlano || kgSemana > u.weightKg! * TETO_FRACAO_PESO_SEMANA) {
+  // Queda rápida cedo demais não vira alerta, mas também não some: a nota
+  // entra antes do último texto do veredito que valer no lugar.
+  const comNota = (texto: string[]) => (rapidoCedo ? [...texto.slice(0, -1), NOTA_AGUA, texto.at(-1)!] : texto);
+
+  if (rapido && !rapidoCedo) {
     const abertura = acimaDoPlano
       ? `Você está perdendo ${num(kgSemana)} kg por semana, acima do teto de ${num(r2(teto))} do plano.`
       : `Você está perdendo ${num(kgSemana)} kg por semana, mais de 1% do seu peso.`;
@@ -158,9 +171,11 @@ export function avaliarRitmo(
       estado: "no-ritmo",
       ...base,
       titulo: "No ritmo",
-      texto: balancaParada
-        ? [`A cintura está descendo no ritmo e a balança ${kgSemana < 0 ? "subiu um pouco" : "quase parou"}. É músculo entrando enquanto a gordura sai — exatamente o que a fase 1 quer.`, "Continua igual."]
-        : ["Peso e cintura descendo no ritmo do plano.", "Continua igual."],
+      texto: comNota(
+        balancaParada
+          ? [`A cintura está descendo no ritmo e a balança ${kgSemana < 0 ? "subiu um pouco" : "quase parou"}. É músculo entrando enquanto a gordura sai — exatamente o que a fase 1 quer.`, "Continua igual."]
+          : ["Peso e cintura descendo no ritmo do plano.", "Continua igual."],
+      ),
     };
   }
 
@@ -194,12 +209,12 @@ export function avaliarRitmo(
     estado: "abaixo",
     ...base,
     titulo: "Abaixo do ritmo",
-    texto: [
+    texto: comNota([
       cintura,
       tresAlavancas,
       causa,
       prazo,
       `A comida fica como está: as ${CONSUMO.metaKcal.toLocaleString("pt-BR")} kcal protegem testosterona e músculo, e o ajuste vem da rotina.`,
-    ],
+    ]),
   };
 }

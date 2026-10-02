@@ -82,6 +82,19 @@ describe("veredito do ritmo", () => {
     expect(textos(v)).toMatch(/termina em/);
   });
 
+  // Decisão dela (2026-10-02): nas primeiras semanas de déficit a balança perde
+  // água e glicogênio, e "coma mais" ali seria alarme falso.
+  it("antes de 3 semanas, queda rápida não vira 'rápido demais' — explica a água", () => {
+    const v = avaliarRitmo(PR, [partida, em(94, 98, 2, "2026-10-09")], BOA, "caminhada");
+    expect(v.estado).not.toBe("rapido");
+    expect(textos(v)).toMatch(/água/);
+    expect(textos(v)).not.toMatch(/Coma mais/);
+  });
+
+  it("a partir de 3 semanas o alerta volta a valer", () => {
+    expect(avaliarRitmo(PR, [partida, em(93.2, 97.5, 2, "2026-10-16")], BOA, "caminhada").estado).toBe("rapido");
+  });
+
   it("rápido demais pelo teto do plano manda comer mais, em gramas", () => {
     const v = avaliarRitmo(PR, [partida, em(91.6, 95)], BOA, "caminhada");
     expect(v.estado).toBe("rapido");
