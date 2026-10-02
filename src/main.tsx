@@ -65,6 +65,8 @@ import { FertilityTRH } from "./pages/path/FertilityTRH";
 import { Support } from "./pages/path/Support";
 import { Vitalidade } from "./pages/path/Vitalidade";
 import { Settings } from "./pages/Settings";
+import { ProgressoHome } from "./pages/ProgressoHome";
+import { GuiaHome } from "./pages/GuiaHome";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
 import { seedStyle } from "./lib/style-seed";
@@ -82,6 +84,8 @@ const router = createBrowserRouter(
       children: [
         { index: true, element: <Today /> },
         { path: "hoje/horarios", element: <RoutineTimes /> },
+        { path: "progresso", element: <ProgressoHome /> },
+        { path: "guia", element: <GuiaHome /> },
         { path: "treino", element: <WorkoutHome /> },
         { path: "treino/plano", element: <WeeklyPlan /> },
         { path: "treino/ciclos", element: <Cycles /> },
