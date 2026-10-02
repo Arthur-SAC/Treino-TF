@@ -1,6 +1,6 @@
 # Objetivo — para onde o app está levando ela
 
-**Última revisão:** 2026-09-23 · **Dona das decisões:** ela. Este documento registra; não decide.
+**Última revisão:** 2026-10-02 · **Dona das decisões:** ela. Este documento registra; não decide.
 
 Leia **antes** de mudar treino, comida, metas ou textos do app. Se algo aqui contradisser
 o código, o código está errado ou este documento está velho — pergunte a ela antes de
@@ -96,6 +96,11 @@ testosterona. Comida ajuda pouco e o app diz que é pouco; o que pesa é défici
 sono, treino e perder a barriga.
 
 ## 8. Fase 2 na Smartfit — o roteiro pra não se perder
+
+**Quando trocar:** só na fase 2 (cintura ≤ 84), mesmo que o teto de carga do prédio chegue
+antes — até lá, ela fica no prédio com as táticas no teto (decisão dela, 2026-10-02). O app
+aprende o teto no uso ("não tem mais peso aqui") e avisa com o card "Hora da Smartfit" quando
+hip thrust, leg press, abdutora e búlgaro estão no teto **e** a cintura já está na fase 2.
 
 Quando ela disser que trocou de academia:
 

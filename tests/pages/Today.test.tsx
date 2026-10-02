@@ -6,6 +6,7 @@ import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
 import { RECOMECO_DATA } from "../../src/lib/objetivo";
+import { EXERCICIOS_CHAVE } from "../../src/lib/teto-predio";
 import {
   ATE_ROTACAO,
   ATE_FASE_3,
@@ -90,6 +91,36 @@ describe("Today (backbone)", () => {
     await db.measurements.add({ date: RECOMECO_DATA, weightKg: 96, waistCm: 99, neckCm: 40 });
     render(<MemoryRouter><Today /></MemoryRouter>);
     expect(await screen.findByText("Seu ritmo")).toBeInTheDocument();
+  });
+
+  it("com os 4 exercícios-chave no teto e a cintura na fase 2, mostra a Hora da Smartfit", async () => {
+    await db.measurements.clear();
+    await db.measurements.add({ date: "2026-09-30", weightKg: 82, waistCm: 84, neckCm: 38 });
+    const tetos = Object.fromEntries(EXERCICIOS_CHAVE.map((id) => [id, 100]));
+    await db.settings.put({ key: "tetoPredio", value: tetos });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    expect(await screen.findByText("Hora da Smartfit")).toBeInTheDocument();
+  });
+
+  // Decisão dela (2026-10-02): teto batido na fase 1 não troca de academia.
+  it("com os 4 no teto mas a cintura acima de 84, não mostra a Hora da Smartfit", async () => {
+    await db.measurements.clear();
+    await db.measurements.add({ date: "2026-09-30", weightKg: 92, waistCm: 95, neckCm: 40 });
+    const tetos = Object.fromEntries(EXERCICIOS_CHAVE.map((id) => [id, 100]));
+    await db.settings.put({ key: "tetoPredio", value: tetos });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    await screen.findByText("Manhã");
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByText("Hora da Smartfit")).not.toBeInTheDocument();
+  });
+
+  it("com só 3 no teto, não mostra a Hora da Smartfit", async () => {
+    const tetos = Object.fromEntries(EXERCICIOS_CHAVE.slice(0, 3).map((id) => [id, 100]));
+    await db.settings.put({ key: "tetoPredio", value: tetos });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    await screen.findByText("Manhã");
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByText("Hora da Smartfit")).not.toBeInTheDocument();
   });
 });
 

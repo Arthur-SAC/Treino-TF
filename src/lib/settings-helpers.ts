@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
+import type { LadoFraco } from "./teto-predio";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -61,6 +62,10 @@ export interface Settings {
   alongamentoNoiteTime: string;
   dormirReminderTime: string;
   vitaminaDTime: string;
+  /** Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio. */
+  tetoPredio: Record<string, number>;
+  /** Perguntado no primeiro exercício de um lado só. */
+  ladoFraco: LadoFraco;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -138,6 +143,10 @@ export const DEFAULTS: Settings = {
   // 22h e não 22h30: às 22h30 o silêncio já começou e engoliria o lembrete.
   dormirReminderTime: "22:00",
   vitaminaDTime: "12:00",
+  // Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio.
+  tetoPredio: {},
+  // Perguntado no primeiro exercício de um lado só.
+  ladoFraco: "",
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

@@ -39,6 +39,8 @@ import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
 import { RitmoCard } from "../components/RitmoCard";
+import { SmartfitCard } from "../components/SmartfitCard";
+import { horaDaSmartfit } from "../lib/teto-predio";
 import { RevisaoDomingoCard } from "../components/RevisaoDomingoCard";
 import { revisarSemana } from "../lib/revisao-semanal";
 import { avaliarRitmo, ultimaMedidaValida } from "../lib/ritmo";
@@ -69,6 +71,7 @@ export function Today() {
   const todayISO = hojeISO(today);
 
   const activeCycle = useSetting("activeCycle");
+  const tetos = useSetting("tetoPredio");
   const todayTemplate = useLiveQuery(
     async () => {
       const all = await db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).toArray();
@@ -427,6 +430,8 @@ export function Today() {
 
       {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
       {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
+      {/* Só na fase 2: teto batido antes disso fica no prédio com as táticas (decisão dela, 2026-10-02). */}
+      {horaDaSmartfit(tetos, (measurementsAsc ?? []).filter((m) => !!m.waistCm).at(-1)?.waistCm) && <SmartfitCard />}
       {dayOfWeek === 0 && adesao7 && (
         <RevisaoDomingoCard
           revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}
