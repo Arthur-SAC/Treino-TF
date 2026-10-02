@@ -25,6 +25,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | A · Treinador | modo das caminhadas (gasto, projeção, comer fora, Hoje), card Seu ritmo (a cintura decide, nunca cortar comida), revisão de domingo | spec `docs/superpowers/specs/2026-10-01-treinador-design.md` · plano `docs/superpowers/plans/2026-10-01-treinador.md` |
 | B · Apresentação no Hoje | item Postura 20:15 (andar → 8 → gingado depois de 14 práticas), dica de sentar em cada micro-pausa, sentar/andar reescritos e 8 com o quadril novos (MOVEMENT_VERSION 13) | spec `docs/superpowers/specs/2026-10-02-apresentacao-no-hoje-design.md` · plano `docs/superpowers/plans/2026-10-02-apresentacao-no-hoje.md` |
 | C · Hora da Smartfit | búlgaro (no lugar do goblet na variação), lado fraco primeiro, "não tem mais peso aqui" + táticas no teto, aviso da Smartfit quando hip thrust/leg press/abdutora/búlgaro estão no teto | spec `docs/superpowers/specs/2026-10-02-hora-da-smartfit-design.md` · plano `docs/superpowers/plans/2026-10-02-hora-da-smartfit.md` |
+| D · Nativo | botões Feito/Bebi 200 ml/Deitei nos lembretes (com dedupe ao reabrir), lembrete e aviso de backup a cada 15 dias; NATIVE_VERSION continua 1 | spec `docs/superpowers/specs/2026-10-02-nativo-design.md` · plano `docs/superpowers/plans/2026-10-02-nativo.md` |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -97,6 +98,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Cardio: esteira ~6% a 5 km/h por 1 h **depois do treino**, no lugar da caminhada (modo `esteira`). Jantar passa pra ~20h30. |
 | 10-02 | Estrutura do treino mantida; entram búlgaro, lado fraco primeiro e táticas no teto. Teto do prédio é aprendido no uso. |
 | 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
+| 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 
 ---
 

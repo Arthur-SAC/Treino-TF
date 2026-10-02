@@ -25,6 +25,8 @@ const vazio: EstadoLembretes = {
   feitosHoje: new Set(), aguaHojeMl: 0, treinouHoje: false,
   treinoPorDia: new Map([[1, "Inferior A"], [3, "Superior A"]]),
   ultimaMedida: "2026-09-24", vitaminaDFeitaEm: [],
+  // Backup em dia por padrão: os testes dos outros lembretes não esperam o "Backup".
+  ultimoBackupEm: "2026-09-24",
 };
 // Quinta, 24/09/2026, 05:00 (hora local).
 const QUINTA_5H = new Date(2026, 8, 24, 5, 0);
@@ -111,6 +113,36 @@ describe("planejar — vitamina D de domingo", () => {
   });
 });
 
+describe("planejar — backup", () => {
+  const backups = (l: ReturnType<typeof planejar>) => l.filter((x) => x.titulo === "Backup");
+  it("nunca feito: todo dia às 12:05 a partir de hoje, abre Configurações", () => {
+    const l = backups(planejar(QUINTA_5H, cfg, { ...vazio, ultimoBackupEm: "" }));
+    expect(l[0].quando).toEqual(new Date(2026, 8, 24, 12, 5));
+    expect(l[0].rota).toBe("/configuracoes");
+    expect(l[0].corpo).toBe("Seus dados só existem no celular");
+    expect(l).toHaveLength(JANELA_DIAS);
+  });
+  it("às 13h de hoje o de hoje já passou: começa amanhã", () => {
+    const l = backups(planejar(new Date(2026, 8, 24, 13, 0), cfg, { ...vazio, ultimoBackupEm: "" }));
+    expect(hojeISO(l[0].quando)).toBe("2026-09-25");
+  });
+  it("feito ontem: nenhum nos próximos 13 dias (o 15º dia cai fora da janela das 05:00)", () => {
+    expect(backups(planejar(QUINTA_5H, cfg, { ...vazio, ultimoBackupEm: "2026-09-23" }))).toEqual([]);
+  });
+  it("feito há 2 dias: o primeiro é no 13º dia a partir de hoje, quando fecha 15 desde o último", () => {
+    const l = backups(planejar(QUINTA_5H, cfg, { ...vazio, ultimoBackupEm: "2026-09-22" }));
+    expect(l.map((x) => hojeISO(x.quando))).toEqual(["2026-10-07"]);
+  });
+  it("o id começa com 9", () => {
+    const l = backups(planejar(QUINTA_5H, cfg, { ...vazio, ultimoBackupEm: "" }));
+    expect(l.every((x) => String(x.id).startsWith("9"))).toBe(true);
+  });
+  it("texto não expõe nada na tela de bloqueio", () => {
+    const l = backups(planejar(QUINTA_5H, cfg, { ...vazio, ultimoBackupEm: "" }));
+    expect(l.filter((x) => EXPOE.test(`${x.titulo} ${x.corpo}`))).toEqual([]);
+  });
+});
+
 describe("planejar — respeita as regras do app", () => {
   it("notificações desligadas: nada", () => {
     expect(planejar(QUINTA_5H, { ...cfg, notificationsEnabled: false }, vazio)).toEqual([]);
@@ -173,5 +205,24 @@ describe("planejar — intervalos inválidos", () => {
     expect(doDia(l, "2026-09-25").filter((x) => x.titulo === "Água")).toHaveLength(17);
     expect(new Set(l.map((x) => x.id)).size).toBe(l.length);
     expect(l.every((x) => x.id < 2 ** 31)).toBe(true);
+  });
+});
+
+describe("planejar — botões de ação e dia do lembrete", () => {
+  const lista = planejar(QUINTA_5H, cfg, { ...vazio, ultimaMedida: "2026-09-01", ultimoBackupEm: "" });
+  const por = (titulo: string, h?: string) => lista.filter((x) => x.titulo === titulo && (!h || hhmm(x.quando) === h));
+  it("alongamento, vitamina D, água e dormir têm ação; o resto não", () => {
+    expect(por("Alongamento", "06:00")[0]).toMatchObject({ acao: "feito", itemId: "alongamento-manha" });
+    expect(por("Alongamento", "21:30")[0]).toMatchObject({ acao: "feito", itemId: "alongamento-noite" });
+    expect(por("Vitamina D")[0]).toMatchObject({ acao: "feito", itemId: "vitamina-d" });
+    expect(por("Água")[0].acao).toBe("bebi");
+    expect(por("Hora de desligar")[0].acao).toBe("deitei");
+    for (const t of ["Levanta um pouco", "Treino", "Medidas", "Backup"]) {
+      expect(por(t).length).toBeGreaterThan(0);
+      for (const l of por(t)) expect(l.acao).toBeUndefined();
+    }
+  });
+  it("todo lembrete leva o ISO do dia em que toca", () => {
+    for (const l of lista) expect(l.dia).toBe(hojeISO(l.quando));
   });
 });

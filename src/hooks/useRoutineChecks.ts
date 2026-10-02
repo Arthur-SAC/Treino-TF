@@ -15,6 +15,12 @@ export async function toggleRoutineCheck(date: string, itemId: string): Promise<
   });
 }
 
+/** Marca como feito, sem virar: o botão "Feito" da notificação pode tocar em
+ *  item que ela já marcou no app, e o toggle o desmarcaria. */
+export async function marcarFeito(date: string, itemId: string): Promise<void> {
+  await db.routineChecks.put({ date, itemId, done: true });
+}
+
 export function useRoutineChecks(date: string): { done: Set<string>; toggle: (itemId: string) => Promise<boolean> } {
   const rows = useLiveQuery(() => db.routineChecks.where("date").equals(date).toArray(), [date]);
   const done = new Set((rows ?? []).filter((r) => r.done).map((r) => r.itemId));

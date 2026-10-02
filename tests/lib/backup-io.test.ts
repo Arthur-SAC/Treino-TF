@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
+import { hojeISO } from "../../src/lib/today-date";
 import { coletarBackup, restaurarBackup, blobParaBase64, base64ParaBlob } from "../../src/lib/backup-io";
 
 // Auditoria de 2026-09-23: o backup deixava de fora as configurações (ciclo
@@ -39,6 +40,14 @@ describe("backup completo — ida e volta", () => {
     expect(await db.hairRemovalSessions.count()).toBe(1);
     expect(await db.products.count()).toBe(1);
     expect(await db.measurements.count()).toBe(1);
+  });
+
+  it("depois de restaurar, ultimoBackupEm é hoje (o arquivo restaurado é um backup)", async () => {
+    await db.settings.put({ key: "ultimoBackupEm", value: "" });
+    const payload = await coletarBackup();
+    await limpar();
+    await restaurarBackup(payload);
+    expect((await db.settings.get("ultimoBackupEm"))?.value).toBe(hojeISO());
   });
 
   it("restaurar por cima de um app recém-instalado substitui as configurações do seed", async () => {

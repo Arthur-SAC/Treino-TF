@@ -89,6 +89,8 @@ export function Settings() {
       const encrypted = await encryptBackup(payload, password);
       // No APK o download do navegador não existe: vai pelo compartilhar do Android.
       await exportarArquivo(`trein-final-${hojeISO()}.trein-backup`, encrypted);
+      // Alimenta o lembrete (notificação e card do Hoje) de 15 em 15 dias.
+      await setSetting("ultimoBackupEm", hojeISO());
       setInfo("Backup baixado.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha no backup.");

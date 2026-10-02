@@ -9,6 +9,7 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { db } from "../db";
 import { isNativo } from "../plataforma";
 import { reagendar } from "./agendar";
+import { aplicarAcao } from "./aplicar-acao";
 
 export function useLembretes(): void {
   const navigate = useNavigate();
@@ -29,8 +30,9 @@ export function useLembretes(): void {
     }).subscribe({ next: agendarLogo });
     const resume = CapApp.addListener("appStateChange", ({ isActive }) => { if (isActive) agendarLogo(); });
     const toque = LocalNotifications.addListener("localNotificationActionPerformed", (a) => {
-      const rota = (a.notification.extra as { rota?: string } | undefined)?.rota;
-      if (rota) navigate(rota);
+      // No Android o botão abre o app por um instante; o registro acontece em
+      // aplicarAcao, no dia do lembrete, sem repetir se o evento voltar.
+      void aplicarAcao(a, { navigate, agora: new Date() }).catch(() => {});
     });
     return () => {
       clearTimeout(timer);
