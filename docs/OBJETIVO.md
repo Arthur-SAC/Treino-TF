@@ -1,6 +1,6 @@
 # Objetivo — para onde o app está levando ela
 
-**Última revisão:** 2026-10-02 · **Dona das decisões:** ela. Este documento registra; não decide.
+**Última revisão:** 2026-10-19 · **Dona das decisões:** ela. Este documento registra; não decide.
 
 Leia **antes** de mudar treino, comida, metas ou textos do app. Se algo aqui contradisser
 o código, o código está errado ou este documento está velho — pergunte a ela antes de
@@ -71,11 +71,15 @@ depois mostra peso-alvo e prazos em mês de calendário, e os Horizontes montam 
 A fase 3 **não acontece** se o BBL estiver marcado (a cirurgia precisa de gordura pra colher).
 
 **Aceleradores que ela aceitou:** caminhada de 5 km também sábado e domingo; sono 7–7,5 h;
-creatina 3 g/dia. **Recusou:** caminhada firme com os cães; BBL antes dos 30.
+creatina 3 g/dia. **Recusou:** caminhada firme com os cães. (BBL antes dos 30 foi recusado
+em 23/09 e revisto por ela em 2026-10-19 — ver seção 6.)
 
 ## 6. BBL, TRH e discrição
 
-- **BBL:** depois dos 30 (set/2029), por decisão dela. Condições: máximo natural atingido,
+- **BBL:** aos 29 (antes de set/2029), por decisão dela em 2026-10-19 (antes era "depois
+  dos 30"). Condição de data: a fase 2 fecha até o fim de 2028 (`mesFim` 24 ≈ set/2028),
+  então peso estável ~6 meses → cirurgia entre mar e set/2029. Se a fase 2 atrasar, o BBL
+  atrasa junto — **nunca encurtar a fase 2 pra caber a data**. Condições: máximo natural atingido,
   peso estável ~6 meses, cirurgião SBCP, hospital, perguntar a camada da injeção (só
   subcutânea), 2–3 semanas sem sentar sobre o glúteo. É historicamente a cirurgia estética
   de maior mortalidade — dizer isso, sem drama e sem esconder.

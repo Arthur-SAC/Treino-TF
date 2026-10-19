@@ -98,6 +98,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Andar: pé **perto da linha, sem cruzar** — a "perna maior" dela é pelve desnivelada (teste de 10-01). |
 | 10-02 | Cardio: esteira ~6% a 5 km/h por 1 h **depois do treino**, no lugar da caminhada (modo `esteira`). Jantar passa pra ~20h30. |
 | 10-02 | Estrutura do treino mantida; entram búlgaro, lado fraco primeiro e táticas no teto. Teto do prédio é aprendido no uso. |
+| 10-19 | **BBL aos 29**, não depois dos 30: se a fase 2 fechar até o fim de 2028 + ~6 meses de peso estável → mar–set/2029. Fase 2 nunca é encurtada pra caber a data; se atrasar, o BBL atrasa junto. |
 | 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 | 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |

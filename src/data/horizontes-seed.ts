@@ -53,7 +53,7 @@ export const HORIZONTES: GuideSection[] = [
     title: "O horizonte cirúrgico",
     intro: "Lipo 360 com lombar + BBL com preenchimento lateral é o que leva a razão do máximo natural (0,72-0,76) para ~0,62-0,66. O implante de mama entra no mesmo horizonte, se você quiser.",
     tips: [
-      "Quando: depois dos 30, por decisão sua — e depois do máximo natural, com peso estável por ~6 meses.",
+      "Quando: aos 29, por decisão sua — se a fase 2 fechar até o fim de 2028, com peso estável por ~6 meses antes. Se a fase 2 atrasar, a cirurgia vai junto: encurtar a fase 2 pra caber a data entrega um BBL pior.",
       "Precisa de gordura pra colher: não faça a fase de marcar de leve se a cirurgia estiver marcada.",
       "É historicamente a cirurgia estética de maior mortalidade, por embolia gordurosa. A injeção só na camada acima do músculo reduziu muito o risco, mas ele não é zero. Cirurgião membro da SBCP, em hospital, e você pergunta em que camada ele injeta.",
       "Feita sobre glúteo já treinado, rende muito mais: treinar agora não atrasa, prepara.",
