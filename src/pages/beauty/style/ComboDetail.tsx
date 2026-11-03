@@ -1,5 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db, type Outfit } from "../../../lib/db";
 
 const STATUS_FLOW: Outfit["status"][] = ["ideia", "comprando", "tenho", "testei"];
@@ -30,7 +31,7 @@ export function ComboDetail() {
     return (
       <div className="p-4 pb-24">
         <div className="mb-4 flex items-center gap-3">
-          <Link to="/beleza/estilo/combinacoes" className="text-muted text-sm">&larr; Combinações</Link>
+          <Voltar para="/beleza/estilo/combinacoes" rotulo="Combinações" />
         </div>
         <p className="text-muted text-sm">Combinação não encontrada.</p>
       </div>
@@ -52,7 +53,7 @@ export function ComboDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/estilo/combinacoes" className="text-muted text-sm">&larr; Combinações</Link>
+        <Voltar para="/beleza/estilo/combinacoes" rotulo="Combinações" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{outfit.name}</h1>
       <p className="text-muted text-xs mb-4">{CONTEXT_LABEL[outfit.context]} · {outfit.occasion}</p>

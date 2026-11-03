@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Voltar } from "../components/Voltar";
 import { itensAjustaveis, formatHora, blocosDaSemanaInteira } from "../lib/routine-times";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
@@ -35,7 +35,7 @@ export function RoutineTimes() {
   return (
     <div className="p-4 pb-24 space-y-3">
       <div className="flex items-center gap-3">
-        <Link to="/" className="text-nude text-sm">← Hoje</Link>
+        <Voltar para="/" rotulo="Hoje" />
       </div>
 
       <h1 className="text-nude-warm text-lg font-medium">Horários do seu dia</h1>

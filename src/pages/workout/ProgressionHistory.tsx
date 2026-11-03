@@ -1,6 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { ProgressionChart } from "../../components/ProgressionChart";
 import { formatDateBR } from "../../lib/format";
@@ -29,7 +29,7 @@ export function ProgressionHistory() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
+        <Voltar para="/treino" rotulo="Treino" />
         <h1 className="font-serif text-2xl text-nude flex-1">Progressão</h1>
       </div>
 

@@ -1,7 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type DailyLog } from "../../lib/db";
-import { PathTabs } from "../../components/PathTabs";
 import { MoodPicker } from "../../components/MoodPicker";
 import { formatDateBR } from "../../lib/format";
 import { hojeISO } from "../../lib/today-date";
@@ -41,7 +41,7 @@ export function DiaryView() {
   return (
     <div className="p-4 pb-24">
       <h1 className="font-serif text-2xl text-nude mb-3">Trilha</h1>
-      <PathTabs />
+      <Voltar para="/progresso" rotulo="Progresso" />
 
       <div className="card mb-4">
         <h2 className="text-nude-warm font-medium mb-3">Hoje · {formatDateBR(new Date())}</h2>

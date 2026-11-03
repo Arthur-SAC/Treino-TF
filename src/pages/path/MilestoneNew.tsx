@@ -1,5 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db, type Milestone } from "../../lib/db";
 import { hojeISO } from "../../lib/today-date";
 
@@ -25,7 +26,7 @@ export function MilestoneNew() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/trilha" className="text-muted text-sm">&larr; Trilha</Link>
+        <Voltar para="/trilha" rotulo="Trilha" />
         <h1 className="font-serif text-2xl text-nude flex-1">Novo marco</h1>
       </div>
 

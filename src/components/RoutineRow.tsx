@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { RoutineItem } from "../lib/today-routine";
 
 export interface RoutineRowProps {
@@ -28,11 +28,25 @@ function Body({ item, done, hora }: { item: RoutineItem; done: boolean; hora?: s
   );
 }
 
+// Só pula quando ela marca agora — item que já abre feito não anima toda vez
+// que o Hoje é desenhado. A vibração curta é o "clique" que faltava; no APK
+// ela não toca até o manifesto pedir VIBRATE (mudança nativa, fica pra
+// próxima versão do APK), e no Chrome do Android já funciona.
 function Box({ done }: { done: boolean }) {
+  const antes = useRef(done);
+  const [pulou, setPulou] = useState(false);
+  useEffect(() => {
+    if (done && !antes.current) {
+      setPulou(true);
+      try { navigator.vibrate?.(12); } catch { /* sem vibração, tudo bem */ }
+    }
+    if (!done) setPulou(false);
+    antes.current = done;
+  }, [done]);
   return (
     <span
       aria-hidden="true"
-      className={`flex-none w-5 h-5 mt-0.5 rounded-md border flex items-center justify-center text-xs ${done ? "bg-nude border-nude text-bg-deep" : "border-muted text-transparent"}`}
+      className={`flex-none w-5 h-5 mt-0.5 rounded-md border flex items-center justify-center text-xs transition-colors duration-200 ${done ? "bg-nude border-nude text-bg-deep" : "border-muted text-transparent"} ${pulou ? "marca-pop" : ""}`}
     >
       ✓
     </span>

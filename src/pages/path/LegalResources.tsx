@@ -1,4 +1,4 @@
-import { PathTabs } from "../../components/PathTabs";
+import { Voltar } from "../../components/Voltar";
 import { DisclaimerCard } from "../../components/DisclaimerCard";
 
 interface Resource {
@@ -70,7 +70,7 @@ export function LegalResources() {
       <div className="mb-3 flex items-center gap-3">
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
       </div>
-      <PathTabs />
+      <Voltar para="/guia" rotulo="Guia" />
 
       <h2 className="text-nude-warm font-medium mb-2 mt-2">Direitos & documentos no Brasil</h2>
       <DisclaimerCard text="Informação geral pra te orientar — leis e procedimentos podem mudar ou variar por estado. Sempre confirme com a Defensoria Pública (gratuita) ou no cartório local antes de agir. Não é aconselhamento jurídico formal." />

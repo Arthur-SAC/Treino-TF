@@ -1,6 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
 import { ExerciseCard } from "../../components/ExerciseCard";
 import { CATEGORIES, CATEGORY_LABELS } from "../../lib/exercise-categories";
@@ -23,13 +23,13 @@ export function ExerciseLibrary() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
+        <Voltar para="/treino" rotulo="Treino" />
         <h1 className="font-serif text-2xl text-nude flex-1">Biblioteca</h1>
       </div>
       <p className="text-muted text-[0.7rem] mb-3">
         "Exposição X/5" = quão à mostra o corpo fica no exercício (1 discreto → 5 aparente).
       </p>
-      <div className="overflow-x-auto -mx-4 px-4 mb-4">
+      <div className="overflow-x-auto sem-barra -mx-4 px-4 mb-4">
         <div className="flex gap-2 w-max">
           <button
             type="button"

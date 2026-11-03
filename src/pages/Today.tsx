@@ -430,7 +430,9 @@ export function Today() {
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
-      {!partidaCarregando && <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
+      {/* Enquanto a medida chega do aparelho, um bloco do mesmo tamanho pulsa no
+          lugar — sem ele o card surgia depois e empurrava a tela inteira. */}
+      {partidaCarregando ? <div className="esqueleto h-28" aria-hidden="true" /> : <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
       {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
       {/* Só na fase 2: teto batido antes disso fica no prédio com as táticas (decisão dela, 2026-10-02). */}
       {horaDaSmartfit(tetos, (measurementsAsc ?? []).filter((m) => !!m.waistCm).at(-1)?.waistCm) && <SmartfitCard />}
@@ -439,24 +441,21 @@ export function Today() {
           revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}
         />
       )}
-      <SemanaCard treinos={treinosSemana} variacao={variacaoSemana} />
-
-      {/* grid-cols-2 (duas linhas), não grid-cols-4: cada StreakCard é um
-          `.card` com padding e borda próprios — em 4 colunas numa tela
-          estreita "Skincare" e "Vitalidade" espremem contra a borda do
-          próprio card. Em 2 colunas cada rótulo cabe numa linha só. */}
-      <div className="grid grid-cols-2 gap-2">
-        <StreakCard label="Treino" count={Math.min(last7DaysTraining ?? 0, TREINOS_POR_SEMANA)} total={TREINOS_POR_SEMANA} />
-        <StreakCard label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
-        <StreakCard label="Sono" count={last7DaysSleep} total={7} />
+      {/* Uma caixa só: a semana em cima e as contagens dos últimos 7 dias
+          embaixo, lado a lado. Eram cinco cards empilhados e a primeira
+          tarefa do dia só aparecia depois de uma tela inteira de rolagem. */}
+      <SemanaCard treinos={treinosSemana} variacao={variacaoSemana}>
+        <StreakCard compacto label="Treino" count={Math.min(last7DaysTraining ?? 0, TREINOS_POR_SEMANA)} total={TREINOS_POR_SEMANA} />
+        <StreakCard compacto label="Skincare" count={last7DaysSkincare ?? 0} total={7} />
+        <StreakCard compacto label="Sono" count={last7DaysSleep} total={7} />
         {/* Rótulo é só "Vitalidade" — o nome do módulo, nunca o que ele
             conta. Ela escolheu o streak visível nesta tela, que fica aberta
             em ambiente não receptivo; a mitigação combinada é exatamente
             este rótulo neutro, não um esconderijo atrás do atalho. Sem
             `total`: os outros três são "de 7 dias", este não tem teto — "19
             / 7" seria absurdo. */}
-        <StreakCard label="Vitalidade" count={streakVitalidade.atual} />
-      </div>
+        <StreakCard compacto label="Vitalidade" count={streakVitalidade.atual} />
+      </SemanaCard>
 
       <div className="flex justify-end pt-2">
         <Link to="/hoje/horarios" className="text-xs text-muted underline decoration-dotted">

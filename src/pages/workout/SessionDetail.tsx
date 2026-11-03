@@ -1,5 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
 import { ordenarPorBloco } from "../../lib/session-order";
@@ -169,7 +170,7 @@ export function SessionDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/treino/plano" className="text-muted text-sm">&larr; Plano</Link>
+        <Voltar para="/treino/plano" rotulo="Plano" />
         <h1 className="font-serif text-2xl text-nude flex-1">{template.name}</h1>
       </div>
 

@@ -1,8 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useState, type FormEvent } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db, type HaircareEntry } from "../../lib/db";
-import { BeautyTabs } from "../../components/BeautyTabs";
 import { formatDateBR } from "../../lib/format";
 import { HAIR_GUIDE } from "../../data/hair-guide-seed";
 import { GuideAccordion } from "../../components/GuideAccordion";
@@ -39,10 +38,9 @@ export function HaircareHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Cabelo · corte do cacho</h1>
       </div>
-      <BeautyTabs />
 
       <p className="text-muted text-sm mb-4">
         Objetivo: feminizar o cacho sem depender de comprimento — corte andrógino→feminino

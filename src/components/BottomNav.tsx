@@ -25,7 +25,9 @@ const items: { to: string; label: string; aba: Aba; Icon: typeof HomeIcon }[] = 
 export function BottomNav() {
   const atual = abaDaRota(useLocation().pathname);
   return (
-    <nav className="fixed bottom-0 inset-x-0 bg-bg-deep border-t border-bg-border z-50">
+    // pb-seguro: no Android com navegação por gestos a barra do sistema ficava
+    // por cima das abas.
+    <nav className="flex-none bg-bg-deep/95 backdrop-blur border-t border-bg-border z-50 pb-seguro">
       <ul className="flex">
         {items.map(({ to, label, aba, Icon }) => {
           const ativa = atual === aba;
@@ -34,9 +36,11 @@ export function BottomNav() {
               <Link
                 to={to}
                 aria-current={ativa ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-2 px-0.5 text-xs ${ativa ? "text-nude" : "text-muted"}`}
+                className={`flex flex-col items-center gap-1 pt-2 pb-2 px-0.5 text-xs ${ativa ? "text-nude" : "text-muted"}`}
               >
-                <Icon className={ativa ? "text-nude" : "text-muted"} />
+                <span className={`flex items-center justify-center h-7 w-14 rounded-pill transition-colors duration-200 ${ativa ? "bg-wine/70" : ""}`}>
+                  <Icon className={ativa ? "text-nude" : "text-muted"} />
+                </span>
                 <span className="w-full text-center truncate">{label}</span>
               </Link>
             </li>

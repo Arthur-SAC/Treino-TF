@@ -1,5 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { db } from "../../../lib/db";
 
 export function GarmentDetail() {
@@ -16,7 +17,7 @@ export function GarmentDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/estilo/pecas" className="text-muted text-sm">&larr; Peças</Link>
+        <Voltar para="/beleza/estilo/pecas" rotulo="Peças" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{garment.name}</h1>
       <p className="text-muted text-xs mb-4">{garment.occasion.join(" · ")}</p>

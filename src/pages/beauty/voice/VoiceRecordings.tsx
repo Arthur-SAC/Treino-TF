@@ -1,6 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db } from "../../../lib/db";
 import { formatDateBR } from "../../../lib/format";
 import { useSetting } from "../../../hooks/useSetting";
@@ -39,7 +39,7 @@ export function VoiceRecordings() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/voz" className="text-muted text-sm">&larr; Voz</Link>
+        <Voltar para="/beleza/voz" rotulo="Voz" />
         <h1 className="font-serif text-2xl text-nude flex-1">Gravações</h1>
       </div>
 

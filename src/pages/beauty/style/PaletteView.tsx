@@ -1,8 +1,7 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import { db, type StylePalette } from "../../../lib/db";
-import { BeautyTabs } from "../../../components/BeautyTabs";
 import { StyleTabs } from "../../../components/StyleTabs";
 import { ColorSwatch } from "../../../components/ColorSwatch";
 import { DisclaimerCard } from "../../../components/DisclaimerCard";
@@ -38,10 +37,9 @@ export function PaletteView() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Estilo</h1>
       </div>
-      <BeautyTabs />
       <StyleTabs />
 
       {!palette.reanalyzed && (

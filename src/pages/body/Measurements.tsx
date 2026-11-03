@@ -1,6 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db, type Measurement } from "../../lib/db";
 import { MeasurementForm } from "../../components/MeasurementForm";
 import { WhrChart } from "../../components/WhrChart";
@@ -72,7 +72,7 @@ export function Measurements() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/corpo" className="text-muted text-sm">&larr; Corpo</Link>
+        <Voltar para="/corpo" rotulo="Corpo" />
         <h1 className="font-serif text-2xl text-nude flex-1">Medidas</h1>
       </div>
 
@@ -98,7 +98,7 @@ export function Measurements() {
       {metricData.length > 0 && (
         <div className="card mb-4">
           <h2 className="text-nude-warm font-medium mb-3">Evolução de uma medida</h2>
-          <div className="overflow-x-auto -mx-4 px-4 mb-3">
+          <div className="overflow-x-auto sem-barra -mx-4 px-4 mb-3">
             <div className="flex gap-2 w-max">
               {metricOptions.map((opt) => (
                 <button

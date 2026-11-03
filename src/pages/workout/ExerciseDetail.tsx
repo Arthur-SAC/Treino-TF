@@ -1,5 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { db } from "../../lib/db";
 import { VideoSection } from "../../components/VideoSection";
 
@@ -18,7 +19,7 @@ export function ExerciseDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/treino/biblioteca" className="text-muted text-sm">&larr; Biblioteca</Link>
+        <Voltar para="/treino/biblioteca" rotulo="Biblioteca" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{ex.name}</h1>
       <p className="text-muted text-xs mb-1">

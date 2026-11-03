@@ -3,9 +3,23 @@ interface Props {
   count: number;
   total?: number;
   unit?: string;
+  /** Sem borda própria: quatro lado a lado dentro do card da semana. */
+  compacto?: boolean;
 }
 
-export function StreakCard({ label, count, total, unit = "dias" }: Props) {
+export function StreakCard({ label, count, total, unit = "dias", compacto = false }: Props) {
+  if (compacto) {
+    return (
+      <div className="text-center min-w-0">
+        <p className="text-muted text-[10px] uppercase truncate">{label}</p>
+        <p className="font-serif text-xl text-nude leading-tight mt-0.5">
+          {count}
+          {total !== undefined && <span className="text-muted text-sm"> / {total}</span>}
+        </p>
+        <p className="text-muted text-[0.6rem]">{unit}</p>
+      </div>
+    );
+  }
   return (
     <div className="card !p-3 text-center">
       <p className="text-muted text-xs uppercase tracking-wider">{label}</p>

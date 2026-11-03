@@ -1,5 +1,5 @@
+import { Voltar } from "../components/Voltar";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
@@ -109,7 +109,7 @@ export function Settings() {
   return (
     <div className="p-4 pb-24 space-y-4">
       <div className="flex items-center gap-3">
-        <Link to="/" className="text-muted text-sm">&larr; Hoje</Link>
+        <Voltar para="/" rotulo="Hoje" />
         <h1 className="font-serif text-2xl text-nude flex-1">Configurações</h1>
       </div>
 

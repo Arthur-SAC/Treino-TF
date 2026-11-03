@@ -1,5 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db, type Look } from "../../../lib/db";
 import { compressImage } from "../../../lib/image-compress";
 import { hojeISO } from "../../../lib/today-date";
@@ -36,7 +37,7 @@ export function LookNew() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/estilo/looks" className="text-muted text-sm">&larr; Looks</Link>
+        <Voltar para="/beleza/estilo/looks" rotulo="Looks" />
         <h1 className="font-serif text-2xl text-nude flex-1">Novo look</h1>
       </div>
 

@@ -1,3 +1,4 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
@@ -7,7 +8,6 @@ import { RecomendadaBadge } from "../../components/RecomendadaBadge";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { comerForaDoModo } from "../../data/comer-fora-seed";
 import { useSetting } from "../../hooks/useSetting";
-import { PathTabs } from "../../components/PathTabs";
 import { buildWeeklyShoppingList } from "../../lib/shopping-list";
 import { renderDietMarkdown, renderDietHtml } from "../../lib/diet-export";
 
@@ -131,7 +131,7 @@ export function MealPlanView() {
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
         <Link to="/trilha/alimentacao/editar" className="text-muted text-sm">editar</Link>
       </div>
-      <PathTabs />
+      <Voltar para="/guia" rotulo="Guia" />
 
       <div className="card mb-3">
         <h2 className="text-nude-warm font-medium mb-1">{plan.name}</h2>

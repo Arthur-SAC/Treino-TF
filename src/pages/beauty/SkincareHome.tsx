@@ -1,7 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
-import { BeautyTabs } from "../../components/BeautyTabs";
 import { RoutineCard } from "../../components/RoutineCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import type { GuideSection } from "../../components/GuideAccordion";
@@ -44,11 +44,10 @@ export function SkincareHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Skincare</h1>
         <Link to="/beleza/pele-cabelo/skincare/nova" className="text-muted text-sm">+ nova</Link>
       </div>
-      <BeautyTabs />
 
       <GuideAccordion sections={FPS_GUIDE} className="mb-4 mt-2" />
 

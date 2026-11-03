@@ -1,7 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
-import { PathTabs } from "../../components/PathTabs";
 import { StreakCard } from "../../components/StreakCard";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { daysInLast, currentStreak } from "../../lib/evolution";
@@ -53,7 +53,7 @@ export function EvolucaoView() {
       <div className="mb-3 flex items-center gap-3">
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
       </div>
-      <PathTabs />
+      <Voltar para="/progresso" rotulo="Progresso" />
 
       {veredito && veredito.estado !== "sem-partida" && <div className="mb-4"><RitmoCard veredito={veredito} /></div>}
 

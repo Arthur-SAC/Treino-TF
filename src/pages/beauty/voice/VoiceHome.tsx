@@ -1,7 +1,7 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type VoiceExercise } from "../../../lib/db";
-import { BeautyTabs } from "../../../components/BeautyTabs";
 import { GuideAccordion, type GuideSection } from "../../../components/GuideAccordion";
 import { formatDateBR } from "../../../lib/format";
 
@@ -66,11 +66,10 @@ export function VoiceHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Voz</h1>
         <Link to="/beleza/voz/gravacoes" className="text-muted text-sm">gravações ({recordings ?? 0})</Link>
       </div>
-      <BeautyTabs />
 
       <div className="card mb-4 !bg-wine/20 !border-wine-light">
         <h2 className="text-nude font-medium mb-1">Como funciona</h2>

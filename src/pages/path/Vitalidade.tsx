@@ -1,3 +1,4 @@
+import { Voltar } from "../../components/Voltar";
 import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
@@ -109,7 +110,7 @@ export function Vitalidade() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/" className="text-muted text-sm">&larr; Hoje</Link>
+        <Voltar para="/" rotulo="Hoje" />
         <h1 className="font-serif text-2xl text-nude flex-1">Vitalidade</h1>
       </div>
 

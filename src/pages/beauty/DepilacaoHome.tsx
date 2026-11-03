@@ -1,8 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useState, type FormEvent } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db, type HairRemovalSession } from "../../lib/db";
-import { BeautyTabs } from "../../components/BeautyTabs";
 import { DisclaimerCard } from "../../components/DisclaimerCard";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { FOLICULITE_GUIDE } from "../../data/foliculite-guide-seed";
@@ -57,10 +56,9 @@ export function DepilacaoHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Depilação</h1>
       </div>
-      <BeautyTabs />
 
       <DisclaimerCard text="Laser e luz pulsada precisam de profissional. Pra área íntima e rosto, procura clínica especializada — feito errado mancha ou queima. Laser são 8-10 sessões pra resultado duradouro." />
 

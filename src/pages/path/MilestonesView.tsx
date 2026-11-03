@@ -1,7 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../../lib/db";
-import { PathTabs } from "../../components/PathTabs";
 import { MilestoneCard } from "../../components/MilestoneCard";
 import { hojeISO } from "../../lib/today-date";
 
@@ -29,7 +29,7 @@ export function MilestonesView() {
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
         <Link to="/trilha/marcos/novo" className="text-muted text-sm">+ novo</Link>
       </div>
-      <PathTabs />
+      <Voltar para="/progresso" rotulo="Progresso" />
 
       <Link to="/trilha/evolucao" className="card block mb-4 hover:border-nude/40 transition">
         <h3 className="text-nude-warm font-medium">Evolução</h3>
