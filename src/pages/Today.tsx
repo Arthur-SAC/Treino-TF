@@ -5,6 +5,7 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
+import { separarNucleo } from "../lib/nucleo";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
@@ -144,6 +145,7 @@ export function Today() {
 
   const walkGoalMin = useSetting("walkGoalMin");
   const modoCaminhada = useSetting("modoCaminhada");
+  const extrasRecolhidos = useSetting("extrasRecolhidos");
 
   // Alvo de micro-pausas derivado da mesma configuração que dispara os
   // lembretes — 7h→16h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
@@ -415,6 +417,37 @@ export function Today() {
       ? variacaoDesdePartida(projecao.partida, ultimaMedida)
       : null;
 
+  // Núcleo × extras (pedido dela em 2026-11-03): o mesmo RoutineRow, a
+  // mesma marcação — só muda onde o item aparece. Ver src/lib/nucleo.ts.
+  const { nucleo, extras } = separarNucleo(routine);
+  const nucleoFeitos = nucleo.filter(isDone).length;
+  const extrasTotal = extras.reduce((n, b) => n + b.items.length, 0);
+  const linha = (item: RoutineItem) => (
+    <RoutineRow
+      key={item.id}
+      item={{
+        ...item,
+        subtitle: subtitleFor(item),
+        label: labelFor(item),
+        to: toFor(item),
+      }}
+      hora={horaDe(item)}
+      done={isDone(item)}
+      onToggle={() => void handleToggle(item)}
+      rightSlot={rightSlotFor(item)}
+      navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
+      onOpen={
+        item.control === "recipe" && item.mealType
+          ? () => setRecipeMealType(item.mealType!)
+          : item.control === "skincare" && item.skincareTime
+            ? () => setSkincareTime(item.skincareTime!)
+            : item.control === "breaks"
+              ? () => setPausaAberta(item.breakIndex ?? 0)
+              : undefined
+      }
+    />
+  );
+
   return (
     <div className="p-4 pb-24 space-y-3">
       <AvisoLembretes />
@@ -463,37 +496,46 @@ export function Today() {
         </Link>
       </div>
 
-      {routine.blocks.map((block) => (
+      <section className="card !p-3 space-y-2 border-nude/40" aria-labelledby="nucleo-titulo">
+        <div className="px-1 pt-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <h2 id="nucleo-titulo" className="text-nude font-medium">O que decide o seu prazo</h2>
+            <span className="text-nude-warm text-sm tabular-nums">{nucleoFeitos} de {nucleo.length}</span>
+          </div>
+          <div className="mt-2 h-1.5 rounded-pill bg-bg-deep overflow-hidden" aria-hidden="true">
+            <div
+              className="h-full rounded-pill bg-nude transition-[width] duration-500 ease-out"
+              style={{ width: `${nucleo.length ? (nucleoFeitos / nucleo.length) * 100 : 0}%` }}
+            />
+          </div>
+          <p className="text-muted text-xs mt-2">
+            {nucleoFeitos === nucleo.length && nucleo.length > 0
+              ? "Feito. O dia já contou pro prazo — o resto é extra."
+              : "Comida, movimento e sono. Num dia ruim, isto basta."}
+          </p>
+        </div>
+        {nucleo.map(linha)}
+      </section>
+
+      <div className="flex items-center justify-between pt-3">
+        <h2 className="text-muted text-xs uppercase tracking-wider">Extras</h2>
+        <button
+          type="button"
+          onClick={() => void db.settings.put({ key: "extrasRecolhidos", value: !extrasRecolhidos })}
+          className="text-xs text-nude underline decoration-dotted px-2 py-1 -mr-2"
+          aria-expanded={!extrasRecolhidos}
+        >
+          {extrasRecolhidos ? `mostrar (${extrasTotal})` : "recolher"}
+        </button>
+      </div>
+
+      {!extrasRecolhidos && extras.map((block) => (
         <section key={block.id} className="space-y-2">
           <div className="flex items-center gap-2 pt-2">
-            <h2 className="text-muted text-xs uppercase tracking-wider">{block.label}</h2>
+            <h3 className="text-muted text-xs uppercase tracking-wider">{block.label}</h3>
             {block.timeHint && <span className="text-nude text-xs ml-auto opacity-80">{block.timeHint}</span>}
           </div>
-          {block.items.map((item) => (
-            <RoutineRow
-              key={item.id}
-              item={{
-                ...item,
-                subtitle: subtitleFor(item),
-                label: labelFor(item),
-                to: toFor(item),
-              }}
-              hora={horaDe(item)}
-              done={isDone(item)}
-              onToggle={() => void handleToggle(item)}
-              rightSlot={rightSlotFor(item)}
-              navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
-              onOpen={
-                item.control === "recipe" && item.mealType
-                  ? () => setRecipeMealType(item.mealType!)
-                  : item.control === "skincare" && item.skincareTime
-                    ? () => setSkincareTime(item.skincareTime!)
-                    : item.control === "breaks"
-                      ? () => setPausaAberta(item.breakIndex ?? 0)
-                      : undefined
-              }
-            />
-          ))}
+          {block.items.map(linha)}
         </section>
       ))}
 
