@@ -9,6 +9,8 @@ const deps = (over: Partial<DepsAtualizacao> = {}) => {
     agendarProxima: vi.fn(async () => ({})),
     adiarParaFechar: vi.fn(async () => ({})),
     versaoNativaInstalada: vi.fn(async () => 1),
+    pacoteJaBaixado: vi.fn(async (): Promise<string | null> => null),
+    aplicarAgora: vi.fn(async () => ({})),
   };
   return { ...d, ...over } as typeof d;
 };
@@ -61,5 +63,30 @@ describe("verificarAtualizacao — quando o pacote entra", () => {
     const d = deps();
     await verificarAtualizacao(d, "abc1234");
     expect(d.adiarParaFechar).not.toHaveBeenCalled();
+  });
+});
+
+// 2026-11-03: ela instalou o APK e a versão nunca trocava. O plugin só aplica o
+// next() quando o app vai pro segundo plano, e cada abertura depois de fechar
+// agendava de novo e recolocava o "espera fechar" — a troca ficava bloqueada
+// pra sempre. Agora, se a versão nova já está baixada, entra na abertura.
+describe("verificarAtualizacao — pacote já baixado", () => {
+  it("abriu com a versão nova já baixada: aplica agora e não reagenda", async () => {
+    const d = deps({ pacoteJaBaixado: vi.fn(async () => "b1") });
+    await verificarAtualizacao(d, "old0000");
+    expect(d.pacoteJaBaixado).toHaveBeenCalledWith("abc1234");
+    expect(d.aplicarAgora).toHaveBeenCalledWith("b1");
+    expect(d.baixar).not.toHaveBeenCalled();
+    expect(d.adiarParaFechar).not.toHaveBeenCalled();
+  });
+  it("primeira vez que vê a versão: baixa e espera fechar, sem aplicar no meio do uso", async () => {
+    const d = deps();
+    await verificarAtualizacao(d, "old0000");
+    expect(d.aplicarAgora).not.toHaveBeenCalled();
+    expect(d.adiarParaFechar).toHaveBeenCalled();
+  });
+  it("falha ao aplicar não quebra a abertura", async () => {
+    const d = deps({ pacoteJaBaixado: vi.fn(async () => "b1"), aplicarAgora: vi.fn(async () => { throw new Error("x"); }) });
+    await expect(verificarAtualizacao(d, "old0000")).resolves.toEqual({ apkNovo: false });
   });
 });

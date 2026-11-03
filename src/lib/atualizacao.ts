@@ -19,6 +19,10 @@ export interface DepsAtualizacao {
   /** O pacote agendado só entra quando o app é fechado de verdade. */
   adiarParaFechar(): Promise<unknown>;
   versaoNativaInstalada(): Promise<number>;
+  /** Id do pacote desta versão se ele já foi baixado e espera a vez; senão null. */
+  pacoteJaBaixado(version: string): Promise<string | null>;
+  /** Troca já (o plugin recarrega a página). */
+  aplicarAgora(id: string): Promise<unknown>;
 }
 
 export async function verificarAtualizacao(deps: DepsAtualizacao, versaoAtual: string): Promise<{ apkNovo: boolean }> {
@@ -27,6 +31,15 @@ export async function verificarAtualizacao(deps: DepsAtualizacao, versaoAtual: s
     const p = await deps.buscarManifesto();
     if (p.nativeVersion > (await deps.versaoNativaInstalada())) return { apkNovo: true };
     if (p.version === versaoAtual) return { apkNovo: false };
+    // Já baixado numa abertura anterior: entra agora, na abertura, antes de ela
+    // começar a mexer. Sem isto o app ficava preso (2026-11-03): o plugin só
+    // aplica o next() ao ir pro segundo plano, e cada abertura reagendava e
+    // recolocava o "espera fechar" abaixo — a troca nunca acontecia.
+    const pronto = await deps.pacoteJaBaixado(p.version);
+    if (pronto) {
+      await deps.aplicarAgora(pronto);
+      return { apkNovo: false };
+    }
     const { id } = await deps.baixar(p);
     await deps.agendarProxima(id);
     // Sem isso o capgo aplica em qualquer ida pro segundo plano — abrir o
@@ -52,6 +65,12 @@ export function iniciarAtualizacao(): void {
     agendarProxima: (id) => CapacitorUpdater.next({ id }),
     adiarParaFechar: () => CapacitorUpdater.setMultiDelay({ delayConditions: [{ kind: "kill" }] }),
     versaoNativaInstalada: async () => Number((await CapApp.getInfo()).build) || NATIVE_VERSION,
+    pacoteJaBaixado: async (version) => {
+      const { bundles } = await CapacitorUpdater.list();
+      const b = bundles.find((x) => x.version === version && (x.status === "pending" || x.status === "success"));
+      return b?.id ?? null;
+    },
+    aplicarAgora: (id) => CapacitorUpdater.set({ id }),
   };
   void verificarAtualizacao(deps, BUNDLE_VERSION).then((r) => {
     apkNovo = r.apkNovo;
