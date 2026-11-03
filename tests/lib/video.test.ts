@@ -6,7 +6,9 @@ describe("toEmbed", () => {
   it("YouTube watch → embed", () => {
     expect(toEmbed("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).toEqual({
       kind: "youtube",
+      id: "dQw4w9WgXcQ",
       src: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      watch: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     });
   });
   it("youtu.be → embed", () => {
@@ -17,6 +19,11 @@ describe("toEmbed", () => {
   });
   it("watch com list antes do v= → embed", () => {
     expect(toEmbed("https://www.youtube.com/watch?list=PLabc&v=dQw4w9WgXcQ")?.src).toContain("/embed/dQw4w9WgXcQ");
+  });
+  it("busca do YouTube → busca com o termo legível", () => {
+    expect(toEmbed("https://www.youtube.com/results?search_query=como+rebolar")).toEqual({
+      kind: "busca", src: "https://www.youtube.com/results?search_query=como+rebolar", termo: "como rebolar",
+    });
   });
   it("arquivo .mp4 → video", () => {
     expect(toEmbed("https://site.com/clip.mp4")).toEqual({ kind: "video", src: "https://site.com/clip.mp4" });
