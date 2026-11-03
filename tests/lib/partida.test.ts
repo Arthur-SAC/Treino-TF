@@ -38,6 +38,15 @@ describe("projeção da fase 1", () => {
     expect(pr.fimFase1[1] <= "2027-06").toBe(true);
     expect(pr.fimFase2).toEqual(["2028-06", "2028-12"]);
   });
+  it("a versão visível vem entre o fim da fase 1 e o fim da fase 2", () => {
+    expect(pr.versaoVisivel).toEqual(["2027-11", "2028-02"]);
+    expect(pr.versaoVisivel[0] > pr.fimFase1[1]).toBe(true);
+    expect(pr.versaoVisivel[1] < pr.fimFase2[0]).toBe(true);
+  });
+  it("partida em 20/10/2026 põe a versão visível no início de 2028", () => {
+    const hoje = projetar({ ...partida, data: "2026-10-20" }, 173)!;
+    expect(hoje.versaoVisivel).toEqual(["2027-12", "2028-03"]);
+  });
   it("o marco 88 vem antes do fim da fase 1", () => {
     expect(pr.cintura88).not.toBe("ja");
     const [c88] = pr.cintura88 as [string, string];
