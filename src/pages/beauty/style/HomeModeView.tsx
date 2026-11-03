@@ -1,7 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db } from "../../../lib/db";
-import { BeautyTabs } from "../../../components/BeautyTabs";
 import { StyleTabs } from "../../../components/StyleTabs";
 import { GarmentCard } from "../../../components/GarmentCard";
 
@@ -19,10 +18,9 @@ export function HomeModeView() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Estilo · Casa</h1>
       </div>
-      <BeautyTabs />
       <StyleTabs />
 
       <div className="card mb-3">

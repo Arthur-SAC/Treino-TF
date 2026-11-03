@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { ExerciseInfoModal } from "../../src/components/ExerciseInfoModal";
 import type { Exercise } from "../../src/lib/db";
 
@@ -25,6 +25,7 @@ describe("ExerciseInfoModal vídeo", () => {
     const { container } = render(
       <ExerciseInfoModal exercise={{ ...ex, videoUrl: "https://youtu.be/dQw4w9WgXcQ" }} onClose={() => {}} />,
     );
+    fireEvent.click(screen.getByRole("button", { name: "Assistir o vídeo" }));
     expect(container.querySelector("iframe")).not.toBeNull();
   });
 });

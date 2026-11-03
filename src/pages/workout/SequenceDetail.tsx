@@ -1,6 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { db, type PracticeLog } from "../../lib/db";
 import { MoveStep } from "../../components/MoveStep";
 import { VideoSection } from "../../components/VideoSection";
@@ -49,7 +50,7 @@ export function SequenceDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/treino/movimento" className="text-muted text-sm">&larr; Movimento</Link>
+        <Voltar para="/treino/movimento" rotulo="Movimento" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{sequence.name}</h1>
       <p className="text-muted text-sm mb-4">{sequence.focus}</p>

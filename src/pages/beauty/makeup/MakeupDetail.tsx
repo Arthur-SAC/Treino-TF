@@ -1,5 +1,6 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../lib/db";
 
 export function MakeupDetail() {
@@ -24,7 +25,7 @@ export function MakeupDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/maquiagem" className="text-muted text-sm">&larr; Maquiagem</Link>
+        <Voltar para="/beleza/maquiagem" rotulo="Maquiagem" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{routine.name}</h1>
       <p className="text-muted text-sm mb-4">{routine.durationMin} min · {routine.steps.length} passos</p>

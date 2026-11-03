@@ -1,3 +1,4 @@
+import { Voltar } from "../../components/Voltar";
 import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
@@ -136,7 +137,7 @@ export function Silhouette() {
   return (
     <div className="p-4 pb-24 space-y-3">
       <div className="flex items-center gap-3">
-        <Link to="/corpo" className="text-muted text-sm">&larr; Corpo</Link>
+        <Voltar para="/corpo" rotulo="Corpo" />
         <h1 className="font-serif text-2xl text-nude flex-1">Silhueta</h1>
       </div>
 

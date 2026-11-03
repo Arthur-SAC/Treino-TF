@@ -1,7 +1,7 @@
 import type { Measurement } from "./db";
 import { estimateBodyFatNavy } from "./body-composition";
 import {
-  RECOMECO_DATA, PCT_GORDURA_FIM_FASE1, CONSUMO, FIM_FASE2_MESES,
+  RECOMECO_DATA, PCT_GORDURA_FIM_FASE1, CONSUMO, FIM_FASE2_MESES, VERSAO_VISIVEL,
   DISTRIBUICAO_GORDURA_ATUAL, FASES, MARCOS_CINTURA, gastoEstimado, type ModoCaminhada,
 } from "./objetivo";
 import { KCAL_POR_KG_GORDURA } from "./comer-fora";
@@ -31,6 +31,8 @@ export interface Projecao {
   fimFase1: [string, string];
   /** "ja" quando a partida já está na trava de 88 ou abaixo dela. */
   cintura88: [string, string] | "ja";
+  /** Cintura 84 e a maior parte do glúteo — não o fim (VERSAO_VISIVEL). */
+  versaoVisivel: [string, string];
   fimFase2: [string, string];
 }
 
@@ -135,6 +137,7 @@ export function projetar(p: Partida, alturaCm: number, modo: ModoCaminhada = "ca
     ritmoKgSemana: ritmo,
     fimFase1: [somaSemanas(p.data, semCedo), somaSemanas(p.data, semTarde)],
     cintura88,
+    versaoVisivel: [somaMeses(p.data, VERSAO_VISIVEL.meses[0]), somaMeses(p.data, VERSAO_VISIVEL.meses[1])],
     fimFase2: [somaMeses(p.data, FIM_FASE2_MESES[0]), somaMeses(p.data, FIM_FASE2_MESES[1])],
   };
 }

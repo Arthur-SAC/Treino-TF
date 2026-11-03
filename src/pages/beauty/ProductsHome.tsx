@@ -1,8 +1,8 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type Product } from "../../lib/db";
-import { BeautyTabs } from "../../components/BeautyTabs";
 import { ProductCard } from "../../components/ProductCard";
 
 type Filter = "all" | Product["category"];
@@ -23,11 +23,10 @@ export function ProductsHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Produtos</h1>
         <Link to="/beleza/pele-cabelo/produtos/novo" className="text-muted text-sm">+ novo</Link>
       </div>
-      <BeautyTabs />
 
       <div className="flex gap-2 mb-4">
         {(["all", "skincare", "haircare", "supplements"] as const).map((f) => (

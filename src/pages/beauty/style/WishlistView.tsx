@@ -1,8 +1,7 @@
+import { Voltar } from "../../../components/Voltar";
 import { useState, type FormEvent } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db, type WishlistItem } from "../../../lib/db";
-import { BeautyTabs } from "../../../components/BeautyTabs";
 import { StyleTabs } from "../../../components/StyleTabs";
 import { GUIA_TAMANHOS } from "../../../data/tamanhos-seed";
 
@@ -35,10 +34,9 @@ export function WishlistView() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Estilo</h1>
       </div>
-      <BeautyTabs />
       <StyleTabs />
 
       {/* Antes da lista de desejo, não depois: estas quatro coisas decidem se a

@@ -17,7 +17,7 @@ const ITEMS = [
 
 export function StyleTabs() {
   return (
-    <div className="overflow-x-auto -mx-4 px-4 mb-4">
+    <div className="overflow-x-auto sem-barra -mx-4 px-4 mb-4">
       <div className="flex gap-2 w-max">
         {ITEMS.map(({ to, label, end }) => (
           <NavLink

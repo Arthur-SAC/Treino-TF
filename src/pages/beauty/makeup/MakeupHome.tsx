@@ -1,7 +1,7 @@
+import { Voltar } from "../../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db, type MakeupRoutine } from "../../../lib/db";
-import { BeautyTabs } from "../../../components/BeautyTabs";
 import { DisclaimerCard } from "../../../components/DisclaimerCard";
 
 const OCCASION_LABEL: Record<MakeupRoutine["occasion"], string> = {
@@ -22,10 +22,9 @@ export function MakeupHome() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza" className="text-muted text-sm">&larr; Beleza</Link>
+        <Voltar para="/beleza" rotulo="Beleza" />
         <h1 className="font-serif text-2xl text-nude flex-1">Maquiagem</h1>
       </div>
-      <BeautyTabs />
 
       <DisclaimerCard text="Comece com as rotinas mais simples (diário, trabalho) e vai evoluindo. Maquiagem é prática — quanto mais você faz, melhor fica." />
 

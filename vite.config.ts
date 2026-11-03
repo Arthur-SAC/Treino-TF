@@ -51,6 +51,8 @@ export default defineConfig(({ mode }) => {
     test: {
       globals: true,
       environment: "happy-dom",
+      // Teste não sai pra internet: o player do YouTube tentava baixar o iframe.
+      environmentOptions: { happyDOM: { settings: { disableIframePageLoading: true } } },
       setupFiles: ["./tests/setup.ts"],
       css: false,
     },

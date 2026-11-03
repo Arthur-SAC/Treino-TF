@@ -21,6 +21,14 @@ describe("linha do tempo", () => {
     expect(s).toMatch(/Fase 2 termina entre/);
   });
 
+  it("a versão visível tem data, quadril e razão vindos do objetivo — e não promete o fim", () => {
+    const s = JSON.stringify(linhaDoTempo(pr));
+    expect(s).toMatch(/Versão visível entre nov\/2027 e fev\/2028/);
+    expect(s).toMatch(/quadril em 110–112/);
+    expect(s).toMatch(/0,76–0,78/);
+    expect(s).toMatch(/não é o fim/i);
+  });
+
   it("partida já abaixo de 88 não inventa data pra trava", () => {
     const abaixo = projetar({ data: "2026-09-25", pesoKg: 90, cinturaCm: 87, pescocoCm: 40 }, 173)!;
     expect(JSON.stringify(linhaDoTempo(abaixo))).toMatch(/já começou abaixo/);

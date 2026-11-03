@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Voltar } from "../../components/Voltar";
 import { DisclaimerCard } from "../../components/DisclaimerCard";
 import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
 
@@ -62,7 +62,7 @@ export function Support() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/" className="text-muted text-sm">&larr; Hoje</Link>
+        <Voltar para="/" rotulo="Hoje" />
         <h1 className="font-serif text-2xl text-nude flex-1">Apoio</h1>
       </div>
 

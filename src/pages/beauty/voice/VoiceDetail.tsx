@@ -1,6 +1,7 @@
+import { Voltar } from "../../../components/Voltar";
 import { useState, useEffect, useRef } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db, type VoicePracticeLog, type VoiceRecording } from "../../../lib/db";
 import { useSetting } from "../../../hooks/useSetting";
 import { analyzeRecordingPitch } from "../../../lib/pitch-audio";
@@ -127,7 +128,7 @@ export function VoiceDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
-        <Link to="/beleza/voz" className="text-muted text-sm">&larr; Voz</Link>
+        <Voltar para="/beleza/voz" rotulo="Voz" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{exercise.name}</h1>
       <p className="text-muted text-sm mb-4">{exercise.focus}</p>

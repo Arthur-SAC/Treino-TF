@@ -1,6 +1,7 @@
+import { Voltar } from "../../components/Voltar";
 import { useState, useEffect, type FormEvent } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db } from "../../lib/db";
 import { getActiveMealPlan } from "../../lib/meal-plan";
 
@@ -41,7 +42,7 @@ export function MealPlanEdit() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/trilha/alimentacao" className="text-muted text-sm">&larr; Alimentação</Link>
+        <Voltar para="/trilha/alimentacao" rotulo="Alimentação" />
         <h1 className="font-serif text-2xl text-nude flex-1">Editar plano</h1>
       </div>
 

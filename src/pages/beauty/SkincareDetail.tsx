@@ -1,3 +1,4 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
@@ -25,7 +26,7 @@ export function SkincareDetail() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/beleza/pele-cabelo/skincare" className="text-muted text-sm">&larr; Skincare</Link>
+        <Voltar para="/beleza/pele-cabelo/skincare" rotulo="Skincare" />
       </div>
       <h1 className="font-serif text-2xl text-nude mb-1">{routine.name}</h1>
       <p className="text-muted text-xs mb-4">

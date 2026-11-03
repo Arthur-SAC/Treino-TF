@@ -1,6 +1,6 @@
+import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
 import { db, type Meal } from "../../lib/db";
 import { getActiveMealPlan, variantEscolhida, EFFORT_LABEL } from "../../lib/meal-plan";
 import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
@@ -65,7 +65,7 @@ export function MealsToday() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/" className="text-muted text-sm">&larr; Hoje</Link>
+        <Voltar para="/" rotulo="Hoje" />
         <h1 className="font-serif text-2xl text-nude flex-1">Refeições hoje</h1>
       </div>
 

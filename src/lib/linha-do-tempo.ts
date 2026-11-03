@@ -1,10 +1,12 @@
 import type { GuideSection } from "../components/GuideAccordion";
 import { mesAno, type Projecao } from "./partida";
-import { FASES } from "./objetivo";
+import { FASES, VERSAO_VISIVEL } from "./objetivo";
 
 const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
+const CINTURA_FIM_FASE1 = FASES.find((f) => f.id === "fase-1")!.cinturaCm;
 const entre = ([a, b]: [string, string]) => (a === b ? mesAno(a) : `${mesAno(a)} e ${mesAno(b)}`);
 const kg = (n: number) => n.toLocaleString("pt-BR");
+const faixa = ([a, b]: readonly [number, number]) => `${kg(a)}–${kg(b)}`;
 
 // Os prazos saem da medição de partida dela, nunca de maio (ela recomeçou do
 // zero em 23/09/2026). Sem partida, a seção diz isso em vez de inventar data.
@@ -24,6 +26,7 @@ export function linhaDoTempo(pr: Projecao | null): GuideSection {
       ? "Cintura 88: você já começou abaixo dela — a trava do superávit não te segura."
       : `Cintura 88 entre ${entre(pr.cintura88)}: é a trava que destrava o superávit.`,
     `Fim da fase 1 entre ${entre(pr.fimFase1)}: cintura 84 e peso por volta de ${pr.pesoAlvoFase1[0]}–${pr.pesoAlvoFase1[1]} kg.`,
+    `Versão visível entre ${entre(pr.versaoVisivel)}: cintura ${kg(CINTURA_FIM_FASE1)}, quadril em ${faixa(VERSAO_VISIVEL.quadrilCm)} e razão cintura÷quadril em ${faixa(VERSAO_VISIVEL.whr)}, com o glúteo já destacado da coxa. Não é o fim: faltam os últimos centímetros de glúteo, que só o resto da fase 2 constrói — e só chega aqui sem faltar.`,
     `Fase 2 termina entre ${entre(pr.fimFase2)}: a balança SOBE de propósito, até ${FASE_2.pesoKgMin}-${FASE_2.pesoKgMax} kg, e o quadril volta a ${FASE_2.quadrilCm} feito de músculo.`,
     "Se a medição do mês ficar atrás da data, a pergunta é adesão (16h e jantar), não o plano.",
   ];

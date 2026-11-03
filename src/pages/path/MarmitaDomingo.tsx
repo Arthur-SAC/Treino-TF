@@ -1,6 +1,5 @@
+import { Voltar } from "../../components/Voltar";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Link } from "react-router-dom";
-import { PathTabs } from "../../components/PathTabs";
 import { ROTEIRO_DOMINGO, MARMITA_TETO_MIN } from "../../data/marmita-domingo-seed";
 import { getActiveMealPlan } from "../../lib/meal-plan";
 import { porcoesDoLote } from "../../lib/marmita-porcoes";
@@ -16,9 +15,9 @@ export function MarmitaDomingo() {
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
         <h1 className="font-serif text-2xl text-nude flex-1">Trilha</h1>
-        <Link to="/trilha/alimentacao" className="text-muted text-sm">&larr; Alimentação</Link>
+        <Voltar para="/trilha/alimentacao" rotulo="Alimentação" />
       </div>
-      <PathTabs />
+      <Voltar para="/guia" rotulo="Guia" />
 
       <div className="card mb-3">
         <h2 className="text-nude-warm font-medium mb-1">Domingo · o lote da semana</h2>

@@ -1,3 +1,4 @@
+import type React from "react";
 import { TREINOS_POR_SEMANA } from "../lib/objetivo";
 
 // Uma linha que responde "estou progredindo?": treinos da semana contra os do
@@ -10,9 +11,12 @@ const sinal = (n: number, unidade: string) =>
 export function SemanaCard({
   treinos,
   variacao,
+  children,
 }: {
   treinos: number;
   variacao: { pesoKg: number | null; cinturaCm: number | null } | null;
+  /** As contagens dos últimos 7 dias, na mesma caixa — eram 5 cards empilhados. */
+  children?: React.ReactNode;
 }) {
   const partes: string[] = [];
   if (variacao?.pesoKg !== null && variacao?.pesoKg !== undefined) partes.push(`peso ${sinal(variacao.pesoKg, "kg")}`);
@@ -22,6 +26,7 @@ export function SemanaCard({
       <p className="text-muted text-xs uppercase tracking-wider">Esta semana</p>
       <p className="text-nude-warm text-sm mt-1">{Math.min(treinos, TREINOS_POR_SEMANA)}/{TREINOS_POR_SEMANA} treinos</p>
       {partes.length > 0 && <p className="text-muted text-xs mt-1">Desde a partida: {partes.join(" · ")}</p>}
+      {children && <div className="grid grid-cols-4 gap-1 mt-3 pt-3 border-t border-bg-border">{children}</div>}
     </div>
   );
 }

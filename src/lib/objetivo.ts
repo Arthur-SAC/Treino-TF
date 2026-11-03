@@ -136,6 +136,16 @@ export const PCT_GORDURA_FIM_FASE1: readonly [number, number] = [0.11, 0.13];
 /** Fim da fase 2 em meses desde a partida (máximo natural). */
 export const FIM_FASE2_MESES: readonly [number, number] = [21, 27];
 
+/** A "versão visível" (pedido dela em 2026-10-20: "no início de 2028 estar
+ *  terminando"): cintura já em 84 e a maior parte do glúteo construída — faltam
+ *  os últimos 2-4 cm de quadril, que só o resto da fase 2 entrega. Meses desde
+ *  a partida; quadril e razão são estimativa de execução normal, por isso faixa. */
+export const VERSAO_VISIVEL = {
+  meses: [14, 17] as readonly [number, number],
+  quadrilCm: [110, 112] as readonly [number, number],
+  whr: [0.76, 0.78] as readonly [number, number],
+} as const;
+
 const FASE_2 = FASES.find((f) => f.id === "fase-2")!;
 
 /** Ombro projetado ao fim da fase 1: cai para perto de 114 cm junto com a

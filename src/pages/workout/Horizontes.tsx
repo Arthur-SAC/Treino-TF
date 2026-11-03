@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Voltar } from "../../components/Voltar";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { HORIZONTES } from "../../data/horizontes-seed";
 import { usePartida } from "../../hooks/usePartida";
@@ -10,7 +10,7 @@ export function Horizontes() {
   return (
     <div className="p-4 pb-24">
       <div className="mb-4 flex items-center gap-3">
-        <Link to="/treino" className="text-muted text-sm">&larr; Treino</Link>
+        <Voltar para="/treino" rotulo="Treino" />
         <h1 className="font-serif text-2xl text-nude flex-1">Até onde dá pra chegar</h1>
       </div>
       <p className="text-muted text-sm mb-4">
