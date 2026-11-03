@@ -43,6 +43,8 @@ export interface Settings {
   entradaMigration: number;
   walkGoalMin: number;
   modoCaminhada: ModoCaminhada;
+  /** Hoje: extras recolhidos (dia ruim) — o núcleo nunca recolhe. */
+  extrasRecolhidos: boolean;
   presencaReminderTime: string;
   lastPresencaReminderAt: string;
   heightCm: number; // altura em cm; 0 = não informada
@@ -127,6 +129,7 @@ export const DEFAULTS: Settings = {
   // Padrão = a rotina que o app sempre supôs. Ela troca em Configurações quando
   // a caminhada muda; o gasto, a projeção e o Hoje acompanham.
   modoCaminhada: "caminhada",
+  extrasRecolhidos: false,
   presencaReminderTime: "21:00",
   lastPresencaReminderAt: "",
   heightCm: 0,
