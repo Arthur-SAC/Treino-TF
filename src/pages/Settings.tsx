@@ -7,6 +7,7 @@ import { encryptBackup } from "../lib/backup";
 import { coletarBackup } from "../lib/backup-io";
 import { exportarArquivo } from "../lib/exportar-arquivo";
 import { RestaurarBackup } from "../components/RestaurarBackup";
+import { VersaoDoApp } from "../components/VersaoDoApp";
 import { db } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
 import { isNativo } from "../lib/plataforma";
@@ -291,6 +292,8 @@ export function Settings() {
           Apagar TUDO
         </button>
       </div>
+
+      <VersaoDoApp />
     </div>
   );
 }
