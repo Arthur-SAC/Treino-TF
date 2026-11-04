@@ -26,7 +26,8 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // v12: peito de cima progride — o catálogo para de mandar manter LEVE (auditoria 2026-09-23).
 // v13: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v14: cardio-zona2 vale pra caminhada e pra esteira (dívida da entrega E, 2026-10-02).
-export const EXERCISE_SEED_VERSION = 14;
+// v15: cardio leve pós-treino, acelerador da fase 1 (2026-11-04).
+export const EXERCISE_SEED_VERSION = 15;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.
@@ -40,7 +41,8 @@ export const EXERCISE_SEED_VERSION = 14;
 // v14: nota do supino da hipertrofia concorda com a progressão do peito.
 // v15: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v16: nota do búlgaro na quarta da Entrada diz com que peso começar (revisão final da entrega C).
-export const TEMPLATE_SEED_VERSION = 16;
+// v17: todo treino de déficit fecha com 15-20 min de cardio leve (2026-11-04).
+export const TEMPLATE_SEED_VERSION = 17;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");

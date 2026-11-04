@@ -1203,6 +1203,31 @@ export const EXERCISES: Exercise[] = [
     ],
   },
   {
+    // Acelerador da fase 1 (pedido dela em 2026-11-04). Não é a zona 2 — essa
+    // continua sendo a caminhada de 5 km. São 15-20 min leves que gastam mais
+    // um pouco sem competir com o glúteo, só enquanto o plano é de déficit.
+    id: "cardio-pos-treino",
+    name: "Cardio leve pós-treino (15-20 min)",
+    category: "cardio",
+    equipment: ["esteira", "bike-reclinada"],
+    difficulty: "iniciante",
+    description: "Logo depois da força, 15-20 min contínuos e leves: esteira em inclinação 3-5% a 4,5-5 km/h, ou bike reclinada nível 3-4 de 8, ou subir e descer a escada do prédio sem pressa. Ritmo de conversa: respira mais forte, mas fala frases inteiras. Não é corrida nem tiro.",
+    commonMistakes: [
+      "Transformar em corrida ou tiro — isso compete com a recuperação do glúteo e da coxa",
+      "Fazer antes da força — o glúteo precisa de você descansada",
+      "Esticar pra 40 min: o resto do cardio do dia já é a caminhada de 5 km",
+    ],
+    easierVariation: "10-15 min, inclinação 0-2% ou bike nível 2-3",
+    harderVariation: "20 min com inclinação 5-6%, ainda conversando",
+    exposureLevel: 1,
+    successCue: "Fez certo se terminou suada e com a respiração mais forte, mas conseguindo conversar o tempo todo e sem perna pesada.",
+    proTips: [
+      "É o acelerador da fase 1: 15-20 min por dia somam ~120-180 kcal sem cortar comida",
+      "No dia em que a caminhada vira esteira de 1 h, este item some — a esteira já é o cardio do dia",
+      "Escada: subir andando, descer com cuidado, segurando o corrimão se precisar",
+    ],
+  },
+  {
     id: "cardio-zona2",
     name: "Cardio zona 2 (caminhada ou esteira)",
     category: "cardio",

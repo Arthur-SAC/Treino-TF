@@ -71,7 +71,8 @@ depois mostra peso-alvo e prazos em mês de calendário, e os Horizontes montam 
 A fase 3 **não acontece** se o BBL estiver marcado (a cirurgia precisa de gordura pra colher).
 
 **Aceleradores que ela aceitou:** caminhada de 5 km também sábado e domingo; sono 7–7,5 h;
-creatina 3 g/dia. **Recusou:** caminhada firme com os cães. (BBL antes dos 30 foi recusado
+creatina 3 g/dia; **cardio leve de 15–20 min logo depois da força** em todo treino de déficit
+(2026-11-04; some no modo esteira). **Recusou:** caminhada firme com os cães. (BBL antes dos 30 foi recusado
 em 23/09 e revisto por ela em 2026-10-19 — ver seção 6.)
 
 ## 6. BBL, TRH e discrição

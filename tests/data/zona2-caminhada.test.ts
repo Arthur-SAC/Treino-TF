@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
 import { EXERCISES } from "../../src/data/exercises-seed";
+import { CARDIO_POS_TREINO } from "../../src/lib/session-order";
+
+// Os 15 min do cardio pós-treino (2026-11-04) entram por cima; estas contas
+// são da zona 2 que saiu em 2026-08, então descontam o acelerador.
+const semAcelerador = (t?: { durationMin: number; exercises: { exerciseId: string }[] }) =>
+  t ? t.durationMin - (t.exercises.some((e) => e.exerciseId === CARDIO_POS_TREINO) ? 15 : 0) : undefined;
 
 describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
   it("nenhum template prescreve cardio-zona2", () => {
@@ -61,7 +67,7 @@ describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
     expect(Object.keys(NOVA_DURACAO)).toHaveLength(21);
     for (const [id, esperado] of Object.entries(NOVA_DURACAO)) {
       const t = ALL_TEMPLATES.find((tpl) => tpl.id === id);
-      expect({ id, durationMin: t?.durationMin }).toEqual({ id, durationMin: esperado });
+      expect({ id, durationMin: semAcelerador(t) }).toEqual({ id, durationMin: esperado });
     }
   });
 
@@ -81,7 +87,7 @@ describe("zona 2 saiu dos treinos — a caminhada de 5 km já entrega", () => {
     };
     for (const [id, esperado] of Object.entries(NAO_AFETADOS)) {
       const t = ALL_TEMPLATES.find((tpl) => tpl.id === id);
-      expect({ id, durationMin: t?.durationMin }).toEqual({ id, durationMin: esperado });
+      expect({ id, durationMin: semAcelerador(t) }).toEqual({ id, durationMin: esperado });
     }
   });
 });

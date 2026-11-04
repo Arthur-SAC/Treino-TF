@@ -28,7 +28,7 @@ describe("vídeos dos exercícios", () => {
   // quadril que não pode girar). Exercício de força que ela nunca fez, sem
   // vídeo, é conteúdo que não chega.
   const SEM_VIDEO_POR_NATUREZA = new Set([
-    "cardio-leve-esteira", "cardio-zona2", "bike-reclinada", "aquecimento-articular",
+    "cardio-leve-esteira", "cardio-zona2", "cardio-pos-treino", "bike-reclinada", "aquecimento-articular",
   ]);
 
   it("todo exercício de força/mobilidade do catálogo tem vídeo no mapa", () => {

@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { db, type Exercise, type WorkoutSession } from "../../lib/db";
-import { ordenarPorBloco } from "../../lib/session-order";
+import { ordenarPorBloco, semCardioPosTreinoNaEsteira } from "../../lib/session-order";
 import { textoDeAquecimento } from "../../lib/session-warmup";
 import { SessionRecorder } from "../../components/SessionRecorder";
 import { GuideAccordion } from "../../components/GuideAccordion";
@@ -17,7 +17,7 @@ import type { ModoCaminhada } from "../../lib/objetivo";
 function dicasZona2(modo: ModoCaminhada): string[] {
   if (modo === "pausada") {
     return [
-      "A caminhada está pausada — a zona 2 de hoje não vem de lugar nenhum. Se quiser compensar, 20–30 min de esteira inclinada depois da força.",
+      "A caminhada está pausada — a zona 2 de hoje não vem de lugar nenhum. Se quiser compensar, estica o cardio pós-treino pra 30 min, ainda no ritmo de conversa.",
       "O passeio com os cães continua, mas é movimento leve — não substitui a zona 2.",
       "Bebe água — você sua mais no calor de Aracaju.",
     ];
@@ -30,7 +30,7 @@ function dicasZona2(modo: ModoCaminhada): string[] {
     ];
   }
   return [
-    "Sem cardio de zona 2 aqui no fim — a caminhada de 5 km do trabalho para casa, às 16h, já entrega os minutos contínuos nesse ritmo (ofegante mas dá pra conversar). Prescrever de novo alongaria o treino e empurraria o jantar pra depois das 20h.",
+    "O cardio pós-treino (15-20 min, último item) é leve e é o acelerador da fase 1. A zona 2 de verdade continua sendo a caminhada de 5 km do trabalho para casa — não precisa de outra caminhada depois do treino.",
     "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
     "Bebe água — você sua mais no calor de Aracaju.",
   ];
@@ -65,8 +65,8 @@ export function SessionDetail() {
     (template?.exercises.some((e) => e.block === "maquina") ?? false) &&
     (template?.exercises.some((e) => e.block === "solo") ?? false);
   const ordenados = useMemo(
-    () => (template ? ordenarPorBloco(template.exercises, soloPrimeiro) : []),
-    [template, soloPrimeiro],
+    () => (template ? ordenarPorBloco(semCardioPosTreinoNaEsteira(template.exercises, modoCaminhada), soloPrimeiro) : []),
+    [template, soloPrimeiro, modoCaminhada],
   );
 
   // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
