@@ -8,28 +8,6 @@ import { MeasurementChart } from "../../components/MeasurementChart";
 import { calculateWhr, classifyWhr } from "../../lib/waist-hip-ratio";
 import { formatCm, formatDateBR } from "../../lib/format";
 import { useSetting } from "../../hooks/useSetting";
-import { GuideAccordion, type GuideSection } from "../../components/GuideAccordion";
-
-// Exportado para o teste que prende a régua: cintura no umbigo e ombro em
-// circunferência são os pontos da partida e da conta de gordura (Navy).
-export const GUIDE_MEDICAO: GuideSection[] = [
-  {
-    id: "como-medir",
-    title: "Como medir certo",
-    intro:
-      "Medir sempre do mesmo jeito é o que torna os dados comparáveis ao longo do tempo. Use uma fita métrica flexível e não elástica.",
-    tips: [
-      "Cintura: na altura do umbigo — é onde a barriga está e é o ponto que a conta de gordura usa. Fique em pé, barriga solta, expire normalmente e passe a fita justa, sem apertar nem folgar. Medir mais acima dá um número menor que não se compara com o da partida.",
-      "Quadril: meça na parte mais larga do bumbum, com os pés unidos. A fita deve ficar paralela ao chão.",
-      "Ombros: a fita dá a volta no corpo passando pela parte mais larga dos ombros, por cima dos músculos do ombro e das costas. Fique ereta, braços relaxados ao lado do corpo. É circunferência, não a distância de uma ponta à outra.",
-      "Busto: na linha dos mamilos, fita paralela ao chão, braços relaxados, depois de expirar.",
-      "Pescoço: logo abaixo do pomo de adão, no ponto mais estreito. Fita paralela ao chão, sem comprimir.",
-      "Coxa: na parte mais grossa da coxa, geralmente no terço superior, logo abaixo da dobra glútea. Perna levemente afastada para a fita não comprimir.",
-      "Braço: no bíceps relaxado, no ponto mais largo entre o ombro e o cotovelo.",
-      "Frequência ideal: meça a cada 2 a 4 semanas, sempre no mesmo horário — de preferência pela manhã, em jejum, antes de treinar ou tomar muito líquido. Isso elimina variações naturais de retenção hídrica ao longo do dia.",
-    ],
-  },
-];
 
 const CATEGORY_LABEL: Record<ReturnType<typeof classifyWhr>, string> = {
   "ampulheta-forte": "Ampulheta forte",
@@ -75,8 +53,6 @@ export function Measurements() {
         <Voltar para="/corpo" rotulo="Corpo" />
         <h1 className="font-serif text-2xl text-nude flex-1">Medidas</h1>
       </div>
-
-      <GuideAccordion sections={GUIDE_MEDICAO} className="mb-4" />
 
       <div className="card mb-4">
         <h2 className="text-nude-warm font-medium mb-3">Nova medida</h2>
