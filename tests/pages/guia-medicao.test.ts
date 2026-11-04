@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { GUIDE_MEDICAO } from "../../src/pages/body/Measurements";
+import { GUIDE_MEDICAO } from "../../src/lib/guia-medicao";
 
 // Auditoria de 2026-09-23: o guia mandava medir a cintura na "parte mais
 // estreita" e o ombro "de ponta a ponta" (largura). A partida (13/05/2026) e a

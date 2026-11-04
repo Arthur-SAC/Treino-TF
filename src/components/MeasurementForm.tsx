@@ -1,6 +1,8 @@
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import type { Measurement } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
+import { GUIDE_MEDICAO, DICA_CURTA, OMBRO_MINIMO_CIRCUNFERENCIA } from "../lib/guia-medicao";
+import { GuideAccordion } from "./GuideAccordion";
 
 type MeasurementInput = Omit<Measurement, "id">;
 
@@ -43,6 +45,8 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [errors, setErrors] = useState<string[]>([]);
   const [salva, setSalva] = useState(false);
+  const [emFoco, setEmFoco] = useState<string | null>(null);
+  const uid = useId();
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -68,6 +72,9 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
     if (m.waistCm !== undefined && m.neckCm !== undefined && m.waistCm <= m.neckCm) {
       errs.push("Cintura menor que o pescoço: confere se os dois campos não ficaram trocados.");
     }
+    if (m.shouldersCm !== undefined && m.shouldersCm < OMBRO_MINIMO_CIRCUNFERENCIA) {
+      errs.push("Ombros: esse número parece a largura das costas. O app usa a fita dando a volta no corpo inteiro (passa de 100 cm).");
+    }
     if (errs.length) {
       setErrors(errs);
       return;
@@ -85,6 +92,7 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <GuideAccordion sections={GUIDE_MEDICAO} />
       <div>
         <label className="block text-muted text-xs uppercase tracking-wider mb-1">Data</label>
         <input
@@ -97,9 +105,13 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
       <div className="grid grid-cols-2 gap-3">
         {FIELDS.map(({ key, label }) => (
           <div key={key}>
-            <label className="block text-muted text-xs uppercase tracking-wider mb-1">{label}</label>
+            <label htmlFor={`${uid}-${key}`} className="block text-muted text-xs uppercase tracking-wider mb-1">{label}</label>
             <div className="relative">
               <input
+                id={`${uid}-${key}`}
+                aria-describedby={`${uid}-${key}-dica`}
+                onFocus={() => setEmFoco(key)}
+                onBlur={() => setEmFoco((f) => (f === key ? null : f))}
                 type="text"
                 inputMode="decimal"
                 value={values[key]}
@@ -112,6 +124,9 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">{key === "weightKg" ? "kg" : "cm"}</span>
             </div>
+            <p id={`${uid}-${key}-dica`} className={emFoco === key ? "text-nude text-xs mt-1 tela-entra" : "sr-only"}>
+              {DICA_CURTA[key]}
+            </p>
           </div>
         ))}
       </div>
