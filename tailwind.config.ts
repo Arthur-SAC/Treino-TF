@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { PALETA } from "./src/lib/contraste";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -6,21 +7,28 @@ export default {
     extend: {
       colors: {
         bg: {
-          base: "#1a0a0e",
-          raised: "#2a1419",
-          deep: "#0a0506",
-          border: "#4a2935",
+          base: PALETA.fundo,
+          raised: PALETA.card,
+          deep: PALETA.trilho,
+          border: PALETA.borda,
         },
         wine: {
-          DEFAULT: "#5c1a2b",
-          light: "#8b3a4a",
+          DEFAULT: "#fde4e0",
+          light: "#f9cfc8",
         },
         nude: {
-          DEFAULT: "#d4a373",
-          light: "#e8b9a6",
-          warm: "#f4e4d6",
+          DEFAULT: PALETA.verm2,
+          light: PALETA.verm,
+          warm: PALETA.texto,
         },
-        muted: "#a87a6a",
+        verm: {
+          DEFAULT: PALETA.verm,
+          2: PALETA.verm2,
+          3: PALETA.verm3,
+        },
+        feito: PALETA.feito,
+        vital: PALETA.vital,
+        muted: PALETA.texto2,
       },
       fontFamily: {
         sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],

@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
     // statsUrl vazio: por padrão o plugin manda eventos do aparelho pra Capgo,
     // e os dados dela ficam só no celular.
     CapacitorUpdater: { autoUpdate: false, statsUrl: "" },
-    LocalNotifications: { smallIcon: "ic_stat_treino", iconColor: "#c9a2a0" },
+    LocalNotifications: { smallIcon: "ic_stat_treino", iconColor: "#e23b3b" },
   },
 };
 
