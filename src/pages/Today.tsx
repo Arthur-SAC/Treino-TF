@@ -486,8 +486,8 @@ export function Today() {
           </div>
           <div className="mt-2 h-1.5 rounded-pill bg-bg-deep overflow-hidden" aria-hidden="true">
             <div
-              className="h-full rounded-pill bg-nude transition-[width] duration-500 ease-out"
-              style={{ width: `${nucleo.length ? (nucleoFeitos / nucleo.length) * 100 : 0}%` }}
+              className={`h-full w-full origin-left rounded-pill barra-enche ${nucleo.length > 0 && nucleoFeitos === nucleo.length ? "bg-feito" : "bg-verm"}`}
+              style={{ transform: `scaleX(${nucleo.length ? nucleoFeitos / nucleo.length : 0})` }}
             />
           </div>
           <p className="text-muted text-xs mt-2">
