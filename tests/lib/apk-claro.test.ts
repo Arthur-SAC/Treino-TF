@@ -6,6 +6,9 @@ const BG = raw(import.meta.glob("../../android/app/src/main/res/values/ic_launch
 const STYLES = raw(import.meta.glob("../../android/app/src/main/res/values/styles.xml", { query: "?raw", import: "default", eager: true }));
 const COLORS = raw(import.meta.glob("../../android/app/src/main/res/values/colors.xml", { query: "?raw", import: "default", eager: true }));
 const SPLASH_XML = raw(import.meta.glob("../../android/app/src/main/res/drawable/splash.xml", { query: "?raw", import: "default", eager: true }));
+const ICONE = raw(import.meta.glob("../../android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml", { query: "?raw", import: "default", eager: true }));
+const ICONE_REDONDO = raw(import.meta.glob("../../android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml", { query: "?raw", import: "default", eager: true }));
+const FRENTE = raw(import.meta.glob("../../android/app/src/main/res/drawable/ic_launcher_foreground_claro.xml", { query: "?raw", import: "default", eager: true }));
 const SPLASH_PNGS = Object.keys(import.meta.glob("../../android/app/src/main/res/drawable*/splash.png", { query: "?url", import: "default" }));
 
 describe("APK claro", () => {
@@ -26,10 +29,36 @@ describe("APK claro", () => {
     }
   });
   it("a splash é um XML claro, sem PNG escuro por perto", () => {
-    expect(SPLASH_XML).toMatch(/#fff7f3/i);
-    expect(SPLASH_XML).toMatch(/@mipmap\/ic_launcher_foreground/);
+    // android:drawable é referência: cor literal ali o AAPT2 recusa. A cor vem
+    // de colors.xml e tem de ser o creme.
+    expect(SPLASH_XML).not.toMatch(/android:drawable="#/);
+    expect(SPLASH_XML).toMatch(/<item android:drawable="@color\/splash_background"\s*\/>/);
+    expect(COLORS).toMatch(/name="splash_background">#fff7f3</i);
+    // Vetor não entra em <bitmap>: vai direto no <item>, com tamanho.
+    expect(SPLASH_XML).not.toMatch(/<bitmap/);
+    expect(SPLASH_XML).toMatch(/android:drawable="@drawable\/ic_launcher_foreground_claro"/);
+    expect(SPLASH_XML).toMatch(/android:gravity="center"/);
+    expect(SPLASH_XML).toMatch(/android:width="\d+dp"/);
+    expect(SPLASH_XML).toMatch(/android:height="\d+dp"/);
     expect(SPLASH_PNGS).toEqual([]);
     expect(STYLES).toMatch(/windowSplashScreenBackground">@color\/splash_background</);
+    expect(STYLES).toMatch(/windowSplashScreenAnimatedIcon">@drawable\/ic_launcher_foreground_claro</);
+  });
+  it("o ícone adaptativo usa o T vermelho em vetor, dentro da zona segura", () => {
+    for (const xml of [ICONE, ICONE_REDONDO]) {
+      expect(xml).toMatch(/<foreground android:drawable="@drawable\/ic_launcher_foreground_claro"\s*\/>/);
+      expect(xml).toMatch(/<background android:drawable="@color\/ic_launcher_background"\s*\/>/);
+    }
+    expect(FRENTE).toMatch(/android:viewportWidth="108"/);
+    expect(FRENTE).toMatch(/android:viewportHeight="108"/);
+    const cores = [...FRENTE.matchAll(/android:fillColor="([^"]+)"/g)].map((m) => m[1].toLowerCase());
+    expect(cores.length).toBeGreaterThan(0);
+    expect(new Set(cores)).toEqual(new Set(["#c81d3a"]));
+    // Todo ponto do desenho dentro do círculo de 66dp no centro (54,54).
+    const pontos = [...FRENTE.matchAll(/android:pathData="([^"]+)"/g)]
+      .flatMap((m) => [...m[1].matchAll(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g)].map((p) => [Number(p[1]), Number(p[2])]));
+    expect(pontos.length).toBeGreaterThan(0);
+    for (const [x, y] of pontos) expect(Math.hypot(x - 54, y - 54)).toBeLessThanOrEqual(33);
   });
   it("o recurso nativo novo sobe a versão nativa", () => {
     expect(NATIVE_VERSION).toBe(2);

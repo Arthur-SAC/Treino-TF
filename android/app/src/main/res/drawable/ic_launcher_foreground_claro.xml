@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Primeiro plano do ícone adaptativo e da splash: um "T" cheio no vermelho 2
+     da paleta (#c81d3a) sobre o creme. Tela de 108dp; o desenho fica dentro do
+     círculo central de 66dp (zona segura de qualquer máscara do launcher). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- barra de cima -->
+    <path
+        android:fillColor="#c81d3a"
+        android:pathData="M33,34L75,34L75,46L33,46Z" />
+    <!-- haste -->
+    <path
+        android:fillColor="#c81d3a"
+        android:pathData="M48,46L60,46L60,76L48,76Z" />
+</vector>
