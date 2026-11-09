@@ -7,6 +7,7 @@ import { estadoSequencia } from "../lib/sequencia";
 import { marcosDeCinturaAtingidos } from "../lib/conquistas";
 import { diaMes, faltamTreinos } from "../lib/placas-texto";
 import { hojeISO } from "../lib/today-date";
+import { EXPOE } from "../lib/discricao";
 
 // Conquistas, dentro do Progresso (spec 2026-11-09, seção 9): o que já abriu,
 // o que vem (com quantos treinos faltam e o que entra) e os marcos batidos.
@@ -31,8 +32,11 @@ export function Conquistas() {
   const marcos = [
     ...cintura.map((m) => ({ chave: `c-${m.cinturaCm}`, titulo: m.titulo, data: m.data })),
     // O seed de marcos tem "Cintura 88"/"Cintura 84" também: a medida já conta,
-    // não repete.
-    ...(concluidos ?? []).filter((m) => !cintura.some((c) => m.title.includes(c.titulo))).map((m) => ({ chave: `m-${m.id}`, titulo: m.title, data: m.dateCompleted! })),
+    // não repete. Marco cujo título expõe (EXPOE) fica só na Trilha: esta tela
+    // é rótulo visível como as outras.
+    ...(concluidos ?? [])
+      .filter((m) => !cintura.some((c) => m.title.includes(c.titulo)) && !EXPOE.test(m.title))
+      .map((m) => ({ chave: `m-${m.id}`, titulo: m.title, data: m.dateCompleted! })),
   ];
 
   return (

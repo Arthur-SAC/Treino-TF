@@ -177,7 +177,7 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
 
   | Sequência | Entra |
   |---|---|
-  | 0 | protetor solar de manhã (1 min) + alongamento da manhã curto, 2 min, com o vacuum |
+  | 0 | protetor solar de manhã (1 min) + alongamento da manhã curto, 4 min no total (2 min de quadril e coluna + o vacuum) |
   | 5 | alongamento da manhã completo + assoalho nível 1, 5 min, identificação |
   | 10 | skincare nível 2 (limpeza e hidratante à noite) + dica de sentar + dança de sábado |
   | 15 | alongamento da noite + assoalho nível 2 (progressão normal) + voz nível 1, 2 min |
@@ -187,7 +187,9 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
   Rulings: assoalho nível 1 tem 5 min (duração real da sequência de identificação; o spec dizia
   3); voz nível 1 tem 2 min (aquecimento do seed); postura entra no 20, não antes. "Ciclo
   concluído" e "primeira subida de carga" ficaram fora das Conquistas (não são fatos guardados
-  hoje); só os marcos de cintura de `objetivo.ts` entram.
+  hoje). Nas Conquistas entram os marcos de cintura de `objetivo.ts` (os únicos que viram
+  placa) e os marcos da Trilha que ela concluiu, menos os de título que expõe (filtro `EXPOE`
+  de `src/lib/discricao.ts`): esses ficam só na Trilha.
 - **APK:** esta entrega sobe `NATIVE_VERSION` de 1 para 2 (ícone, splash e barra de status
   claros). Ela precisa **reinstalar o APK uma vez**, por cima.
 

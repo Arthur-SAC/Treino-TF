@@ -4,7 +4,7 @@ import { DEFAULTS } from "../../src/lib/settings-helpers";
 import { buildDayRoutine } from "../../src/lib/today-routine";
 import { hojeISO } from "../../src/lib/today-date";
 
-const EXPOE = /\bTRH\b|horm|fertilidade|disforia|transi[çc][ãa]o|intimidade|[íi]ntim|firmeza|sexo|sexual|safad/i;
+import { EXPOE } from "../../src/lib/discricao";
 
 const cfg: ConfigLembretes = {
   notificationsEnabled: true,

@@ -4,7 +4,7 @@ const raw = (glob: Record<string, unknown>) => Object.values(glob)[0] as string;
 const MANIFEST = raw(import.meta.glob("../../android/app/src/main/AndroidManifest.xml", { query: "?raw", import: "default", eager: true }));
 const GITIGNORE = raw(import.meta.glob("../../.gitignore", { query: "?raw", import: "default", eager: true }));
 const CAP = raw(import.meta.glob("../../capacitor.config.ts", { query: "?raw", import: "default", eager: true }));
-const EXPOE = /\bTRH\b|horm|fertilidade|disforia|transi[çc][ãa]o|intimidade|[íi]ntim|firmeza|sexo|sexual|safad/i;
+import { EXPOE } from "../../src/lib/discricao";
 
 describe("o APK", () => {
   it("existe o projeto Android", () => {

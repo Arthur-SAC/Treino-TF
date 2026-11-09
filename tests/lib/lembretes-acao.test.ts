@@ -3,7 +3,7 @@ import { efeitoDaAcao, TIPOS_DE_ACAO } from "../../src/lib/lembretes/acao";
 import { marcarFeito } from "../../src/hooks/useRoutineChecks";
 import { db } from "../../src/lib/db";
 
-const EXPOE = /\bTRH\b|horm|fertilidade|disforia|transi[çc][ãa]o|intimidade|[íi]ntim|firmeza|sexo|sexual|safad/i;
+import { EXPOE } from "../../src/lib/discricao";
 
 describe("efeitoDaAcao", () => {
   it("Feito marca o dia do lembrete, não hoje", () => {

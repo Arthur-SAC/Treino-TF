@@ -17,7 +17,7 @@ const MOVIMENTO = Object.values(import.meta.glob("../../src/pages/workout/Moveme
 // tela de bloqueio e o nome do app aparece no instalador — tudo isso é visível
 // pra quem olhar o celular dela, num ambiente que não é receptivo. Mesma regra
 // da aba "Vitalidade": o rótulo nunca descreve o que tem dentro.
-const EXPOE = /\bTRH\b|horm|fertilidade|disforia|transi[çc][ãa]o|intimidade|[íi]ntim|firmeza|sexo|sexual|safad/i;
+import { EXPOE } from "../../src/lib/discricao";
 
 describe("rótulos visíveis não expõem a transição nem a intimidade", () => {
   it("os atalhos do Hoje", () => {

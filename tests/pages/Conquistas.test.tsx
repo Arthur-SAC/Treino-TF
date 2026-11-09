@@ -59,6 +59,18 @@ describe("Conquistas", () => {
     expect(within(marcos).queryByText("Ainda não")).toBeNull();
   });
 
+  it("marco concluído cujo título expõe não aparece (fica só na Trilha)", async () => {
+    await db.milestones.bulkAdd([
+      { title: "♡ Busto sem hormônio — avaliar começar a usar bralette", category: "fisico", datePlanned: "2026-11-01", dateCompleted: "2026-11-03" },
+      { title: "Primeiro corte novo", category: "social", datePlanned: "2026-11-01", dateCompleted: "2026-11-05" },
+    ]);
+    render(<MemoryRouter><Conquistas /></MemoryRouter>);
+    const marcos = await screen.findByRole("region", { name: "Marcos" });
+    expect(await within(marcos).findByText("Primeiro corte novo")).toBeInTheDocument();
+    expect(marcos.textContent).not.toMatch(/Busto|horm/);
+    expect(within(marcos).queryByText("03/11")).toBeNull();
+  });
+
   it("a rota ativa a aba Progresso e o índice tem o item", () => {
     expect(abaDaRota("/progresso/conquistas")).toBe("progresso");
     expect(ITENS_PROGRESSO).toContainEqual({ label: "Conquistas", sub: "o que já abriu e o que vem", to: "/progresso/conquistas" });
