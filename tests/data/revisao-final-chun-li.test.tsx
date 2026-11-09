@@ -42,7 +42,7 @@ describe("posterior pela flexora, não pela dobradiça", () => {
     ["adaptação", WORKOUT_PLAN],
     ["variação", CYCLE_TEMPLATES.filter((t) => t.cycle === "variacao")],
   ])("na %s a flexora tem mais séries que as dobradiças juntas", (_, ts) => {
-    expect(series(ts as WorkoutTemplate[], ["flexora-em-pe"])).toBeGreaterThan(series(ts as WorkoutTemplate[], DOBRADICAS));
+    expect(series(ts as WorkoutTemplate[], ["flexora-em-pe", "flexora-sentada"])).toBeGreaterThan(series(ts as WorkoutTemplate[], DOBRADICAS));
   });
 });
 

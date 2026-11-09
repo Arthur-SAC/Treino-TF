@@ -49,7 +49,11 @@ describe("seedDatabase", () => {
       "maquina-abdutor", "maquina-adutor", "maquina-remada", "maquina-puxada",
       "maquina-voador", "leg-press", "caneleira", "kettlebell",
       // extensora e flexora da multiestação (2026-09-23): o rolo tem pilha de placas
-      "multiestacao"];
+      "multiestacao",
+      // catálogo da Smartfit Jardins: aparelhos com pilha de placas
+      "maquina-extensora", "maquina-flexora", "maquina-hip-thrust", "maquina-coice", "maquina-hack",
+      // máquina primeiro (2026-11-09)
+      "maquina-supino-inclinado"];
     for (const ex of exercises) {
       const hasLoad = ex.equipment.some((e) => loaded.includes(e));
       if (hasLoad) {

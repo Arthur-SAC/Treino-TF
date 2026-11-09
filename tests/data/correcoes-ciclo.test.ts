@@ -51,7 +51,10 @@ describe("correções de programação (Bloco B da spec 2026-07-27)", () => {
   // peito pesado de poucas reps (e supino reto/declinado, que nem existe aqui).
   it("o peitoral da hipertrofia não é pesado — 3 séries, 10 reps ou mais", () => {
     const h = CYCLE_TEMPLATES.find((t) => t.id === "h-ter-cintura-costas");
-    const supino = h?.exercises.find((e) => e.exerciseId === "supino-inclinado-halteres");
+    // Máquina primeiro (2026-11-09): o supino da hipertrofia é o da máquina,
+    // com o de halteres como plano B — a regra vale pro slot, seja qual for.
+    const supino = h?.exercises.find((e) => e.exerciseId === "supino-inclinado-maquina" || e.exerciseId === "supino-inclinado-halteres");
+    expect(supino).toBeDefined();
     expect(supino?.sets).toBeLessThanOrEqual(3);
     expect(Number(supino?.repsTarget.match(/\d+/)?.[0])).toBeGreaterThanOrEqual(10);
   });

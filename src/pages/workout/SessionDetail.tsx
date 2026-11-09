@@ -10,6 +10,8 @@ import { GuideAccordion } from "../../components/GuideAccordion";
 import { hojeISO } from "../../lib/today-date";
 import { useSetting } from "../../hooks/useSetting";
 import type { ModoCaminhada } from "../../lib/objetivo";
+import { aplicarAusentes, podeMarcarAusente, type ItemTemplate } from "../../lib/troca-aparelho";
+import { setSetting } from "../../lib/settings-helpers";
 
 // Os dois primeiros textos de "Ao terminar" dependem de a zona 2 vir de algum
 // lugar hoje. Em "pausada" não vem — afirmar que a caminhada "já entrega" seria
@@ -26,18 +28,22 @@ function dicasZona2(modo: ModoCaminhada): string[] {
     // Sem a dica de água compartilhada: a segunda frase já manda levar água.
     return [
       "Agora a esteira inclinada: ~6% a 5 km/h, 1 h sem parar, ofegante mas falando em frases curtas. É ela a zona 2 de hoje.",
-      "Leva água, não se segura no corrimão, e deixa o jantar pronto pra comer em até 30 min depois.",
+      "Leva água e não se segura no corrimão. A esteira acaba por volta das 19h, os cães vêm depois e o jantar é às 20:30 — deixa ele pronto de manhã.",
     ];
   }
   return [
-    "O cardio pós-treino (15-20 min, último item) é leve e é o acelerador da fase 1. A zona 2 de verdade continua sendo a caminhada de 5 km do trabalho para casa — não precisa de outra caminhada depois do treino.",
-    "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
+    "O cardio pós-treino (15-20 min, último item) é leve e é o acelerador da fase 1. A zona 2 de verdade continua sendo a caminhada: ~4 km até a academia e ~1 km de volta pra casa depois do treino — não precisa de outra caminhada além dessa.",
+    "O passeio lento com os cães, depois que você chega em casa, é movimento bônus (bom pra saúde) em cima disso.",
     "Bebe água — você sua mais no calor de Aracaju.",
   ];
 }
 
 export function SessionDetail() {
   const modoCaminhada = useSetting("modoCaminhada");
+  const ausentes = useSetting("aparelhosAusentes");
+  // "Ocupado": original → substituto, SÓ nesta visita à sessão. Nada vai pro db:
+  // amanhã o aparelho pode estar livre.
+  const [ocupados, setOcupados] = useState<Record<string, string>>({});
   const { templateId } = useParams<{ templateId: string }>();
   const navigate = useNavigate();
   const template = useLiveQuery(
@@ -46,7 +52,8 @@ export function SessionDetail() {
   );
   const exercises = useLiveQuery(async () => {
     if (!template) return [];
-    const ids = template.exercises.map((e) => e.exerciseId);
+    // Inclui os substitutos: a troca por "Ocupado" precisa do nome deles já na mão.
+    const ids = template.exercises.flatMap((e) => (e.substitutoId ? [e.exerciseId, e.substitutoId] : [e.exerciseId]));
     return db.exercises.where("id").anyOf(ids).toArray();
   }, [template]);
 
@@ -64,9 +71,15 @@ export function SessionDetail() {
   const temBlocos =
     (template?.exercises.some((e) => e.block === "maquina") ?? false) &&
     (template?.exercises.some((e) => e.block === "solo") ?? false);
+  // Ausência permanente e "Ocupado" usam a mesma troca (mesma regra do " cada").
+  const efetivo = useMemo(() => {
+    if (!template) return undefined;
+    const equipPorId = new Map((exercises ?? []).map((e) => [e.id, e.equipment]));
+    return aplicarAusentes(template, [...ausentes, ...Object.keys(ocupados)], (id) => equipPorId.get(id));
+  }, [template, exercises, ausentes, ocupados]);
   const ordenados = useMemo(
-    () => (template ? ordenarPorBloco(semCardioPosTreinoNaEsteira(template.exercises, modoCaminhada), soloPrimeiro) : []),
-    [template, soloPrimeiro, modoCaminhada],
+    () => (efetivo ? ordenarPorBloco(semCardioPosTreinoNaEsteira(efetivo.exercises, modoCaminhada), soloPrimeiro) as ItemTemplate[] : []),
+    [efetivo, soloPrimeiro, modoCaminhada],
   );
 
   // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
@@ -220,7 +233,18 @@ export function SessionDetail() {
       {ordenados.map((tplEx) => {
         const ex = exMap.get(tplEx.exerciseId);
         if (!ex) return null;
-        const alreadyRecorded = recorded.some((r) => r.exerciseId === ex.id);
+        // Sessão reaberta não lembra do "Ocupado" (é só da visita): o item volta
+        // ao original, mas se ela registrou o substituto, ele conta como feito.
+        const idsDoItem = [tplEx.exerciseId];
+        if (tplEx.originalId) idsDoItem.push(tplEx.originalId);
+        if (tplEx.substitutoId && !template.exercises.some((o) => o.exerciseId === tplEx.substitutoId)) {
+          idsDoItem.push(tplEx.substitutoId);
+        }
+        const registro = recorded.find((r) => idsDoItem.includes(r.exerciseId));
+        const alreadyRecorded = registro !== undefined;
+        const exRegistrado = registro ? exMap.get(registro.exerciseId) ?? ex : ex;
+        const original = tplEx.originalId ? exMap.get(tplEx.originalId) : undefined;
+        const voltavel = tplEx.originalId !== undefined && ocupados[tplEx.originalId] !== undefined && !ausentes.includes(tplEx.originalId);
         const titulo = tituloDoBloco.get(tplEx.exerciseId);
         // Key por exerciseId (não pelo índice): ao trocar a ordem com
         // soloPrimeiro, o mesmo índice passa a apontar pra outro exercício, e um
@@ -233,13 +257,13 @@ export function SessionDetail() {
             )}
             {alreadyRecorded ? (
               <div className="card mb-3 border-nude">
-                <h3 className="text-nude-warm font-medium">{ex.name} ✓</h3>
+                <h3 className="text-nude-warm font-medium">{exRegistrado.name} ✓</h3>
                 <div className="flex justify-between items-baseline">
                   <p className="text-muted text-xs">Registrado</p>
                   <button
                     type="button"
-                    onClick={() => corrigir(ex.id)}
-                    aria-label={`Corrigir ${ex.name}`}
+                    onClick={() => corrigir(exRegistrado.id)}
+                    aria-label={`Corrigir ${exRegistrado.name}`}
                     className="text-muted text-xs underline"
                   >
                     Corrigir
@@ -252,8 +276,23 @@ export function SessionDetail() {
                 setsTarget={tplEx.sets}
                 repsTarget={tplEx.repsTarget}
                 restSec={tplEx.restSec}
-                notes={tplEx.notes}
+                // As notas descrevem o aparelho ORIGINAL ("polia no chão, tornozeleira…");
+                // no substituto seriam instrução errada.
+                notes={tplEx.originalId ? undefined : tplEx.notes}
                 onSave={handleSave}
+                onOcupado={tplEx.substitutoId && !tplEx.originalId
+                  ? () => setOcupados((o) => ({ ...o, [tplEx.exerciseId]: tplEx.substitutoId as string }))
+                  : undefined}
+                onNaoTemAqui={podeMarcarAusente(tplEx)
+                  ? () => void setSetting("aparelhosAusentes", [...ausentes, tplEx.exerciseId])
+                  : undefined}
+                onVoltarAoOriginal={voltavel
+                  ? () => setOcupados((o) => {
+                      const { [tplEx.originalId as string]: _, ...resto } = o;
+                      return resto;
+                    })
+                  : undefined}
+                nomeOriginal={original?.name}
               />
             )}
           </Fragment>

@@ -3,6 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useParams } from "react-router-dom";
 import { db } from "../../lib/db";
 import { VideoSection } from "../../components/VideoSection";
+import { ExecucaoBlocos } from "../../components/ExecucaoBlocos";
 
 export function ExerciseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -34,32 +35,40 @@ export function ExerciseDetail() {
         onSave={(url) => { void db.exercises.update(ex.id, { videoUrl: url || undefined }); }}
       />
 
-      <div className="card mb-3">
-        <h2 className="text-nude-warm font-medium mb-2">Como fazer</h2>
-        <p className="text-sm">{ex.description}</p>
-      </div>
-
-      <div className="card mb-3">
-        <h2 className="text-nude-warm font-medium mb-2">Erros comuns</h2>
-        <ul className="space-y-1 text-sm list-disc pl-5">
-          {ex.commonMistakes.map((m) => <li key={m}>{m}</li>)}
-        </ul>
-      </div>
-
-      {ex.proTips && ex.proTips.length > 0 && (
+      {ex.execucao ? (
         <div className="card mb-3">
-          <h2 className="text-nude-warm font-medium mb-2">Dicas pra maximizar</h2>
-          <ul className="space-y-1 text-sm list-disc pl-5">
-            {ex.proTips.map((t) => <li key={t}>{t}</li>)}
-          </ul>
+          <ExecucaoBlocos execucao={ex.execucao} />
         </div>
-      )}
+      ) : (
+        <>
+          <div className="card mb-3">
+            <h2 className="text-nude-warm font-medium mb-2">Como fazer</h2>
+            <p className="text-sm">{ex.description}</p>
+          </div>
 
-      {ex.successCue && (
-        <div className="card mb-3 border-nude/40">
-          <h2 className="text-nude-warm font-medium mb-2">Como saber que fez certo</h2>
-          <p className="text-sm">{ex.successCue}</p>
-        </div>
+          <div className="card mb-3">
+            <h2 className="text-nude-warm font-medium mb-2">Erros comuns</h2>
+            <ul className="space-y-1 text-sm list-disc pl-5">
+              {ex.commonMistakes.map((m) => <li key={m}>{m}</li>)}
+            </ul>
+          </div>
+
+          {ex.proTips && ex.proTips.length > 0 && (
+            <div className="card mb-3">
+              <h2 className="text-nude-warm font-medium mb-2">Dicas pra maximizar</h2>
+              <ul className="space-y-1 text-sm list-disc pl-5">
+                {ex.proTips.map((t) => <li key={t}>{t}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {ex.successCue && (
+            <div className="card mb-3 border-nude/40">
+              <h2 className="text-nude-warm font-medium mb-2">Como saber que fez certo</h2>
+              <p className="text-sm">{ex.successCue}</p>
+            </div>
+          )}
+        </>
       )}
 
       {ex.equipment.length > 0 && (

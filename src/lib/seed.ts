@@ -27,7 +27,9 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // v13: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v14: cardio-zona2 vale pra caminhada e pra esteira (dívida da entrega E, 2026-10-02).
 // v15: cardio leve pós-treino, acelerador da fase 1 (2026-11-04).
-export const EXERCISE_SEED_VERSION = 15;
+// v16: catálogo da Smartfit Jardins (aparelhos novos, incrementos de polia e máquina; a flexora em pé é com caneleira, sem aparelho).
+// v17: explicação no formato fixo (execucao) em todo exercício e substituto do treino (2026-11-09).
+export const EXERCISE_SEED_VERSION = 17;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.
@@ -42,7 +44,12 @@ export const EXERCISE_SEED_VERSION = 15;
 // v15: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v16: nota do búlgaro na quarta da Entrada diz com que peso começar (revisão final da entrega C).
 // v17: todo treino de déficit fecha com 15-20 min de cardio leve (2026-11-04).
-export const TEMPLATE_SEED_VERSION = 17;
+// v18: Smartfit Jardins em todos os ciclos — Entrada, adaptação, variação,
+// hipertrofia, refinamento e manutenção com os aparelhos dela e substituto por item.
+export const TEMPLATE_SEED_VERSION = 18;
+
+/** Migração única da Smartfit (recomeço na Entrada). */
+export const SMARTFIT_MIGRATION = 1;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -137,6 +144,21 @@ export async function seedDatabase(): Promise<void> {
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
   }
 
+  // Migração pontual da Smartfit: ela trocou de academia e recomeça a
+  // progressão pela primeira Entrada, com o histórico intacto.
+  // cycleStartSessionCount = total atual → sessionsInCycle começa em 0 sem
+  // apagar nada. O teto do prédio não vale na Smartfit.
+  const smartfitFeita = await db.settings.get("smartfitMigration");
+  if (((smartfitFeita?.value as number) ?? 0) < SMARTFIT_MIGRATION) {
+    await db.settings.put({ key: "activeCycle", value: "entrada-1" });
+    await db.settings.put({
+      key: "cycleStartSessionCount",
+      value: await db.workoutSessions.count(),
+    });
+    await db.settings.delete("tetoPredio");
+    await db.settings.put({ key: "smartfitMigration", value: SMARTFIT_MIGRATION });
+  }
+
   // Lembretes que ainda estão no padrão antigo passam pros horários da rotina
   // (auditoria 2026-09-23: 8h e 22h, com silêncio 22h-8h, nenhum tocava). Só
   // troca valor igual ao padrão antigo — o que ela ajustou fica.
@@ -144,12 +166,16 @@ export async function seedDatabase(): Promise<void> {
     ["morningReminderTime", "08:00", "06:25"],
     ["eveningReminderTime", "22:00", "20:00"],
     ["workoutReminderTime", "18:00", "18:15"],
+    // 2026-11: treino na Smart Fit às 17h; o aviso sai antes dela deixar o trabalho.
+    ["workoutReminderTime", "18:15", "15:50"],
+    // O skincare da noite sai de cima do jantar (20:00) pras 20:30.
+    ["eveningReminderTime", "20:00", "20:30"],
     ["hydrationGoalMl", 2000, 3000],
     ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
   ];
   // Uma vez só: se depois ela escolher um valor antigo de propósito (é tudo
   // editável em Configurações), a próxima abertura não pode desfazer.
-  const LEMBRETES_MIGRACAO = 1;
+  const LEMBRETES_MIGRACAO = 2;
   const lembretesFeita = await db.settings.get("lembretesMigracao");
   if (((lembretesFeita?.value as number) ?? 0) < LEMBRETES_MIGRACAO) {
     for (const [key, antigo, novo] of ANTIGOS) {

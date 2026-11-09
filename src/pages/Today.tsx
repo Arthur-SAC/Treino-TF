@@ -7,14 +7,14 @@ import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { separarNucleo } from "../lib/nucleo";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
-import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
+import { flexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
 import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
 import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
 import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
 import { TREINOS_POR_SEMANA } from "../lib/objetivo";
 import { posturaDoDia, SEQUENCIAS_POSTURA } from "../lib/postura-progression";
-import { rotuloDaSequencia } from "../lib/sequence-label";
+import { rotuloFlexDoDia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -41,8 +41,6 @@ import { horariosDasPausas } from "../lib/micro-pausas";
 import { usePartida } from "../hooks/usePartida";
 import { PartidaCard } from "../components/PartidaCard";
 import { RitmoCard } from "../components/RitmoCard";
-import { SmartfitCard } from "../components/SmartfitCard";
-import { horaDaSmartfit } from "../lib/teto-predio";
 import { RevisaoDomingoCard } from "../components/RevisaoDomingoCard";
 import { revisarSemana } from "../lib/revisao-semanal";
 import { avaliarRitmo, ultimaMedidaValida } from "../lib/ritmo";
@@ -55,26 +53,12 @@ import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
 
-/** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
- *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
- *  a duração sai sempre do catálogo, nunca de um número cravado no item, e sem
- *  sequência o rótulo fica nu. Era uma cópia — duas escritas da mesma regra em
- *  camadas diferentes, que é como ela diverge em silêncio. O que sobra aqui é
- *  só o subtítulo, que para o alongamento é a etapa da fase. */
-function rotuloFlexDoDia(baseLabel: string, doDia: FlexDoDia): { label: string; subtitle: string } {
-  return {
-    label: rotuloDaSequencia(baseLabel, doDia.sequenceId),
-    subtitle: doDia.etapa,
-  };
-}
-
 export function Today() {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const todayISO = hojeISO(today);
 
   const activeCycle = useSetting("activeCycle");
-  const tetos = useSetting("tetoPredio");
   const todayTemplate = useLiveQuery(
     async () => {
       const all = await db.workoutTemplates.where("dayOfWeek").equals(dayOfWeek).toArray();
@@ -467,8 +451,6 @@ export function Today() {
           lugar — sem ele o card surgia depois e empurrava a tela inteira. */}
       {partidaCarregando ? <div className="esqueleto h-28" aria-hidden="true" /> : <PartidaCard projecao={projecao} invalida={partidaInvalida} />}
       {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
-      {/* Só na fase 2: teto batido antes disso fica no prédio com as táticas (decisão dela, 2026-10-02). */}
-      {horaDaSmartfit(tetos, (measurementsAsc ?? []).filter((m) => !!m.waistCm).at(-1)?.waistCm) && <SmartfitCard />}
       {dayOfWeek === 0 && adesao7 && (
         <RevisaoDomingoCard
           revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}

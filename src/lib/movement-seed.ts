@@ -22,7 +22,11 @@ import { SEQUENCES } from "../data/sequences-seed";
 // v13: entrega B (2026-10-02) — sentar e andar reescritos (sem "nunca abertas",
 // sem pisar na linha: a pelve dela é desnivelada), o 8 com o quadril novo e o
 // gingado "perto da linha, sem cruzar os pés".
-export const MOVEMENT_VERSION = 13;
+// v14: explicação no formato fixo (posição, movimento, onde sentir, erros) em
+// todo move do alongamento da manhã, do da noite e do assoalho — ela tinha que
+// pesquisar fora do app pra entender. Nome e descrição dos moves não mudaram:
+// sem o bump, o id já existe no aparelho e a explicação nunca chega.
+export const MOVEMENT_VERSION = 14;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

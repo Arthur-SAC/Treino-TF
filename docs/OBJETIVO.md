@@ -1,6 +1,6 @@
 # Objetivo — para onde o app está levando ela
 
-**Última revisão:** 2026-10-19 · **Dona das decisões:** ela. Este documento registra; não decide.
+**Última revisão:** 2026-11-09 · **Dona das decisões:** ela. Este documento registra; não decide.
 
 Leia **antes** de mudar treino, comida, metas ou textos do app. Se algo aqui contradisser
 o código, o código está errado ou este documento está velho — pergunte a ela antes de
@@ -63,7 +63,7 @@ depois mostra peso-alvo e prazos em mês de calendário, e os Horizontes montam 
 
 | Fase | O que acontece | Comida | Onde treina |
 |---|---|---|---|
-| **1 · Tirar a barriga** (~5,5–7,5 meses; o app calcula pela medição de partida dela) | cintura → 84, peso → 80–82 (massa magra ÷ 0,87–0,89), músculo começando | **2.200 kcal** contra gasto 2.700–2.900 (0,45–0,64 kg/sem), 150–160 g proteína | academia do prédio |
+| **1 · Tirar a barriga** (~5,5–7,5 meses; o app calcula pela medição de partida dela) | cintura → 84, peso → 80–82 (massa magra ÷ 0,87–0,89), músculo começando | **2.200 kcal** contra gasto 2.700–2.900 (0,45–0,64 kg/sem), 150–160 g proteína | **Smartfit Jardins** (troca antecipada em 2026-11-09; antes era o prédio) |
 | **2 · Construir** (até ~mês 21–27) | glúteo destacado, coxa, peito de cima, costas. **A balança sobe de propósito** (85–88 kg); quadril volta a 114–116 feito de músculo | manutenção 2.750 · superávit leve 2.950 **só com cintura ≤ 88** | **Smartfit** (ver seção 8) |
 | **3 · Marcar de leve** (2–3 meses, opcional) | "durinha, levemente marcado" | déficit curto ~2.400 | onde estiver |
 | **Horizonte cirúrgico** | lipo 360 + BBL (+ implante de mama opcional) | peso estável ~6 meses antes; **não** fazer a fase 3 | — |
@@ -102,18 +102,28 @@ sono, treino e perder a barriga.
 
 ## 8. Fase 2 na Smartfit — o roteiro pra não se perder
 
-**Quando trocar:** só na fase 2 (cintura ≤ 84), mesmo que o teto de carga do prédio chegue
-antes — até lá, ela fica no prédio com as táticas no teto (decisão dela, 2026-10-02). O app
-aprende o teto no uso ("não tem mais peso aqui") e avisa com o card "Hora da Smartfit" quando
-hip thrust, leg press, abdutora e búlgaro estão no teto **e** a cintura já está na fase 2.
+**Quando trocar: agora, ainda na fase 1** (decisão dela, 2026-11-09 — substitui a de 2026-10-02,
+"só na fase 2"). Motivo: as máquinas do prédio não ajustam e não mostram o peso, então não dá
+pra medir progressão nem encaixar o quadril; e a Smartfit fica no caminho a pé do trabalho.
+A troca **não acelera a perda da barriga** (quem decide é o déficit); acelera o músculo
+construído durante a fase 1, com a testosterona dela a favor.
 
-Quando ela disser que trocou de academia:
+**A unidade:** Smart Fit Jardins, Av. Deputado Pedro Valadares, 890 (seg–sex 5h–23h,
+sáb 7h–19h, dom 9h–15h). Ela sai às 16h do Anexo 1 da Funesa (Getúlio Vargas), vai a pé e
+chega ~17h (rota a pé ~3,9 km, ~50 min); treina ~17h–18h, volta a pé (~1–1,8 km,
+~15–25 min — o trajeto total continua ~5 km, a academia só fica no meio), e leva os cães quando chega em casa (os cães saem
+do 17:15). O lanche das 16h vira obrigatório — ela treina depois de 9 h de trabalho e de
+caminhada. O app da Smartfit mostra a lotação ao vivo: olhar antes de sair do trabalho.
 
-1. **Pedir fotos ou a lista de aparelhos da unidade dela.** Não supor o catálogo de uma
+O card "Hora da Smartfit" e as táticas de teto do prédio perderam o sentido com a troca e foram removidos (2026-11-09).
+
+Quando ela trocar de academia (a ordem vale também pra fase 1):
+
+1. ✅ (2026-11-09) **Pedir fotos ou a lista de aparelhos da unidade dela.** Não supor o catálogo de uma
    Smartfit genérica.
-2. **Mini-entrada de 1–2 semanas** com exposição baixa (máquinas sentadas, área de
+2. ✅ (2026-11-09) **Entrada de 3 semanas** (semana 1 = aprender as máquinas com carga leve) com exposição baixa (máquinas sentadas, área de
    aparelhos) — a Smartfit é cheia e pública, e ela cancela treino quando aparece gente.
-3. **Reescrever hipertrofia, refinamento e manutenção** (`src/data/cycles-seed.ts`) com os
+3. ✅ (2026-11-09, Smart Fit Jardins) **Reescrever hipertrofia, refinamento e manutenção** (`src/data/cycles-seed.ts`) com os
    aparelhos reais, mantendo as regras da seção 2 e estas faixas semanais:
    glúteo máximo 18–22 séries (viés de projeção) · glúteo médio 15–21 (máquina ≥ 3x) ·
    quadríceps 12–16 · adutor ~6 · posterior 6–8 com **flexora > stiff+good-morning** ·
@@ -121,9 +131,19 @@ Quando ela disser que trocou de academia:
    bíceps ~6 · tríceps ~6. Sessão **≤ 60 min pelo estimador** (`src/lib/session-duration.ts`).
    A hipertrofia pode ficar no topo dessas faixas; o refinamento no meio; a manutenção
    nunca deixa glúteo médio < 12.
-4. **O que a Smartfit destrava:** polia baixa de verdade (coice e abdução no cabo,
+4. ✅ (2026-11-09) **O que a Smartfit destrava:** polia baixa de verdade (coice e abdução no cabo,
    pull-through), mesa flexora, máquina de glúteo, hack/smith. Use pra projeção e dobra.
-   O teste `no-low-pulley.test.ts` é da academia do prédio — revisar quando ela trocar.
+   Unidade Jardins confirmada: polia até o chão, máquina de hip thrust, flexora sentada,
+   abdutora/adutora, leg press, extensora, peck deck, remada e halteres; smith, coice, 45° e
+   hack entram "se tiver" (o app tem o "não tem aqui" por exercício). O teste
+   `no-low-pulley.test.ts` era da academia do prédio e foi aposentado.
+   **Máquina primeiro, peso livre como plano B** (decisão dela, 2026-11-09): onde máquina ou
+   polia rende igual, ela é o exercício e o livre é o substituto (supino inclinado na máquina
+   "se tiver", remadas, roscas e tríceps na polia, hip thrust leve no lugar da ponte, pallof no
+   lugar da prancha antirrotação, pull-through no lugar do swing). **Búlgaro, goblet,
+   carregamento frontal e farmer ficam livres** — rendem mais pro objetivo. **Vacuum em casa
+   todo dia** (alongamento da manhã), fora dos treinos de academia. Régua:
+   `tests/data/maquina-primeiro.test.ts`.
 5. **Comida da fase 2:** o app troca sozinho pra manutenção/superávit pela cintura
    (`resolveGoal`, trava 88). O **advisor de ciclo** libera a hipertrofia com cintura ≤ 84
    (fim da fase 1) ou platô de cintura — corrigido na entrega 2.

@@ -60,11 +60,11 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(15);
+    expect(EXERCISE_SEED_VERSION).toBe(17);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(17);
+    expect(TEMPLATE_SEED_VERSION).toBe(18);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele
@@ -84,7 +84,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // Com esta, as CINCO versões de seed do app têm pino: exercícios, templates,
   // plano alimentar, estilo e movimento. Era a última que vivia privada.
   it("MOVEMENT_VERSION é a versão revisada nesta rodada", () => {
-    expect(MOVEMENT_VERSION).toBe(13);
+    expect(MOVEMENT_VERSION).toBe(14);
   });
 });
 
@@ -132,6 +132,27 @@ describe("exercícios", () => {
     const ex = await db.exercises.get("cardio-zona2");
     expect(ex?.name).toContain("caminhada ou esteira");
     expect(ex?.description).toContain("esteira inclinada");
+    // O link que ela colou é dela e continua lá.
+    expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
+  });
+
+  // v17: a explicação no formato fixo (execucao) de todo exercício do treino.
+  // O id já existia na versão anterior; só o conteúdo muda — é o caso que um
+  // teste de "existe?" não pega.
+  it("a explicação nova chega em quem estava na versão anterior", async () => {
+    await db.exercises.put({
+      id: "hip-thrust-maquina", name: "Hip thrust na máquina", category: "gluteo",
+      equipment: ["maquina-hip-thrust"], difficulty: "iniciante", description: "antigo",
+      commonMistakes: [], exposureLevel: 3, videoUrl: "https://exemplo/video-dela",
+    } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
+
+    await seedDatabase();
+
+    const ex = await db.exercises.get("hip-thrust-maquina");
+    expect(ex?.execucao?.regulagem?.trim()).toBeTruthy();
     // O link que ela colou é dela e continua lá.
     expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
   });
@@ -202,14 +223,16 @@ describe("templates de treino", () => {
     await seedDatabase();
 
     const TROCAS: [string, string][] = [
-      // adaptação — o ciclo que ela alcança em ~3 semanas
-      ["seg-gluteo-mobilidade", "agachamento-goblet"],
+      // adaptação — o ciclo que ela alcança depois da Entrada
       // o carregamento foi pra quinta (Superior B · força de levantar) em 2026-09-23
       ["qui-gluteo-coxa", "carregamento-frontal"],
-      ["ter-cintura-costas", "prancha-antirrotacao"],
-      // e os ciclos de construção
-      ["v-seg-gluteo-unilateral", "agachamento-goblet"],
-      ["v-ter-cintura-costas", "prancha-antirrotacao"],
+      // Máquina primeiro (2026-11-09): o pallof na polia entrou na frente da
+      // prancha antirrotação, que virou o plano B dele.
+      ["ter-cintura-costas", "pallof-polia"],
+      // Smartfit Jardins (2026-11-09): hip thrust na máquina e flexora sentada
+      ["seg-gluteo-mobilidade", "hip-thrust-maquina"],
+      ["v-seg-gluteo-unilateral", "hip-thrust-maquina"],
+      ["v-sex-peitoral-postura", "flexora-sentada"],
     ];
     const faltando: string[] = [];
     for (const [templateId, exerciseId] of TROCAS) {
@@ -223,6 +246,11 @@ describe("templates de treino", () => {
     // (glúteo médio 3x); o que saiu de lá foi o leg press de pés altos.
     const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
     expect(seg?.exercises.some((e) => e.exerciseId === "smith-squat")).toBe(false);
+    // Na Smartfit (2026-11-09) o leg press de pés altos saiu da Entrada inteira.
+    for (const t of ALL_TEMPLATES.filter((x) => (x.cycle ?? "").startsWith("entrada"))) {
+      const gravado = await db.workoutTemplates.get(t.id);
+      expect({ id: t.id, smith: gravado?.exercises.some((e) => e.exerciseId === "smith-squat") }).toEqual({ id: t.id, smith: false });
+    }
   });
 });
 
@@ -364,6 +392,19 @@ describe("sequências de movimento", () => {
       expect(s).toBeDefined();
       expect(s?.category).toBe("mobilidade");
     }
+  });
+
+  it("as explicações do alongamento e do assoalho alcançam quem estava na versão anterior", async () => {
+    // O banco dela já tem a sequência, com o mesmo id e o mesmo texto: só a
+    // execução é nova. Sem o bump, o move continua mudo no aparelho.
+    await db.settings.put({ key: "movementSeeded", value: true });
+    await db.settings.put({ key: "movementVersion", value: MOVEMENT_VERSION - 1 });
+
+    await seedMovement();
+
+    const s = await db.danceSequences.get("flex-manha-amplitude");
+    const move = s?.moves.find((m) => m.name === "90/90 com rotação");
+    expect(move?.execucao?.movimento.length).toBeGreaterThanOrEqual(2);
   });
 
   it("o repertório íntimo alcança quem estava na versão anterior", async () => {

@@ -163,11 +163,4 @@ describe("padrão de força para levantar outra pessoa", () => {
       expect({ id, fora }).toEqual({ id, fora: [] });
     }
   });
-
-  it("nenhum usa Smith nem polia baixa — não existem na academia dela", () => {
-    for (const id of NOVOS) {
-      const e = EXERCISES.find((x) => x.id === id)!;
-      expect((e.equipment ?? []).join(" ")).not.toMatch(/smith|polia-baixa/);
-    }
-  });
 });

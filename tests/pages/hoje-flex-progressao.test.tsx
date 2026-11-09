@@ -15,6 +15,12 @@ import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
 import { hojeISO } from "../../src/lib/today-date";
 import { flexDoDia, ATE_FLEX_FASE_2 } from "../../src/lib/flex-progression";
+import { rotuloFlexDoDia } from "../../src/lib/sequence-label";
+
+// O subtítulo é a etapa da fase + "· inclui o vacuum" quando a sequência tem
+// vacuum (2026-11-09) — o texto que a tela mostra sai da mesma função.
+const subManha = (n: number) => rotuloFlexDoDia("Alongamento manhã", flexDoDia("manha", n)).subtitle;
+const subNoite = (n: number) => rotuloFlexDoDia("Alongamento noite", flexDoDia("noite", n)).subtitle;
 
 beforeEach(async () => {
   await db.routineChecks.clear();
@@ -41,11 +47,12 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
 
     const esperado = flexDoDia("manha", 0);
     expect(esperado.sequenceId).toBe("mobilidade-pelvica-matinal");
+    expect(subManha(0)).toMatch(/· inclui o vacuum$/);
     // Espera um texto que muda com a fase (a etapa) antes de ler o href — o
     // useLiveQuery da contagem ainda não liquidou no primeiro paint, e ler o
     // link ali observaria sempre este mesmo estado mesmo com a progressão
     // quebrada.
-    await screen.findByText(esperado.etapa);
+    await screen.findByText(subManha(0));
 
     const link = await screen.findByRole("link", { name: /alongamento manh/i });
     expect(link.getAttribute("href")).toBe(`/treino/movimento/${esperado.sequenceId}`);
@@ -57,7 +64,7 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
 
     const esperado = flexDoDia("manha", ATE_FLEX_FASE_2);
     expect(esperado.sequenceId).toBe("flex-manha-amplitude");
-    await screen.findByText(esperado.etapa);
+    await screen.findByText(subManha(ATE_FLEX_FASE_2));
 
     const link = await screen.findByRole("link", { name: /alongamento manh/i });
     expect(link.getAttribute("href")).toBe(`/treino/movimento/${esperado.sequenceId}`);
@@ -69,11 +76,11 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
 
     // Espera a MANHÃ liquidar em fase 2 primeiro — sinal de que os
     // useLiveQuery das duas trilhas já resolveram, não só o primeiro paint.
-    await screen.findByText(flexDoDia("manha", ATE_FLEX_FASE_2).etapa);
+    await screen.findByText(subManha(ATE_FLEX_FASE_2));
 
     const noiteEsperada = flexDoDia("noite", 0);
     expect(noiteEsperada.sequenceId).toBe("flexibilidade-intima");
-    await screen.findByText(noiteEsperada.etapa);
+    await screen.findByText(subNoite(0));
 
     const linkNoite = await screen.findByRole("link", { name: /alongamento noite/i });
     expect(linkNoite.getAttribute("href")).toBe(`/treino/movimento/${noiteEsperada.sequenceId}`);
@@ -81,7 +88,7 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
 
   it("o rótulo mostra a duração da sequência do dia, não um número fixo", async () => {
     const primeiraMontagem = render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText(flexDoDia("manha", 0).etapa);
+    await screen.findByText(subManha(0));
     // Fase 1 da manhã (mobilidade-pelvica-matinal) dura 10 min no catálogo —
     // não o "15 min" que estava cravado em today-routine.ts.
     expect(await screen.findByText("Alongamento manhã · 10 min")).toBeInTheDocument();
@@ -89,7 +96,7 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
 
     await comPraticas(ATE_FLEX_FASE_2, "mobilidade-pelvica-matinal");
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText(flexDoDia("manha", ATE_FLEX_FASE_2).etapa);
+    await screen.findByText(subManha(ATE_FLEX_FASE_2));
     // Fase 2 (flex-manha-amplitude) dura 15 min — outro número, e o rótulo
     // acompanha porque agora vem do catálogo, não de texto fixo no item.
     expect(await screen.findByText("Alongamento manhã · 15 min")).toBeInTheDocument();

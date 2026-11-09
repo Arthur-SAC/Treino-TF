@@ -20,6 +20,9 @@ describe("backup completo — ida e volta", () => {
       { key: "activeCycle", value: "variacao" },
       { key: "cycleStartSessionCount", value: 23 },
       { key: "heightCm", value: 173 },
+      // Backup já pós-migração da Smartfit (sem a chave, restaurar refaz a migração).
+      { key: "smartfitMigration", value: 1 },
+      { key: "entradaMigration", value: 1 },
     ]);
     await db.routineChecks.put({ date: "2026-09-24", itemId: "creatina", done: true });
     await db.looks.add({ date: "2026-09-24", blob: new Blob(["foto"], { type: "image/jpeg" }), occasion: "casa", rating: "love" });
@@ -52,6 +55,10 @@ describe("backup completo — ida e volta", () => {
 
   it("restaurar por cima de um app recém-instalado substitui as configurações do seed", async () => {
     await db.settings.put({ key: "activeCycle", value: "adaptacao" });
+    await db.settings.bulkPut([
+      { key: "smartfitMigration", value: 1 },
+      { key: "entradaMigration", value: 1 },
+    ]);
     const payload = await coletarBackup();
     await db.settings.put({ key: "activeCycle", value: "entrada-1" }); // o seed de um aparelho novo
     await restaurarBackup(payload);

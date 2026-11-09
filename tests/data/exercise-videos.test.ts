@@ -29,6 +29,11 @@ describe("vídeos dos exercícios", () => {
   // vídeo, é conteúdo que não chega.
   const SEM_VIDEO_POR_NATUREZA = new Set([
     "cardio-leve-esteira", "cardio-zona2", "cardio-pos-treino", "bike-reclinada", "aquecimento-articular",
+    // Aparelho novo da Smartfit: ela cola o link pelo player do exercício.
+    "hip-thrust-maquina", "flexora-sentada", "triceps-polia-corda", "rosca-polia", "pallof-polia",
+    "extensao-45-gluteo", "coice-maquina", "hack-machine",
+    // Máquina primeiro (2026-11-09): mesma regra, ela cola o link.
+    "supino-inclinado-maquina", "remada-polia-unilateral", "hip-thrust-maquina-leve",
   ]);
 
   it("todo exercício de força/mobilidade do catálogo tem vídeo no mapa", () => {

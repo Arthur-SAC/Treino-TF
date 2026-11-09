@@ -2,57 +2,10 @@ import { describe, it, expect } from "vitest";
 import { ALL_TEMPLATES } from "../../src/data/all-templates";
 import { EXERCISES } from "../../src/data/exercises-seed";
 
-/** Contagem e duração por template ANTES desta task. Congelado de propósito:
- *  a decisão da usuária é que a sessão não cresce, e um número escrito aqui é
- *  o que impede alguém de "só acrescentar um exercício" depois.
- *
- *  Os cinco templates de ADAPTAÇÃO entraram na revisão final, quando as trocas
- *  passaram a valer também pro ciclo que ela alcança em ~3 semanas. Os valores
- *  foram lidos do código e congelados ANTES de qualquer edição do seed — é o
- *  que dá sentido à palavra "antes" no nome desta tabela. */
-// Adaptação e variação saíram desta tabela em 2026-09-23 (Chun-Li macia): a
-// regra delas passou a ser ≤ 60 min pelo estimador — tests/data/fase1-chun-li.test.ts.
-// A manutenção ganhou a abdutora de máquina (glúteo médio nunca abaixo de 12).
-const ANTES: Record<string, { ex: number; min: number }> = {
-  // hipertrofia em diante (fase 2 — reescrita quando ela for pra Smartfit)
-  "h-seg-gluteo-volume": { ex: 7, min: 47 },
-  "h-ter-cintura-costas": { ex: 6, min: 35 },
-  "h-qua-mobilidade-danca": { ex: 9, min: 54 },
-  "h-qui-gluteo-posterior": { ex: 7, min: 37 },
-  "h-sex-peitoral-postura": { ex: 8, min: 37 },
-  "r-seg-gluteo-densidade": { ex: 7, min: 32 },
-  "r-ter-cintura-postura": { ex: 8, min: 48 },
-  "r-qua-mobilidade-danca": { ex: 9, min: 56 },
-  "r-qui-gluteo-simetria": { ex: 7, min: 32 },
-  "r-sex-peitoral-refinamento": { ex: 7, min: 32 },
-  "m-seg-gluteo": { ex: 7, min: 37 },
-  "m-ter-superior": { ex: 7, min: 45 },
-  "m-qua-mobilidade": { ex: 8, min: 48 },
-  "m-qui-gluteo": { ex: 6, min: 32 },
-  "m-sex-gluteo": { ex: 6, min: 27 },
-};
-
+// A tabela congelada de contagem e duração da hipertrofia/refinamento/manutenção
+// saiu em 2026-11-09: os ciclos foram reescritos pra Smartfit Jardins e a regra
+// passou a ser ≤ 60 min pelo estimador (tests/data/fase2-smartfit.test.ts).
 describe("as trocas não fazem a sessão crescer", () => {
-  it("nenhum template ganhou ou perdeu exercício", () => {
-    const divergentes = Object.entries(ANTES)
-      .map(([id, esperado]) => {
-        const t = ALL_TEMPLATES.find((x) => x.id === id);
-        return { id, agora: t?.exercises.length, esperado: esperado.ex };
-      })
-      .filter((r) => r.agora !== r.esperado);
-    expect(divergentes).toEqual([]);
-  });
-
-  it("nenhum template mudou de duração", () => {
-    const divergentes = Object.entries(ANTES)
-      .map(([id, esperado]) => {
-        const t = ALL_TEMPLATES.find((x) => x.id === id);
-        return { id, agora: t?.durationMin, esperado: esperado.min };
-      })
-      .filter((r) => r.agora !== r.esperado);
-    expect(divergentes).toEqual([]);
-  });
-
   it("o goblet saiu do limbo — estava no catálogo sem estar em treino nenhum", () => {
     const usos = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "agachamento-goblet"));
     expect(usos.length).toBeGreaterThanOrEqual(4);
@@ -63,8 +16,10 @@ describe("as trocas não fazem a sessão crescer", () => {
     expect(usos.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("a prancha antirrotação entrou", () => {
-    const usos = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "prancha-antirrotacao"));
+  // Máquina primeiro (2026-11-09): o pallof na polia é o principal e a prancha
+  // antirrotação ficou como plano B dele — conta como exercício OU substituto.
+  it("a prancha antirrotação entrou (como exercício ou plano B do pallof)", () => {
+    const usos = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "prancha-antirrotacao" || e.substitutoId === "prancha-antirrotacao"));
     expect(usos.length).toBeGreaterThanOrEqual(4);
   });
 
@@ -74,8 +29,10 @@ describe("as trocas não fazem a sessão crescer", () => {
     expect([...new Set(orfaos)]).toEqual([]);
   });
 
-  it("o vacuum abdominal não foi sacrificado — é a alavanca da cintura dela", () => {
-    const comVacuum = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "vacuum-abdominal"));
-    expect(comVacuum.length).toBeGreaterThanOrEqual(6);
+  // O vacuum saiu da academia em 2026-11-09 e passou a ser diário em casa, no
+  // alongamento da manhã — a regra que protege a alavanca da cintura dela agora
+  // é "vacuum todo dia fora do treino" (tests/data/maquina-primeiro.test.ts).
+  it("o vacuum abdominal não foi sacrificado — continua no catálogo", () => {
+    expect(EXERCISES.some((e) => e.id === "vacuum-abdominal")).toBe(true);
   });
 });

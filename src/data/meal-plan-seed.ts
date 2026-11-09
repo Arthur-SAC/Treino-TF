@@ -614,8 +614,8 @@ const SLOTS: MealSlot[] = [
   },
 
   // ─── LANCHE (~450 kcal) ───────────────────────────────────────────────────
-  // Ela come às 15h30, caminha 5 km do trabalho pra casa, passeia 1h com os cães
-  // e treina 18h15 — tudo depois deste lanche e antes do jantar. Duas regras
+  // Ela come às 15h30, caminha ~4 km até a Smart Fit, treina às 17h, volta a pé
+  // e passeia com os cães às 18h45 — tudo depois deste lanche e antes do jantar. Duas regras
   // saem daí, e nenhuma é preferência:
   //
   // 1. ≤5g de gordura em toda opção. Gordura atrasa o esvaziamento gástrico e

@@ -11,6 +11,7 @@
 // Mora neste módulo, e não em `today-routine.ts`, pela mesma razão de antes:
 // aquele módulo é puro e não conhece o catálogo.
 import { SEQUENCES } from "../data/sequences-seed";
+import type { FlexDoDia } from "./flex-progression";
 
 /** A sequência do catálogo, por id. Uma busca só, num lugar só — era o
  *  `SEQUENCES.find` repetido nas duas camadas. */
@@ -24,4 +25,17 @@ export function sequenciaDoCatalogo(sequenceId: string) {
 export function rotuloDaSequencia(baseLabel: string, sequenceId: string): string {
   const seq = sequenciaDoCatalogo(sequenceId);
   return seq ? `${baseLabel} · ${seq.durationMin} min` : baseLabel;
+}
+
+/** Rótulo e subtítulo do alongamento do dia (manhã, noite, postura). O
+ *  subtítulo é a etapa da fase e, quando a sequência do dia tem vacuum, diz
+ *  isso: desde 2026-11-09 o vacuum saiu da academia e mora no alongamento da
+ *  manhã — sem nomear no Hoje, ele fica escondido dentro do item. Derivado do
+ *  catálogo, não cravado: só promete vacuum onde a sequência tem. */
+export function rotuloFlexDoDia(baseLabel: string, doDia: FlexDoDia): { label: string; subtitle: string } {
+  const temVacuum = !!sequenciaDoCatalogo(doDia.sequenceId)?.moves.some((m) => /vacuum/i.test(m.name));
+  return {
+    label: rotuloDaSequencia(baseLabel, doDia.sequenceId),
+    subtitle: temVacuum ? `${doDia.etapa} · inclui o vacuum` : doDia.etapa,
+  };
 }

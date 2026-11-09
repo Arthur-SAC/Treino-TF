@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { db, type Exercise } from "../lib/db";
 import { VideoSection } from "./VideoSection";
+import { ExecucaoBlocos } from "./ExecucaoBlocos";
 
 interface Props {
   exercise: Exercise;
@@ -54,25 +55,38 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
             onSave={(url) => { void db.exercises.update(exercise.id, { videoUrl: url || undefined }); }}
           />
 
-          <section>
-            <h3 className="text-nude-warm font-medium mb-1">Como fazer</h3>
-            <p className="text-sm">{exercise.description}</p>
-          </section>
+          {exercise.execucao ? (
+            <ExecucaoBlocos execucao={exercise.execucao} />
+          ) : (
+            <>
+              <section>
+                <h3 className="text-nude-warm font-medium mb-1">Como fazer</h3>
+                <p className="text-sm">{exercise.description}</p>
+              </section>
 
-          <section>
-            <h3 className="text-nude-warm font-medium mb-1">Erros comuns</h3>
-            <ul className="space-y-1 text-sm list-disc pl-5">
-              {exercise.commonMistakes.map((m) => <li key={m}>{m}</li>)}
-            </ul>
-          </section>
+              <section>
+                <h3 className="text-nude-warm font-medium mb-1">Erros comuns</h3>
+                <ul className="space-y-1 text-sm list-disc pl-5">
+                  {exercise.commonMistakes.map((m) => <li key={m}>{m}</li>)}
+                </ul>
+              </section>
 
-          {exercise.proTips && exercise.proTips.length > 0 && (
-            <section>
-              <h3 className="text-nude-warm font-medium mb-1">Dicas pra maximizar</h3>
-              <ul className="space-y-1 text-sm list-disc pl-5">
-                {exercise.proTips.map((t) => <li key={t}>{t}</li>)}
-              </ul>
-            </section>
+              {exercise.proTips && exercise.proTips.length > 0 && (
+                <section>
+                  <h3 className="text-nude-warm font-medium mb-1">Dicas pra maximizar</h3>
+                  <ul className="space-y-1 text-sm list-disc pl-5">
+                    {exercise.proTips.map((t) => <li key={t}>{t}</li>)}
+                  </ul>
+                </section>
+              )}
+
+              {exercise.successCue && (
+                <section>
+                  <h3 className="text-nude-warm font-medium mb-1">Como saber que fez certo</h3>
+                  <p className="text-sm">{exercise.successCue}</p>
+                </section>
+              )}
+            </>
           )}
 
           {exercise.equipment.length > 0 && (

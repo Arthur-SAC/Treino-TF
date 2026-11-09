@@ -67,10 +67,10 @@ describe("as notas dos templates existem pra ser mostradas", () => {
     expect(comNota.length).toBeGreaterThan(50);
   });
 
-  it("a graduação do hip thrust da semana 3 está numa nota — o item mais importante da fase", () => {
-    const e3seg = ENTRADA_TEMPLATES.find((t) => t.id === "e3-seg")!;
-    const hip = e3seg.exercises.find((e) => e.exerciseId === "hip-thrust-barra")!;
+  it("o hip thrust na máquina da semana 1 traz a nota de carga leve — o item mais importante da fase", () => {
+    const e1seg = ENTRADA_TEMPLATES.find((t) => t.id === "e1-seg")!;
+    const hip = e1seg.exercises.find((e) => e.exerciseId === "hip-thrust-maquina")!;
     expect(hip.notes).toBeDefined();
-    expect(hip.notes!).toMatch(/ETAPA 1|peso do corpo/i);
+    expect(hip.notes!).toMatch(/Semana de aprender/);
   });
 });

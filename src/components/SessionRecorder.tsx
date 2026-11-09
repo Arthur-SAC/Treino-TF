@@ -7,8 +7,8 @@ import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
 import { useSetting } from "../hooks/useSetting";
-import { getSetting, setSetting } from "../lib/settings-helpers";
-import { noTeto, taticasNoTeto, ehUnilateral } from "../lib/teto-predio";
+import { setSetting } from "../lib/settings-helpers";
+import { ehUnilateral } from "../lib/lado-fraco";
 
 interface Props {
   exercise: Exercise;
@@ -20,6 +20,13 @@ interface Props {
    *  que a descrição genérica do exercício e por isso aparece em destaque. */
   notes?: string;
   onSave: (entry: WorkoutSession["exercises"][number]) => void;
+  /** Aparelho ocupado agora: troca pelo substituto só nesta sessão. */
+  onOcupado?: () => void;
+  /** Não existe na academia: troca pelo substituto pra sempre (até "Tem sim"). */
+  onNaoTemAqui?: () => void;
+  /** Já está no substituto por "Ocupado": o aparelho liberou. */
+  onVoltarAoOriginal?: () => void;
+  nomeOriginal?: string;
 }
 
 function formatTime(s: number): string {
@@ -35,7 +42,7 @@ function describeLast(last: LastPerformance): string {
     .join(" · ");
 }
 
-export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave }: Props) {
+export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave, onOcupado, onNaoTemAqui, onVoltarAoOriginal, nomeOriginal }: Props) {
   const timeBased = isTimeBased(repsTarget);
   // Carregamento ("20m", "30m"): o segundo campo é a distância, não reps.
   const porDistancia = /\d\s*m\b/i.test(repsTarget);
@@ -48,9 +55,10 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const [restRunning, setRestRunning] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const tetos = useSetting("tetoPredio");
-  const teto = tetos[exercise.id];
   const ladoFraco = useSetting("ladoFraco");
+  // Depois de salvar, trocar de aparelho deixaria um registro órfão do que ela
+  // já fez no outro: os botões de troca somem.
+  const [salvou, setSalvou] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -66,19 +74,6 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         setLast(lastPerf);
         if (timeBased) return;
         const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
-        // Teto velho: ela já treinou ACIMA dele (achou mais anilha, halter mais
-        // pesado), então o prédio tem mais do que o app aprendeu. Apaga o teto
-        // em vez de subir: ele volta a ser aprendido se ela tocar o botão de
-        // novo. Roda uma vez por exercício (some na primeira passada, então não
-        // há laço de escrita) e relê o setting fresco dentro da transação.
-        await db.transaction("rw", db.settings, async () => {
-          const atual = await getSetting("tetoPredio");
-          const teto = atual[exercise.id];
-          if (teto !== undefined && lastSet.weight > teto) {
-            const { [exercise.id]: _, ...resto } = atual;
-            await setSetting("tetoPredio", resto);
-          }
-        });
         if (!mounted) return;
         // Completou = toda série no mínimo da faixa; topo = toda série no
         // máximo (antes, qualquer rep > 0 contava como completar).
@@ -171,27 +166,8 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
     setSets((prev) => prev.map((s) => ({ ...s, weight: String(suggested) })));
   }
 
-  const cargaAnterior = last ? last.sets[last.sets.length - 1].weight : 0;
-  // Só faz sentido dizer "não tem mais peso" quando o app pede pra SUBIR.
-  const podeMarcarTeto = suggested !== null && cargaAnterior > 0 && suggested > cargaAnterior && teto === undefined;
   // Dead bug é "cada" mas alterna braço e perna na mesma série: não tem lado fraco por onde começar.
   const perguntaLado = ehUnilateral(repsTarget) && exercise.id !== "dead-bug";
-  const travado = suggested !== null && noTeto(suggested, teto);
-
-  // Lê o setting na hora de escrever: o `tetos` da render pode estar velho e
-  // regravá-lo apagaria o teto de outro exercício gravado nesse meio-tempo.
-  async function marcarTeto() {
-    await db.transaction("rw", db.settings, async () => {
-      const atual = await getSetting("tetoPredio");
-      await setSetting("tetoPredio", { ...atual, [exercise.id]: cargaAnterior });
-    });
-  }
-  async function desfazerTeto() {
-    await db.transaction("rw", db.settings, async () => {
-      const { [exercise.id]: _, ...resto } = await getSetting("tetoPredio");
-      await setSetting("tetoPredio", resto);
-    });
-  }
 
   function handleSave() {
     // Só as séries marcadas como feitas: as outras vêm pré-preenchidas da
@@ -207,8 +183,33 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           weight: Number(s.weight.replace(",", ".")) || 0,
         })),
     };
-    if (entry.sets.length > 0) onSave(entry);
+    if (entry.sets.length > 0) {
+      setSalvou(true);
+      onSave(entry);
+    }
   }
+
+  // Botões de troca, ao lado do cabeçalho. Só aparecem se a página mandou a
+  // prop: nem todo item tem substituto. Alvo de toque confortável (min-h-10).
+  // Série marcada ✓ e ainda não salva se perderia no remount da troca: some também.
+  const temSerieFeita = sets.some((s) => s.done);
+  const podeTrocar = !salvou && !temSerieFeita;
+  const botaoTroca = "px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-muted";
+  const trocas = (
+    <>
+      {(onOcupado || onNaoTemAqui) && podeTrocar && (
+        <div className="flex gap-2 mt-2">
+          {onOcupado && <button type="button" onClick={onOcupado} className={botaoTroca}>Ocupado</button>}
+          {onNaoTemAqui && <button type="button" onClick={onNaoTemAqui} className={botaoTroca}>Não tem aqui</button>}
+        </div>
+      )}
+      {onVoltarAoOriginal && podeTrocar && (
+        <div className="mt-2">
+          <button type="button" onClick={onVoltarAoOriginal} className={botaoTroca}>Voltar pro {nomeOriginal}</button>
+        </div>
+      )}
+    </>
+  );
 
   // ── Exercícios por TEMPO (cardio, aquecimento, isometria): só "feito" ──────
   if (timeBased) {
@@ -228,11 +229,12 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-muted text-xs mt-0.5">
           {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
         </p>
+        {trocas}
         {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mt-2 mb-1">{notes}</p>}
         {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
         <button
           type="button"
-          onClick={() => onSave({ exerciseId: exercise.id, sets: [] })}
+          onClick={() => { setSalvou(true); onSave({ exerciseId: exercise.id, sets: [] }); }}
           className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm mt-3"
         >
           Marcar feito
@@ -260,6 +262,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-muted text-xs mt-0.5">
           {setsTarget}x {repsTarget} {restSec > 0 && `· descanso ${restSec}s`}
         </p>
+        {trocas}
       </div>
 
       {isHoldLight(exercise.category) && (
@@ -288,24 +291,11 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           Última vez ({formatDateBR(new Date(last.date))}): {describeLast(last)}
         </p>
       )}
-      {suggested !== null && travado ? (
-        <div className="text-xs mb-3">
-          <p className="text-nude-warm">No teto do prédio ({teto} kg)</p>
-          <ul className="text-muted list-disc pl-4 mt-1 space-y-0.5">
-            {taticasNoTeto(repsTarget, exercise.id).map((t) => <li key={t}>{t}</li>)}
-          </ul>
-          <button type="button" onClick={() => void desfazerTeto()} className="text-muted underline mt-1">o aparelho tem mais peso</button>
-        </div>
-      ) : suggested !== null ? (
+      {suggested !== null ? (
         <div className="mb-3">
           <button type="button" onClick={applySuggestion} className="text-xs text-nude underline block">
             Sugestão: {suggested} kg (aplicar em todas)
           </button>
-          {podeMarcarTeto && (
-            <button type="button" onClick={() => void marcarTeto()} className="text-xs text-muted underline block mt-1">
-              Não tem mais peso aqui
-            </button>
-          )}
         </div>
       ) : exercise.startLoadKg ? (
         <button

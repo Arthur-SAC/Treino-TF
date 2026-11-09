@@ -12,7 +12,7 @@ const cfg: ConfigLembretes = {
   focusModeUntil: null,
   alongamentoManhaTime: "06:00",
   alongamentoNoiteTime: "21:30",
-  workoutReminderTime: "18:15",
+  workoutReminderTime: "15:50",
   dormirReminderTime: "22:00",
   vitaminaDTime: "12:00",
   activeBreakStartHour: 7,
@@ -45,9 +45,16 @@ describe("planejar — o dia útil", () => {
     ]);
   });
 
-  it("segunda tem treino às 18h15 com o nome do treino", () => {
+  it("segunda tem treino às 15h50, antes de sair, com o nome do treino e a lotação", () => {
     const seg = planejar(QUINTA_5H, cfg, vazio).filter((x) => hojeISO(x.quando) === "2026-09-28" && x.titulo === "Treino");
-    expect(seg.map((x) => [hhmm(x.quando), x.corpo])).toEqual([["18:15", "Inferior A"]]);
+    expect(seg.map((x) => [hhmm(x.quando), x.corpo])).toEqual([
+      ["15:50", "Inferior A · olhe a lotação no app da academia antes de sair"],
+    ]);
+    expect(seg[0].corpo).not.toMatch(EXPOE);
+  });
+
+  it("o padrão do lembrete de treino é 15:50", () => {
+    expect(DEFAULTS.workoutReminderTime).toBe("15:50");
   });
 
   it("fim de semana não tem água nem pausa", () => {
@@ -75,7 +82,7 @@ describe("planejar — pula o que já foi feito hoje", () => {
   it("treinou hoje: o treino de hoje não toca", () => {
     const seg8h = new Date(2026, 8, 28, 8, 0);
     const l = planejar(seg8h, cfg, { ...vazio, treinouHoje: true });
-    expect(titulosDoDia(l, "2026-09-28")).not.toContain("18:15 Treino");
+    expect(titulosDoDia(l, "2026-09-28")).not.toContain("15:50 Treino");
   });
 });
 

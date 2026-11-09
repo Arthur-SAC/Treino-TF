@@ -1,4 +1,5 @@
 import type { DanceMove, DanceSequence } from "../lib/db";
+import { EXECUCAO_DAS_SEQUENCIAS } from "./execucao-sequencias";
 
 // Nivelar a pelve. Em 2026-10-01 ela achou que uma perna era maior e o teste
 // (deitada × sentada) mostrou que não: é a pelve subindo de um lado, puxada
@@ -7,11 +8,11 @@ import type { DanceMove, DanceSequence } from "../lib/db";
 // sozinha e um alongamento que só existe na fase 1 some sem aviso. Noite e não
 // manhã: às 21h30 o corpo está morno e o flexor passou o dia sentado.
 const NIVELAR_PELVE: DanceMove[] = [
-  { name: "Inclinação lateral (nivelar a pelve)", description: "Em pé, cruza a perna do lado bom por trás da outra, sobe o braço do lado puxado e inclina o tronco pro lado bom. Estica a lateral da cintura, sem torcer. 30s no lado bom, 60s no puxado — o puxado é o da perna que pareceu mais curta no teste deitada. Respira fundo, para antes da dor.", durationSec: 90 },
+  { name: "Inclinação lateral (nivelar a pelve)", description: "Em pé, a perna do lado que vai alongar passa por trás da outra, o braço desse mesmo lado sobe e o tronco inclina pro lado contrário. Estica a lateral da cintura, sem torcer. 30s no lado bom, 60s no puxado — o puxado é o da perna que pareceu mais curta no teste deitada. Respira fundo, para antes da dor.", durationSec: 90 },
   { name: "Flexor do quadril ajoelhada", description: "Joelho do lado puxado no chão (almofada embaixo), outro pé à frente. Aperta o glúteo e leva a pelve pra frente SEM arquear a lombar — se arqueou, recua. 30s no lado bom, 60s no puxado.", durationSec: 90 },
 ];
 
-export const SEQUENCES: DanceSequence[] = [
+const SEQUENCIAS_BASE: DanceSequence[] = [
   // === MOBILIDADE ===
   {
     id: "mobilidade-pelvica-matinal",
@@ -31,7 +32,7 @@ export const SEQUENCES: DanceSequence[] = [
       // exercício manda fazer quase todo dia — e a sessão de academia não
       // cresce. De manhã, antes de comer, é quando ele é mais fácil: barriga
       // vazia, sem esforço de recuperação nenhum.
-      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 90, repeat: 3 },
+      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 110, repeat: 3 },
       { name: "Respiração final", description: "Deitada, mão na barriga. 5 respirações profundas pra terminar.", durationSec: 60 },
     ],
   },
@@ -107,7 +108,7 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "Agachamento profundo com apoio", description: "Segura no espaldar ou num apoio, agacha o mais fundo que der com os calcanhares no chão. Fica 60s deixando o peso abrir o quadril. 2 vezes.", durationSec: 120, repeat: 2 },
       // Progride pelo TEMPO de isometria (30 → 45 → 60s), nunca por carga: é
       // transverso, e carga aqui engrossaria justamente o que ela quer afinar.
-      { name: "Vacuum abdominal · 45s", description: "Expira todo o ar e puxa o umbigo pra dentro e pra cima, colando na coluna. Segura 45s respirando curto pela costela. 3 vezes. Se o oblíquo aparecer ou a barriga estufar, é sinal de que virou abdominal comum — volta a puxar pra DENTRO.", durationSec: 135, repeat: 3 },
+      { name: "Vacuum abdominal · 45s", description: "Expira todo o ar e puxa o umbigo pra dentro e pra cima, colando na coluna. Segura 45s respirando curto pela costela. 3 vezes. Se o oblíquo aparecer ou a barriga estufar, é sinal de que virou abdominal comum — volta a puxar pra DENTRO.", durationSec: 155, repeat: 3 },
       { name: "Respiração final", description: "Deitada, joelhos dobrados. 5 respirações longas soltando tudo. É na expiração que o tecido cede.", durationSec: 60, repeat: 5 },
     ],
   },
@@ -124,7 +125,7 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "90/90 sustentado", description: "Fica 90s de cada lado na posição, tronco ereto, sem apoio das mãos se der. É a rotação que as posições pedem.", durationSec: 180, repeat: 2 },
       { name: "Abertura em V com respiração", description: "2 min na abertura, descendo só na expiração. Se a lombar arredondar, sobe um pouco — coluna longa vale mais que centímetro.", durationSec: 120 },
       { name: "Agachamento profundo livre", description: "Sem apoio, 90s. Se ainda precisar de apoio, tudo bem — continua na fase 2 desse movimento até soltar.", durationSec: 90 },
-      { name: "Vacuum abdominal · 60s em pé", description: "Em pé agora, que é a versão difícil: expira todo o ar e puxa o umbigo pra dentro e pra cima, segurando 60s com respiração curta e contínua. 3 vezes. Em pé não há gravidade ajudando — é o transverso sozinho, e é ele que segura a cintura o dia inteiro sem você pensar.", durationSec: 180, repeat: 3 },
+      { name: "Vacuum abdominal · 60s em pé", description: "Em pé agora, que é a versão difícil: expira todo o ar e puxa o umbigo pra dentro e pra cima, segurando 60s com respiração curta e contínua. 3 vezes. Em pé não há gravidade ajudando — é o transverso sozinho, e é ele que segura a cintura o dia inteiro sem você pensar.", durationSec: 200, repeat: 3 },
       { name: "Respiração final", description: "Deitada, 5 respirações longas.", durationSec: 60, repeat: 5 },
     ],
   },
@@ -133,7 +134,7 @@ export const SEQUENCES: DanceSequence[] = [
     name: "Noite · flexão profunda e rotação",
     category: "mobilidade",
     level: "intermediario",
-    durationMin: 15,
+    durationMin: 14,
     focus: "Fase 2 da noite: abre o que as posições que ela quer pedem — flexão profunda de quadril, rotação interna e externa, adutor solto. Espacate não entra aqui e não é necessário para nada disso. Para antes da dor.",
     moves: [
       { name: "Aquecimento", description: "Círculos de quadril e balanço de perna, 90s. Corpo já morno do dia, mas nunca pular.", durationSec: 90 },
@@ -278,7 +279,7 @@ export const SEQUENCES: DanceSequence[] = [
       { name: "Pulsos rápidos (1s on, 1s off)", description: "Contrai 1s, solta 1s. 20 vezes contínuas. Mantém ritmo regular.", durationSec: 40, repeat: 20 },
       { name: "Pausa", description: "30s descanso.", durationSec: 30 },
       { name: "Pulsos rápidos (mais rápido)", description: "0.5s on, 0.5s off. 20 pulsos. Tipo 'bater asa de borboleta'.", durationSec: 30, repeat: 20 },
-      { name: "Mistura", description: "Alternar 5 pulsos rápidos + 1 sustentação de 3s. Repete 5x. Treina controle de cadência.", durationSec: 60, repeat: 5 },
+      { name: "Mistura", description: "Alternar 5 pulsos rápidos + 1 sustentação de 3s. Repete 5x. Treina controle de cadência.", durationSec: 65, repeat: 5 },
     ],
   },
   {
@@ -303,8 +304,8 @@ export const SEQUENCES: DanceSequence[] = [
     durationMin: 5,
     focus: "Controle gradual. Aprender a contrair PROGRESSIVAMENTE — não só on/off — dá controle fino do prazer e da firmeza durante penetração.",
     moves: [
-      { name: "Subindo a escala", description: "Contrai nível 1 (10% força) — sente. Sobe pra 2 (30%). 3 (50%). 4 (70%). 5 (100%, máximo). Cada nível 2s. Sente a diferença entre eles.", durationSec: 30, repeat: 5 },
-      { name: "Descendo a escala", description: "Do 5 vai descendo gradualmente pra 4, 3, 2, 1, relaxado total. Cada nível 2s. Controle a soltura, não 'derrame'.", durationSec: 30, repeat: 5 },
+      { name: "Subindo a escala", description: "Contrai nível 1 (10% força) — sente. Sobe pra 2 (30%). 3 (50%). 4 (70%). 5 (100%, máximo). Cada nível 2s. Sente a diferença entre eles.", durationSec: 50, repeat: 5 },
+      { name: "Descendo a escala", description: "Do 5 vai descendo gradualmente pra 4, 3, 2, 1, relaxado total. Cada nível 2s. Controle a soltura, não 'derrame'.", durationSec: 50, repeat: 5 },
       { name: "Subida e descida", description: "Faz 1→5→1 em fluxo contínuo (10s subindo, 10s descendo). 4 ciclos. Treina controle dinâmico.", durationSec: 80, repeat: 4 },
       { name: "Parar em nível", description: "Sobe pro nível 3, sustenta 5s. Sobe pro 4, sustenta 5s. 5, sustenta 5s. Volta 4, 3, 2, 1. Treina capacidade de PARAR em cada nível.", durationSec: 90 },
     ],
@@ -1032,3 +1033,18 @@ export const SEQUENCES: DanceSequence[] = [
     ],
   },
 ];
+
+// A explicação no formato fixo mora em `execucao-sequencias.ts`, por sequência
+// e por nome do move, e é pendurada aqui. Separada porque o nome e a descrição
+// de cada move são rótulo visível e texto que tela antiga e backup ainda leem:
+// assim nenhum deles é redigitado (e alterado sem querer) pra caber a execução.
+// Cópia por move, nunca mutação — os de NIVELAR_PELVE são o mesmo objeto nas
+// três fases da noite.
+export const SEQUENCES: DanceSequence[] = SEQUENCIAS_BASE.map((s) => {
+  const daSequencia = EXECUCAO_DAS_SEQUENCIAS[s.id];
+  if (!daSequencia) return s;
+  return {
+    ...s,
+    moves: s.moves.map((m) => (daSequencia[m.name] ? { ...m, execucao: daSequencia[m.name] } : m)),
+  };
+});

@@ -21,7 +21,7 @@ describe("a caminhada de 5 km do trabalho para casa", () => {
     expect(acha(1, "caminhada-trabalho")!.control).toBe("walk");
   });
 
-  it("começa às 16h, quando ela sai do trabalho", () => {
+  it("começa às 16h, quando ela sai do trabalho e vai a pé pra academia", () => {
     expect(acha(1, "caminhada-trabalho")!.defaultTime).toBe("16:00");
   });
 
@@ -39,16 +39,45 @@ describe("horários da tarde batem com o dia real", () => {
     expect(acha(6, "lanche-saida")!.defaultTime).toBe("16:00");
   });
 
-  it("os cães são às 17:15, depois da caminhada", () => {
-    expect(acha(1, "caes")!.defaultTime).toBe("17:15");
+  it("a caminhada até a academia é às 16h, com ~4 km de ida e ~1 km na volta", () => {
+    const c = acha(1, "caminhada-trabalho")!;
+    expect(c.defaultTime).toBe("16:00");
+    expect(c.label).toBe("Caminhada até a academia");
+    expect(c.subtitle).toBe("~4 km até lá e ~1 km na volta — os mesmos 5 km de sempre");
   });
 
-  it("o treino é às 18:15, depois dos cães", () => {
-    expect(acha(1, "treino")!.defaultTime).toBe("18:15");
+  it("o treino é às 17:00, na academia, com cardio leve no fim", () => {
+    const t = acha(1, "treino")!;
+    expect(t.defaultTime).toBe("17:00");
+    expect(t.subtitle).toBe("Força até 60 min + cardio leve no fim");
   });
 
-  it("o jantar é às 19:30", () => {
-    expect(acha(1, "jantar")!.defaultTime).toBe("19:30");
+  it("os cães são às 18:45, quando ela chega em casa", () => {
+    const c = acha(1, "caes")!;
+    expect(c.defaultTime).toBe("18:45");
+    expect(c.subtitle).toBe("Quando chegar em casa");
+  });
+
+  it("o jantar é às 20:00 e não chama as 20h de hora ruim", () => {
+    const j = acha(1, "jantar")!;
+    expect(j.defaultTime).toBe("20:00");
+    expect(j.subtitle).not.toMatch(/às 20h/);
+  });
+
+  it("o lanche explica por que comer antes de sair", () => {
+    expect(acha(1, "lanche-saida")!.subtitle).toBe(
+      "Toque pra ver a receita · coma antes de sair às 16h — você treina depois de 9 h de trabalho e 50 min a pé",
+    );
+  });
+
+  it("nenhum item de dia útil no modo caminhada fica entre 16:00 e 18:45 além de caminhada e treino", () => {
+    for (const dow of [1, 2, 3, 4, 5]) {
+      const dentro = itensDe(dow)
+        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "18:45")
+        .map((i) => i.id)
+        .sort();
+      expect(dentro).toEqual(["caminhada-trabalho", "treino"]);
+    }
   });
 
   it("a tarde de semana está em ordem cronológica", () => {

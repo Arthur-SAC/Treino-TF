@@ -14,13 +14,13 @@ describe("horários da rotina", () => {
     expect(acharItem("cafe-marmita").defaultTime).toBeDefined();
     expect(acharItem("almoco").defaultTime).toBe("12:00");
     expect(acharItem("lanche-saida").defaultTime).toBe("15:30");
-    expect(acharItem("jantar").defaultTime).toBe("19:30");
+    expect(acharItem("jantar").defaultTime).toBe("20:00");
   });
 
-  it("a sequência da saída bate com o dia real: lanche, caminhada, cães, treino", () => {
+  it("a sequência da saída bate com o dia real: lanche, caminhada, treino, cães", () => {
     const tarde = SEGUNDA.blocks.find((b) => b.id === "tarde")!;
-    expect(tarde.items.map((i) => i.id)).toEqual(["lanche-saida", "caminhada-trabalho", "caes", "treino"]);
-    expect(tarde.items.map((i) => i.defaultTime)).toEqual(["15:30", "16:00", "17:15", "18:15"]);
+    expect(tarde.items.map((i) => i.id)).toEqual(["lanche-saida", "caminhada-trabalho", "treino", "caes"]);
+    expect(tarde.items.map((i) => i.defaultTime)).toEqual(["15:30", "16:00", "17:00", "18:45"]);
   });
 
   it("o jantar vem antes do skincare da noite — ela chega do treino e come", () => {
@@ -89,7 +89,7 @@ describe("horários da rotina", () => {
 
 describe("resolveRoutineTime", () => {
   it("usa o padrão quando não há ajuste", () => {
-    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("19:30");
+    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("20:00");
   });
 
   it("o ajuste da usuária vence o padrão", () => {
@@ -198,7 +198,7 @@ describe("passeio dos cães — dia de semana e sábado têm ids (e ajustes) ind
     const passeioSabado = buildDayRoutine(6, 1).blocks.flatMap((b) => b.items).find((i) => i.id === "caes-fds")!;
 
     expect(resolveRoutineTime(passeioSabado, overrides)).toBe("18:45");
-    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("17:15");
+    expect(resolveRoutineTime(passeioSemana, overrides)).toBe("18:45");
   });
 });
 

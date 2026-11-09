@@ -1,6 +1,6 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
-import type { LadoFraco } from "./teto-predio";
+import type { LadoFraco } from "./lado-fraco";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -41,6 +41,12 @@ export interface Settings {
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
   entradaMigration: number;
+  /** Migração única da Smartfit: recomeço na Entrada, limpa o teto do prédio. */
+  smartfitMigration: number;
+  /** Versão da migração dos lembretes pros horários da rotina (ver seed.ts). */
+  lembretesMigracao: number;
+  /** Ids de exercício cujo aparelho está ausente/ocupado na academia (usado no treino). */
+  aparelhosAusentes: string[];
   walkGoalMin: number;
   modoCaminhada: ModoCaminhada;
   /** Hoje: extras recolhidos (dia ruim) — o núcleo nunca recolhe. */
@@ -69,8 +75,6 @@ export interface Settings {
   /** Ações de notificação já aplicadas (id da notificação:ação, só as últimas 50):
    *  o Android refaz o evento ao reabrir pelo Recentes; sem isso "Bebi" somava de novo. */
   acoesTratadas: string[];
-  /** Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio. */
-  tetoPredio: Record<string, number>;
   /** Perguntado no primeiro exercício de um lado só. */
   ladoFraco: LadoFraco;
 }
@@ -92,8 +96,9 @@ export const DEFAULTS: Settings = {
   // Os horários dos itens de skincare e treino da rotina do Hoje (auditoria
   // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
   morningReminderTime: "06:25",
-  eveningReminderTime: "20:00",
-  workoutReminderTime: "18:15",
+  eveningReminderTime: "20:30",
+  // 15:50: dez minutos antes de ela sair do trabalho a pé pra Smart Fit (16h).
+  workoutReminderTime: "15:50",
   activeBreakIntervalMin: 90,
   // Expediente real dela: 7h-16h. Vinha 9h-18h, um padrão genérico que punha a
   // primeira pausa duas horas depois de ela já estar trabalhando e a última
@@ -117,6 +122,9 @@ export const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   entradaMigration: 0,
+  smartfitMigration: 0,
+  lembretesMigracao: 0,
+  aparelhosAusentes: [],
   // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
   // a rotina real de dia útil (ver `caminhada-trabalho` e `caes` em
   // today-routine.ts) — os dois têm `control: "walk"` e cada um credita 60
@@ -154,8 +162,6 @@ export const DEFAULTS: Settings = {
   // Gravado quando o export termina.
   ultimoBackupEm: "",
   acoesTratadas: [],
-  // Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio.
-  tetoPredio: {},
   // Perguntado no primeiro exercício de um lado só.
   ladoFraco: "",
 };

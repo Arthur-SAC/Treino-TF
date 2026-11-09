@@ -54,8 +54,9 @@ export const ITENS_CAMINHADA = ["caminhada-trabalho", "caminhada-fds"] as const;
 function noModo(item: RoutineItem, modo: ModoCaminhada): RoutineItem | null {
   if (modo === "pausada") return null;
   if (modo === "esteira") {
-    // Dia útil: a esteira é logo depois da força (decisão dela, 2026-10-02:
-    // treino 18:15 → 1 h de esteira → jantar ~20:30). Quem monta o bloco da
+    // Dia útil: a esteira é logo depois da força (decisão dela, 2026-10-02;
+    // na Smart Fit: treino 17:00 → 1 h de esteira às 18:00 → jantar 20:30).
+    // Quem monta o bloco da
     // noite é `buildBlocks`; aqui só o texto e o horário do item.
     if (item.id === "caminhada-trabalho") {
       return {
@@ -63,7 +64,7 @@ function noModo(item: RoutineItem, modo: ModoCaminhada): RoutineItem | null {
         block: "noite",
         label: "Esteira inclinada · 1 h",
         subtitle: "Logo depois da força: ~6% a 5 km/h, 1 h, ofegante mas falando em frases curtas",
-        defaultTime: "19:15",
+        defaultTime: "18:00",
       };
     }
     return {
@@ -122,7 +123,7 @@ const CAMINHADA_FDS: RoutineItem = {
 
 function manhaItems(dayOfYear: number, fimDeSemana: boolean, modo: ModoCaminhada): RoutineItem[] {
   const items: RoutineItem[] = [
-    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
+    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna · inclui o vacuum", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
   ];
   if (isBarbaDay(dayOfYear)) items.push(BARBA);
   items.push(
@@ -192,7 +193,7 @@ type TipoDeDia = "semana" | "sabado" | "domingo";
 
 /** O lanche existe nos sete dias, mas horário e motivo mudam: em dia de semana
  *  é às 15:30, a janela pré-treino comida ainda no trabalho, meia hora antes
- *  da caminhada das 16h; no fim de semana é às 16h — no sábado é antes da
+ *  de ela sair a pé pra Smart Fit às 16h; no fim de semana é às 16h — no sábado é antes da
  *  dança, no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
 function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
@@ -201,9 +202,9 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
     block: "tarde",
     control: "recipe",
     mealType: "lanche",
-    // Na semana o lanche antecede a caminhada de 5 km das 16h — comido na
-    // mesa, meia hora antes, pra não sair de casa 4h em jejum e prestes a
-    // andar. Fim de semana não tem essa pressa, então mantém as 16h.
+    // Na semana o lanche antecede a caminhada até a academia das 16h — comido
+    // na mesa, meia hora antes, pra não sair do trabalho em jejum depois de
+    // 9 h e prestes a andar 4 km. Fim de semana não tem essa pressa, então mantém as 16h.
     defaultTime: dia === "semana" ? "15:30" : "16:00",
   } as const;
   if (dia === "sabado") {
@@ -215,9 +216,9 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
   // Fora do modo caminhada não há caminhada de 5 km antes dos cães: o texto não
   // pode afirmar uma que o modo trocou ou tirou.
   if (modo !== "caminhada") {
-    return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho — é o combustível até o treino das 18h15" };
+    return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho — é o combustível até o treino das 17h" };
   }
-  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · come ainda no trabalho, meia hora antes da caminhada de 5 km — depois vêm os cães e o treino" };
+  return { ...base, label: "Lanche pré-treino", subtitle: "Toque pra ver a receita · coma antes de sair às 16h — você treina depois de 9 h de trabalho e 50 min a pé" };
 }
 
 /** Passeio com os cães. Acontece nos sete dias da semana — e no fim de semana
@@ -229,7 +230,7 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
  *  é informação verdadeira sobre um dia mais parado, não falha.
  *
  *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
- *  propósito: o passeio de semana é às 17:15, mas no sábado precisa ser às
+ *  propósito: o passeio de semana é às 18:45, mas no sábado precisa ser às
  *  18:15 (depois da dança das 17:30, pra não colidir com ela). Com um id só
  *  pros sete dias, a tela /hoje/horarios deduplicava e mostrava uma linha
  *  única — ajustar aquele horário reescrevia o override pros sete dias,
@@ -241,7 +242,7 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
  *  Domingo passa a usar `caes-fds` também, no mesmo 18:15 do sábado: como os
  *  dois compartilham id (e portanto o mesmo ajuste em /hoje/horarios), dar a
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
- *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
+ *  enquanto o domingo de verdade ainda usasse 18:45 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
 function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
@@ -250,7 +251,9 @@ function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
     block: "tarde",
     label: fimDeSemana ? "Passear com os cães · 1h (fim de semana)" : "Passear com os cães · 1h",
     control: "walk",
-    defaultTime: fimDeSemana ? "18:15" : "17:15",
+    // Dia útil: ela só chega da academia ~18:15, então os cães são às 18:45;
+    // na esteira o treino é em casa de passagem e os cães vêm depois da esteira.
+    defaultTime: fimDeSemana ? "18:15" : modo === "esteira" ? "19:15" : "18:45",
   } as const;
   if (dia === "sabado") {
     return { ...base, subtitle: "NEAT — depois da dança, pra soltar; é ele que fecha o movimento do dia" };
@@ -269,10 +272,12 @@ function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
     };
   }
   if (modo === "pausada") {
-    return { ...base, subtitle: "Movimento leve — com a caminhada pausada, é o único passeio do dia." };
+    return { ...base, subtitle: "Movimento leve — com a caminhada até a academia pausada, é o único passeio da rotina." };
   }
-  const base16 = modo === "esteira" ? "esteira" : "caminhada das 16h";
-  return { ...base, subtitle: `NEAT — lento, com paradas; é o movimento fácil que soma em cima da ${base16}` };
+  if (modo === "esteira") {
+    return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da esteira" };
+  }
+  return { ...base, subtitle: "Quando chegar em casa" };
 }
 
 /** A caminhada de 5 km do trabalho para casa, todos os dias úteis. São ~370
@@ -283,8 +288,8 @@ function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
 const CAMINHADA_TRABALHO: RoutineItem = {
   id: "caminhada-trabalho",
   block: "tarde",
-  label: "Caminhada do trabalho para casa · 5 km",
-  subtitle: "~1h em ritmo de zona 2 — ofegante, mas ainda dá pra conversar em frases curtas",
+  label: "Caminhada até a academia",
+  subtitle: "~4 km até lá e ~1 km na volta — os mesmos 5 km de sempre",
   control: "walk",
   to: "/treino/exercicio/cardio-zona2",
   defaultTime: "16:00",
@@ -294,18 +299,17 @@ const CAMINHADA_TRABALHO: RoutineItem = {
 function subtituloTreino(modo: ModoCaminhada): string {
   if (modo === "esteira") return "Força primeiro; a esteira vem logo depois";
   if (modo === "pausada") return "A caminhada está pausada; se quiser compensar, 20–30 min de esteira inclinada depois da força.";
-  return "Sem cardio no fim — a caminhada das 16h já cobriu";
+  return "Força até 60 min + cardio leve no fim";
 }
 
 function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
   const caminhada = noModo(CAMINHADA_TRABALHO, modo);
   return [
     ...(caminhada && caminhada.block === "tarde" ? [caminhada] : []),
-    // Esteira: ela chega em casa ~16:30 sem a caminhada, então a postura sai da
-    // noite (20:15 cairia em cima da esteira/jantar) e vem pra cá.
-    ...(modo === "esteira" ? [POSTURA_ESTEIRA] : []),
-    caes("semana", modo),
-    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "18:15" },
+    { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:00" },
+    // Na esteira os cães (19:15) vêm depois da esteira (18:00), que mora no
+    // bloco da noite: ficam lá também, pra ordem na tela ser a ordem do dia.
+    ...(modo === "esteira" ? [] : [caes("semana", modo)]),
   ];
 }
 
@@ -317,12 +321,24 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
   let base = NOITE;
   if (modo === "esteira" && diaUtil) {
-    // Treino 18:15 → esteira 19:15 → jantar 20:30. A ordem do array segue o horário.
-    const horario: Record<string, string> = { jantar: "20:30", "skincare-noite": "21:00", voz: "21:10" };
+    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → skincare 21:00
+    // → postura 21:15 → voz 21:30 → assoalho 21:45 → alongamento 22:00 → dormir
+    // 22:30. Nada começa nos 30 min depois do jantar começar (ela está comendo),
+    // e a ordem do array segue o horário.
+    const horario: Record<string, string> = {
+      jantar: "20:30", "skincare-noite": "21:00", postura: "21:15", voz: "21:30",
+      "assoalho-pelvico": "21:45", "alongamento-noite": "22:00",
+    };
     base = [
       noModo(CAMINHADA_TRABALHO, modo)!,
-      ...NOITE.filter((i) => i.id !== "postura").map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
+      { ...caes("semana", modo), block: "noite" },
+      ...NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
     ];
+  }
+  // Fora do modo esteira, o jantar de dia útil é às 20:00 (chega da academia,
+  // cães às 18:45); o horário de fim de semana não muda.
+  if (diaUtil && modo !== "esteira") {
+    base = base.map((i) => (i.id === "jantar" ? { ...i, defaultTime: "20:00" } : i));
   }
   if (!fora) return base;
   return base.map((i) =>
@@ -332,18 +348,13 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   );
 }
 
-/** A postura do dia útil no modo esteira: ~16:45, com ela já em casa. */
-const POSTURA_ESTEIRA: RoutineItem = {
-  id: "postura", block: "tarde", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "16:45",
-};
-
 const NOITE: RoutineItem[] = [
-  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome às 20h nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
-  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
+  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
+  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:30" },
   // Sentar ficou nas micro-pausas; aqui é andar, 8 e gingado (decisão dela,
   // 2026-10-02: cada prática no momento em que ela é usada). Rótulo neutro de
   // propósito — o Hoje fica aberto em ambiente não receptivo.
-  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:15" },
+  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:45" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   ASSOALHO,
   // Mesma progressão do alongamento da manhã, trilha própria (ver
@@ -415,7 +426,7 @@ function buildBlocks(
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday, modo) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek, modo) },
+    { id: "noite", label: "Noite", timeHint: "do jantar em diante", items: noiteDoDia(dayOfWeek, modo) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }

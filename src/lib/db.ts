@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import type { Execucao } from "./execucao";
 
 export interface Measurement {
   id?: number;
@@ -43,6 +44,7 @@ export interface Exercise {
   startLoadKg?: number; // peso sugerido inicial (só exercícios com carga externa)
   proTips?: string[]; // dicas pra maximizar resultado
   successCue?: string; // "fez certo se sentir X" — sensação-alvo
+  execucao?: Execucao; // formato fixo; quando existe substitui description/erros/dicas na tela
 }
 
 export interface WorkoutTemplate {
@@ -59,6 +61,9 @@ export interface WorkoutTemplate {
      *  sessão sempre na ordem autorada. Só `maquina` e `solo` — o miolo — podem
      *  trocar de lugar, pra quando a área está ocupada. */
     block?: "aquecimento" | "maquina" | "solo" | "final";
+    /** Exercício que entra no lugar quando o aparelho está ocupado ou não existe
+     *  na academia. Um nível só: o substituto não declara outro substituto. */
+    substitutoId?: string;
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
@@ -287,6 +292,7 @@ export interface DanceMove {
   description: string;
   durationSec: number;
   repeat?: number;
+  execucao?: Execucao;
 }
 
 export interface DanceSequence {

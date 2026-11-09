@@ -5,16 +5,19 @@ import { ALL_TEMPLATES } from "../../src/data/all-templates";
 import { EXERCISES } from "../../src/data/exercises-seed";
 import { volumeSemanal, diasComExercicio, type GrupoMuscular } from "../../src/lib/volume-muscular";
 import { estimarDuracaoMin } from "../../src/lib/session-duration";
+import { ENTRADA_TEMPLATES } from "../../src/data/entrada-seed";
+import { FAIXA_VARIACAO } from "./faixas";
 
 const ADAPTACAO = WORKOUT_PLAN;
 const VARIACAO = CYCLE_TEMPLATES.filter((t) => t.cycle === "variacao");
 const MANUTENCAO = CYCLE_TEMPLATES.filter((t) => t.cycle === "manutencao");
 const FASE1 = [...ADAPTACAO, ...VARIACAO];
-
-const FAIXA_VARIACAO: Record<GrupoMuscular, [number, number]> = {
-  "gluteo-max": [18, 22], "gluteo-medio": [15, 21], quadriceps: [12, 16], adutor: [6, 6],
-  posterior: [6, 8], peito: [9, 12], costas: [9, 12], biceps: [6, 6], triceps: [6, 6],
-};
+// A Entrada também é fase 1 (Smartfit, 2026-11-09): mesmas réguas de duração e
+// de blocos, com teto de 40 min.
+const FASE1_COM_ENTRADA = [...ENTRADA_TEMPLATES, ...FASE1];
+const eqDe = new Map(EXERCISES.map((e) => [e.id, e.equipment ?? []]));
+const MIOLO = (b?: string) => b === "maquina" || b === "solo";
+const SEMANA_DE_APRENDER = "Semana de aprender: ache o aparelho, regule e use carga leve — sobra fôlego no fim de cada série";
 
 describe("fase 1 — Chun-Li macia", () => {
   it("a variação (topo da fase 1) fica dentro das faixas da spec em todo grupo", () => {
@@ -37,15 +40,15 @@ describe("fase 1 — Chun-Li macia", () => {
     expect(diasComExercicio(VARIACAO, "abdutor-maquina")).toBe(3);
   });
 
-  it("toda sessão da fase 1 cabe em 60 min, e o número anunciado bate com o estimador", () => {
-    const erradas = FASE1
-      .map((t) => ({ id: t.id, anunciado: t.durationMin, estimado: estimarDuracaoMin(t) }))
-      .filter((r) => r.anunciado > 60 || r.anunciado !== r.estimado);
+  it("toda sessão da fase 1 cabe em 60 min (40 na Entrada), e o número anunciado bate com o estimador", () => {
+    const erradas = FASE1_COM_ENTRADA
+      .map((t) => ({ id: t.id, anunciado: t.durationMin, estimado: estimarDuracaoMin(t), teto: (t.cycle ?? "").startsWith("entrada") ? 40 : 60 }))
+      .filter((r) => r.anunciado > r.teto || r.anunciado !== r.estimado);
     expect(erradas).toEqual([]);
   });
 
   it("toda sessão da fase 1 declara blocos contíguos — a reordenação depende disso", () => {
-    for (const t of FASE1) {
+    for (const t of FASE1_COM_ENTRADA) {
       expect({ id: t.id, semBloco: t.exercises.filter((e) => !e.block).length }).toEqual({ id: t.id, semBloco: 0 });
       const seq = t.exercises.map((e) => e.block).filter((b, i, arr) => b !== arr[i - 1]);
       expect({ id: t.id, contiguo: seq.length === new Set(seq).size }).toEqual({ id: t.id, contiguo: true });
@@ -70,6 +73,45 @@ describe("fase 1 — Chun-Li macia", () => {
         .map((e) => `${t.id}: ${e.exerciseId}`),
     );
     expect(achados).toEqual([]);
+  });
+
+  it("a Entrada mantém a divisão da variação: inferior seg/qua/sex, superior ter/qui, nas três semanas", () => {
+    for (const cycle of ["entrada-1", "entrada-2", "entrada-3"]) {
+      const dias = ENTRADA_TEMPLATES.filter((t) => t.cycle === cycle).map((t) => t.dayOfWeek).sort();
+      expect({ cycle, dias }).toEqual({ cycle, dias: [1, 2, 3, 4, 5] });
+    }
+    const inferior = (t: (typeof ENTRADA_TEMPLATES)[number]) => t.exercises.some((e) => e.exerciseId === "abdutor-maquina");
+    for (const t of ENTRADA_TEMPLATES) {
+      expect({ id: t.id, inferior: inferior(t) }).toEqual({ id: t.id, inferior: [1, 3, 5].includes(t.dayOfWeek) });
+    }
+  });
+
+  it("o miolo da Entrada é só máquina e polia (core de peso do corpo pode)", () => {
+    const CORE_LIVRE = ["vacuum-abdominal", "ponte-gluteo-band"];
+    const fora = ENTRADA_TEMPLATES.flatMap((t) =>
+      t.exercises
+        .filter((e) => MIOLO(e.block) && !CORE_LIVRE.includes(e.exerciseId))
+        .filter((e) => !(eqDe.get(e.exerciseId) ?? []).some((q) => q.startsWith("maquina-") || q === "leg-press" || q === "polia"))
+        .map((e) => `${t.id}: ${e.exerciseId}`),
+    );
+    expect(fora).toEqual([]);
+    expect(ENTRADA_TEMPLATES.flatMap((t) => t.exercises).some((e) => e.exerciseId === "smith-squat")).toBe(false);
+  });
+
+  it("semana 1: 2 séries por exercício, carga leve escrita em todo item do miolo, hip thrust na máquina", () => {
+    const s1 = ENTRADA_TEMPLATES.filter((t) => t.cycle === "entrada-1");
+    const errados = s1.flatMap((t) =>
+      t.exercises.filter((e) => MIOLO(e.block)).filter((e) => e.sets !== 2 || e.notes !== SEMANA_DE_APRENDER).map((e) => `${t.id}: ${e.exerciseId}`),
+    );
+    expect(errados).toEqual([]);
+    expect(s1.find((t) => t.dayOfWeek === 1)!.exercises.map((e) => e.exerciseId)).toContain("hip-thrust-maquina");
+  });
+
+  it("semana 2 com 2-3 séries e semana 3 com 3 séries por exercício do miolo", () => {
+    const series = (c: string) => ENTRADA_TEMPLATES.filter((t) => t.cycle === c).flatMap((t) => t.exercises.filter((e) => MIOLO(e.block)).map((e) => e.sets));
+    expect(series("entrada-2").every((s) => s === 2 || s === 3)).toBe(true);
+    expect(series("entrada-2").some((s) => s === 3)).toBe(true);
+    expect(series("entrada-3").every((s) => s === 3)).toBe(true);
   });
 
   it("o rebolado saiu da quarta — fica no sábado e na progressão de vitalidade", () => {

@@ -12,11 +12,11 @@ describe("búlgaro (entrega C)", () => {
     expect(ex(tpl("qua-mobilidade-danca"), "agachamento-bulgaro")).toBeUndefined();
   });
 
-  it("substitui o goblet na variação de quarta; o goblet fica no Inferior A", () => {
+  it("fica na variação de quarta; o goblet vira o substituto do leg press no Inferior A", () => {
     const qua = tpl("v-qua-mobilidade-danca");
     expect(ex(qua, "agachamento-bulgaro")).toMatchObject({ sets: 3, repsTarget: "10-12 cada" });
     expect(ex(qua, "agachamento-goblet")).toBeUndefined();
-    expect(ex(tpl("v-seg-gluteo-unilateral"), "agachamento-goblet")).toBeDefined();
+    expect(ex(tpl("v-seg-gluteo-unilateral"), "leg-press-pes-medios")?.substitutoId).toBe("agachamento-goblet");
   });
 
   it("a sessão da variação continua em até 60 min, com a duração do estimador", () => {

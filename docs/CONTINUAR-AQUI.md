@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-10-02
+**Última atualização:** 2026-11-09
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -27,6 +27,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | C · Hora da Smartfit | búlgaro (no lugar do goblet na variação), lado fraco primeiro, "não tem mais peso aqui" + táticas no teto, aviso da Smartfit quando hip thrust/leg press/abdutora/búlgaro estão no teto | spec `docs/superpowers/specs/2026-10-02-hora-da-smartfit-design.md` · plano `docs/superpowers/plans/2026-10-02-hora-da-smartfit.md` |
 | D · Nativo | botões Feito/Bebi 200 ml/Deitei nos lembretes (com dedupe ao reabrir), lembrete e aviso de backup a cada 15 dias; NATIVE_VERSION continua 1 | spec `docs/superpowers/specs/2026-10-02-nativo-design.md` · plano `docs/superpowers/plans/2026-10-02-nativo.md` |
 | E · Navegação + dívidas | 4 abas (Hoje · Progresso · Guia · Vitalidade) sem mudar rota, aba acesa por abaDaRota; zona 2 pelo modo; TREINOS_POR_SEMANA no objetivo; lista antiga de presença removida | spec `docs/superpowers/specs/2026-10-02-navegacao-e-dividas-design.md` · plano `docs/superpowers/plans/2026-10-02-navegacao-e-dividas.md` |
+| F · Smartfit Jardins | catálogo da Smart Fit (EXERCISE_SEED_VERSION 17); todos os ciclos reescritos com `substitutoId` por item e regra " cada" nos unilaterais (TEMPLATE_SEED_VERSION 18); migração única que recomeça na Entrada (`SMARTFIT_MIGRATION`, roda de novo ao restaurar backup antigo); teto do prédio e card "Hora da Smartfit" removidos (lado fraco ficou, em `src/lib/lado-fraco.ts`); "Ocupado" / "Não tem aqui" / "Voltar pro …" na sessão + lista de desfazer em Configurações (setting `aparelhosAusentes`); rotina de dia útil nova (lanche 15:30, caminhada 16:00, treino 17:00, cães 18:45, jantar 20:00, skincare 20:30, postura 20:45; variante esteira; LEMBRETES_MIGRACAO 2); formato estruturado de execução (`ExecucaoBlocos`) em todos os exercícios, substitutos, alongamentos e assoalho (MOVEMENT_VERSION 14) | spec `docs/superpowers/specs/2026-11-09-smartfit-jardins-design.md` · plano `docs/superpowers/plans/2026-11-09-smartfit-jardins.md` · **na branch `feat/smartfit-jardins`, falta publicar** |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -102,6 +103,8 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 | 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |
+| 11-09 | **Smartfit já na fase 1** (substitui a de 10-02). Unidade Jardins (Av. Dep. Pedro Valadares, 890); sai 16h do Anexo 1 da Funesa a pé, treina ~17h–18h, cães quando chega em casa. Entregue na branch `feat/smartfit-jardins` (falta publicar): **recomeço na Entrada** (migração única, sem herdar carga do prédio); **força 60 min na Smartfit e cardio fora** (caminhada de ida/volta e esteira só como variante); **"não tem aqui" por exercício** (troca pelo substituto, desfazível em Configurações). `tetoPredio`, card "Hora da Smartfit" e `no-low-pulley.test.ts` saíram. |
+| 11-09 | **Máquina primeiro, peso livre como plano B**; búlgaro, goblet, carregamento e farmer ficam livres; **vacuum em casa todo dia** (alongamento da manhã), fora da academia. Régua: `tests/data/maquina-primeiro.test.ts`. |
 
 ---
 
@@ -248,6 +251,9 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 | Streak de vitalidade | `src/lib/vitalidade.ts` |
 | Versões de seed (exportadas e travadas) | `src/lib/seed.ts`, `src/lib/movement-seed.ts`, `src/lib/style-seed.ts` |
 | Rotina do dia | `src/lib/today-routine.ts` |
+| Troca de aparelho (Ocupado / Não tem aqui, `UNILATERAIS`, `aplicarAusentes`) | `src/lib/troca-aparelho.ts` |
+| Formato estruturado de execução (tipos, `problemasDaExecucao`) · sequências de alongamento e assoalho | `src/lib/execucao.ts` (+ `ExecucaoBlocos`) · `src/data/execucao-sequencias.ts` |
+| Lado fraco primeiro | `src/lib/lado-fraco.ts` |
 | Cardápio (fonte única) | `src/data/meal-plan-seed.ts` · versão em `src/lib/path-seed.ts` |
 | Roteiro de domingo · porção de cada pote | `src/data/marmita-domingo-seed.ts`, `src/lib/marmita-porcoes.ts` |
 | Três modos de estilo · migração | `src/lib/db.ts` (`StyleMode`), `src/lib/style-seed.ts` (`migrarModos`) |
@@ -281,12 +287,23 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 aviso de água substitui o subtítulo de dose; migração v8 dos marcos reancora datas;
 comentários com LANCHE ~500 / JANTAR ~700.
 
+**Smartfit Jardins (2026-11-09) — menores adiados:**
+
+- Alguns exercícios seguem com equipment espaldar/bola-suíça/multiestação.
+- A `description` de `hip-thrust-maquina` ainda diz "Sentada"; "costela fechada" segue sem tradução em proTips/descrições antigas (a note do `e3-seg` já foi traduzida).
+- O vídeo de `flexora-em-pe` pode mostrar a versão de máquina.
+- Cast `as ItemTemplate` em `troca-aparelho.ts`; teste de `podeMarcarAusente` com 3 casos num `it`;  `ocupados` guarda valor nunca lido; `textoDeAquecimento` lê o template cru.
+- No modo esteira, o lembrete do alongamento da noite (setting global 21:30) diverge do item do Hoje (22:00); o lembrete de skincare do PWA (20:30) também diverge do item do Hoje (21:00).
+- O bloco de um substituto trocado vem do equipamento (`blocoDoEquipamento`): só `maquina-*`/`leg-press` contam como área de aparelhos; substituto de polia/multiestação cai em "Na área livre".
+- "Ocupado"/"Não tem aqui"/"Voltar" somem assim que há uma série ✓ ou o exercício é salvo (o remount da troca perderia o que ela marcou); pra trocar depois disso, ela precisa desmarcar a série.
+- A regra da oração em `problemasDaExecucao` aceita parêntese não relacionado ("(10 reps)"); o teste de dor aceita "sem doer" e exclui por nome.
+- Contar pra ela: a Entrada agora tem 5 dias de força; o assoalho usa "pinto" e "entre o saco e o ânus" (termos que já existiam) — trocar se ela preferir outros.
+- Sem vídeo ainda: 8 exercícios novos (em `SEM_VIDEO`); ela cola o link pelo player.
+
 **Anteriores:**
 
 - PathTabs (Trilha) mistura telas de Progresso e de Guia — reorganizar as telas internas é a próxima arrumação.
 - O lembrete das 21h do PWA só conta practiceLogs de postura (não o check do Hoje); o APK não usa esse agendador.
-- Quando ela trocar pra Smartfit, a reescrita da fase 2 tem que limpar o setting `tetoPredio`
-  (senão o card e as táticas continuam ligados nos 4 exercícios).
 - Montagem de alvo de sono e fase pélvica ainda copiada entre `Today.tsx` e
   `Vitalidade.tsx` — a regra foi extraída, a montagem não.
 - `session-order.test.ts` usa fixtures locais, então não pega regressão nos templates reais.
