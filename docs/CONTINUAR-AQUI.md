@@ -102,6 +102,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Troca pra Smartfit **só na fase 2** (cintura ≤ 84), mesmo com o teto do prédio batido antes — até lá, táticas no teto. |
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 | 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |
+| 11-09 | **Smartfit já na fase 1** (substitui a de 10-02). Unidade Jardins (Av. Dep. Pedro Valadares, 890); sai 16h do Anexo 1 da Funesa a pé, treina ~17h–18h, cães quando chega em casa. Próximo passo: fotos dos aparelhos dela → reescrever a fase 1 (`cycles-seed.ts`), limpar `tetoPredio`, aposentar o card "Hora da Smartfit", revisar `no-low-pulley.test.ts`, mexer no horário do treino e nos lembretes. |
 
 ---
 
