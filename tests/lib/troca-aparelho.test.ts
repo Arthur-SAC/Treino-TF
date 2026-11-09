@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { WorkoutTemplate } from "../../src/lib/db";
-import { aplicarAusentes, podeMarcarAusente, type ItemTemplate } from "../../src/lib/troca-aparelho";
+import { aplicarAusentes, podeMarcarAusente, UNILATERAIS, type ItemTemplate } from "../../src/lib/troca-aparelho";
 
 function deepFreeze<T>(o: T): T {
   if (o && typeof o === "object") {
@@ -50,5 +50,30 @@ describe("podeMarcarAusente", () => {
     expect(podeMarcarAusente({ ...base().exercises[0], originalId: "x" })).toBe(false);
     expect(podeMarcarAusente(base().exercises[1])).toBe(false);
     expect(podeMarcarAusente(base().exercises[0])).toBe(true);
+  });
+});
+
+describe("substituto unilateral", () => {
+  const t = (repsTarget: string): WorkoutTemplate => ({
+    id: "u", name: "U", dayOfWeek: 1, durationMin: 30,
+    exercises: [{ exerciseId: "abdutor-maquina", sets: 3, repsTarget, restSec: 45, substitutoId: "abducao-quadril-polia" }],
+  });
+
+  it("acrescenta ' cada' quando o substituto é de um lado só — ela faz os dois", () => {
+    expect(UNILATERAIS.has("abducao-quadril-polia")).toBe(true);
+    expect(aplicarAusentes(t("15-20"), ["abdutor-maquina"]).exercises[0].repsTarget).toBe("15-20 cada");
+  });
+
+  it("não duplica quando o alvo já diz 'cada'", () => {
+    expect(aplicarAusentes(t("12 cada"), ["abdutor-maquina"]).exercises[0].repsTarget).toBe("12 cada");
+  });
+
+  it("substituto bilateral herda o alvo como está", () => {
+    const b: WorkoutTemplate = { ...t("10-12"), exercises: [{ exerciseId: "leg-press-pes-medios", sets: 3, repsTarget: "10-12", restSec: 90, substitutoId: "agachamento-goblet" }] };
+    expect(aplicarAusentes(b, ["leg-press-pes-medios"]).exercises[0].repsTarget).toBe("10-12");
+  });
+
+  it("o item que não foi trocado não ganha 'cada'", () => {
+    expect(aplicarAusentes(t("15-20"), []).exercises[0].repsTarget).toBe("15-20");
   });
 });

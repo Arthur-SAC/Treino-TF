@@ -5,7 +5,7 @@ import { ENTRADA_TEMPLATES } from "../../src/data/entrada-seed";
 import { volumeSemanal, diasComExercicio, type GrupoMuscular } from "../../src/lib/volume-muscular";
 import { estimarDuracaoMin } from "../../src/lib/session-duration";
 import type { WorkoutTemplate } from "../../src/lib/db";
-import { foraDaFaixa } from "./faixas";
+import { FAIXA, foraDaFaixa } from "./faixas";
 
 // Régua da fase 2 na Smartfit Jardins (docs/OBJETIVO.md §8.3), irmã da
 // tests/data/fase1-chun-li.test.ts. Hipertrofia no topo, refinamento no meio,
@@ -32,8 +32,20 @@ describe("fase 2 — Smartfit Jardins", () => {
     expect(abaixo).toEqual([]);
   });
 
-  it("o refinamento fica dentro das faixas", () => {
-    expect(foraDaFaixa(volumeSemanal(REFINAMENTO))).toEqual([]);
+  it("a hipertrofia fica no topo: todo grupo na metade de cima da faixa", () => {
+    const h = volumeSemanal(HIPERTROFIA);
+    const abaixo = (Object.keys(FAIXA) as GrupoMuscular[])
+      .filter((g) => h[g] < Math.ceil((FAIXA[g][0] + FAIXA[g][1]) / 2))
+      .map((g) => `${g}: ${h[g]} < meio ${Math.ceil((FAIXA[g][0] + FAIXA[g][1]) / 2)}`);
+    expect(abaixo).toEqual([]);
+  });
+
+  it("o refinamento fica dentro das faixas e nunca acima da hipertrofia", () => {
+    const r = volumeSemanal(REFINAMENTO);
+    const h = volumeSemanal(HIPERTROFIA);
+    expect(foraDaFaixa(r)).toEqual([]);
+    const acima = (Object.keys(r) as GrupoMuscular[]).filter((g) => r[g] > h[g]).map((g) => `${g}: ${r[g]} > ${h[g]}`);
+    expect(acima).toEqual([]);
   });
 
   it("a manutenção nunca passa do refinamento, segura o glúteo médio em 12+ e usa a abdutora", () => {

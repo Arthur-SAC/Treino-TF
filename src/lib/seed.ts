@@ -27,7 +27,7 @@ import { MEDIDAS_PARTIDA } from "./objetivo";
 // v13: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v14: cardio-zona2 vale pra caminhada e pra esteira (dívida da entrega E, 2026-10-02).
 // v15: cardio leve pós-treino, acelerador da fase 1 (2026-11-04).
-// v16: catálogo da Smartfit Jardins (aparelhos novos, incrementos de polia e máquina).
+// v16: catálogo da Smartfit Jardins (aparelhos novos, incrementos de polia e máquina; a flexora em pé é com caneleira, sem aparelho).
 export const EXERCISE_SEED_VERSION = 16;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele

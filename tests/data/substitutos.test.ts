@@ -5,7 +5,7 @@ import { CYCLE_TEMPLATES } from "../../src/data/cycles-seed";
 import { EXERCISES } from "../../src/data/exercises-seed";
 import { GRUPO_DO_EXERCICIO, volumeSemanal } from "../../src/lib/volume-muscular";
 import { estimarDuracaoMin } from "../../src/lib/session-duration";
-import { aplicarAusentes } from "../../src/lib/troca-aparelho";
+import { aplicarAusentes, UNILATERAIS } from "../../src/lib/troca-aparelho";
 import { foraDaFaixa } from "./faixas";
 
 // "Ocupado" e "Não tem aqui" (spec 2026-11-09 §6): o treino nunca pode
@@ -84,5 +84,28 @@ describe("substitutos declarados", () => {
       .filter((r) => r.min > r.teto);
     expect(estouram).toEqual([]);
     expect(foraDaFaixa(volumeSemanal(trocados.filter((t) => t.cycle === "variacao")))).toEqual([]);
+  });
+
+  it("com TODOS os itens trocados (tudo ocupado ao mesmo tempo), a sessão ainda cabe no teto", () => {
+    // aplicarAusentes soma " cada" quando o substituto é de um lado só, então
+    // o estimador mede o tempo real da troca — é isso que deixa esta regra ficar vermelha.
+    const estouram = CRUS
+      .map((t) => aplicarAusentes(t, t.exercises.map((e) => e.exerciseId)))
+      .map((t) => ({ id: t.id, min: estimarDuracaoMin(t), teto: (t.cycle ?? "").startsWith("entrada") ? 40 : 60 }))
+      .filter((r) => r.min > r.teto);
+    expect(estouram).toEqual([]);
+  });
+
+  it("todo exercício marcado como unilateral existe no catálogo", () => {
+    expect([...UNILATERAIS].filter((id) => !porId.has(id))).toEqual([]);
+  });
+
+  it("o substituto unilateral de um item bilateral aparece com 'cada' depois da troca", () => {
+    const semCada = CRUS.flatMap((t) =>
+      aplicarAusentes(t, t.exercises.map((e) => e.exerciseId)).exercises
+        .filter((e) => UNILATERAIS.has(e.exerciseId) && !/cada/.test(e.repsTarget) && "originalId" in e)
+        .map((e) => `${t.id}: ${e.exerciseId} ${e.repsTarget}`),
+    );
+    expect(semCada).toEqual([]);
   });
 });
