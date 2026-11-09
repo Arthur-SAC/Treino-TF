@@ -319,15 +319,18 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
   let base = NOITE;
   if (modo === "esteira" && diaUtil) {
-    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → postura 20:45
-    // → skincare 21:00 → voz 21:10, sempre com ~15 min entre vizinhos. A ordem
-    // do array segue o horário, então a postura vem logo depois do jantar.
-    const horario: Record<string, string> = { jantar: "20:30", postura: "20:45", "skincare-noite": "21:00", voz: "21:10" };
-    const ajustada = NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i));
-    const postura = ajustada.find((i) => i.id === "postura")!;
-    const resto = ajustada.filter((i) => i.id !== "postura");
-    resto.splice(resto.findIndex((i) => i.id === "jantar") + 1, 0, postura);
-    base = [noModo(CAMINHADA_TRABALHO, modo)!, ...resto];
+    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → skincare 21:00
+    // → postura 21:15 → voz 21:30 → assoalho 21:45 → alongamento 22:00 → dormir
+    // 22:30. Nada começa nos 30 min depois do jantar começar (ela está comendo),
+    // e a ordem do array segue o horário.
+    const horario: Record<string, string> = {
+      jantar: "20:30", "skincare-noite": "21:00", postura: "21:15", voz: "21:30",
+      "assoalho-pelvico": "21:45", "alongamento-noite": "22:00",
+    };
+    base = [
+      noModo(CAMINHADA_TRABALHO, modo)!,
+      ...NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
+    ];
   }
   // Fora do modo esteira, o jantar de dia útil é às 20:00 (chega da academia,
   // cães às 18:45); o horário de fim de semana não muda.
@@ -420,7 +423,7 @@ function buildBlocks(
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday, modo) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 20h", items: noiteDoDia(dayOfWeek, modo) },
+    { id: "noite", label: "Noite", timeHint: "do jantar em diante", items: noiteDoDia(dayOfWeek, modo) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }
