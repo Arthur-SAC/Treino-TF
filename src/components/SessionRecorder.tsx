@@ -7,8 +7,8 @@ import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
 import { useSetting } from "../hooks/useSetting";
-import { getSetting, setSetting } from "../lib/settings-helpers";
-import { noTeto, taticasNoTeto, ehUnilateral } from "../lib/teto-predio";
+import { setSetting } from "../lib/settings-helpers";
+import { ehUnilateral } from "../lib/lado-fraco";
 
 interface Props {
   exercise: Exercise;
@@ -48,8 +48,6 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const [restRunning, setRestRunning] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const tetos = useSetting("tetoPredio");
-  const teto = tetos[exercise.id];
   const ladoFraco = useSetting("ladoFraco");
 
   useEffect(() => {
@@ -66,19 +64,6 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         setLast(lastPerf);
         if (timeBased) return;
         const lastSet = lastPerf.sets[lastPerf.sets.length - 1];
-        // Teto velho: ela já treinou ACIMA dele (achou mais anilha, halter mais
-        // pesado), então o prédio tem mais do que o app aprendeu. Apaga o teto
-        // em vez de subir: ele volta a ser aprendido se ela tocar o botão de
-        // novo. Roda uma vez por exercício (some na primeira passada, então não
-        // há laço de escrita) e relê o setting fresco dentro da transação.
-        await db.transaction("rw", db.settings, async () => {
-          const atual = await getSetting("tetoPredio");
-          const teto = atual[exercise.id];
-          if (teto !== undefined && lastSet.weight > teto) {
-            const { [exercise.id]: _, ...resto } = atual;
-            await setSetting("tetoPredio", resto);
-          }
-        });
         if (!mounted) return;
         // Completou = toda série no mínimo da faixa; topo = toda série no
         // máximo (antes, qualquer rep > 0 contava como completar).
@@ -171,27 +156,8 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
     setSets((prev) => prev.map((s) => ({ ...s, weight: String(suggested) })));
   }
 
-  const cargaAnterior = last ? last.sets[last.sets.length - 1].weight : 0;
-  // Só faz sentido dizer "não tem mais peso" quando o app pede pra SUBIR.
-  const podeMarcarTeto = suggested !== null && cargaAnterior > 0 && suggested > cargaAnterior && teto === undefined;
   // Dead bug é "cada" mas alterna braço e perna na mesma série: não tem lado fraco por onde começar.
   const perguntaLado = ehUnilateral(repsTarget) && exercise.id !== "dead-bug";
-  const travado = suggested !== null && noTeto(suggested, teto);
-
-  // Lê o setting na hora de escrever: o `tetos` da render pode estar velho e
-  // regravá-lo apagaria o teto de outro exercício gravado nesse meio-tempo.
-  async function marcarTeto() {
-    await db.transaction("rw", db.settings, async () => {
-      const atual = await getSetting("tetoPredio");
-      await setSetting("tetoPredio", { ...atual, [exercise.id]: cargaAnterior });
-    });
-  }
-  async function desfazerTeto() {
-    await db.transaction("rw", db.settings, async () => {
-      const { [exercise.id]: _, ...resto } = await getSetting("tetoPredio");
-      await setSetting("tetoPredio", resto);
-    });
-  }
 
   function handleSave() {
     // Só as séries marcadas como feitas: as outras vêm pré-preenchidas da
@@ -288,24 +254,11 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           Última vez ({formatDateBR(new Date(last.date))}): {describeLast(last)}
         </p>
       )}
-      {suggested !== null && travado ? (
-        <div className="text-xs mb-3">
-          <p className="text-nude-warm">No teto do prédio ({teto} kg)</p>
-          <ul className="text-muted list-disc pl-4 mt-1 space-y-0.5">
-            {taticasNoTeto(repsTarget, exercise.id).map((t) => <li key={t}>{t}</li>)}
-          </ul>
-          <button type="button" onClick={() => void desfazerTeto()} className="text-muted underline mt-1">o aparelho tem mais peso</button>
-        </div>
-      ) : suggested !== null ? (
+      {suggested !== null ? (
         <div className="mb-3">
           <button type="button" onClick={applySuggestion} className="text-xs text-nude underline block">
             Sugestão: {suggested} kg (aplicar em todas)
           </button>
-          {podeMarcarTeto && (
-            <button type="button" onClick={() => void marcarTeto()} className="text-xs text-muted underline block mt-1">
-              Não tem mais peso aqui
-            </button>
-          )}
         </div>
       ) : exercise.startLoadKg ? (
         <button

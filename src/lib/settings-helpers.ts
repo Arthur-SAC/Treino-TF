@@ -1,6 +1,6 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
-import type { LadoFraco } from "./teto-predio";
+import type { LadoFraco } from "./lado-fraco";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -73,8 +73,6 @@ export interface Settings {
   /** Ações de notificação já aplicadas (id da notificação:ação, só as últimas 50):
    *  o Android refaz o evento ao reabrir pelo Recentes; sem isso "Bebi" somava de novo. */
   acoesTratadas: string[];
-  /** Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio. */
-  tetoPredio: Record<string, number>;
   /** Perguntado no primeiro exercício de um lado só. */
   ladoFraco: LadoFraco;
 }
@@ -160,8 +158,6 @@ export const DEFAULTS: Settings = {
   // Gravado quando o export termina.
   ultimoBackupEm: "",
   acoesTratadas: [],
-  // Aprendido no uso (entrega C): ela não sabe as cargas máximas do prédio.
-  tetoPredio: {},
   // Perguntado no primeiro exercício de um lado só.
   ladoFraco: "",
 };
