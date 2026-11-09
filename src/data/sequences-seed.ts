@@ -1,4 +1,5 @@
 import type { DanceMove, DanceSequence } from "../lib/db";
+import { EXECUCAO_DAS_SEQUENCIAS } from "./execucao-sequencias";
 
 // Nivelar a pelve. Em 2026-10-01 ela achou que uma perna era maior e o teste
 // (deitada × sentada) mostrou que não: é a pelve subindo de um lado, puxada
@@ -11,7 +12,7 @@ const NIVELAR_PELVE: DanceMove[] = [
   { name: "Flexor do quadril ajoelhada", description: "Joelho do lado puxado no chão (almofada embaixo), outro pé à frente. Aperta o glúteo e leva a pelve pra frente SEM arquear a lombar — se arqueou, recua. 30s no lado bom, 60s no puxado.", durationSec: 90 },
 ];
 
-export const SEQUENCES: DanceSequence[] = [
+const SEQUENCIAS_BASE: DanceSequence[] = [
   // === MOBILIDADE ===
   {
     id: "mobilidade-pelvica-matinal",
@@ -1032,3 +1033,18 @@ export const SEQUENCES: DanceSequence[] = [
     ],
   },
 ];
+
+// A explicação no formato fixo mora em `execucao-sequencias.ts`, por sequência
+// e por nome do move, e é pendurada aqui. Separada porque o nome e a descrição
+// de cada move são rótulo visível e texto que tela antiga e backup ainda leem:
+// assim nenhum deles é redigitado (e alterado sem querer) pra caber a execução.
+// Cópia por move, nunca mutação — os de NIVELAR_PELVE são o mesmo objeto nas
+// três fases da noite.
+export const SEQUENCES: DanceSequence[] = SEQUENCIAS_BASE.map((s) => {
+  const daSequencia = EXECUCAO_DAS_SEQUENCIAS[s.id];
+  if (!daSequencia) return s;
+  return {
+    ...s,
+    moves: s.moves.map((m) => (daSequencia[m.name] ? { ...m, execucao: daSequencia[m.name] } : m)),
+  };
+});

@@ -84,7 +84,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // Com esta, as CINCO versões de seed do app têm pino: exercícios, templates,
   // plano alimentar, estilo e movimento. Era a última que vivia privada.
   it("MOVEMENT_VERSION é a versão revisada nesta rodada", () => {
-    expect(MOVEMENT_VERSION).toBe(13);
+    expect(MOVEMENT_VERSION).toBe(14);
   });
 });
 
@@ -390,6 +390,19 @@ describe("sequências de movimento", () => {
       expect(s).toBeDefined();
       expect(s?.category).toBe("mobilidade");
     }
+  });
+
+  it("as explicações do alongamento e do assoalho alcançam quem estava na versão anterior", async () => {
+    // O banco dela já tem a sequência, com o mesmo id e o mesmo texto: só a
+    // execução é nova. Sem o bump, o move continua mudo no aparelho.
+    await db.settings.put({ key: "movementSeeded", value: true });
+    await db.settings.put({ key: "movementVersion", value: MOVEMENT_VERSION - 1 });
+
+    await seedMovement();
+
+    const s = await db.danceSequences.get("flex-manha-amplitude");
+    const move = s?.moves.find((m) => m.name === "90/90 com rotação");
+    expect(move?.execucao?.movimento.length).toBeGreaterThanOrEqual(2);
   });
 
   it("o repertório íntimo alcança quem estava na versão anterior", async () => {
