@@ -226,7 +226,9 @@ describe("templates de treino", () => {
       // adaptação — o ciclo que ela alcança depois da Entrada
       // o carregamento foi pra quinta (Superior B · força de levantar) em 2026-09-23
       ["qui-gluteo-coxa", "carregamento-frontal"],
-      ["ter-cintura-costas", "prancha-antirrotacao"],
+      // Máquina primeiro (2026-11-09): o pallof na polia entrou na frente da
+      // prancha antirrotação, que virou o plano B dele.
+      ["ter-cintura-costas", "pallof-polia"],
       // Smartfit Jardins (2026-11-09): hip thrust na máquina e flexora sentada
       ["seg-gluteo-mobilidade", "hip-thrust-maquina"],
       ["v-seg-gluteo-unilateral", "hip-thrust-maquina"],

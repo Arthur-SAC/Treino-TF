@@ -427,7 +427,7 @@ export const EXERCISES: Exercise[] = [
     harderVariation: "Em pé, segurando 30-60s com respiração contínua",
     exposureLevel: 1,
     proTips: [
-      "Sem TRH, controlar o transverso + déficit é a principal ferramenta de cintura fina — faça quase todo dia",
+      "Sem TRH, controlar o transverso + déficit é a principal ferramenta de cintura fina — faça todo dia, no alongamento da manhã em casa",
       "Não é exercício de gomos: é puxar pra DENTRO, afinando, não engrossando",
       "Progrida pelo tempo de isometria (30 → 45 → 60s), não por carga",
     ],
@@ -436,7 +436,7 @@ export const EXERCISES: Exercise[] = [
       movimento: [
         "Solta todo o ar pela boca, até esvaziar.",
         "Sem puxar ar, puxa o umbigo pra dentro e pra cima, como se fosse encostar na coluna.",
-        "Segura o tempo do treino respirando curto, só pelo peito.",
+        "Segura o tempo pedido respirando curto, só pelo peito.",
         "Solta a barriga devagar e respira normal.",
       ],
       ondeSentir: "Bem fundo na barriga, abaixo do umbigo, como um cinto apertando por dentro. Os gomos da barriga ficam quietos.",
@@ -599,6 +599,48 @@ export const EXERCISES: Exercise[] = [
       regulagem: "Altura do banco: a pegada fica na altura da barriga quando você puxa. Se tiver apoio de peito, ajusta pra alcançar a pegada com os braços esticados sem sair dele. Se tiver apoio de pés, pés firmes nele e joelhos levemente dobrados. Escolhe o peso no pino da pilha.",
     },
   },
+  // Máquina primeiro (decisão dela, 2026-11-09): a remada de um braço só na
+  // polia entra na frente da remada com halter no Superior B. A remada baixa
+  // já é a do Superior A, então a semana não repete a mesma máquina.
+  {
+    id: "remada-polia-unilateral",
+    name: "Remada unilateral na polia",
+    category: "costas",
+    equipment: ["polia"],
+    difficulty: "iniciante",
+    description: "Em pé de frente pra polia na altura da barriga, puxador de uma mão só. Puxa até a lateral da barriga com o cotovelo rente ao corpo, junta a omoplata em direção à coluna e volta devagar. Um lado inteiro e depois o outro. Espessura no meio das costas, sem alargar.",
+    commonMistakes: [
+      "Girar o tronco pra puxar",
+      "Abrir o cotovelo pro lado (puxa pra largura das costas)",
+      "Subir o ombro em direção à orelha",
+    ],
+    exposureLevel: 2,
+    startLoadKg: 5,
+    proTips: [
+      "Cotovelo rente ao corpo, como quem guarda o cotovelo no bolso de trás",
+      "Quadril e peito virados pra frente o tempo todo: quem se mexe é só o braço",
+    ],
+    execucao: {
+      posicao: "Em pé de frente pra polia, pés um pouco afastados, joelhos levemente dobrados, puxador de uma mão só, a outra mão apoiada na máquina.",
+      movimento: [
+        "Dá um passo pra trás até o cabo ficar esticado com o braço estendido.",
+        "Puxa o puxador até a lateral da barriga, cotovelo raspando o corpo.",
+        "Junta a omoplata do lado que puxa em direção à coluna e segura 1 segundo.",
+        "Volta devagar até esticar o braço.",
+      ],
+      ondeSentir: "Meio das costas, do lado que puxa, entre a omoplata e a coluna. Nada no pescoço nem no alto do ombro.",
+      erradoSe: [
+        "O tronco gira pra puxar → tira um pino e deixa quadril e peito virados pra frente.",
+        "O cotovelo abre pro lado → cola no corpo; aberto puxa pra largura das costas, que você não quer.",
+        "O ombro sobe → desce o ombro antes de puxar.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com o puxador na barriga.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "Polia na altura da barriga. Puxador de uma mão preso no gancho do cabo. Escolhe o peso no pino da pilha. Faz todas as repetições de um lado e depois do outro.",
+    },
+  },
   {
     id: "puxada-frente-maquina",
     name: "Puxada na máquina (frente)",
@@ -714,6 +756,47 @@ export const EXERCISES: Exercise[] = [
         "Desce em 3 segundos.",
         "Pausa de 1 segundo lá embaixo.",
       ],
+    },
+  },
+  // Máquina primeiro (decisão dela, 2026-11-09). A unidade não confirmou essa
+  // máquina, então ela se anuncia "(se tiver)" e o supino com halteres fica
+  // como plano B em todo template.
+  {
+    id: "supino-inclinado-maquina",
+    name: "Supino inclinado na máquina (se tiver)",
+    category: "peitoral",
+    equipment: ["maquina-supino-inclinado"],
+    difficulty: "iniciante",
+    description: "Sentada na máquina de supino inclinado, costas no encosto. Empurra as pegadas pra frente e volta devagar. A máquina guia o caminho, então você foca no peito de cima, que enche o decote. Se a unidade não tiver, o supino inclinado com halteres entra no lugar.",
+    commonMistakes: [
+      "Banco baixo demais (a pegada fica no alto do peito e vira ombro)",
+      "Descolar as costas do encosto pra empurrar",
+      "Deixar a pilha bater na volta",
+    ],
+    exposureLevel: 1,
+    startLoadKg: 10,
+    proTips: [
+      "Pegada na linha do meio do peito: é o que joga o trabalho pro peito de cima e não pro ombro",
+      "Volta devagar sentindo o peito abrir; sobe sem estufar os ombros",
+    ],
+    execucao: {
+      posicao: "Sentada na máquina de supino inclinado, costas e cabeça no encosto, pés firmes no chão, mãos nas pegadas na altura do peito.",
+      movimento: [
+        "Ombros pra trás e pra baixo, peito aberto.",
+        "Empurra as pegadas pra frente até quase esticar os braços.",
+        "Volta devagar até as mãos chegarem perto do peito, sem deixar a pilha bater.",
+      ],
+      ondeSentir: "Peito de cima, perto da clavícula, e parte de trás do braço.",
+      erradoSe: [
+        "Você sente a frente do ombro mais que o peito → sobe o banco um furo e traz os cotovelos um pouco mais perto do corpo.",
+        "As costas descolam do encosto → tira um pino e cola as costas.",
+        "Os ombros sobem pra orelha → desce os ombros antes de empurrar.",
+      ],
+      renderMais: [
+        "Volta em 3 segundos.",
+        "Pausa de 1 segundo com as mãos perto do peito.",
+      ],
+      regulagem: "Altura do banco: sentada, as pegadas ficam na linha do meio do peito, um pouco abaixo da clavícula. Se tiver alavanca pra trazer as pegadas pra perto, usa no começo pra não torcer o ombro. Escolhe o peso no pino da pilha.",
     },
   },
   {

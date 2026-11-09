@@ -15,6 +15,7 @@ export const UNILATERAIS: ReadonlySet<string> = new Set([
   "clamshell",
   "flexora-em-pe",
   "remada-unilateral-halter",
+  "remada-polia-unilateral",
   "kickback",
   "kickback-cabo",
   "coice-gluteo-polia",

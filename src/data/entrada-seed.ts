@@ -12,7 +12,8 @@ import type { WorkoutTemplate } from "../lib/db";
 //
 // A divisão é a da variação (Inferior A · Superior A · Inferior B · Superior B
 // · Inferior C), só com máquina e polia — halter e banco entram na Adaptação.
-// Core de peso do corpo (vacuum, ponte) pode. Teto de 40 min pelo estimador.
+// Teto de 40 min pelo estimador. O vacuum não entra aqui: desde 2026-11-09 ele
+// é diário, no alongamento da manhã em casa (tests/data/maquina-primeiro.test.ts).
 // Travado por tests/data/fase1-chun-li.test.ts e tests/data/entrada-blocos.test.ts.
 //
 // BLOCOS — cada exercício declara onde ele mora na sessão:
@@ -78,15 +79,15 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 2, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "abdutor-band-em-pe", notes: APRENDER },
       { exerciseId: "cadeira-extensora", sets: 2, repsTarget: "12", restSec: 60, block: "maquina", substitutoId: "agachamento-goblet", notes: APRENDER },
       { exerciseId: "adutora-maquina", sets: 2, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "agachamento-sumo", notes: APRENDER },
+      { exerciseId: "hip-thrust-maquina", sets: 2, repsTarget: "15", restSec: 30, block: "maquina", substitutoId: "ponte-gluteo-band", notes: APRENDER },
       { exerciseId: "abducao-quadril-polia", sets: 2, repsTarget: "12 cada", restSec: 30, block: "solo", substitutoId: "abdutor-deitada", notes: APRENDER },
-      { exerciseId: "ponte-gluteo-band", sets: 2, repsTarget: "15", restSec: 30, block: "solo", notes: APRENDER },
     ],
   },
   {
     id: "e1-qui",
     name: "Entrada · Superior B",
     dayOfWeek: 4,
-    durationMin: 24,
+    durationMin: 21,
     cycle: "entrada-1",
     purpose: "Costas, peito de cima e braço de novo, com outros aparelhos. É a base da força de levantar.",
     exercises: [
@@ -95,7 +96,6 @@ const SEMANA_1: WorkoutTemplate[] = [
       { exerciseId: "crucifixo-polia", sets: 2, repsTarget: "12", restSec: 60, block: "solo", substitutoId: "cross-over-cabo", notes: APRENDER },
       { exerciseId: "rosca-polia", sets: 2, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "rosca-martelo", notes: APRENDER },
       { exerciseId: "triceps-polia-corda", sets: 2, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "triceps-testa-barra-w", notes: APRENDER },
-      { exerciseId: "vacuum-abdominal", sets: 2, repsTarget: "30s", restSec: 30, block: "solo", notes: APRENDER },
     ],
   },
   {
@@ -163,15 +163,15 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "abdutor-band-em-pe", notes: "Tronco um pouco inclinado pra frente: puxa pra parte de cima do glúteo" },
       { exerciseId: "cadeira-extensora", sets: 3, repsTarget: "12", restSec: 60, block: "maquina", substitutoId: "agachamento-goblet" },
       { exerciseId: "adutora-maquina", sets: 2, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "agachamento-sumo" },
+      { exerciseId: "hip-thrust-maquina", sets: 3, repsTarget: "15", restSec: 30, block: "maquina", substitutoId: "ponte-gluteo-band", notes: "Leve, como acabamento: aperte o glúteo 1-2 s lá em cima. É a contração que constrói" },
       { exerciseId: "abducao-quadril-polia", sets: 2, repsTarget: "12 cada", restSec: 30, block: "solo", substitutoId: "abdutor-deitada" },
-      { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "15", restSec: 30, block: "solo", notes: "Aperte o glúteo 1-2 s lá em cima. É a contração que constrói" },
     ],
   },
   {
     id: "e2-qui",
     name: "Entrada · Superior B II",
     dayOfWeek: 4,
-    durationMin: 29,
+    durationMin: 24,
     cycle: "entrada-2",
     purpose: "Costas, peito de cima e braço com mais séries. A força de levantar começa a aparecer.",
     exercises: [
@@ -180,7 +180,6 @@ const SEMANA_2: WorkoutTemplate[] = [
       { exerciseId: "crucifixo-polia", sets: 3, repsTarget: "12", restSec: 60, block: "solo", substitutoId: "cross-over-cabo", notes: "De baixo pra cima: é o peito de cima" },
       { exerciseId: "rosca-polia", sets: 2, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "rosca-martelo" },
       { exerciseId: "triceps-polia-corda", sets: 2, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "triceps-testa-barra-w" },
-      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "40s", restSec: 30, block: "solo", notes: "Cinto interno — afina a cintura por dentro, sem engrossar" },
     ],
   },
   {
@@ -248,15 +247,15 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "abdutor-band-em-pe" },
       { exerciseId: "cadeira-extensora", sets: 3, repsTarget: "12", restSec: 60, block: "maquina", substitutoId: "agachamento-goblet" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "agachamento-sumo" },
+      { exerciseId: "hip-thrust-maquina", sets: 3, repsTarget: "20", restSec: 30, block: "maquina", substitutoId: "ponte-gluteo-band", notes: "Leve, como acabamento do glúteo: aperte 1-2 s lá em cima" },
       { exerciseId: "abducao-quadril-polia", sets: 3, repsTarget: "12 cada", restSec: 30, block: "solo", substitutoId: "abdutor-deitada" },
-      { exerciseId: "ponte-gluteo-band", sets: 3, repsTarget: "20", restSec: 30, block: "solo" },
     ],
   },
   {
     id: "e3-qui",
     name: "Entrada · Superior B III",
     dayOfWeek: 4,
-    durationMin: 31,
+    durationMin: 27,
     cycle: "entrada-3",
     purpose: "Último superior da Entrada. Na semana que vem começa a Adaptação e entram halteres e banco.",
     exercises: [
@@ -265,7 +264,6 @@ const SEMANA_3: WorkoutTemplate[] = [
       { exerciseId: "crucifixo-polia", sets: 3, repsTarget: "12", restSec: 60, block: "solo", substitutoId: "cross-over-cabo" },
       { exerciseId: "rosca-polia", sets: 3, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "rosca-martelo" },
       { exerciseId: "triceps-polia-corda", sets: 3, repsTarget: "12", restSec: 45, block: "solo", substitutoId: "triceps-testa-barra-w" },
-      { exerciseId: "vacuum-abdominal", sets: 3, repsTarget: "45s", restSec: 30, block: "solo" },
     ],
   },
   {

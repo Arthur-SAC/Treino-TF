@@ -60,6 +60,7 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "good-morning": "posterior",
   // peito
   "supino-inclinado-halteres": "peito",
+  "supino-inclinado-maquina": "peito",
   "cross-over-cabo": "peito",
   "cross-over-baixo": "peito",
   "voador-maquina": "peito",
@@ -67,6 +68,7 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   // costas
   "remada-baixa-maquina": "costas",
   "remada-unilateral-halter": "costas",
+  "remada-polia-unilateral": "costas",
   "remada-curvada": "costas",
   "face-pull-polia": "costas",
   "face-pull": "costas",

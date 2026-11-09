@@ -23,9 +23,12 @@ describe("kettlebell", () => {
     expect(swing?.difficulty).not.toBe("iniciante");
   });
 
-  it("o swing é programado em algum ciclo de variação em diante", () => {
+  // Máquina primeiro (decisão dela, 2026-11-09): o pull-through na polia é o
+  // principal e o swing ficou como plano B dele. O que a regra protege é o
+  // swing continuar no programa, como exercício OU como substituto.
+  it("o swing continua no programa da variação em diante, como exercício ou plano B", () => {
     const usado = CYCLE_TEMPLATES.some((t) =>
-      t.exercises.some((e) => e.exerciseId === "kettlebell-swing"),
+      t.exercises.some((e) => e.exerciseId === "kettlebell-swing" || e.substitutoId === "kettlebell-swing"),
     );
     expect(usado).toBe(true);
   });

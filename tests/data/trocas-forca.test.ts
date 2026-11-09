@@ -16,8 +16,10 @@ describe("as trocas não fazem a sessão crescer", () => {
     expect(usos.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("a prancha antirrotação entrou", () => {
-    const usos = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "prancha-antirrotacao"));
+  // Máquina primeiro (2026-11-09): o pallof na polia é o principal e a prancha
+  // antirrotação ficou como plano B dele — conta como exercício OU substituto.
+  it("a prancha antirrotação entrou (como exercício ou plano B do pallof)", () => {
+    const usos = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "prancha-antirrotacao" || e.substitutoId === "prancha-antirrotacao"));
     expect(usos.length).toBeGreaterThanOrEqual(4);
   });
 
@@ -27,8 +29,10 @@ describe("as trocas não fazem a sessão crescer", () => {
     expect([...new Set(orfaos)]).toEqual([]);
   });
 
-  it("o vacuum abdominal não foi sacrificado — é a alavanca da cintura dela", () => {
-    const comVacuum = ALL_TEMPLATES.filter((t) => t.exercises.some((e) => e.exerciseId === "vacuum-abdominal"));
-    expect(comVacuum.length).toBeGreaterThanOrEqual(6);
+  // O vacuum saiu da academia em 2026-11-09 e passou a ser diário em casa, no
+  // alongamento da manhã — a regra que protege a alavanca da cintura dela agora
+  // é "vacuum todo dia fora do treino" (tests/data/maquina-primeiro.test.ts).
+  it("o vacuum abdominal não foi sacrificado — continua no catálogo", () => {
+    expect(EXERCISES.some((e) => e.id === "vacuum-abdominal")).toBe(true);
   });
 });

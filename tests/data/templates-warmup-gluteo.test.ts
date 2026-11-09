@@ -21,7 +21,10 @@ describe("aquecimento e glúteo nos templates", () => {
     for (const t of quartas) {
       const ids = t.exercises.map((e) => e.exerciseId);
       expect(ids[0]).toBe("aquecimento-articular");
-      expect(ids).toContain("ponte-gluteo-band");
+      // Máquina primeiro (2026-11-09): o fecho de glúteo da quarta é o hip
+      // thrust na máquina, leve, com a ponte como plano B dele.
+      const subs = t.exercises.map((e) => e.substitutoId);
+      expect({ id: t.id, ponte: ids.includes("ponte-gluteo-band") || subs.includes("ponte-gluteo-band") }).toEqual({ id: t.id, ponte: true });
       // Desde 2026-11-09 (Smartfit) o glúteo médio da quarta pode vir da
       // abdutora, da polia ou do solo — o que importa é ele estar lá.
       expect({ id: t.id, medio: ids.some((id) => GRUPO_DO_EXERCICIO[id] === "gluteo-medio") }).toEqual({ id: t.id, medio: true });
