@@ -101,12 +101,12 @@ export function MealsToday() {
                 <button
                   type="button"
                   onClick={() => void toggleMeal(type, foods)}
-                  className={`w-6 h-6 rounded-md flex-shrink-0 border ${
+                  className={`relative after:absolute after:-inset-3 after:content-[''] w-6 h-6 rounded-md flex-shrink-0 border ${
                     checked ? "bg-nude border-nude" : "bg-bg-deep border-bg-border"
                   }`}
                   aria-label={checked ? "Feito" : "Não feito"}
                 >
-                  {checked && <span className="text-bg-base text-xs">✓</span>}
+                  {checked && <span className="text-white text-xs">✓</span>}
                 </button>
                 <div className="flex-1 min-w-0 flex justify-between items-baseline">
                   <h3 className={`font-medium ${checked ? "text-muted line-through" : "text-nude-warm"}`}>

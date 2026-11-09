@@ -65,7 +65,7 @@ export function PitchMeter({ targetLowHz, targetHighHz }: Props) {
 
   return (
     <div>
-      {error && <p className="text-red-300 text-sm mb-2">{error}</p>}
+      {error && <p className="text-verm-3 text-sm mb-2">{error}</p>}
       <div className="flex items-center justify-between mb-2">
         <span className={`font-serif text-3xl tabular-nums ${label === "alvo" ? "text-nude" : "text-nude-warm"}`}>
           {hz !== null ? `${Math.round(hz)} Hz` : "— Hz"}
@@ -79,7 +79,7 @@ export function PitchMeter({ targetLowHz, targetHighHz }: Props) {
       <button
         type="button"
         onClick={() => setOn((v) => !v)}
-        className={`w-full rounded-md py-2 text-sm ${on ? "bg-red-900/40 border border-red-900 text-red-200" : "bg-bg-deep border border-bg-border text-muted"}`}
+        className={`w-full rounded-md py-2 text-sm ${on ? "bg-wine border border-verm/40 text-verm-3" : "bg-bg-deep border border-bg-border text-muted"}`}
       >
         {on ? "■ Parar microfone" : "● Ligar microfone"}
       </button>

@@ -111,7 +111,7 @@ export function DepilacaoHome() {
             </div>
             {s.cost !== undefined && <p className="text-muted text-xs">R$ {s.cost.toFixed(2)}</p>}
             {s.notes && <p className="text-muted text-sm mt-1">{s.notes}</p>}
-            <button onClick={() => void remove(s.id)} type="button" className="text-muted text-xs hover:text-red-300 mt-1">apagar</button>
+            <button onClick={() => void remove(s.id)} type="button" className="text-muted text-xs hover:text-verm-3 mt-1">apagar</button>
           </div>
         ))}
         {(sessions?.length ?? 0) === 0 && <p className="text-muted text-sm text-center py-4">Sem registros ainda.</p>}

@@ -99,7 +99,7 @@ export function ComboDetail() {
 
       {outfit.notes && <p className="text-muted text-sm mb-3">{outfit.notes}</p>}
 
-      <button onClick={() => void remove()} type="button" className="text-muted text-xs hover:text-red-300">
+      <button onClick={() => void remove()} type="button" className="text-muted text-xs hover:text-verm-3">
         apagar combinação
       </button>
     </div>

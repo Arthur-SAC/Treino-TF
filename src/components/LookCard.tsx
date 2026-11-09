@@ -24,7 +24,7 @@ export function LookCard({ look, onDelete }: Props) {
       <p className="text-muted text-xs mt-0.5">{formatDateBR(new Date(look.date))}</p>
       {look.notes && <p className="text-muted text-xs mt-1">{look.notes}</p>}
       {onDelete && (
-        <button onClick={onDelete} type="button" className="text-muted text-xs hover:text-red-300 mt-1">
+        <button onClick={onDelete} type="button" className="text-muted text-xs hover:text-verm-3 mt-1">
           apagar
         </button>
       )}

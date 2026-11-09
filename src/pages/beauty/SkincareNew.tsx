@@ -91,7 +91,7 @@ export function SkincareNew() {
                 <div className="flex justify-between items-baseline">
                   <span className="text-muted text-xs">Passo {i + 1}</span>
                   {steps.length > 1 && (
-                    <button type="button" onClick={() => removeStep(i)} className="text-muted text-xs hover:text-red-300">
+                    <button type="button" onClick={() => removeStep(i)} className="text-muted text-xs hover:text-verm-3">
                       remover
                     </button>
                   )}

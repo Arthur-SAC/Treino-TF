@@ -61,7 +61,7 @@ export function VoiceRecordings() {
               {r.avgPitchHz !== undefined && ` · ~${r.avgPitchHz} Hz · ${classifyPitch(r.avgPitchHz, targetLow, targetHigh)}`}
             </p>
             <RecordingPlayer blob={r.blob} />
-            <button onClick={() => void remove(r.id)} type="button" className="text-muted text-xs hover:text-red-300 mt-1">
+            <button onClick={() => void remove(r.id)} type="button" className="text-muted text-xs hover:text-verm-3 mt-1">
               apagar
             </button>
           </div>

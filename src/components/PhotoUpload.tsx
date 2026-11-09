@@ -75,7 +75,7 @@ export function PhotoUpload({ onUpload }: Props) {
           className="hidden"
         />
       </label>
-      {error && <p className="text-red-300 text-sm">{error}</p>}
+      {error && <p className="text-verm-3 text-sm">{error}</p>}
     </div>
   );
 }

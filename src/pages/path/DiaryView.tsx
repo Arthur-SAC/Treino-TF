@@ -2,7 +2,7 @@ import { Voltar } from "../../components/Voltar";
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type DailyLog } from "../../lib/db";
-import { MoodPicker } from "../../components/MoodPicker";
+import { MoodPicker, COLORS } from "../../components/MoodPicker";
 import { formatDateBR } from "../../lib/format";
 import { hojeISO } from "../../lib/today-date";
 
@@ -72,7 +72,7 @@ export function DiaryView() {
             <div className="flex justify-between items-baseline mb-1">
               <span className="text-nude-warm text-sm">{formatDateBR(new Date(r.date))}</span>
               {r.mood && (
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: ["#3a1419", "#5c1a2b", "#8b3a4a", "#a87a6a", "#d4a373"][r.mood - 1] }} />
+                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[r.mood] }} />
               )}
             </div>
             {r.notes && <p className="text-sm text-muted">{r.notes}</p>}

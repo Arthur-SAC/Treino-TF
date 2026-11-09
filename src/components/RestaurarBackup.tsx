@@ -40,7 +40,7 @@ export function RestaurarBackup({ rotulo = "Importar backup", onPronto }: { rotu
           onChange={(e) => e.target.files?.[0] && void importar(e.target.files[0])} />
       </label>
       {ok && <p className="text-nude text-sm mt-1">Backup importado.</p>}
-      {erro && <p className="text-red-300 text-sm mt-1">{erro}</p>}
+      {erro && <p className="text-verm-3 text-sm mt-1">{erro}</p>}
     </div>
   );
 }

@@ -12,15 +12,16 @@ interface Props {
 
 export function TodayCard({ title, subtitle, note, to, variant = "default", rightSlot }: Props) {
   const base = "card block transition";
-  const variantCls = variant === "highlight" ? "bg-wine/40 border-wine-light" : "hover:border-nude/40";
+  const variantCls = variant === "highlight" ? "bg-gradient-to-br from-verm to-verm-2 border-verm-3 text-white shadow-lg shadow-verm-3/30" : "hover:border-nude/40";
+  const claro = variant === "highlight";
   const inner = (
     <>
       <div className="flex justify-between items-baseline">
-        <h3 className="text-nude-warm font-medium">{title}</h3>
+        <h3 className={`font-medium ${claro ? "text-white" : "text-nude-warm"}`}>{title}</h3>
         {rightSlot}
       </div>
-      {subtitle && <p className="text-muted text-sm mt-1">{subtitle}</p>}
-      {note && <p className="text-muted text-xs mt-1 opacity-80">{note}</p>}
+      {subtitle && <p className={`text-sm mt-1 ${claro ? "text-white/90" : "text-muted"}`}>{subtitle}</p>}
+      {note && <p className={`text-xs mt-1 opacity-80 ${claro ? "text-white" : "text-muted"}`}>{note}</p>}
     </>
   );
   if (to) {

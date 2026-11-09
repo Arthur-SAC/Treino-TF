@@ -1,3 +1,4 @@
+import { PALETA } from "../lib/contraste";
 interface DataPoint {
   date: string;
   value: number;
@@ -10,7 +11,7 @@ interface Props {
   color?: string;
 }
 
-export function MeasurementChart({ data, unit = "cm", height = 140, color = "#d4a373" }: Props) {
+export function MeasurementChart({ data, unit = "cm", height = 140, color = PALETA.verm }: Props) {
   if (data.length < 2) {
     return <p className="text-muted text-sm text-center py-3">Pelo menos 2 medidas pra ver evolução.</p>;
   }
@@ -37,10 +38,10 @@ export function MeasurementChart({ data, unit = "cm", height = 140, color = "#d4
       {data.map((d, i) => {
         const cx = padding + i * stepX;
         const cy = padding + (1 - (d.value - min) / range) * (h - padding * 2);
-        return <circle key={i} cx={cx} cy={cy} r={2.5} fill="#f4e4d6" />;
+        return <circle key={i} cx={cx} cy={cy} r={2.5} fill={PALETA.card} stroke={PALETA.verm} strokeWidth={1.5} />;
       })}
-      <text x={padding} y={padding - 6} fontSize={9} fill="#a87a6a">{max.toFixed(1)} {unit}</text>
-      <text x={padding} y={h - 6} fontSize={9} fill="#a87a6a">{min.toFixed(1)} {unit}</text>
+      <text x={padding} y={padding - 6} fontSize={9} fill={PALETA.texto2}>{max.toFixed(1)} {unit}</text>
+      <text x={padding} y={h - 6} fontSize={9} fill={PALETA.texto2}>{min.toFixed(1)} {unit}</text>
     </svg>
   );
 }

@@ -101,7 +101,7 @@ export function WishlistView() {
           <div key={it.id} className="card">
             <div className="flex justify-between items-baseline mb-1">
               <span className="text-muted text-xs uppercase tracking-wider">{it.category}</span>
-              <button onClick={() => void remove(it.id)} className="text-muted text-xs hover:text-red-300" type="button">
+              <button onClick={() => void remove(it.id)} className="text-muted text-xs hover:text-verm-3" type="button">
                 apagar
               </button>
             </div>

@@ -209,12 +209,12 @@ export function VoiceDetail() {
         <p className="text-muted text-xs mb-3">
           30-60s da sua voz neste exercício. Compare gravações ao longo do tempo pra ouvir evolução real.
         </p>
-        {recError && <p className="text-red-300 text-sm mb-2">{recError}</p>}
+        {recError && <p className="text-verm-3 text-sm mb-2">{recError}</p>}
         <button
           type="button"
           onClick={recording ? stopRecording : startRecording}
           className={`w-full rounded-md py-2 text-sm ${
-            recording ? "bg-red-900/40 border border-red-900 text-red-200" : "bg-bg-deep border border-bg-border text-muted"
+            recording ? "bg-wine border border-verm/40 text-verm-3" : "bg-bg-deep border border-bg-border text-muted"
           }`}
         >
           {recording ? "■ Parar gravação" : "● Gravar voz"}

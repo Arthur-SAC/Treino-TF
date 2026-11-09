@@ -1,3 +1,4 @@
+import { PALETA } from "../lib/contraste";
 interface DataPoint {
   date: string;
   weight: number;
@@ -39,14 +40,14 @@ export function ProgressionChart({ data, height = 160 }: Props) {
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" xmlns="http://www.w3.org/2000/svg">
-      <polyline points={points} fill="none" stroke="#d4a373" strokeWidth={1.5} strokeLinejoin="round" />
+      <polyline points={points} fill="none" stroke={PALETA.verm} strokeWidth={1.5} strokeLinejoin="round" />
       {data.map((d, i) => {
         const x = padding + i * stepX;
         const y = padding + (1 - (d.weight - min) / range) * (h - padding * 2);
-        return <circle key={i} cx={x} cy={y} r={2.5} fill="#f4e4d6" />;
+        return <circle key={i} cx={x} cy={y} r={2.5} fill={PALETA.card} stroke={PALETA.verm} strokeWidth={1.5} />;
       })}
-      <text x={padding} y={padding - 4} fontSize={10} fill="#a87a6a">{max} kg</text>
-      <text x={padding} y={h - 4} fontSize={10} fill="#a87a6a">{min} kg</text>
+      <text x={padding} y={padding - 4} fontSize={10} fill={PALETA.texto2}>{max} kg</text>
+      <text x={padding} y={h - 4} fontSize={10} fill={PALETA.texto2}>{min} kg</text>
     </svg>
   );
 }

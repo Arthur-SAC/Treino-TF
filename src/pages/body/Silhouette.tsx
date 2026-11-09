@@ -256,14 +256,14 @@ export function Silhouette() {
 
       {/* Trava de cintura */}
       {guard.triggered && (
-        <div className="card border-red-900 bg-red-900/20 space-y-1">
-          <h2 className="text-red-200 font-medium">Trava de cintura</h2>
-          <p className="text-red-200 text-sm">
+        <div className="card border-verm/40 bg-wine space-y-1">
+          <h2 className="text-verm-3 font-medium">Trava de cintura</h2>
+          <p className="text-verm-3 text-sm">
             Sua cintura subiu {guard.deltaCm} cm desde a última medida durante o superávit. No seu
             corpo isso é gordura na barriga, não glúteo. Considere segurar o superávit ou voltar à
             manutenção.
           </p>
-          <p className="text-red-200/80 text-xs">
+          <p className="text-verm-3/80 text-xs">
             Meta prática: tolere até ~1–1,5 cm de cintura no superávit <strong>se</strong> o quadril
             cresceu mais que isso no mesmo período — aí a silhueta ainda melhora. Se a cintura sobe
             sozinha (quadril parado), segure já.

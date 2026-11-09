@@ -46,7 +46,7 @@ function Box({ done }: { done: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className={`flex-none w-5 h-5 mt-0.5 rounded-md border flex items-center justify-center text-xs transition-colors duration-200 ${done ? "bg-nude border-nude text-bg-deep" : "border-muted text-transparent"} ${pulou ? "marca-pop" : ""}`}
+      className={`flex-none w-5 h-5 mt-0.5 rounded-md border flex items-center justify-center text-xs transition-colors duration-200 ${done ? "bg-nude border-nude text-white" : "border-muted text-transparent"} ${pulou ? "marca-pop" : ""}`}
     >
       ✓
     </span>

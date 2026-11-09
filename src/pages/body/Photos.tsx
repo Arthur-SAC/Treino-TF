@@ -80,7 +80,7 @@ export function Photos() {
             </div>
             <button
               onClick={() => handleDelete(p.id)}
-              className="text-muted text-xs hover:text-red-300 mt-1"
+              className="text-muted text-xs hover:text-verm-3 mt-1"
               type="button"
             >
               apagar

@@ -62,7 +62,7 @@ export function SkincareDetail() {
       <button
         type="button"
         onClick={() => void handleDelete()}
-        className="mt-6 text-muted text-xs hover:text-red-300"
+        className="mt-6 text-muted text-xs hover:text-verm-3"
       >
         Apagar rotina
       </button>

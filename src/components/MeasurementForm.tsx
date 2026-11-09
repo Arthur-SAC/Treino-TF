@@ -140,7 +140,7 @@ export function MeasurementForm({ initial, onSubmit }: Props) {
         />
       </div>
       {errors.length > 0 && (
-        <ul className="text-red-300 text-sm space-y-1">
+        <ul className="text-verm-3 text-sm space-y-1">
           {errors.map((er) => (
             <li key={er}>{er}</li>
           ))}

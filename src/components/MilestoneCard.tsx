@@ -41,7 +41,7 @@ export function MilestoneCard({ milestone, onComplete, onDelete }: Props) {
           </button>
         )}
         {onDelete && (
-          <button onClick={onDelete} type="button" className="text-muted text-xs hover:text-red-300">
+          <button onClick={onDelete} type="button" className="text-muted text-xs hover:text-verm-3">
             apagar
           </button>
         )}

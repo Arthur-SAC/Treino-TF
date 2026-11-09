@@ -33,7 +33,7 @@ export function SkincareRoutineModal({ time, onClose }: { time: SkincareRoutine[
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 p-4"
       onClick={onClose}
     >
       <div

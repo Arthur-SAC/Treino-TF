@@ -11,13 +11,13 @@ const LABELS: Record<number, string> = {
   5: "Ótimo",
 };
 
-// 5 círculos com intensidade crescente de cor (de wine escuro a nude claro)
-const COLORS: Record<number, string> = {
-  1: "#3a1419",
-  2: "#5c1a2b",
-  3: "#8b3a4a",
-  4: "#a87a6a",
-  5: "#d4a373",
+// 5 círculos com intensidade crescente de cor (de cinza-rosado a coral claro)
+export const COLORS: Record<number, string> = {
+  1: "#8a6a68",
+  2: "#9e1430",
+  3: "#c81d3a",
+  4: "#e23b3b",
+  5: "#f08a7e",
 };
 
 export function MoodPicker({ value, onChange }: Props) {

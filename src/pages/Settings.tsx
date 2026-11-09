@@ -126,7 +126,7 @@ export function Settings() {
       </div>
 
       {info && <p className="text-nude text-sm">{info}</p>}
-      {error && <p className="text-red-300 text-sm">{error}</p>}
+      {error && <p className="text-verm-3 text-sm">{error}</p>}
 
       <div className="card space-y-3">
         <h2 className="text-nude-warm font-medium">Caminhadas agora</h2>
@@ -161,7 +161,7 @@ export function Settings() {
                   type="button"
                   aria-label={`Tem sim: ${nome}`}
                   onClick={() => void setSetting("aparelhosAusentes", ausentes.filter((a) => a !== id))}
-                  className="px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-nude"
+                  className="px-3 min-h-11 rounded-md text-xs bg-bg-deep border border-bg-border text-nude"
                 >
                   Tem sim
                 </button>
@@ -322,7 +322,7 @@ export function Settings() {
         ) : (
           <p className="text-muted text-xs">No Android, adicione o app na lista "Não otimizar bateria" pra notificações chegarem em tempo.</p>
         )}
-        <button onClick={() => void wipeAll()} className="w-full bg-red-900/40 border border-red-900 text-red-200 rounded-md py-2 text-sm">
+        <button onClick={() => void wipeAll()} className="w-full bg-wine border border-verm/40 text-verm-3 rounded-md py-2 text-sm">
           Apagar TUDO
         </button>
       </div>

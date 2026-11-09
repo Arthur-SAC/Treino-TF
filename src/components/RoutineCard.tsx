@@ -27,12 +27,12 @@ export function RoutineCard({ routine, done, onToggle }: Props) {
         <button
           type="button"
           onClick={onToggle}
-          className={`w-6 h-6 rounded-md flex-shrink-0 border ${
+          className={`relative after:absolute after:-inset-3 after:content-[''] w-6 h-6 rounded-md flex-shrink-0 border ${
             done ? "bg-nude border-nude" : "bg-bg-deep border-bg-border"
           }`}
           aria-label={done ? "Feito" : "Não feito"}
         >
-          {done && <span className="text-bg-base text-xs">✓</span>}
+          {done && <span className="text-white text-xs">✓</span>}
         </button>
       )}
       <Link to={`/beleza/pele-cabelo/skincare/${routine.id}`} className="flex-1 min-w-0">

@@ -194,7 +194,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   // Série marcada ✓ e ainda não salva se perderia no remount da troca: some também.
   const temSerieFeita = sets.some((s) => s.done);
   const podeTrocar = !salvou && !temSerieFeita;
-  const botaoTroca = "px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-muted";
+  const botaoTroca = "px-3 min-h-11 rounded-md text-xs bg-bg-deep border border-bg-border text-muted";
   const trocas = (
     <>
       {(onOcupado || onNaoTemAqui) && podeTrocar && (
@@ -346,8 +346,8 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
             <button
               type="button"
               onClick={() => toggleDone(i)}
-              className={`w-7 h-7 rounded-md flex items-center justify-center text-sm ${
-                s.done ? "bg-nude text-bg-base" : "bg-bg-deep border border-bg-border text-muted"
+              className={`relative after:absolute after:-inset-2 after:content-[''] w-7 h-7 rounded-md flex items-center justify-center text-sm ${
+                s.done ? "bg-nude text-white" : "bg-bg-deep border border-bg-border text-muted"
               }`}
               aria-label={s.done ? "Feita" : "Marcar feita"}
             >
