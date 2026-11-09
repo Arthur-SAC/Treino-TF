@@ -23,4 +23,7 @@ describe("paleta A: contraste", () => {
   it("branco sobre feito (ícone) >= 3", () => {
     expect(contraste("#ffffff", PALETA.feito)).toBeGreaterThanOrEqual(3);
   });
+  it("branco sobre verm (T do ícone, glifo grande) >= 3", () => {
+    expect(contraste("#ffffff", PALETA.verm)).toBeGreaterThanOrEqual(3);
+  });
 });
