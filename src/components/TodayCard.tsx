@@ -12,7 +12,7 @@ interface Props {
 
 export function TodayCard({ title, subtitle, note, to, variant = "default", rightSlot }: Props) {
   const base = "card block transition";
-  const variantCls = variant === "highlight" ? "bg-gradient-to-br from-verm to-verm-2 border-verm-3 text-white shadow-lg shadow-verm-3/30" : "hover:border-nude/40";
+  const variantCls = variant === "highlight" ? "bg-gradient-to-br from-verm-2 to-verm-3 border-verm-3 text-white shadow-lg shadow-verm-3/30" : "hover:border-nude/40";
   const claro = variant === "highlight";
   const inner = (
     <>
@@ -20,8 +20,8 @@ export function TodayCard({ title, subtitle, note, to, variant = "default", righ
         <h3 className={`font-medium ${claro ? "text-white" : "text-nude-warm"}`}>{title}</h3>
         {rightSlot}
       </div>
-      {subtitle && <p className={`text-sm mt-1 ${claro ? "text-white/90" : "text-muted"}`}>{subtitle}</p>}
-      {note && <p className={`text-xs mt-1 opacity-80 ${claro ? "text-white" : "text-muted"}`}>{note}</p>}
+      {subtitle && <p className={`text-sm mt-1 ${claro ? "text-white" : "text-muted"}`}>{subtitle}</p>}
+      {note && <p className={`text-xs mt-1 ${claro ? "text-white" : "text-muted opacity-80"}`}>{note}</p>}
     </>
   );
   if (to) {

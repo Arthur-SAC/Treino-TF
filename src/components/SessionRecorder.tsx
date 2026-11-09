@@ -346,7 +346,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
             <button
               type="button"
               onClick={() => toggleDone(i)}
-              className={`relative after:absolute after:-inset-2 after:content-[''] w-7 h-7 rounded-md flex items-center justify-center text-sm ${
+              className={`relative after:absolute after:-inset-y-2 after:-right-2 after:-left-1 after:content-[''] w-7 h-7 rounded-md flex items-center justify-center text-sm ${
                 s.done ? "bg-nude text-white" : "bg-bg-deep border border-bg-border text-muted"
               }`}
               aria-label={s.done ? "Feita" : "Marcar feita"}

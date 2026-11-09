@@ -13,7 +13,7 @@ const LABELS: Record<number, string> = {
 
 // 5 círculos com intensidade crescente de cor (de cinza-rosado a coral claro)
 export const COLORS: Record<number, string> = {
-  1: "#8a6a68",
+  1: "#7d5f5d",
   2: "#9e1430",
   3: "#c81d3a",
   4: "#e23b3b",

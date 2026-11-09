@@ -4,7 +4,7 @@ export const PALETA = {
   card: "#ffffff",
   borda: "#f0d9d4",
   texto: "#2a1416",
-  texto2: "#8a6a68",
+  texto2: "#7d5f5d",
   verm: "#e23b3b",
   verm2: "#c81d3a",
   verm3: "#9e1430",

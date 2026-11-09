@@ -26,4 +26,12 @@ describe("paleta A: contraste", () => {
   it("branco sobre verm (T do ícone, glifo grande) >= 3", () => {
     expect(contraste("#ffffff", PALETA.verm)).toBeGreaterThanOrEqual(3);
   });
+  it("branco sobre verm3 (fim do gradiente do card) >= 4.5", () => {
+    expect(contraste("#ffffff", PALETA.verm3)).toBeGreaterThanOrEqual(4.5);
+  });
+  it("texto2 (muted) sobre trilho, fundo e wine >= 4.5", () => {
+    expect(contraste(PALETA.texto2, PALETA.trilho)).toBeGreaterThanOrEqual(4.5);
+    expect(contraste(PALETA.texto2, PALETA.fundo)).toBeGreaterThanOrEqual(4.5);
+    expect(contraste(PALETA.texto2, "#fde4e0")).toBeGreaterThanOrEqual(4.5);
+  });
 });
