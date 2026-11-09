@@ -48,7 +48,7 @@ export const DESBLOQUEIOS: readonly Desbloqueio[] = [
   },
   {
     id: "assoalho-1", patamar: 5, titulo: "Assoalho pélvico nível 1",
-    entra: "À noite, antes do alongamento, entra a identificação: achar o músculo do assoalho, deitada.",
+    entra: "À noite, às 21h20, entra a identificação: achar o músculo do assoalho, deitada.",
     praQue: "Sem achar o músculo certo, todo exercício seguinte aperta barriga, bumbum ou coxa no lugar dele.",
     minutos: duracao(SEQ_ASSOALHO_1), horario: "21:20",
   },
@@ -159,6 +159,7 @@ function nivelDoItem(i: RoutineItem, ja: Desbloqueados): RoutineItem {
       return {
         ...semChaves(i, "linkKey"),
         label: `Assoalho pélvico · ${duracao(SEQ_ASSOALHO_1)} min`,
+        subtitle: "Achar o músculo certo, deitada",
         to: `/treino/movimento/${SEQ_ASSOALHO_1}`,
       };
     case "skincare-noite":

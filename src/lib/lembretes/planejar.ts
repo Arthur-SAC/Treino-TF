@@ -30,6 +30,9 @@ export interface ConfigLembretes {
   activeBreakIntervalMin: number;
   hydrationIntervalMin: number;
   hydrationGoalMl: number;
+  /** Ids de item do Hoje trancados pelo nível (`idsTrancados`): lembrete de
+   *  mecânica trancada não toca (spec 2026-11-09, seção 8). */
+  trancados: ReadonlySet<string>;
 }
 
 export interface EstadoLembretes {
@@ -74,8 +77,10 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
   const hoje = hojeISO(agora);
   const limite = agora.getTime() + JANELA_DIAS * 86400000;
   const saida: Lembrete[] = [];
-  const add = (tipo: number, dia: Date, seq: number, quando: Date, titulo: string, corpo: string, rota = "/", extra: { acao?: Lembrete["acao"]; itemId?: string } = {}) =>
+  const add = (tipo: number, dia: Date, seq: number, quando: Date, titulo: string, corpo: string, rota = "/", extra: { acao?: Lembrete["acao"]; itemId?: string } = {}) => {
+    if (extra.itemId && cfg.trancados.has(extra.itemId)) return;
     saida.push({ id: idDe(tipo, dia, seq), quando, titulo, corpo, rota, dia: hojeISO(dia), ...extra });
+  };
 
   const medirDesde = estado.ultimaMedida ? somarDias(estado.ultimaMedida, 14) : somarDias(hoje, 0);
 

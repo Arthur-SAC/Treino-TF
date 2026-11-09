@@ -3,6 +3,7 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { Today } from "../../src/pages/Today";
+import { desbloquearTudo } from "../helpers/desbloquear";
 import { hojeISO } from "../../src/lib/today-date";
 
 const todayISO = hojeISO();
@@ -11,6 +12,8 @@ const todayDow = new Date().getDay();
 describe("Today — cards de treino", () => {
   beforeEach(async () => {
     await db.dailyLog.clear();
+    // A Postura tranca no nível (patamar 20): aqui o que importa é o item.
+    await desbloquearTudo();
   });
 
   // Ancorado em itens presentes todo dia (Água/Postura) — o item "Treino do dia"

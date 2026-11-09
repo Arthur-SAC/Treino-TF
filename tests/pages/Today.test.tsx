@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
+import { desbloquearTudo } from "../helpers/desbloquear";
 import { hojeISO } from "../../src/lib/today-date";
 import { RECOMECO_DATA } from "../../src/lib/objetivo";
 import {
@@ -25,6 +26,8 @@ beforeEach(async () => {
   await db.measurements.clear();
   await db.settings.put({ key: "activeCycle", value: "adaptacao" });
   await db.mealPlans.add({ ...INITIAL_PLAN });
+  // Estes testes olham as mecânicas, não o nível (ver hoje-niveis.test.tsx).
+  await desbloquearTudo();
 });
 
 describe("Today (backbone)", () => {
@@ -32,7 +35,8 @@ describe("Today (backbone)", () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
     expect(await screen.findByText("Manhã")).toBeInTheDocument();
     expect(screen.getByText("No trabalho")).toBeInTheDocument();
-    expect(screen.getByText("Noite")).toBeInTheDocument();
+    // Noite só tem extras trancáveis: espera os desbloqueios chegarem do banco.
+    expect(await screen.findByText("Noite")).toBeInTheDocument();
   });
 
   it("o item Postura leva pra sequência do dia e mostra a duração", async () => {

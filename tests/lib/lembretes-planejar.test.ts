@@ -20,6 +20,7 @@ const cfg: ConfigLembretes = {
   activeBreakIntervalMin: 90,
   hydrationIntervalMin: 60,
   hydrationGoalMl: 3000,
+  trancados: new Set(),
 };
 const vazio: EstadoLembretes = {
   feitosHoje: new Set(), aguaHojeMl: 0, treinouHoje: false,
@@ -231,5 +232,19 @@ describe("planejar — botões de ação e dia do lembrete", () => {
   });
   it("todo lembrete leva o ISO do dia em que toca", () => {
     for (const l of lista) expect(l.dia).toBe(hojeISO(l.quando));
+  });
+});
+
+describe("planejar — mecânica trancada não toca", () => {
+  const noites = (l: ReturnType<typeof planejar>) => l.filter((x) => x.itemId === "alongamento-noite");
+  it("com o alongamento da noite trancado, nenhum lembrete dele", () => {
+    const l = planejar(QUINTA_5H, { ...cfg, trancados: new Set(["alongamento-noite"]) }, vazio);
+    expect(noites(l)).toEqual([]);
+    // O resto do dia segue: o da manhã continua tocando.
+    expect(l.some((x) => x.itemId === "alongamento-manha")).toBe(true);
+  });
+  it("sem nada trancado, toca como sempre", () => {
+    const l = planejar(QUINTA_5H, cfg, vazio);
+    expect(noites(l).map((x) => `${hojeISO(x.quando)} ${hhmm(x.quando)} ${x.titulo}`)[0]).toBe("2026-09-24 21:30 Alongamento");
   });
 });

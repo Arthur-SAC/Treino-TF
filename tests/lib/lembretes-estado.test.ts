@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { carregarEstado, carregarConfig } from "../../src/lib/lembretes/estado";
 import { SEQUENCIAS_FLEX } from "../../src/lib/flex-progression";
+import { setSetting } from "../../src/lib/settings-helpers";
 
 const AGORA = new Date(2026, 8, 28, 5, 0); // segunda
 beforeEach(async () => {
@@ -53,5 +54,10 @@ describe("carregarConfig", () => {
     const c = await carregarConfig();
     expect(c.alongamentoManhaTime).toBe("06:00");
     expect(c.dormirReminderTime).toBe("22:00");
+  });
+  it("banco novo: o que está fora do núcleo vem trancado; desbloqueado sai da lista", async () => {
+    expect((await carregarConfig()).trancados.has("alongamento-noite")).toBe(true);
+    await setSetting("desbloqueios", { "alongamento-noite": "2026-11-01" });
+    expect((await carregarConfig()).trancados.has("alongamento-noite")).toBe(false);
   });
 });

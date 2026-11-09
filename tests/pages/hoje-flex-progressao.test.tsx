@@ -13,6 +13,7 @@ import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
+import { desbloquearTudo } from "../helpers/desbloquear";
 import { hojeISO } from "../../src/lib/today-date";
 import { flexDoDia, ATE_FLEX_FASE_2 } from "../../src/lib/flex-progression";
 import { rotuloFlexDoDia } from "../../src/lib/sequence-label";
@@ -31,6 +32,8 @@ beforeEach(async () => {
   await db.practiceLogs.clear();
   await db.settings.put({ key: "activeCycle", value: "adaptacao" });
   await db.mealPlans.add({ ...INITIAL_PLAN });
+  // Estes testes olham as mecânicas, não o nível (ver hoje-niveis.test.tsx).
+  await desbloquearTudo();
 });
 
 /** Semeia `n` práticas concluídas de UMA sequência — é o que move a fase de

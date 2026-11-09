@@ -7,6 +7,7 @@ import { getSetting } from "../settings-helpers";
 import { hojeISO, ultimosDiasISO } from "../today-date";
 import { praticadaHoje } from "../practice-log-helpers";
 import { SEQUENCIAS_FLEX } from "../flex-progression";
+import { idsTrancados } from "../desbloqueios";
 import type { ConfigLembretes, EstadoLembretes } from "./planejar";
 
 export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
@@ -55,5 +56,6 @@ export async function carregarConfig(): Promise<ConfigLembretes> {
     activeBreakIntervalMin: await getSetting("activeBreakIntervalMin"),
     hydrationIntervalMin: await getSetting("hydrationIntervalMin"),
     hydrationGoalMl: await getSetting("hydrationGoalMl"),
+    trancados: idsTrancados(await getSetting("desbloqueios")),
   };
 }

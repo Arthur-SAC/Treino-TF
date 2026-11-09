@@ -3,6 +3,7 @@ import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay }
 import { getSetting, setSetting } from "./settings-helpers";
 import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { hojeISO } from "./today-date";
+import { idsTrancados } from "./desbloqueios";
 
 /** Aparece na tela de bloqueio — visível pra quem pegar o celular dela. Não
  *  descreve o que a sequência é (tests/lib/discricao-rotulos.test.ts). */
@@ -23,6 +24,19 @@ export async function praticouPosturaHoje(hoje: string): Promise<boolean> {
       .and((p) => ids.includes(p.sequenceId))
       .count()) > 0
   );
+}
+
+/** Skincare da noite: uma vez por dia, depois do horário — e só se o item
+ *  estiver aberto no Hoje (lembrete de mecânica trancada não toca). */
+export function lembrarSkincareNoite(o: {
+  currentMin: number;
+  eveningMin: number;
+  lastEvening: string;
+  todayISO: string;
+  trancados: ReadonlySet<string>;
+}): boolean {
+  if (o.trancados.has("skincare-noite")) return false;
+  return o.currentMin >= o.eveningMin && o.lastEvening !== o.todayISO;
 }
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -79,6 +93,7 @@ async function tick() {
   const todayISO = hojeISO(now);
   const lastMorning = await getSetting("lastSkincareMorningAt");
   const lastEvening = await getSetting("lastSkincareEveningAt");
+  const trancados = idsTrancados(await getSetting("desbloqueios"));
 
   const [mH, mM] = morningTime.split(":").map(Number);
   const [eH, eM] = eveningTime.split(":").map(Number);
@@ -91,7 +106,7 @@ async function tick() {
     notify("Skincare matinal", "Comece o dia com a sua rotina de rosto");
     await setSetting("lastSkincareMorningAt", todayISO);
   }
-  if (currentMin >= eveningMin && lastEvening !== todayISO) {
+  if (lembrarSkincareNoite({ currentMin, eveningMin, lastEvening, todayISO, trancados })) {
     notify("Skincare noturno", "Hora da rotina noturna antes de dormir");
     await setSetting("lastSkincareEveningAt", todayISO);
   }
@@ -101,7 +116,8 @@ async function tick() {
   const lastPresenca = await getSetting("lastPresencaReminderAt");
   const [prH, prM] = presencaTime.split(":").map(Number);
   const presencaMin = prH * 60 + prM;
-  if (!Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
+  // Pergunta pela postura (é a trilha que ele confere): trancada no Hoje, não toca.
+  if (!trancados.has("postura") && !Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
     const presencaDone = await praticouPosturaHoje(todayISO);
     if (shouldRemindOncePerDay({ currentMin, targetMin: presencaMin, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
       notify(NOTIFICACAO_NOITE.titulo, NOTIFICACAO_NOITE.corpo);

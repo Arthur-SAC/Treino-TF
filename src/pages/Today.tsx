@@ -52,6 +52,8 @@ import { setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
+import { filtrarRotina, proximoDesbloqueio } from "../lib/desbloqueios";
+import { estadoSequencia } from "../lib/sequencia";
 
 export function Today() {
   const today = new Date();
@@ -180,7 +182,10 @@ export function Today() {
     return uniqueDates.size;
   }, []);
 
-  const routine = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada);
+  // Níveis de desbloqueio (spec 2026-11-09, seção 8): o trancado sai e o que
+  // está no nível mínimo vem na versão mínima — antes de tudo o que lê a rotina.
+  const desbloqueios = useSetting("desbloqueios");
+  const routine = filtrarRotina(buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada), desbloqueios);
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
@@ -378,6 +383,12 @@ export function Today() {
   const { projecao, invalida: partidaInvalida, carregando: partidaCarregando } = usePartida();
   const datasDeTreino = useLiveQuery(async () => (await db.workoutSessions.toArray()).map((x) => x.date), []);
   const treinosSemana = treinosNaSemana(datasDeTreino ?? [], todayISO);
+  const sequenciaDesde = useSetting("sequenciaDesde");
+  // Só com as datas carregadas: antes disso a sequência seria 0 e a linha
+  // piscaria um "faltam" errado.
+  const proximo = datasDeTreino
+    ? proximoDesbloqueio(estadoSequencia(datasDeTreino, sequenciaDesde, todayISO).atual, desbloqueios)
+    : null;
   const ultimaMedida = measurementsAsc?.at(-1);
   // 14 dias de adesão pro treinador: a mesma janela do lembrete de medir.
   const adesao14 = useAdesao(todayISO, 14, alvoSono);
@@ -521,6 +532,12 @@ export function Today() {
         </section>
       ))}
 
+      {proximo && (
+        <p className="text-muted text-sm pt-2">
+          Próximo desbloqueio: {proximo.d.titulo} — {proximo.faltam === 1 ? "falta 1 treino" : `faltam ${proximo.faltam} treinos`}
+        </p>
+      )}
+
       <ShortcutsGrid />
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
@@ -529,6 +546,7 @@ export function Today() {
         <MicroPausaModal
           n={pausaAberta}
           diaDoAno={diaDoAno(today)}
+          mostrarSentar={Object.prototype.hasOwnProperty.call(desbloqueios, "sentar")}
           onClose={() => setPausaAberta(null)}
           onFeito={() => void addBreak()}
         />
