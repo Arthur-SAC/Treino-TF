@@ -2,6 +2,7 @@ import { db } from "./db";
 import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
 import { MEDIDAS_PARTIDA } from "./objetivo";
+import { hojeISO } from "./today-date";
 
 // Exportadas (não apenas locais a seedDatabase) por uma razão concreta: seis
 // vezes este projeto perdeu correções porque o conteúdo mudou no seed mas a
@@ -50,6 +51,7 @@ export const TEMPLATE_SEED_VERSION = 18;
 
 /** Migração única da Smartfit (recomeço na Entrada). */
 export const SMARTFIT_MIGRATION = 1;
+export const SEQUENCIA_MIGRATION = 1;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -157,6 +159,17 @@ export async function seedDatabase(): Promise<void> {
     });
     await db.settings.delete("tetoPredio");
     await db.settings.put({ key: "smartfitMigration", value: SMARTFIT_MIGRATION });
+  }
+
+  // Marco de início da sequência de dias úteis: o dia em que a migração roda.
+  // Não reescreve um marco que já exista.
+  const sequenciaFeita = await db.settings.get("sequenciaMigration");
+  if (((sequenciaFeita?.value as number) ?? 0) < SEQUENCIA_MIGRATION) {
+    const desde = await db.settings.get("sequenciaDesde");
+    if (!desde || !desde.value) {
+      await db.settings.put({ key: "sequenciaDesde", value: hojeISO() });
+    }
+    await db.settings.put({ key: "sequenciaMigration", value: SEQUENCIA_MIGRATION });
   }
 
   // Lembretes que ainda estão no padrão antigo passam pros horários da rotina

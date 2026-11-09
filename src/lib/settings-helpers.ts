@@ -43,6 +43,11 @@ export interface Settings {
   entradaMigration: number;
   /** Migração única da Smartfit: recomeço na Entrada, limpa o teto do prédio. */
   smartfitMigration: number;
+  /** Marco de início da sequência de dias úteis (ISO); "" até a migração. */
+  sequenciaDesde: string;
+  sequenciaMigration: number;
+  /** ISO da quebra cuja queda ela já viu. */
+  quedaVistaEm: string;
   /** Versão da migração dos lembretes pros horários da rotina (ver seed.ts). */
   lembretesMigracao: number;
   /** Ids de exercício cujo aparelho está ausente/ocupado na academia (usado no treino). */
@@ -123,6 +128,9 @@ export const DEFAULTS: Settings = {
   cyclesSeeded: false,
   entradaMigration: 0,
   smartfitMigration: 0,
+  sequenciaDesde: "",
+  sequenciaMigration: 0,
+  quedaVistaEm: "",
   lembretesMigracao: 0,
   aparelhosAusentes: [],
   // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
