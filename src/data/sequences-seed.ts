@@ -8,7 +8,7 @@ import { EXECUCAO_DAS_SEQUENCIAS } from "./execucao-sequencias";
 // sozinha e um alongamento que só existe na fase 1 some sem aviso. Noite e não
 // manhã: às 21h30 o corpo está morno e o flexor passou o dia sentado.
 const NIVELAR_PELVE: DanceMove[] = [
-  { name: "Inclinação lateral (nivelar a pelve)", description: "Em pé, cruza a perna do lado bom por trás da outra, sobe o braço do lado puxado e inclina o tronco pro lado bom. Estica a lateral da cintura, sem torcer. 30s no lado bom, 60s no puxado — o puxado é o da perna que pareceu mais curta no teste deitada. Respira fundo, para antes da dor.", durationSec: 90 },
+  { name: "Inclinação lateral (nivelar a pelve)", description: "Em pé, a perna do lado que vai alongar passa por trás da outra, o braço desse mesmo lado sobe e o tronco inclina pro lado contrário. Estica a lateral da cintura, sem torcer. 30s no lado bom, 60s no puxado — o puxado é o da perna que pareceu mais curta no teste deitada. Respira fundo, para antes da dor.", durationSec: 90 },
   { name: "Flexor do quadril ajoelhada", description: "Joelho do lado puxado no chão (almofada embaixo), outro pé à frente. Aperta o glúteo e leva a pelve pra frente SEM arquear a lombar — se arqueou, recua. 30s no lado bom, 60s no puxado.", durationSec: 90 },
 ];
 
@@ -304,8 +304,8 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
     durationMin: 5,
     focus: "Controle gradual. Aprender a contrair PROGRESSIVAMENTE — não só on/off — dá controle fino do prazer e da firmeza durante penetração.",
     moves: [
-      { name: "Subindo a escala", description: "Contrai nível 1 (10% força) — sente. Sobe pra 2 (30%). 3 (50%). 4 (70%). 5 (100%, máximo). Cada nível 2s. Sente a diferença entre eles.", durationSec: 30, repeat: 5 },
-      { name: "Descendo a escala", description: "Do 5 vai descendo gradualmente pra 4, 3, 2, 1, relaxado total. Cada nível 2s. Controle a soltura, não 'derrame'.", durationSec: 30, repeat: 5 },
+      { name: "Subindo a escala", description: "Contrai nível 1 (10% força) — sente. Sobe pra 2 (30%). 3 (50%). 4 (70%). 5 (100%, máximo). Cada nível 2s. Sente a diferença entre eles.", durationSec: 50, repeat: 5 },
+      { name: "Descendo a escala", description: "Do 5 vai descendo gradualmente pra 4, 3, 2, 1, relaxado total. Cada nível 2s. Controle a soltura, não 'derrame'.", durationSec: 50, repeat: 5 },
       { name: "Subida e descida", description: "Faz 1→5→1 em fluxo contínuo (10s subindo, 10s descendo). 4 ciclos. Treina controle dinâmico.", durationSec: 80, repeat: 4 },
       { name: "Parar em nível", description: "Sobe pro nível 3, sustenta 5s. Sobe pro 4, sustenta 5s. 5, sustenta 5s. Volta 4, 3, 2, 1. Treina capacidade de PARAR em cada nível.", durationSec: 90 },
     ],
