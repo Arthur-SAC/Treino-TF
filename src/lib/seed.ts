@@ -47,6 +47,9 @@ export const EXERCISE_SEED_VERSION = 16;
 // hipertrofia, refinamento e manutenção com os aparelhos dela e substituto por item.
 export const TEMPLATE_SEED_VERSION = 18;
 
+/** Migração única da Smartfit (recomeço na Entrada). */
+export const SMARTFIT_MIGRATION = 1;
+
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
   if (seeded?.value !== true) {
@@ -138,6 +141,21 @@ export async function seedDatabase(): Promise<void> {
       await db.settings.put({ key: "cycleStartSessionCount", value: 0 });
     }
     await db.settings.put({ key: "entradaMigration", value: ENTRADA_MIGRATION });
+  }
+
+  // Migração pontual da Smartfit: ela trocou de academia e recomeça a
+  // progressão pela primeira Entrada, com o histórico intacto.
+  // cycleStartSessionCount = total atual → sessionsInCycle começa em 0 sem
+  // apagar nada. O teto do prédio não vale na Smartfit.
+  const smartfitFeita = await db.settings.get("smartfitMigration");
+  if (((smartfitFeita?.value as number) ?? 0) < SMARTFIT_MIGRATION) {
+    await db.settings.put({ key: "activeCycle", value: "entrada-1" });
+    await db.settings.put({
+      key: "cycleStartSessionCount",
+      value: await db.workoutSessions.count(),
+    });
+    await db.settings.delete("tetoPredio");
+    await db.settings.put({ key: "smartfitMigration", value: SMARTFIT_MIGRATION });
   }
 
   // Lembretes que ainda estão no padrão antigo passam pros horários da rotina

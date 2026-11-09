@@ -41,6 +41,10 @@ export interface Settings {
   cycleStartSessionCount: number;
   cyclesSeeded: boolean;
   entradaMigration: number;
+  /** Migração única da Smartfit: recomeço na Entrada, limpa o teto do prédio. */
+  smartfitMigration: number;
+  /** Ids de exercício cujo aparelho está ausente/ocupado na academia (usado no treino). */
+  aparelhosAusentes: string[];
   walkGoalMin: number;
   modoCaminhada: ModoCaminhada;
   /** Hoje: extras recolhidos (dia ruim) — o núcleo nunca recolhe. */
@@ -117,6 +121,8 @@ export const DEFAULTS: Settings = {
   cycleStartSessionCount: 0,
   cyclesSeeded: false,
   entradaMigration: 0,
+  smartfitMigration: 0,
+  aparelhosAusentes: [],
   // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
   // a rotina real de dia útil (ver `caminhada-trabalho` e `caes` em
   // today-routine.ts) — os dois têm `control: "walk"` e cada um credita 60
