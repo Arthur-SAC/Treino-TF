@@ -38,6 +38,30 @@ describe("execução dos alongamentos e do assoalho", () => {
     expect(ruins).toEqual([]);
   });
 
+  // A explicação casa com o move pelo NOME: dois moves com o mesmo nome na
+  // mesma sequência receberiam a mesma explicação sem ninguém perceber.
+  it("nome de move é único dentro de cada sequência coberta", () => {
+    const repetidos = COBERTAS.flatMap((id) => {
+      const nomes = (porId.get(id)?.moves ?? []).map((m) => m.name);
+      return nomes.filter((n, i) => nomes.indexOf(n) !== i).map((n) => `${id}: ${n}`);
+    });
+    expect(repetidos).toEqual([]);
+  });
+
+  // A tela mostra a execução NO LUGAR da descrição. "Para antes da dor" morava
+  // na descrição dos alongamentos e sumia junto — todo alongamento tem que
+  // dizer o que fazer quando dói. Respiração, vacuum e aquecimento não alongam.
+  it("todo alongamento diz o que fazer quando dói", () => {
+    const NAO_ALONGA = /^respira|vacuum|aquecimento/i;
+    const semDor = FLEX.flatMap((id) =>
+      (porId.get(id)?.moves ?? [])
+        .filter((m) => !NAO_ALONGA.test(m.name))
+        .filter((m) => ![...(m.execucao?.movimento ?? []), ...(m.execucao?.erradoSe ?? [])].some((t) => /\bd[óo]i\b|\bdor\b|\bdoer\b/i.test(t)))
+        .map((m) => `${id}: ${m.name}`),
+    );
+    expect(semDor).toEqual([]);
+  });
+
   // Uma chave com erro de digitação não pendura a explicação em lugar nenhum —
   // e o move fica mudo sem ninguém perceber.
   it("toda explicação escrita cai num move que existe", () => {

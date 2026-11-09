@@ -33,6 +33,8 @@ const ERR_SOLTA_EMPURRANDO =
 const ERR_SOLTURA_PELA_METADE =
   "A soltura é só parar de apertar → solta de propósito, deixando a região descer e alargar com a inspiração, um pouco além de como ela fica parada.";
 
+const ERR_DOI = "Dói em vez de puxar → volta até onde só puxa; para antes da dor.";
+
 const POS_SENTADA_DISCRETA =
   "Sentada numa cadeira, pés no chão, costas retas, mãos nas coxas — ou deitada de barriga pra cima, joelhos dobrados. De fora ninguém vê.";
 const ONDE_APERTO =
@@ -50,7 +52,7 @@ function vacuum(segundos: number, posicao: string): Execucao {
       "Solta todo o ar pela boca, até esvaziar.",
       "Sem puxar ar de volta, puxa o umbigo pra dentro e pra cima, como se quisesse colar ele na coluna.",
       `Segura ${segundos} segundos fazendo respirações curtas pelo alto do peito, sem soltar a barriga.`,
-      "Solta, respira normal por uns segundos e repete. São 3 vezes.",
+      "Solta, respira normal por 10 segundos e repete. São 3 vezes.",
     ],
     ondeSentir: "Bem fundo na barriga, como um cinto apertando por dentro em volta da cintura.",
     erradoSe: [
@@ -122,6 +124,7 @@ const MANHA_FASE_1: Record<string, Execucao> = {
     erradoSe: [
       "Os braços dobram e o peito afunda → braços esticados; só o quadril mexe.",
       "O círculo sai maior de um lado → diminui até sair igual dos dois lados.",
+      ERR_DOI,
     ],
     renderMais: ["Solta o ar na metade de trás do círculo e puxa na metade da frente."],
   },
@@ -155,6 +158,7 @@ const MANHA_FASE_1: Record<string, Execucao> = {
       "Você sente a lombar → sobe menos e deixa a barriga firme, como quem segura uma tosse.",
       "A parte de trás da coxa puxa ou dá cãibra → aproxima os pés do bumbum.",
       "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
+      "Dor na lombar ou no joelho → sobe menos ou para; nunca segue com dor.",
     ],
     renderMais: ["Segura 3 segundos no topo em toda repetição."],
   },
@@ -170,6 +174,7 @@ const MANHA_FASE_1: Record<string, Execucao> = {
       "Você empurra os joelhos com as mãos ou os cotovelos → tira; quem abre é o peso das pernas.",
       "A lombar arredonda → senta na beira de uma almofada dobrada.",
       "Um joelho fica bem mais alto que o outro → deixa como está; forçar o alto só trava. Ele desce com as semanas.",
+      ERR_DOI,
     ],
     renderMais: ["A cada saída de ar, solta ombros, mandíbula e coxas."],
   },
@@ -247,6 +252,7 @@ const MANHA_FASE_2: Record<string, Execucao> = {
       "As costas arredondam → volta as mãos até a coluna ficar longa; coluna reta vale mais que chegar perto do chão.",
       "Os joelhos giram pra dentro → aponta os dedões dos pés pro teto.",
       "Choque ou formigamento atrás do joelho → dobra um pouco os joelhos.",
+      ERR_DOI,
     ],
     renderMais: [
       "Senta na beira de uma almofada dobrada: o quadril inclina pra frente sem esforço.",
@@ -317,6 +323,7 @@ const MANHA_FASE_3: Record<string, Execucao> = {
     erradoSe: [
       "O tronco cai pra trás sem as mãos → apoia as pontas dos dedos no chão; tirar vem com as semanas.",
       "As costas arredondam → sobe o tronco e inclina menos.",
+      ERR_DOI,
     ],
     renderMais: ["Mesmo tempo dos dois lados, mesmo que um seja mais duro."],
   },
@@ -331,6 +338,7 @@ const MANHA_FASE_3: Record<string, Execucao> = {
     erradoSe: [
       "A lombar arredonda → sobe um pouco; coluna longa vale mais que centímetro.",
       "Você avança também na inspiração → para enquanto entra o ar; só desce soltando.",
+      ERR_DOI,
     ],
     renderMais: ["Senta na beira de uma almofada dobrada: o quadril inclina pra frente sem esforço."],
   },
@@ -345,6 +353,7 @@ const MANHA_FASE_3: Record<string, Execucao> = {
     erradoSe: [
       "Cai pra trás ou o calcanhar sobe → segura num apoio; continua na versão da fase 2 desse movimento até soltar.",
       "Os joelhos caem pra dentro → empurra os joelhos pra fora com os cotovelos.",
+      ERR_DOI,
     ],
     renderMais: ["Lá embaixo, solta o ar devagar e deixa o peso do corpo trabalhar."],
   },
@@ -373,6 +382,7 @@ const NIVELAR_INCLINACAO: Execucao = {
     "O tronco gira pra frente → imagina que está entre duas paredes de vidro; inclina só de lado.",
     "Puxa na lombar em vez da lateral → inclina menos e cresce pra cima antes de inclinar.",
     "Perde o equilíbrio → apoia a mão livre na parede.",
+    "Dói em vez de puxar → inclina menos; para antes da dor.",
   ],
   renderMais: [
     "Respira fundo pra dentro da costela do lado que alonga: ela abre por dentro.",
@@ -393,6 +403,7 @@ const NIVELAR_FLEXOR: Execucao = {
     "A lombar arqueia e a barriga vai pra frente → recua a pelve e aperta mais o bumbum.",
     "Sente só o joelho de baixo → mais almofada.",
     "Não sente nada → aperta o bumbum antes de levar a pelve; o movimento é pequeno.",
+    "Dói em vez de puxar → leva menos a pelve pra frente; para antes da dor.",
   ],
   renderMais: [
     "Sobe o braço do lado do joelho no chão pro alto: o alongamento segue até a costela.",
@@ -431,6 +442,7 @@ const BORBOLETA_SEM_EMPURRAR = (minutos: string, extra: string): Execucao => ({
   erradoSe: [
     "Você empurra os joelhos → tira as mãos; empurrar aqui faz o músculo fechar.",
     "A virilha fica tensa → afasta os pés um palmo do corpo e fica ali.",
+    ERR_DOI,
   ],
   renderMais: [extra],
 });
@@ -446,6 +458,7 @@ const PERNAS_NA_PAREDE = (minutos: string): Execucao => ({
   erradoSe: [
     "Formigamento nos pés ou nas pernas → fecha um pouco as pernas ou dobra os joelhos.",
     "Você segura as pernas no ar com força → deixa elas cair até onde a parede segura.",
+    ERR_DOI,
   ],
   renderMais: ["Respira pela barriga e solta as coxas a cada saída de ar."],
 });
@@ -461,6 +474,7 @@ const JOELHO_POR_FORA_DO_OMBRO = (tempo: string): Execucao => ({
   erradoSe: [
     "O bumbum sai do chão → traz o joelho menos pra perto.",
     "Beliscão na frente do quadril → afasta o joelho um pouco pra fora, até o beliscão sumir.",
+    ERR_DOI,
   ],
   renderMais: ["A outra perna pode ficar esticada no chão, solta.", "O tempo do segundo lado é igual ao do primeiro."],
 });
@@ -477,6 +491,7 @@ const GIRO_SOBRE_A_PERNA_DE_TRAS = (tempo: string): Execucao => ({
   erradoSe: [
     "Pontada no joelho de trás → afasta mais esse pé do corpo.",
     "O bumbum da perna de trás sobe do chão → inclina menos.",
+    ERR_DOI,
   ],
   renderMais: ["Mesmo tempo dos dois lados, mesmo que um seja mais duro.", "Solta o ar devagar e deixa o quadril amolecer."],
 });
@@ -504,6 +519,7 @@ const NOITE_FASE_1: Record<string, Execucao> = {
     erradoSe: [
       "O joelho dobrado passa da ponta do pé ou cai pra dentro → afasta mais os pés.",
       "O tronco despenca pra frente → mãos nas coxas e peito alto.",
+      ERR_DOI,
     ],
     renderMais: ["Mesmo tempo dos dois lados.", "Respira pela barriga e solta a coxa esticada na saída do ar."],
   },
@@ -532,13 +548,13 @@ const NOITE_FASE_1: Record<string, Execucao> = {
     erradoSe: [
       "O calcanhar sobe ou você cai pra trás → segura num apoio firme.",
       "Os joelhos caem pra dentro → empurra os joelhos pra fora com os cotovelos.",
+      ERR_DOI,
     ],
     renderMais: ["Lá embaixo, solta o ar devagar e relaxa o bumbum."],
   },
   "Frog stretch": {
     posicao: RA_POSICAO,
     movimento: [
-      "Abre os joelhos pros lados até onde não dói.",
       "Leva o quadril pra trás, na direção dos calcanhares, até a virilha puxar.",
       "Fica os 2 minutos respirando fundo.",
     ],
@@ -560,6 +576,7 @@ const NOITE_FASE_1: Record<string, Execucao> = {
     erradoSe: [
       "O bumbum sobe do chão → segura nos tornozelos ou na parte de trás das coxas.",
       "O pescoço tensiona → apoia a cabeça no chão, queixo pra baixo.",
+      ERR_DOI,
     ],
     renderMais: ["Balança de leve de um lado pro outro, massageando a lombar no chão."],
   },
@@ -604,6 +621,7 @@ const NOITE_FASE_2: Record<string, Execucao> = {
     erradoSe: [
       "O bumbum sobe do chão → segura nos tornozelos ou na parte de trás das coxas.",
       "O pescoço tensiona → cabeça no chão, queixo pra baixo.",
+      ERR_DOI,
     ],
     renderMais: ["Na entrada do ar, deixa a região entre as pernas descer e alargar, sem empurrar."],
   },
@@ -671,6 +689,7 @@ const KEGEL_5X5 = (extra: string): Execucao => ({
     ERR_PRENDE_AR,
     ERR_BARRIGA_BUMBUM,
     "O aperto enfraquece antes dos 5 segundos → aperta menos e segura o tempo todo; qualidade antes de força.",
+    ERR_DOR_PELVICA,
   ],
   renderMais: ["Solta devagar e por completo: o descanso também é treino.", extra],
 });
@@ -687,6 +706,7 @@ const SUSTENTACAO = (s: number, vezes: number, extraErro?: string): Execucao => 
     ERR_PRENDE_AR,
     "O aperto vai sumindo antes do fim → aperta menos no começo pra durar até o fim.",
     ...(extraErro ? [extraErro] : [ERR_BARRIGA_BUMBUM]),
+    ERR_DOR_PELVICA,
   ],
   renderMais: ["O descanso dura o mesmo que o aperto: soltar tudo é parte do exercício."],
 });
@@ -810,6 +830,8 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       erradoSe: [
         "Você pula do 1 direto pro 5 → aperta menos no começo; a diferença entre os degraus é o treino.",
         ERR_BARRIGA_BUMBUM,
+        ERR_PRENDE_AR,
+        ERR_DOR_PELVICA,
       ],
       renderMais: ["Prende a atenção nos degraus 1 e 2: os leves são os mais difíceis de acertar."],
     },
@@ -825,6 +847,7 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       erradoSe: [
         "O aperto despenca de uma vez → afrouxa menos a cada degrau; você está controlando a soltura, não largando.",
         ERR_PRENDE_AR,
+        ERR_DOR_PELVICA,
       ],
       renderMais: ["Depois do degrau 1, solta mais um pouco com a inspiração."],
     },
@@ -851,8 +874,9 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       ],
       ondeSentir: "Por dentro, na base entre as pernas, parado em cada degrau sem escorregar.",
       erradoSe: [
-        "O aperto escorrega pro degrau de baixo enquanto você segura → escolhe degraus mais fortes até conseguir parar.",
+        "O aperto escorrega pro degrau de baixo enquanto você segura → segura menos tempo em cada degrau até conseguir parar sem escorregar.",
         ERR_PRENDE_AR,
+        ERR_DOR_PELVICA,
       ],
       renderMais: ["Confere com a mão na barriga que ela não endurece nos degraus altos."],
     },
@@ -902,6 +926,7 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       erradoSe: [
         "Você volta pro padrão anterior sem perceber → mais devagar, contando em voz baixa.",
         "O peito sobe pra compensar → ar na barriga, mesmo apertando.",
+        ERR_PRENDE_AR,
       ],
       renderMais: ["Compara com a anterior: qual das duas é mais natural pra você? Anota."],
     },
@@ -1005,7 +1030,7 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
         "3 vezes.",
       ],
       ondeSentir: "Por dentro, na base entre as pernas: calor subindo pela região.",
-      erradoSe: [ERR_PRENDE_AR, ERR_BARRIGA_BUMBUM],
+      erradoSe: [ERR_PRENDE_AR, ERR_BARRIGA_BUMBUM, ERR_DOR_PELVICA],
       renderMais: ["Solta por completo nos 5 segundos: é a soltura que traz o sangue de volta."],
     },
     "Massagem em volta": {
@@ -1323,7 +1348,7 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       ],
       ondeSentir: "Pressão que vai diminuindo até virar só a sensação do dedo ali.",
       erradoSe: [
-        "Aperto ou dor → para de avançar, respira e espera; se não passar, sai devagar e volta pra pressão por fora.",
+        "Aperto (sem dor) → para de avançar, respira e espera; se não ceder, sai devagar e volta pra pressão por fora.",
         "Você mexe o dedo → nesta fase o dedo fica parado.",
         ERR_DOR_PELVICA,
       ],
@@ -1338,7 +1363,7 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
       ondeSentir: "Cada degrau novo começa com pressão e termina em conforto.",
       erradoSe: [
         "Pula degrau porque o anterior saiu bem uma vez → volta; uma vez não é duas seguidas.",
-        "Sangue ou dor que fica depois → para por uns dias e volta um degrau.",
+        "Sangue ou dor que fica depois → para por uns dias e volta um degrau. Se sangrar de novo ou não parar, procura médico antes de voltar.",
       ],
       renderMais: ["Anota em que degrau está, pra não depender da memória."],
     },

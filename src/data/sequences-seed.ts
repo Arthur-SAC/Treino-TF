@@ -32,7 +32,7 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
       // exercício manda fazer quase todo dia — e a sessão de academia não
       // cresce. De manhã, antes de comer, é quando ele é mais fácil: barriga
       // vazia, sem esforço de recuperação nenhum.
-      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 90, repeat: 3 },
+      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 110, repeat: 3 },
       { name: "Respiração final", description: "Deitada, mão na barriga. 5 respirações profundas pra terminar.", durationSec: 60 },
     ],
   },
@@ -108,7 +108,7 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
       { name: "Agachamento profundo com apoio", description: "Segura no espaldar ou num apoio, agacha o mais fundo que der com os calcanhares no chão. Fica 60s deixando o peso abrir o quadril. 2 vezes.", durationSec: 120, repeat: 2 },
       // Progride pelo TEMPO de isometria (30 → 45 → 60s), nunca por carga: é
       // transverso, e carga aqui engrossaria justamente o que ela quer afinar.
-      { name: "Vacuum abdominal · 45s", description: "Expira todo o ar e puxa o umbigo pra dentro e pra cima, colando na coluna. Segura 45s respirando curto pela costela. 3 vezes. Se o oblíquo aparecer ou a barriga estufar, é sinal de que virou abdominal comum — volta a puxar pra DENTRO.", durationSec: 135, repeat: 3 },
+      { name: "Vacuum abdominal · 45s", description: "Expira todo o ar e puxa o umbigo pra dentro e pra cima, colando na coluna. Segura 45s respirando curto pela costela. 3 vezes. Se o oblíquo aparecer ou a barriga estufar, é sinal de que virou abdominal comum — volta a puxar pra DENTRO.", durationSec: 155, repeat: 3 },
       { name: "Respiração final", description: "Deitada, joelhos dobrados. 5 respirações longas soltando tudo. É na expiração que o tecido cede.", durationSec: 60, repeat: 5 },
     ],
   },
@@ -125,7 +125,7 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
       { name: "90/90 sustentado", description: "Fica 90s de cada lado na posição, tronco ereto, sem apoio das mãos se der. É a rotação que as posições pedem.", durationSec: 180, repeat: 2 },
       { name: "Abertura em V com respiração", description: "2 min na abertura, descendo só na expiração. Se a lombar arredondar, sobe um pouco — coluna longa vale mais que centímetro.", durationSec: 120 },
       { name: "Agachamento profundo livre", description: "Sem apoio, 90s. Se ainda precisar de apoio, tudo bem — continua na fase 2 desse movimento até soltar.", durationSec: 90 },
-      { name: "Vacuum abdominal · 60s em pé", description: "Em pé agora, que é a versão difícil: expira todo o ar e puxa o umbigo pra dentro e pra cima, segurando 60s com respiração curta e contínua. 3 vezes. Em pé não há gravidade ajudando — é o transverso sozinho, e é ele que segura a cintura o dia inteiro sem você pensar.", durationSec: 180, repeat: 3 },
+      { name: "Vacuum abdominal · 60s em pé", description: "Em pé agora, que é a versão difícil: expira todo o ar e puxa o umbigo pra dentro e pra cima, segurando 60s com respiração curta e contínua. 3 vezes. Em pé não há gravidade ajudando — é o transverso sozinho, e é ele que segura a cintura o dia inteiro sem você pensar.", durationSec: 200, repeat: 3 },
       { name: "Respiração final", description: "Deitada, 5 respirações longas.", durationSec: 60, repeat: 5 },
     ],
   },
@@ -279,7 +279,7 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
       { name: "Pulsos rápidos (1s on, 1s off)", description: "Contrai 1s, solta 1s. 20 vezes contínuas. Mantém ritmo regular.", durationSec: 40, repeat: 20 },
       { name: "Pausa", description: "30s descanso.", durationSec: 30 },
       { name: "Pulsos rápidos (mais rápido)", description: "0.5s on, 0.5s off. 20 pulsos. Tipo 'bater asa de borboleta'.", durationSec: 30, repeat: 20 },
-      { name: "Mistura", description: "Alternar 5 pulsos rápidos + 1 sustentação de 3s. Repete 5x. Treina controle de cadência.", durationSec: 60, repeat: 5 },
+      { name: "Mistura", description: "Alternar 5 pulsos rápidos + 1 sustentação de 3s. Repete 5x. Treina controle de cadência.", durationSec: 65, repeat: 5 },
     ],
   },
   {
