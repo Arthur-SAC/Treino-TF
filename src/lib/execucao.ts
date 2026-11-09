@@ -27,6 +27,8 @@ export const TERMOS_QUE_PEDEM_TRADUCAO: readonly RegExp[] = [
   /dorsiflex(?:ão|ao|ões|oes)/gi,
   /assoalho p[eé]lvico/gi,
   /cadeias? posterior(?:es)?/gi,
+  // Gíria de academia, não termo técnico — mas ela também não sabia o que era.
+  /costela fechada|fecha(?:r)? a costela/gi,
 ];
 
 function pedeRegulagem(equipment: readonly string[]): boolean {

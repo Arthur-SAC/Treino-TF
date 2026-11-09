@@ -54,6 +54,16 @@ describe("problemasDaExecucao", () => {
     expect(c("Sinta o transverso. Depois (algo).")).toBeGreaterThan(0);
     expect(c("Sinta o transverso do abdômen: o músculo fundo.")).toBe(0);
   });
+  // "Costela fechada" é gíria de academia: ela não sabia o que era (revisão
+  // da task 9). Vale o mesmo contrato dos termos técnicos.
+  it("cobra tradução de 'costela fechada' e 'fecha a costela'", () => {
+    const c = (t: string) => problemasDaExecucao({ ...ok, ondeSentir: t }).length;
+    expect(c("Queixo pra baixo e costela fechada.")).toBeGreaterThan(0);
+    expect(c("Sobe menos e fecha a costela.")).toBeGreaterThan(0);
+    expect(c("Lembre de fechar a costela.")).toBeGreaterThan(0);
+    expect(c("Costela fechada (barriga firme, como quem segura uma tosse).")).toBe(0);
+    expect(c("Sobe menos e fecha a costela (barriga firme).")).toBe(0);
+  });
   it("normaliza NFC antes de casar", () => {
     const nfd = "Faça rotação interna parada.".normalize("NFD");
     expect(problemasDaExecucao({ ...ok, posicao: nfd }).length).toBeGreaterThan(0);

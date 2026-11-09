@@ -153,6 +153,8 @@ describe("exercícios", () => {
 
     const ex = await db.exercises.get("hip-thrust-maquina");
     expect(ex?.execucao?.regulagem?.trim()).toBeTruthy();
+    // O link que ela colou é dela e continua lá.
+    expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
   });
 
   it("os dois exercícios do padrão de levantar chegam, com o texto e o nível desta versão", async () => {

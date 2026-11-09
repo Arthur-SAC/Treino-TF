@@ -28,13 +28,13 @@ export const EXERCISES: Exercise[] = [
       posicao: "Sentada no chão, costas apoiadas na borda do banco na altura do sutiã, barra com espuma em cima do osso do quadril.",
       movimento: [
         "Pés no chão, na largura do quadril, um pouco à frente dos joelhos.",
-        "Queixo pra baixo e costela fechada, olhando pra frente.",
+        "Queixo pra baixo e costela fechada (barriga firme, como quem segura uma tosse), olhando pra frente.",
         "Empurra o chão com os calcanhares e sobe o quadril até o corpo ficar reto do ombro ao joelho.",
         "Segura 1 a 2 segundos apertando o bumbum e desce devagar.",
       ],
       ondeSentir: "Bumbum, embaixo e no meio, apertando forte no topo. Não a lombar, e não só a frente da coxa.",
       erradoSe: [
-        "A lombar arqueia no topo e você sente as costas → sobe só até o corpo ficar reto e fecha a costela, como quem segura uma tosse.",
+        "A lombar arqueia no topo e você sente as costas → sobe só até o corpo ficar reto e fecha a costela (barriga firme).",
         "A frente da coxa queima mais que o bumbum → afasta os pés um palmo do banco.",
         "A parte de trás da coxa puxa ou dá cãibra → traz os pés um pouco mais perto do bumbum.",
         "A barra machuca o osso → usa a espuma de proteção ou dobra um colchonete por cima.",
@@ -70,13 +70,13 @@ export const EXERCISES: Exercise[] = [
       posicao: "Deitada de barriga pra cima no colchonete, joelhos dobrados, pés no chão na largura do quadril.",
       movimento: [
         "Braços no chão ao lado do corpo.",
-        "Queixo pra baixo e costela fechada.",
+        "Queixo pra baixo e costela fechada (barriga firme, como quem segura uma tosse).",
         "Empurra o chão com os calcanhares e sobe o quadril até ombro, quadril e joelho ficarem numa linha.",
         "Aperta o bumbum 1 a 2 segundos lá em cima e desce devagar.",
       ],
       ondeSentir: "Bumbum, embaixo, apertando no topo. A lombar não trabalha.",
       erradoSe: [
-        "Você sente a lombar → sobe menos e fecha a costela.",
+        "Você sente a lombar → sobe menos e fecha a costela (barriga firme).",
         "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
         "A frente da coxa trabalha mais → leva os pés um pouco mais longe do bumbum.",
       ],
@@ -157,7 +157,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: "iniciante",
     description: "Sentada, abre os joelhos contra a resistência da máquina. Foco no glúteo médio (lateral do quadril).",
     commonMistakes: [
-      "Inclinar tronco pra frente em vez de manter ereto",
+      "Balançar o tronco pra frente e pra trás pra abrir (inclinar um pouco à frente e ficar parada é o certo)",
       "Movimento muito rápido sem controle",
     ],
     exposureLevel: 1,
@@ -446,7 +446,7 @@ export const EXERCISES: Exercise[] = [
         "Os gomos endurecem e a barriga empurra pra fora → é puxar pra dentro, não apertar.",
       ],
       renderMais: [
-        "Faz quase todo dia: o efeito vem de repetir.",
+        "Segura 10 segundos a mais que na última vez, sem soltar a barriga.",
         "Quando segurar fácil de quatro, faz em pé, sem apoio.",
       ],
     },
@@ -481,14 +481,14 @@ export const EXERCISES: Exercise[] = [
     execucao: {
       posicao: "Em pé, um halter pesado seguro na vertical contra o peito, as duas mãos embaixo da cabeça de cima, cotovelos apontando pro chão.",
       movimento: [
-        "Fica em pé alta, costela fechada, barriga firme.",
+        "Fica em pé alta, costela fechada (barriga firme, como quem segura uma tosse).",
         "Caminha 20 a 30 metros em passos curtos.",
         "Respira curto e sem parar; não prende o ar.",
         "Para e põe o halter no chão dobrando os joelhos, costas retas.",
       ],
       ondeSentir: "Barriga segurando o tronco, braços e alto das costas firmes. Tronco ereto o percurso inteiro, e nada na lombar.",
       erradoSe: [
-        "A lombar arqueia pra trás pra compensar o peso → fecha a costela e aperta o bumbum.",
+        "A lombar arqueia pra trás pra compensar o peso → fecha a costela (barriga firme) e aperta o bumbum.",
         "O halter desce e se afasta do peito → cola de volta no peito; se não der, a série acabou.",
         "O ombro sobe em direção à orelha → desce os ombros e deixa os cotovelos apontarem pro chão.",
       ],
@@ -658,7 +658,7 @@ export const EXERCISES: Exercise[] = [
       "Aperta as escápulas e mostra o peito no fim do movimento",
     ],
     execucao: {
-      posicao: "Deitada de bruços no banco inclinado, peito apoiado, um halter leve em cada mão, braços pendurados embaixo dos ombros.",
+      posicao: "Deitada de bruços no banco inclinado baixo, peito apoiado, um halter leve em cada mão, braços pendurados embaixo dos ombros.",
       movimento: [
         "Cotovelos levemente dobrados, polegares pra frente.",
         "Abre os braços pros lados e um pouco pra trás, até a linha do ombro.",
@@ -1466,7 +1466,7 @@ export const EXERCISES: Exercise[] = [
       ],
       renderMais: [
         "Segura 1 a 2 segundos com a perna aberta.",
-        "Começa pelo lado mais fraco; o lado forte faz as mesmas repetições.",
+        "Volta em 3 segundos.",
       ],
       regulagem: "Polia no ponto mais baixo, perto do chão. Tornozeleira presa no gancho do cabo. Escolhe o peso no pino da pilha. Começa pelo mais leve.",
     },
@@ -1487,17 +1487,17 @@ export const EXERCISES: Exercise[] = [
       "Pausa de 1 s no topo apertando o glúteo",
     ],
     execucao: {
-      posicao: "Sentada na máquina, parte de cima das costas no encosto, cinto ou almofada em cima do osso do quadril.",
+      posicao: "Recostada na máquina, quase deitada, parte de cima das costas no encosto, almofada ou cinto em cima do osso do quadril.",
       movimento: [
-        "Pés na plataforma, na largura do quadril.",
-        "Queixo pra baixo e costela fechada.",
+        "Pés na plataforma ou no chão, na largura do quadril.",
+        "Queixo pra baixo e costela fechada (barriga firme, como quem segura uma tosse).",
         "Empurra com os calcanhares e sobe o quadril até o corpo ficar reto do ombro ao joelho.",
         "Segura 1 a 2 segundos apertando o bumbum e desce devagar.",
       ],
       ondeSentir: "Bumbum, embaixo e no meio, apertando forte no topo. A máquina guia o caminho; o seu trabalho é só apertar.",
       erradoSe: [
-        "A lombar arqueia no topo → sobe só até o corpo ficar reto e fecha a costela.",
-        "A frente da coxa trabalha mais que o bumbum → põe os pés mais à frente na plataforma.",
+        "A lombar arqueia no topo → sobe só até o corpo ficar reto e fecha a costela (barriga firme).",
+        "A frente da coxa trabalha mais que o bumbum → põe os pés um pouco mais longe do quadril.",
         "A parte de trás da coxa puxa ou dá cãibra → traz os pés um pouco mais perto.",
         "Pontada ou dor aguda na lombar → para a série.",
       ],
@@ -1505,7 +1505,7 @@ export const EXERCISES: Exercise[] = [
         "Pausa de 2 segundos no topo em toda repetição.",
         "Desce em 3 segundos, sem deixar o peso descansar embaixo.",
       ],
-      regulagem: "Encosto na altura da linha do sutiã. Cinto ou almofada firme em cima do osso do quadril, não na barriga. Pés na plataforma num ponto em que, lá em cima, a canela fica em pé, reta. O peso vai em anilhas ou no pino, conforme a máquina.",
+      regulagem: "Se o encosto ajustar, deixa a borda dele na altura da linha do sutiã. Almofada ou cinto firme em cima do osso do quadril, não na barriga. Se a plataforma dos pés ajustar, põe num ponto em que, lá em cima, a canela fica em pé, reta. O peso vai em anilhas ou no pino, conforme a máquina.",
     },
   },
   {
@@ -1717,7 +1717,7 @@ export const EXERCISES: Exercise[] = [
         "Sobe empurrando pelos calcanhares.",
         "Para em cima sem travar o joelho e trava a máquina ao terminar.",
       ],
-      ondeSentir: "Frente da coxa e bumbum. Pés mais altos na plataforma levam mais trabalho pro bumbum.",
+      ondeSentir: "Frente da coxa e bumbum. Com os pés um pouco altos, como na regulagem, o bumbum trabalha mais.",
       erradoSe: [
         "A lombar descola do encosto lá embaixo → desce menos.",
         "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
@@ -1727,7 +1727,7 @@ export const EXERCISES: Exercise[] = [
         "Desce em 3 segundos.",
         "Pausa de 1 segundo lá embaixo.",
       ],
-      regulagem: "Ombreiras encostadas em cima dos ombros, sem apertar o pescoço. Pés no meio da plataforma, na largura dos ombros. Anilhas iguais dos dois lados. Antes de começar, acha a trava de segurança (a alavanca do lado) e testa soltar e prender sem peso.",
+      regulagem: "Ombreiras encostadas em cima dos ombros, sem apertar o pescoço. Pés um pouco acima do meio da plataforma, na largura dos ombros: assim o trabalho vai mais pro bumbum. Anilhas iguais dos dois lados. Antes de começar, acha a trava de segurança (a alavanca do lado) e testa soltar e prender sem peso.",
     },
   },
   // === ONDA EQUIPAMENTO: BUSTO / POSTURA ===
@@ -1930,7 +1930,7 @@ export const EXERCISES: Exercise[] = [
     execucao: {
       posicao: "Sentada no chão de costas pra bola, deita a parte de cima das costas nela, pés no chão na largura do quadril.",
       movimento: [
-        "Queixo pra baixo e costela fechada.",
+        "Queixo pra baixo e costela fechada (barriga firme, como quem segura uma tosse).",
         "Sobe o quadril até o corpo ficar reto do ombro ao joelho, joelhos dobrados em ângulo reto.",
         "Aperta o bumbum 1 a 2 segundos.",
         "Desce devagar, segurando a bola parada.",
@@ -1938,7 +1938,7 @@ export const EXERCISES: Exercise[] = [
       ondeSentir: "Bumbum, embaixo, e a barriga segurando o equilíbrio.",
       erradoSe: [
         "A bola rola → abre um pouco mais os pés e desce mais devagar.",
-        "A lombar arqueia no topo → sobe só até ficar reta e fecha a costela.",
+        "A lombar arqueia no topo → sobe só até ficar reta e fecha a costela (barriga firme).",
         "A frente da coxa trabalha mais → leva os pés um pouco mais longe.",
       ],
       renderMais: [
@@ -2421,7 +2421,7 @@ export const EXERCISES: Exercise[] = [
       posicao: "Deitada de barriga pra baixo no colchonete, pernas esticadas, mãos ao lado da cabeça.",
       movimento: [
         "Aperta o bumbum e olha pro chão, pescoço comprido.",
-        "Sobe o peito do chão devagar, só até o tronco alinhar com as pernas.",
+        "Sobe o peito devagar, só um palmo do chão.",
         "Segura 1 segundo.",
         "Desce devagar.",
       ],
@@ -2429,7 +2429,7 @@ export const EXERCISES: Exercise[] = [
       erradoSe: [
         "Pontada ou dor aguda na lombar → para na hora.",
         "A cabeça vai pra trás → olha pro chão o movimento inteiro.",
-        "Sobe no impulso e passa da linha → sobe menos e devagar.",
+        "Sobe no impulso ou mais de um palmo → sobe menos e devagar.",
       ],
       renderMais: [
         "Segura 3 segundos lá em cima.",

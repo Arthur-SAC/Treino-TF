@@ -21,6 +21,10 @@ const IDS_DO_TREINO = [
 
 const porId = new Map(EXERCISES.map((e) => [e.id, e]));
 
+// "Pra render mais" é técnica (tempo, pausa, amplitude), nunca carga.
+const PEDE_CARGA =
+  /mais (carga|peso)|(aument|sob|subi)\w* (a |o )?(carga|peso)|carga maior|peso maior|pino a mais|mais pesad/i;
+
 describe("execução de todos os exercícios do treino", () => {
   it("todo id do treino existe no catálogo", () => {
     expect(IDS_DO_TREINO.filter((id) => !porId.has(id))).toEqual([]);
@@ -39,10 +43,17 @@ describe("execução de todos os exercícios do treino", () => {
     expect(ruins).toEqual([]);
   });
 
+  it("o detector de 'mais carga' pega as formas que aparecem na academia", () => {
+    for (const t of ["Põe mais peso.", "Aumenta a carga.", "Sobe o peso.", "Um pino a mais.", "Halter mais pesado.", "Carga maior."]) {
+      expect({ t, pega: PEDE_CARGA.test(t) }).toEqual({ t, pega: true });
+    }
+    expect(PEDE_CARGA.test("Desce em 3 segundos.")).toBe(false);
+  });
+
   it("'Pra render mais' nunca pede mais carga", () => {
     const ruins = IDS_DO_TREINO.flatMap((id) =>
       (porId.get(id)?.execucao?.renderMais ?? [])
-        .filter((r) => /(mais|aumente?a?r?|sob[ea]r?) (a )?(carga|peso)|carga maior|peso maior/i.test(r))
+        .filter((r) => PEDE_CARGA.test(r))
         .map((r) => `${id}: ${r}`),
     );
     expect(ruins).toEqual([]);
