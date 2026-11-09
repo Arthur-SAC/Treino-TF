@@ -142,6 +142,11 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "smartfitMigration")) {
       await db.settings.delete("smartfitMigration");
     }
+    // Mesmo motivo pros lembretes: um backup anterior à versão 2 traz o treino
+    // das 18:15, e o `lembretesMigracao` = 2 do aparelho impediria a troca.
+    if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "lembretesMigracao")) {
+      await db.settings.delete("lembretesMigracao");
+    }
     await db.routineChecks.bulkPut((p.routineChecks ?? []) as never);
     await db.looks.bulkPut(desserializar(p.looks) as never);
     await db.wishlist.bulkPut((p.wishlist ?? []) as never);

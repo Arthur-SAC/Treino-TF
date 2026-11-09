@@ -43,6 +43,8 @@ export interface Settings {
   entradaMigration: number;
   /** Migração única da Smartfit: recomeço na Entrada, limpa o teto do prédio. */
   smartfitMigration: number;
+  /** Versão da migração dos lembretes pros horários da rotina (ver seed.ts). */
+  lembretesMigracao: number;
   /** Ids de exercício cujo aparelho está ausente/ocupado na academia (usado no treino). */
   aparelhosAusentes: string[];
   walkGoalMin: number;
@@ -95,7 +97,8 @@ export const DEFAULTS: Settings = {
   // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
   morningReminderTime: "06:25",
   eveningReminderTime: "20:00",
-  workoutReminderTime: "18:15",
+  // 15:50: dez minutos antes de ela sair do trabalho a pé pra Smart Fit (16h).
+  workoutReminderTime: "15:50",
   activeBreakIntervalMin: 90,
   // Expediente real dela: 7h-16h. Vinha 9h-18h, um padrão genérico que punha a
   // primeira pausa duas horas depois de ela já estar trabalhando e a última
@@ -120,6 +123,7 @@ export const DEFAULTS: Settings = {
   cyclesSeeded: false,
   entradaMigration: 0,
   smartfitMigration: 0,
+  lembretesMigracao: 0,
   aparelhosAusentes: [],
   // 60 min da caminhada do trabalho para casa + 60 do passeio com os cães é
   // a rotina real de dia útil (ver `caminhada-trabalho` e `caes` em

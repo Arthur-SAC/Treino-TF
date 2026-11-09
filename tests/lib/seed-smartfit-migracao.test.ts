@@ -83,3 +83,47 @@ describe("migração da Smartfit: recomeço na Entrada", () => {
     });
   });
 });
+
+describe("migração 2 dos lembretes (horário da Smartfit)", () => {
+  async function comLembretes(treino: string, migracao?: number) {
+    await db.settings.put({ key: "workoutReminderTime", value: treino });
+    if (migracao === undefined) await db.settings.delete("lembretesMigracao");
+    else await db.settings.put({ key: "lembretesMigracao", value: migracao });
+  }
+
+  it("troca 18:15 por 15:50 quando ainda é o padrão antigo", async () => {
+    await seedDatabase();
+    await comLembretes("18:15", 1);
+    await seedDatabase();
+    expect((await db.settings.get("workoutReminderTime"))?.value).toBe("15:50");
+    expect((await db.settings.get("lembretesMigracao"))?.value).toBe(2);
+  });
+
+  it("não sobrescreve um horário que ela já mudou", async () => {
+    await seedDatabase();
+    await comLembretes("16:10", 1);
+    await seedDatabase();
+    expect((await db.settings.get("workoutReminderTime"))?.value).toBe("16:10");
+  });
+
+  it("restaurar backup com 18:15 e sem lembretesMigracao leva a 15:50", async () => {
+    await seedDatabase();
+    await comLembretes("18:15", 2);
+    const p = await coletarBackup();
+    p.settings = ((p.settings ?? []) as Array<{ key: string; value: unknown }>)
+      .filter((c) => c.key !== "lembretesMigracao" && c.key !== "workoutReminderTime")
+      .concat([{ key: "workoutReminderTime", value: "18:15" }]);
+    await restaurarBackup(p);
+    expect((await db.settings.get("workoutReminderTime"))?.value).toBe("15:50");
+  });
+
+  it("restaurar backup em que ela tinha 16:10 mantém 16:10", async () => {
+    await seedDatabase();
+    const p = await coletarBackup();
+    p.settings = ((p.settings ?? []) as Array<{ key: string; value: unknown }>)
+      .filter((c) => c.key !== "lembretesMigracao" && c.key !== "workoutReminderTime")
+      .concat([{ key: "workoutReminderTime", value: "16:10" }]);
+    await restaurarBackup(p);
+    expect((await db.settings.get("workoutReminderTime"))?.value).toBe("16:10");
+  });
+});

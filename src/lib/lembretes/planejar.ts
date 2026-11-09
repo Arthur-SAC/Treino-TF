@@ -112,7 +112,7 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
 
     const treino = estado.treinoPorDia.get(dow);
     if (treino && !(ehHoje && estado.treinouHoje))
-      add(TIPO.treino, dia, 0, naHora(dia, cfg.workoutReminderTime), "Treino", treino);
+      add(TIPO.treino, dia, 0, naHora(dia, cfg.workoutReminderTime), "Treino", `${treino} · olhe a lotação no app da academia antes de sair`);
 
     if (!(ehHoje && estado.feitosHoje.has("alongamento-noite")))
       add(TIPO.alongNoite, dia, 0, naHora(dia, cfg.alongamentoNoiteTime), "Alongamento", "Antes de deitar", "/", { acao: "feito", itemId: "alongamento-noite" });

@@ -59,21 +59,39 @@ describe("rotina pelo modo das caminhadas", () => {
       const noite = bloco(dow, "noite", "esteira");
       const tarde = bloco(dow, "tarde", "esteira");
       const est = noite.find((i) => i.id === "caminhada-trabalho")!;
-      expect(est).toMatchObject({ defaultTime: "19:15", control: "walk", to: "/treino/exercicio/cardio-zona2", label: "Esteira inclinada · 1 h" });
+      expect(est).toMatchObject({ defaultTime: "18:00", control: "walk", to: "/treino/exercicio/cardio-zona2", label: "Esteira inclinada · 1 h" });
       expect(est.subtitle).toBe("Logo depois da força: ~6% a 5 km/h, 1 h, ofegante mas falando em frases curtas");
       expect(tarde.map((i) => i.id)).not.toContain("caminhada-trabalho");
       const t = (id: string) => noite.find((i) => i.id === id)?.defaultTime;
       expect(t("jantar")).toBe("20:30");
       expect(t("skincare-noite")).toBe("21:00");
       expect(t("voz")).toBe("21:10");
-      expect(noite.map((i) => i.id)).not.toContain("postura");
-      expect(tarde.find((i) => i.id === "postura")).toMatchObject({ defaultTime: "16:45", linkKey: "postura" });
+      // A postura volta pra noite (21:05, depois do jantar e do skincare): às 16:45 cairia entre a caminhada e o treino.
+      expect(tarde.map((i) => i.id)).not.toContain("postura");
+      expect(t("postura")).toBe("21:05");
+      expect(tarde.find((i) => i.id === "treino")!.defaultTime).toBe("17:00");
+      expect(tarde.find((i) => i.id === "caes")!.defaultTime).toBe("19:15");
       expect(tarde.find((i) => i.id === "treino")!.subtitle).toBe("Força primeiro; a esteira vem logo depois");
       for (const b of ["tarde", "noite"]) {
         const h = horas(bloco(dow, b, "esteira"));
         expect(h).toEqual([...h].sort());
       }
     }
+  });
+
+  it("esteira: nada se sobrepõe entre 16:00 e 19:15 (treino 17:00, esteira 18:00 de 1 h)", () => {
+    for (const dow of [1, 2, 3, 4, 5]) {
+      const dentro = itens(dow, "esteira")
+        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "19:15")
+        .map((i) => [i.id, i.defaultTime]);
+      expect(dentro).toEqual([["treino", "17:00"], ["caminhada-trabalho", "18:00"]]);
+    }
+  });
+
+  it("pausada: treino às 17:00 e jantar às 20:00 nos dias úteis", () => {
+    const t = bloco(2, "tarde", "pausada").find((i) => i.id === "treino")!;
+    expect(t.defaultTime).toBe("17:00");
+    expect(bloco(2, "noite", "pausada").find((i) => i.id === "jantar")!.defaultTime).toBe("20:00");
   });
 
   it("esteira no fim de semana não muda: continua de manhã e a postura fica na noite", () => {
@@ -86,17 +104,18 @@ describe("rotina pelo modo das caminhadas", () => {
 
   it("caminhada em dia útil continua como era", () => {
     const tarde = bloco(2, "tarde", "caminhada").map((i) => [i.id, i.defaultTime]);
-    expect(tarde).toEqual([["lanche-saida", "15:30"], ["caminhada-trabalho", "16:00"], ["caes", "17:15"], ["treino", "18:15"]]);
+    expect(tarde).toEqual([["lanche-saida", "15:30"], ["caminhada-trabalho", "16:00"], ["treino", "17:00"], ["caes", "18:45"]]);
     const noite = bloco(2, "noite", "caminhada").map((i) => [i.id, i.defaultTime]).slice(0, 4);
-    expect(noite).toEqual([["jantar", "19:30"], ["skincare-noite", "20:00"], ["postura", "20:15"], ["voz", "21:00"]]);
+    expect(noite).toEqual([["jantar", "20:00"], ["skincare-noite", "20:00"], ["postura", "20:15"], ["voz", "21:00"]]);
   });
 
   it("o lanche da semana não cita a caminhada fora do modo caminhada", () => {
     const l = (m: Parameters<typeof buildDayRoutine>[3]) => bloco(2, "tarde", m).find((i) => i.id === "lanche-saida")!.subtitle;
     expect(l("esteira")).toMatch(/combustível até o treino/);
     expect(l("esteira")).not.toMatch(/meia hora antes do treino/);
+    expect(l("esteira")).toMatch(/treino das 17h/);
     expect(l("pausada")).toMatch(/combustível até o treino/);
     expect(l("pausada")).not.toMatch(/meia hora antes do treino/);
-    expect(l("caminhada")).toMatch(/caminhada de 5 km/);
+    expect(l("caminhada")).toMatch(/coma antes de sair às 16h/);
   });
 });

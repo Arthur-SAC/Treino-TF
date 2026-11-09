@@ -165,12 +165,14 @@ export async function seedDatabase(): Promise<void> {
     ["morningReminderTime", "08:00", "06:25"],
     ["eveningReminderTime", "22:00", "20:00"],
     ["workoutReminderTime", "18:00", "18:15"],
+    // 2026-11: treino na Smart Fit às 17h; o aviso sai antes dela deixar o trabalho.
+    ["workoutReminderTime", "18:15", "15:50"],
     ["hydrationGoalMl", 2000, 3000],
     ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
   ];
   // Uma vez só: se depois ela escolher um valor antigo de propósito (é tudo
   // editável em Configurações), a próxima abertura não pode desfazer.
-  const LEMBRETES_MIGRACAO = 1;
+  const LEMBRETES_MIGRACAO = 2;
   const lembretesFeita = await db.settings.get("lembretesMigracao");
   if (((lembretesFeita?.value as number) ?? 0) < LEMBRETES_MIGRACAO) {
     for (const [key, antigo, novo] of ANTIGOS) {
