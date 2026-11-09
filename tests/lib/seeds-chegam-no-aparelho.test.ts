@@ -64,7 +64,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(TEMPLATE_SEED_VERSION).toBe(17);
+    expect(TEMPLATE_SEED_VERSION).toBe(18);
   });
 
   // O plano alimentar era o único seed grande fora deste arquivo: a versão dele
@@ -202,14 +202,14 @@ describe("templates de treino", () => {
     await seedDatabase();
 
     const TROCAS: [string, string][] = [
-      // adaptação — o ciclo que ela alcança em ~3 semanas
-      ["seg-gluteo-mobilidade", "agachamento-goblet"],
+      // adaptação — o ciclo que ela alcança depois da Entrada
       // o carregamento foi pra quinta (Superior B · força de levantar) em 2026-09-23
       ["qui-gluteo-coxa", "carregamento-frontal"],
       ["ter-cintura-costas", "prancha-antirrotacao"],
-      // e os ciclos de construção
-      ["v-seg-gluteo-unilateral", "agachamento-goblet"],
-      ["v-ter-cintura-costas", "prancha-antirrotacao"],
+      // Smartfit Jardins (2026-11-09): hip thrust na máquina e flexora sentada
+      ["seg-gluteo-mobilidade", "hip-thrust-maquina"],
+      ["v-seg-gluteo-unilateral", "hip-thrust-maquina"],
+      ["v-sex-peitoral-postura", "flexora-sentada"],
     ];
     const faltando: string[] = [];
     for (const [templateId, exerciseId] of TROCAS) {
@@ -223,6 +223,11 @@ describe("templates de treino", () => {
     // (glúteo médio 3x); o que saiu de lá foi o leg press de pés altos.
     const seg = await db.workoutTemplates.get("seg-gluteo-mobilidade");
     expect(seg?.exercises.some((e) => e.exerciseId === "smith-squat")).toBe(false);
+    // Na Smartfit (2026-11-09) o leg press de pés altos saiu da Entrada inteira.
+    for (const t of ALL_TEMPLATES.filter((x) => (x.cycle ?? "").startsWith("entrada"))) {
+      const gravado = await db.workoutTemplates.get(t.id);
+      expect({ id: t.id, smith: gravado?.exercises.some((e) => e.exerciseId === "smith-squat") }).toEqual({ id: t.id, smith: false });
+    }
   });
 });
 

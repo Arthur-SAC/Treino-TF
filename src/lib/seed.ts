@@ -43,7 +43,9 @@ export const EXERCISE_SEED_VERSION = 16;
 // v15: búlgaro com viés de glúteo; entra na quarta (entrega C, 2026-10-02).
 // v16: nota do búlgaro na quarta da Entrada diz com que peso começar (revisão final da entrega C).
 // v17: todo treino de déficit fecha com 15-20 min de cardio leve (2026-11-04).
-export const TEMPLATE_SEED_VERSION = 17;
+// v18: Smartfit Jardins em todos os ciclos — Entrada, adaptação, variação,
+// hipertrofia, refinamento e manutenção com os aparelhos dela e substituto por item.
+export const TEMPLATE_SEED_VERSION = 18;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");

@@ -41,13 +41,14 @@ describe("Fase de Entrada — blocos independentes", () => {
     }
   });
 
-  it("só os dias sem miolo completo são os leves e o da graduação do hip thrust", () => {
-    const semMiolo = ENTRADA_TEMPLATES.filter((t) => {
-      const blocos = new Set(t.exercises.map((e) => e.block));
-      return !(blocos.has("maquina") && blocos.has("solo"));
-    }).map((t) => t.id).sort();
-    // e1-qui/e2-qui/e3-qui são dias leves (mobilidade + cardio, ou step-up);
-    // e3-seg é hip thrust + abdutora, ambos em estação — não há o que reordenar.
-    expect(semMiolo).toEqual(["e1-qui", "e2-qui", "e3-qui", "e3-seg"]);
+  it("todo template da Entrada tem miolo, com bloco em todos os itens e blocos contíguos", () => {
+    // Na Smartfit (2026-11-09) não há mais dia leve: os cinco dias seguem a
+    // divisão da variação, só com máquina e polia.
+    for (const t of ENTRADA_TEMPLATES) {
+      expect({ id: t.id, semBloco: t.exercises.filter((e) => !e.block).length }).toEqual({ id: t.id, semBloco: 0 });
+      expect({ id: t.id, miolo: t.exercises.some((e) => e.block === "maquina" || e.block === "solo") }).toEqual({ id: t.id, miolo: true });
+      const seq = t.exercises.map((e) => e.block).filter((b, i, arr) => b !== arr[i - 1]);
+      expect({ id: t.id, contiguo: seq.length === new Set(seq).size }).toEqual({ id: t.id, contiguo: true });
+    }
   });
 });

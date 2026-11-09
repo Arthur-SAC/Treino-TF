@@ -44,11 +44,14 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "hack-machine": "quadriceps",
   "agachamento-goblet": "quadriceps",
   "agachamento-livre": "quadriceps",
-  "agachamento-sumo": "quadriceps",
   "agachamento-bulgaro": "quadriceps",
   "step-up-gluteo": "quadriceps",
   // adutor
   "adutora-maquina": "adutor",
+  // O sumô de base larga tem o adutor magno como motor principal. Conta aqui
+  // (e não no quadríceps) porque é o substituto da adutora quando ela está
+  // ocupada: sem isso, "Não tem aqui" zerava o adutor da semana (2026-11-09).
+  "agachamento-sumo": "adutor",
   // posterior: flexora por joelho + dobradiças
   "flexora-em-pe": "posterior",
   "flexora-sentada": "posterior",
@@ -60,6 +63,7 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "cross-over-cabo": "peito",
   "cross-over-baixo": "peito",
   "voador-maquina": "peito",
+  "crucifixo-polia": "peito", // de baixo pra cima: peito de cima, substituto do voador
   // costas
   "remada-baixa-maquina": "costas",
   "remada-unilateral-halter": "costas",

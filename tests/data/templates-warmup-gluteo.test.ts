@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { WORKOUT_PLAN } from "../../src/data/workout-plan-seed";
 import { CYCLE_TEMPLATES } from "../../src/data/cycles-seed";
 import type { WorkoutTemplate } from "../../src/lib/db";
+import { GRUPO_DO_EXERCICIO } from "../../src/lib/volume-muscular";
 
 const ALL: WorkoutTemplate[] = [...WORKOUT_PLAN, ...CYCLE_TEMPLATES];
 
@@ -21,7 +22,9 @@ describe("aquecimento e glúteo nos templates", () => {
       const ids = t.exercises.map((e) => e.exerciseId);
       expect(ids[0]).toBe("aquecimento-articular");
       expect(ids).toContain("ponte-gluteo-band");
-      expect(ids).toContain("abdutor-deitada");
+      // Desde 2026-11-09 (Smartfit) o glúteo médio da quarta pode vir da
+      // abdutora, da polia ou do solo — o que importa é ele estar lá.
+      expect({ id: t.id, medio: ids.some((id) => GRUPO_DO_EXERCICIO[id] === "gluteo-medio") }).toEqual({ id: t.id, medio: true });
     }
   });
 });
