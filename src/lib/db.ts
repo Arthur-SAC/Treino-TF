@@ -59,6 +59,9 @@ export interface WorkoutTemplate {
      *  sessão sempre na ordem autorada. Só `maquina` e `solo` — o miolo — podem
      *  trocar de lugar, pra quando a área está ocupada. */
     block?: "aquecimento" | "maquina" | "solo" | "final";
+    /** Exercício que entra no lugar quando o aparelho está ocupado ou não existe
+     *  na academia. Um nível só: o substituto não declara outro substituto. */
+    substitutoId?: string;
   }>;
   durationMin: number;
   purpose?: string; // frase curta: o que esta sessão faz pelo objetivo da usuária
