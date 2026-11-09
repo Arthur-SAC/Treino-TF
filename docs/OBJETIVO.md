@@ -115,15 +115,15 @@ chega ~17h (rota a pé ~3,9 km, ~50 min); treina ~17h–18h, volta a pé (~1–1
 do 17:15). O lanche das 16h vira obrigatório — ela treina depois de 9 h de trabalho e de
 caminhada. O app da Smartfit mostra a lotação ao vivo: olhar antes de sair do trabalho.
 
-O card "Hora da Smartfit" e as táticas de teto do prédio perdem o sentido com a troca.
+O card "Hora da Smartfit" e as táticas de teto do prédio perderam o sentido com a troca e foram removidos (2026-11-09).
 
 Quando ela trocar de academia (a ordem vale também pra fase 1):
 
-1. **Pedir fotos ou a lista de aparelhos da unidade dela.** Não supor o catálogo de uma
+1. ✅ (2026-11-09) **Pedir fotos ou a lista de aparelhos da unidade dela.** Não supor o catálogo de uma
    Smartfit genérica.
-2. **Mini-entrada de 1–2 semanas** com exposição baixa (máquinas sentadas, área de
+2. ✅ (2026-11-09) **Mini-entrada de 1–2 semanas** com exposição baixa (máquinas sentadas, área de
    aparelhos) — a Smartfit é cheia e pública, e ela cancela treino quando aparece gente.
-3. **Reescrever hipertrofia, refinamento e manutenção** (`src/data/cycles-seed.ts`) com os
+3. ✅ (2026-11-09, Smart Fit Jardins) **Reescrever hipertrofia, refinamento e manutenção** (`src/data/cycles-seed.ts`) com os
    aparelhos reais, mantendo as regras da seção 2 e estas faixas semanais:
    glúteo máximo 18–22 séries (viés de projeção) · glúteo médio 15–21 (máquina ≥ 3x) ·
    quadríceps 12–16 · adutor ~6 · posterior 6–8 com **flexora > stiff+good-morning** ·
@@ -131,9 +131,12 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
    bíceps ~6 · tríceps ~6. Sessão **≤ 60 min pelo estimador** (`src/lib/session-duration.ts`).
    A hipertrofia pode ficar no topo dessas faixas; o refinamento no meio; a manutenção
    nunca deixa glúteo médio < 12.
-4. **O que a Smartfit destrava:** polia baixa de verdade (coice e abdução no cabo,
+4. ✅ (2026-11-09) **O que a Smartfit destrava:** polia baixa de verdade (coice e abdução no cabo,
    pull-through), mesa flexora, máquina de glúteo, hack/smith. Use pra projeção e dobra.
-   O teste `no-low-pulley.test.ts` é da academia do prédio — revisar quando ela trocar.
+   Unidade Jardins confirmada: polia até o chão, máquina de hip thrust, flexora sentada,
+   abdutora/adutora, leg press, extensora, peck deck, remada e halteres; smith, coice, 45° e
+   hack entram "se tiver" (o app tem o "não tem aqui" por exercício). O teste
+   `no-low-pulley.test.ts` era da academia do prédio e foi aposentado.
 5. **Comida da fase 2:** o app troca sozinho pra manutenção/superávit pela cintura
    (`resolveGoal`, trava 88). O **advisor de ciclo** libera a hipertrofia com cintura ≤ 84
    (fim da fase 1) ou platô de cintura — corrigido na entrega 2.
