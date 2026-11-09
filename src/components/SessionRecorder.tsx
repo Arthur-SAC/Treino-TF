@@ -20,6 +20,13 @@ interface Props {
    *  que a descrição genérica do exercício e por isso aparece em destaque. */
   notes?: string;
   onSave: (entry: WorkoutSession["exercises"][number]) => void;
+  /** Aparelho ocupado agora: troca pelo substituto só nesta sessão. */
+  onOcupado?: () => void;
+  /** Não existe na academia: troca pelo substituto pra sempre (até "Tem sim"). */
+  onNaoTemAqui?: () => void;
+  /** Já está no substituto por "Ocupado": o aparelho liberou. */
+  onVoltarAoOriginal?: () => void;
+  nomeOriginal?: string;
 }
 
 function formatTime(s: number): string {
@@ -35,7 +42,7 @@ function describeLast(last: LastPerformance): string {
     .join(" · ");
 }
 
-export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave }: Props) {
+export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, notes, onSave, onOcupado, onNaoTemAqui, onVoltarAoOriginal, nomeOriginal }: Props) {
   const timeBased = isTimeBased(repsTarget);
   // Carregamento ("20m", "30m"): o segundo campo é a distância, não reps.
   const porDistancia = /\d\s*m\b/i.test(repsTarget);
@@ -49,6 +56,9 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
   const [showInfo, setShowInfo] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const ladoFraco = useSetting("ladoFraco");
+  // Depois de salvar, trocar de aparelho deixaria um registro órfão do que ela
+  // já fez no outro: os botões de troca somem.
+  const [salvou, setSalvou] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -173,8 +183,30 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           weight: Number(s.weight.replace(",", ".")) || 0,
         })),
     };
-    if (entry.sets.length > 0) onSave(entry);
+    if (entry.sets.length > 0) {
+      setSalvou(true);
+      onSave(entry);
+    }
   }
+
+  // Botões de troca, ao lado do cabeçalho. Só aparecem se a página mandou a
+  // prop: nem todo item tem substituto. Alvo de toque confortável (min-h-10).
+  const botaoTroca = "px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-muted";
+  const trocas = (
+    <>
+      {(onOcupado || onNaoTemAqui) && !salvou && (
+        <div className="flex gap-2 mt-2">
+          {onOcupado && <button type="button" onClick={onOcupado} className={botaoTroca}>Ocupado</button>}
+          {onNaoTemAqui && <button type="button" onClick={onNaoTemAqui} className={botaoTroca}>Não tem aqui</button>}
+        </div>
+      )}
+      {onVoltarAoOriginal && (
+        <div className="mt-2">
+          <button type="button" onClick={onVoltarAoOriginal} className={botaoTroca}>Voltar pro {nomeOriginal}</button>
+        </div>
+      )}
+    </>
+  );
 
   // ── Exercícios por TEMPO (cardio, aquecimento, isometria): só "feito" ──────
   if (timeBased) {
@@ -194,11 +226,12 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-muted text-xs mt-0.5">
           {setsTarget > 1 ? `${setsTarget}x ` : ""}{repsTarget} · por tempo
         </p>
+        {trocas}
         {notes && <p className="text-xs text-nude-warm bg-wine/30 border border-nude/25 rounded-md px-2 py-1.5 mt-2 mb-1">{notes}</p>}
         {exercise.successCue && <p className="text-xs text-nude/80 mt-2">✦ {exercise.successCue}</p>}
         <button
           type="button"
-          onClick={() => onSave({ exerciseId: exercise.id, sets: [] })}
+          onClick={() => { setSalvou(true); onSave({ exerciseId: exercise.id, sets: [] }); }}
           className="w-full bg-wine text-nude-warm rounded-md py-2 text-sm mt-3"
         >
           Marcar feito
@@ -226,6 +259,7 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
         <p className="text-muted text-xs mt-0.5">
           {setsTarget}x {repsTarget} {restSec > 0 && `· descanso ${restSec}s`}
         </p>
+        {trocas}
       </div>
 
       {isHoldLight(exercise.category) && (

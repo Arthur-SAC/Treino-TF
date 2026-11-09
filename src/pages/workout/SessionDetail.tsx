@@ -10,6 +10,8 @@ import { GuideAccordion } from "../../components/GuideAccordion";
 import { hojeISO } from "../../lib/today-date";
 import { useSetting } from "../../hooks/useSetting";
 import type { ModoCaminhada } from "../../lib/objetivo";
+import { aplicarAusentes, podeMarcarAusente, type ItemTemplate } from "../../lib/troca-aparelho";
+import { setSetting } from "../../lib/settings-helpers";
 
 // Os dois primeiros textos de "Ao terminar" dependem de a zona 2 vir de algum
 // lugar hoje. Em "pausada" não vem — afirmar que a caminhada "já entrega" seria
@@ -38,6 +40,10 @@ function dicasZona2(modo: ModoCaminhada): string[] {
 
 export function SessionDetail() {
   const modoCaminhada = useSetting("modoCaminhada");
+  const ausentes = useSetting("aparelhosAusentes");
+  // "Ocupado": original → substituto, SÓ nesta visita à sessão. Nada vai pro db:
+  // amanhã o aparelho pode estar livre.
+  const [ocupados, setOcupados] = useState<Record<string, string>>({});
   const { templateId } = useParams<{ templateId: string }>();
   const navigate = useNavigate();
   const template = useLiveQuery(
@@ -46,7 +52,8 @@ export function SessionDetail() {
   );
   const exercises = useLiveQuery(async () => {
     if (!template) return [];
-    const ids = template.exercises.map((e) => e.exerciseId);
+    // Inclui os substitutos: a troca por "Ocupado" precisa do nome deles já na mão.
+    const ids = template.exercises.flatMap((e) => (e.substitutoId ? [e.exerciseId, e.substitutoId] : [e.exerciseId]));
     return db.exercises.where("id").anyOf(ids).toArray();
   }, [template]);
 
@@ -64,9 +71,14 @@ export function SessionDetail() {
   const temBlocos =
     (template?.exercises.some((e) => e.block === "maquina") ?? false) &&
     (template?.exercises.some((e) => e.block === "solo") ?? false);
+  // Ausência permanente e "Ocupado" usam a mesma troca (mesma regra do " cada").
+  const efetivo = useMemo(
+    () => (template ? aplicarAusentes(template, [...ausentes, ...Object.keys(ocupados)]) : undefined),
+    [template, ausentes, ocupados],
+  );
   const ordenados = useMemo(
-    () => (template ? ordenarPorBloco(semCardioPosTreinoNaEsteira(template.exercises, modoCaminhada), soloPrimeiro) : []),
-    [template, soloPrimeiro, modoCaminhada],
+    () => (efetivo ? ordenarPorBloco(semCardioPosTreinoNaEsteira(efetivo.exercises, modoCaminhada), soloPrimeiro) as ItemTemplate[] : []),
+    [efetivo, soloPrimeiro, modoCaminhada],
   );
 
   // Carrega o treino em andamento de hoje (se a usuária saiu e voltou): mostra o
@@ -220,7 +232,18 @@ export function SessionDetail() {
       {ordenados.map((tplEx) => {
         const ex = exMap.get(tplEx.exerciseId);
         if (!ex) return null;
-        const alreadyRecorded = recorded.some((r) => r.exerciseId === ex.id);
+        // Sessão reaberta não lembra do "Ocupado" (é só da visita): o item volta
+        // ao original, mas se ela registrou o substituto, ele conta como feito.
+        const idsDoItem = [tplEx.exerciseId];
+        if (tplEx.originalId) idsDoItem.push(tplEx.originalId);
+        if (tplEx.substitutoId && !template.exercises.some((o) => o.exerciseId === tplEx.substitutoId)) {
+          idsDoItem.push(tplEx.substitutoId);
+        }
+        const registro = recorded.find((r) => idsDoItem.includes(r.exerciseId));
+        const alreadyRecorded = registro !== undefined;
+        const exRegistrado = registro ? exMap.get(registro.exerciseId) ?? ex : ex;
+        const original = tplEx.originalId ? exMap.get(tplEx.originalId) : undefined;
+        const voltavel = tplEx.originalId !== undefined && ocupados[tplEx.originalId] !== undefined && !ausentes.includes(tplEx.originalId);
         const titulo = tituloDoBloco.get(tplEx.exerciseId);
         // Key por exerciseId (não pelo índice): ao trocar a ordem com
         // soloPrimeiro, o mesmo índice passa a apontar pra outro exercício, e um
@@ -233,13 +256,13 @@ export function SessionDetail() {
             )}
             {alreadyRecorded ? (
               <div className="card mb-3 border-nude">
-                <h3 className="text-nude-warm font-medium">{ex.name} ✓</h3>
+                <h3 className="text-nude-warm font-medium">{exRegistrado.name} ✓</h3>
                 <div className="flex justify-between items-baseline">
                   <p className="text-muted text-xs">Registrado</p>
                   <button
                     type="button"
-                    onClick={() => corrigir(ex.id)}
-                    aria-label={`Corrigir ${ex.name}`}
+                    onClick={() => corrigir(exRegistrado.id)}
+                    aria-label={`Corrigir ${exRegistrado.name}`}
                     className="text-muted text-xs underline"
                   >
                     Corrigir
@@ -252,8 +275,23 @@ export function SessionDetail() {
                 setsTarget={tplEx.sets}
                 repsTarget={tplEx.repsTarget}
                 restSec={tplEx.restSec}
-                notes={tplEx.notes}
+                // As notas descrevem o aparelho ORIGINAL ("polia no chão, tornozeleira…");
+                // no substituto seriam instrução errada.
+                notes={tplEx.originalId ? undefined : tplEx.notes}
                 onSave={handleSave}
+                onOcupado={tplEx.substitutoId && !tplEx.originalId
+                  ? () => setOcupados((o) => ({ ...o, [tplEx.exerciseId]: tplEx.substitutoId as string }))
+                  : undefined}
+                onNaoTemAqui={podeMarcarAusente(tplEx)
+                  ? () => void setSetting("aparelhosAusentes", [...ausentes, tplEx.exerciseId])
+                  : undefined}
+                onVoltarAoOriginal={voltavel
+                  ? () => setOcupados((o) => {
+                      const { [tplEx.originalId as string]: _, ...resto } = o;
+                      return resto;
+                    })
+                  : undefined}
+                nomeOriginal={original?.name}
               />
             )}
           </Fragment>

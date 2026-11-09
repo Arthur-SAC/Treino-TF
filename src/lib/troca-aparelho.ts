@@ -27,6 +27,13 @@ export const UNILATERAIS: ReadonlySet<string> = new Set([
   "elevacao-pelvica-banco",
 ]);
 
+/** Alvo de reps do substituto: se ele é feito um lado por vez, o alvo herdado
+ *  vale pra cada lado. Único lugar com essa regra — usado pela ausência
+ *  permanente e pelo "Ocupado" da sessão. */
+export function repsDoSubstituto(repsTarget: string, substitutoId: string): string {
+  return UNILATERAIS.has(substitutoId) && !/cada/.test(repsTarget) ? `${repsTarget} cada` : repsTarget;
+}
+
 /** Troca cada item ausente pelo seu substituto. Um nível só: se o substituto
  *  também está ausente, ele fica mesmo assim (não há terceira opção, e seguir
  *  a cadeia poderia girar em laço). Devolve cópia; a entrada não é mutada. */
@@ -38,9 +45,7 @@ export function aplicarAusentes(
     ...t,
     exercises: t.exercises.map((item) => {
       if (!item.substitutoId || !ausentes.includes(item.exerciseId)) return { ...item };
-      const repsTarget = UNILATERAIS.has(item.substitutoId) && !/cada/.test(item.repsTarget)
-        ? `${item.repsTarget} cada`
-        : item.repsTarget;
+      const repsTarget = repsDoSubstituto(item.repsTarget, item.substitutoId);
       return { ...item, exerciseId: item.substitutoId, originalId: item.exerciseId, repsTarget } as ItemTemplate;
     }),
   };

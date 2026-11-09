@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { WorkoutTemplate } from "../../src/lib/db";
-import { aplicarAusentes, podeMarcarAusente, UNILATERAIS, type ItemTemplate } from "../../src/lib/troca-aparelho";
+import { aplicarAusentes, podeMarcarAusente, repsDoSubstituto, UNILATERAIS, type ItemTemplate } from "../../src/lib/troca-aparelho";
 
 function deepFreeze<T>(o: T): T {
   if (o && typeof o === "object") {
@@ -75,5 +75,13 @@ describe("substituto unilateral", () => {
 
   it("o item que não foi trocado não ganha 'cada'", () => {
     expect(aplicarAusentes(t("15-20"), []).exercises[0].repsTarget).toBe("15-20");
+  });
+});
+
+describe("repsDoSubstituto", () => {
+  it("acrescenta ' cada' só quando o substituto é unilateral e o alvo ainda não diz", () => {
+    expect(repsDoSubstituto("15-20", "kickback")).toBe("15-20 cada");
+    expect(repsDoSubstituto("12 cada", "kickback")).toBe("12 cada");
+    expect(repsDoSubstituto("10-12", "hip-thrust-barra")).toBe("10-12");
   });
 });

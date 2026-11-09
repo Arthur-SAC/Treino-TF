@@ -1,5 +1,6 @@
 import { Voltar } from "../components/Voltar";
 import { useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
 import { requestNotificationPermission } from "../lib/notifications";
@@ -43,6 +44,16 @@ export function Settings() {
   const pitchLow = useSetting("voicePitchTargetLowHz");
   const pitchHigh = useSetting("voicePitchTargetHighHz");
   const modoCaminhada = useSetting("modoCaminhada");
+
+  const ausentes = useSetting("aparelhosAusentes");
+  // Nomes (não ids) pra ela reconhecer o que marcou; id sem exercício no catálogo cai no próprio id.
+  const nomesAusentes = useLiveQuery(
+    async () => {
+      const rows = await db.exercises.where("id").anyOf(ausentes).toArray();
+      return new Map(rows.map((e) => [e.id, e.name]));
+    },
+    [ausentes],
+  );
 
   const [busy, setBusy] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
@@ -136,6 +147,29 @@ export function Settings() {
           </label>
         ))}
       </div>
+
+      {ausentes.length > 0 && (
+        <div className="card space-y-3">
+          <h2 className="text-nude-warm font-medium">Aparelhos que não tem na sua academia</h2>
+          <p className="text-muted text-xs">Nos treinos, o substituto entra no lugar deles. Se o aparelho aparecer, toque em "Tem sim".</p>
+          {ausentes.map((id) => {
+            const nome = nomesAusentes?.get(id) ?? id;
+            return (
+              <div key={id} className="flex items-center justify-between gap-2">
+                <span className="text-sm">{nome}</span>
+                <button
+                  type="button"
+                  aria-label={`Tem sim: ${nome}`}
+                  onClick={() => void setSetting("aparelhosAusentes", ausentes.filter((a) => a !== id))}
+                  className="px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-nude"
+                >
+                  Tem sim
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <div className="card space-y-3">
         <h2 className="text-nude-warm font-medium">Notificações</h2>

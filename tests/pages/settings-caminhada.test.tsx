@@ -22,3 +22,24 @@ describe("Configurações · caminhadas agora", () => {
     expect(await screen.findByText(/somem do Hoje/)).toBeInTheDocument();
   });
 });
+
+describe("Configurações · aparelhos que não tem na academia", () => {
+  it("lista vazia não renderiza a seção", async () => {
+    render(<MemoryRouter><Settings /></MemoryRouter>);
+    await screen.findByText(/Caminhadas agora/);
+    expect(screen.queryByText(/Aparelhos que não tem/)).toBeNull();
+  });
+
+  it("Tem sim remove o id de aparelhosAusentes", async () => {
+    await db.exercises.put({
+      id: "abdutor-maquina", name: "Abdutora", category: "gluteo", equipment: ["maquina"],
+      difficulty: "iniciante", description: "x", commonMistakes: [], exposureLevel: 2,
+    });
+    await db.settings.put({ key: "aparelhosAusentes", value: ["abdutor-maquina", "outro-id"] });
+    render(<MemoryRouter><Settings /></MemoryRouter>);
+    expect(await screen.findByText("Abdutora")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Tem sim: Abdutora" }));
+    await waitFor(async () => expect((await db.settings.get("aparelhosAusentes"))?.value).toEqual(["outro-id"]));
+    await waitFor(() => expect(screen.queryByText("Abdutora")).toBeNull());
+  });
+});
