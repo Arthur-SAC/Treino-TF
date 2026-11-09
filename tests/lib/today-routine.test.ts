@@ -17,9 +17,17 @@ describe("buildDayRoutine", () => {
         "alongamento-manha", "skincare-manha", "sol-manha",
         "agua", "micro-pausa-0700",
         "lanche-saida", "caes", "treino",
-        "skincare-noite", "alongamento-noite", "seu-tempo", "diario",
+        "skincare-noite", "alongamento-noite",
       ]),
     );
+  });
+
+  it("nenhum dia da semana tem os itens seu-tempo nem diario (saíram do Hoje)", () => {
+    for (const dow of [0, 1, 2, 3, 4, 5, 6]) {
+      const ids = buildDayRoutine(dow, 1).blocks.flatMap((b) => b.items.map((i) => i.id));
+      expect({ dow, seuTempo: ids.includes("seu-tempo"), diario: ids.includes("diario") })
+        .toEqual({ dow, seuTempo: false, diario: false });
+    }
   });
 
   it("itens com estado externo usam control:link e linkKey", () => {

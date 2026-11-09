@@ -361,8 +361,6 @@ const NOITE: RoutineItem[] = [
   // flex-progression.ts): a noite trabalha flexão profunda e rotação, e
   // misturar a contagem com a manhã faria uma trilha mascarar a outra.
   { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "21:30" },
-  { id: "seu-tempo", block: "noite", label: "Seu tempo: desenho + leitura", subtitle: "Descanso protegido — vale pro humor e pro sono", optional: true },
-  { id: "diario", block: "noite", label: "Diário · como foi o dia?", to: "/trilha/diario" },
   // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a
   // partir do horário do próprio item (que a usuária ajusta em /hoje/horarios).
   { id: "dormir", block: "noite", label: "Dormir", subtitle: "Meta: 7–7,5 h até as 6h · marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },

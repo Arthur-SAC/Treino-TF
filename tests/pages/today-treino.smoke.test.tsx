@@ -13,11 +13,11 @@ describe("Today — cards de treino", () => {
     await db.dailyLog.clear();
   });
 
-  // Ancorado em itens presentes todo dia (Água/Seu tempo) — o item "Treino do dia"
+  // Ancorado em itens presentes todo dia (Água/Postura) — o item "Treino do dia"
   // só existe em dia de semana, então é coberto pelo teste de template abaixo.
-  it("mostra itens estáveis da rotina (Água e Seu tempo)", async () => {
+  it("mostra itens estáveis da rotina (Água e Postura)", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText(/Seu tempo/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Postura/)).toBeInTheDocument());
     expect(screen.getByText("Água")).toBeInTheDocument();
   });
 

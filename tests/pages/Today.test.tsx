@@ -41,9 +41,11 @@ describe("Today (backbone)", () => {
     expect(link.getAttribute("href")).toMatch(/^\/treino\/movimento\/(corporal-caminhada|corporal-oito-quadril)$/);
   });
 
-  it("mostra o item Seu tempo (desenho + leitura)", async () => {
+  it("não mostra Seu tempo nem Diário (saíram do Hoje; ficam no Progresso)", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    expect(await screen.findByText(/Seu tempo/i)).toBeInTheDocument();
+    await screen.findByText("Noite");
+    expect(screen.queryByText(/Seu tempo/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Diário/i)).not.toBeInTheDocument();
   });
 
   // O alvo do sono era a constante "22:30" na tela, enquanto o horário do item
