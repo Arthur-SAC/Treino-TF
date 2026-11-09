@@ -193,7 +193,7 @@ type TipoDeDia = "semana" | "sabado" | "domingo";
 
 /** O lanche existe nos sete dias, mas horário e motivo mudam: em dia de semana
  *  é às 15:30, a janela pré-treino comida ainda no trabalho, meia hora antes
- *  da caminhada das 16h; no fim de semana é às 16h — no sábado é antes da
+ *  de ela sair a pé pra Smart Fit às 16h; no fim de semana é às 16h — no sábado é antes da
  *  dança, no domingo não há nem trabalho nem treino. Mesmo `id` sempre — o
  *  check do dia e o horário ajustado seguem o item, não a copy. */
 function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
@@ -202,9 +202,9 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
     block: "tarde",
     control: "recipe",
     mealType: "lanche",
-    // Na semana o lanche antecede a caminhada de 5 km das 16h — comido na
-    // mesa, meia hora antes, pra não sair de casa 4h em jejum e prestes a
-    // andar. Fim de semana não tem essa pressa, então mantém as 16h.
+    // Na semana o lanche antecede a caminhada até a academia das 16h — comido
+    // na mesa, meia hora antes, pra não sair do trabalho em jejum depois de
+    // 9 h e prestes a andar 4 km. Fim de semana não tem essa pressa, então mantém as 16h.
     defaultTime: dia === "semana" ? "15:30" : "16:00",
   } as const;
   if (dia === "sabado") {
@@ -230,7 +230,7 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
  *  é informação verdadeira sobre um dia mais parado, não falha.
  *
  *  Dia de semana e fim de semana usam IDS DIFERENTES (`caes` × `caes-fds`) de
- *  propósito: o passeio de semana é às 17:15, mas no sábado precisa ser às
+ *  propósito: o passeio de semana é às 18:45, mas no sábado precisa ser às
  *  18:15 (depois da dança das 17:30, pra não colidir com ela). Com um id só
  *  pros sete dias, a tela /hoje/horarios deduplicava e mostrava uma linha
  *  única — ajustar aquele horário reescrevia o override pros sete dias,
@@ -242,7 +242,7 @@ function lanche(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem 
  *  Domingo passa a usar `caes-fds` também, no mesmo 18:15 do sábado: como os
  *  dois compartilham id (e portanto o mesmo ajuste em /hoje/horarios), dar a
  *  eles o mesmo horário padrão evita que a tela de ajuste mostre 18:15
- *  enquanto o domingo de verdade ainda usasse 17:15 — não há dança no domingo
+ *  enquanto o domingo de verdade ainda usasse 18:45 — não há dança no domingo
  *  pra colidir, então a mudança de horário não tem custo. */
 function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
   const fimDeSemana = dia === "sabado" || dia === "domingo";
@@ -272,7 +272,7 @@ function caes(dia: TipoDeDia, modo: ModoCaminhada = "caminhada"): RoutineItem {
     };
   }
   if (modo === "pausada") {
-    return { ...base, subtitle: "Movimento leve — com a caminhada pausada, é o único passeio do dia." };
+    return { ...base, subtitle: "Movimento leve — com a caminhada até a academia pausada, é o único passeio da rotina." };
   }
   if (modo === "esteira") {
     return { ...base, subtitle: "NEAT — lento, com paradas; é o movimento fácil que soma em cima da esteira" };
@@ -319,13 +319,15 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
   let base = NOITE;
   if (modo === "esteira" && diaUtil) {
-    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → postura 21:05.
-    // A ordem do array segue o horário.
-    const horario: Record<string, string> = { jantar: "20:30", postura: "21:05", "skincare-noite": "21:00", voz: "21:10" };
-    base = [
-      noModo(CAMINHADA_TRABALHO, modo)!,
-      ...NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
-    ];
+    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → postura 20:45
+    // → skincare 21:00 → voz 21:10, sempre com ~15 min entre vizinhos. A ordem
+    // do array segue o horário, então a postura vem logo depois do jantar.
+    const horario: Record<string, string> = { jantar: "20:30", postura: "20:45", "skincare-noite": "21:00", voz: "21:10" };
+    const ajustada = NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i));
+    const postura = ajustada.find((i) => i.id === "postura")!;
+    const resto = ajustada.filter((i) => i.id !== "postura");
+    resto.splice(resto.findIndex((i) => i.id === "jantar") + 1, 0, postura);
+    base = [noModo(CAMINHADA_TRABALHO, modo)!, ...resto];
   }
   // Fora do modo esteira, o jantar de dia útil é às 20:00 (chega da academia,
   // cães às 18:45); o horário de fim de semana não muda.
@@ -342,11 +344,11 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
 
 const NOITE: RoutineItem[] = [
   { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
-  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:00" },
+  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:30" },
   // Sentar ficou nas micro-pausas; aqui é andar, 8 e gingado (decisão dela,
   // 2026-10-02: cada prática no momento em que ela é usada). Rótulo neutro de
   // propósito — o Hoje fica aberto em ambiente não receptivo.
-  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:15" },
+  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:45" },
   { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
   ASSOALHO,
   // Mesma progressão do alongamento da manhã, trilha própria (ver
@@ -418,7 +420,7 @@ function buildBlocks(
     { id: "manha", label: "Manhã", timeHint: "a partir das 6h", items: manhaItems(dayOfYear, isSaturday || isSunday, modo) },
     trabalho,
     tarde,
-    { id: "noite", label: "Noite", timeHint: "a partir das 19h", items: noiteDoDia(dayOfWeek, modo) },
+    { id: "noite", label: "Noite", timeHint: "a partir das 20h", items: noiteDoDia(dayOfWeek, modo) },
     { id: "semana", label: "Esta semana", items: semanaItems },
   ];
 }

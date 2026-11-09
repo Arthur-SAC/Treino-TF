@@ -96,7 +96,7 @@ export const DEFAULTS: Settings = {
   // Os horários dos itens de skincare e treino da rotina do Hoje (auditoria
   // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
   morningReminderTime: "06:25",
-  eveningReminderTime: "20:00",
+  eveningReminderTime: "20:30",
   // 15:50: dez minutos antes de ela sair do trabalho a pé pra Smart Fit (16h).
   workoutReminderTime: "15:50",
   activeBreakIntervalMin: 90,

@@ -40,7 +40,7 @@ describe("rotina pelo modo das caminhadas", () => {
       for (const i of itens(dow, "esteira")) expect(i.subtitle ?? "").not.toMatch(REDE);
     }
     expect(itens(1, "pausada").find((i) => i.id === "treino")!.subtitle).toMatch(/caminhada está pausada/);
-    expect(itens(1, "pausada").find((i) => i.id === "caes")!.subtitle).toMatch(/único passeio do dia/);
+    expect(itens(1, "pausada").find((i) => i.id === "caes")!.subtitle).toMatch(/único passeio da rotina/);
     expect(itens(1, "esteira").find((i) => i.id === "caes")!.subtitle).toMatch(/em cima da esteira/);
   });
 
@@ -66,9 +66,9 @@ describe("rotina pelo modo das caminhadas", () => {
       expect(t("jantar")).toBe("20:30");
       expect(t("skincare-noite")).toBe("21:00");
       expect(t("voz")).toBe("21:10");
-      // A postura volta pra noite (21:05, depois do jantar e do skincare): às 16:45 cairia entre a caminhada e o treino.
+      // A postura volta pra noite (20:45, logo depois do jantar): às 16:45 cairia entre a caminhada e o treino.
       expect(tarde.map((i) => i.id)).not.toContain("postura");
-      expect(t("postura")).toBe("21:05");
+      expect(t("postura")).toBe("20:45");
       expect(tarde.find((i) => i.id === "treino")!.defaultTime).toBe("17:00");
       expect(tarde.find((i) => i.id === "caes")!.defaultTime).toBe("19:15");
       expect(tarde.find((i) => i.id === "treino")!.subtitle).toBe("Força primeiro; a esteira vem logo depois");
@@ -88,6 +88,25 @@ describe("rotina pelo modo das caminhadas", () => {
     }
   });
 
+  it("caminhada e pausada: nenhum item de dia útil começa entre 20:00 e 20:30 além do jantar", () => {
+    for (const modo of ["caminhada", "pausada"] as const) {
+      for (const dow of [1, 2, 3, 4, 5]) {
+        const dentro = itens(dow, modo)
+          .filter((i) => i.defaultTime && i.defaultTime >= "20:00" && i.defaultTime < "20:30")
+          .map((i) => i.id);
+        expect(dentro).toEqual(["jantar"]);
+      }
+    }
+  });
+
+  it("esteira: a postura tem ao menos 15 min de folga dos vizinhos", () => {
+    const noite = bloco(2, "noite", "esteira");
+    const min = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3));
+    const i = noite.findIndex((x) => x.id === "postura");
+    expect(min(noite[i].defaultTime!) - min(noite[i - 1].defaultTime!)).toBeGreaterThanOrEqual(15);
+    expect(min(noite[i + 1].defaultTime!) - min(noite[i].defaultTime!)).toBeGreaterThanOrEqual(15);
+  });
+
   it("pausada: treino às 17:00 e jantar às 20:00 nos dias úteis", () => {
     const t = bloco(2, "tarde", "pausada").find((i) => i.id === "treino")!;
     expect(t.defaultTime).toBe("17:00");
@@ -97,7 +116,7 @@ describe("rotina pelo modo das caminhadas", () => {
   it("esteira no fim de semana não muda: continua de manhã e a postura fica na noite", () => {
     for (const dow of [0, 6]) {
       expect(bloco(dow, "manha", "esteira").map((i) => i.id)).toContain("caminhada-fds");
-      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "postura")!.defaultTime).toBe("20:15");
+      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "postura")!.defaultTime).toBe("20:45");
       expect(bloco(dow, "noite", "esteira").find((i) => i.id === "jantar")!.defaultTime).toBe("19:30");
     }
   });
@@ -106,7 +125,7 @@ describe("rotina pelo modo das caminhadas", () => {
     const tarde = bloco(2, "tarde", "caminhada").map((i) => [i.id, i.defaultTime]);
     expect(tarde).toEqual([["lanche-saida", "15:30"], ["caminhada-trabalho", "16:00"], ["treino", "17:00"], ["caes", "18:45"]]);
     const noite = bloco(2, "noite", "caminhada").map((i) => [i.id, i.defaultTime]).slice(0, 4);
-    expect(noite).toEqual([["jantar", "20:00"], ["skincare-noite", "20:00"], ["postura", "20:15"], ["voz", "21:00"]]);
+    expect(noite).toEqual([["jantar", "20:00"], ["skincare-noite", "20:30"], ["postura", "20:45"], ["voz", "21:00"]]);
   });
 
   it("o lanche da semana não cita a caminhada fora do modo caminhada", () => {

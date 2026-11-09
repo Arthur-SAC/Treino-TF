@@ -167,6 +167,8 @@ export async function seedDatabase(): Promise<void> {
     ["workoutReminderTime", "18:00", "18:15"],
     // 2026-11: treino na Smart Fit às 17h; o aviso sai antes dela deixar o trabalho.
     ["workoutReminderTime", "18:15", "15:50"],
+    // O skincare da noite sai de cima do jantar (20:00) pras 20:30.
+    ["eveningReminderTime", "20:00", "20:30"],
     ["hydrationGoalMl", 2000, 3000],
     ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
   ];
