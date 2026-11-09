@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import type { Execucao } from "./execucao";
 
 export interface Measurement {
   id?: number;
@@ -43,6 +44,7 @@ export interface Exercise {
   startLoadKg?: number; // peso sugerido inicial (só exercícios com carga externa)
   proTips?: string[]; // dicas pra maximizar resultado
   successCue?: string; // "fez certo se sentir X" — sensação-alvo
+  execucao?: Execucao; // formato fixo; quando existe substitui description/erros/dicas na tela
 }
 
 export interface WorkoutTemplate {
@@ -290,6 +292,7 @@ export interface DanceMove {
   description: string;
   durationSec: number;
   repeat?: number;
+  execucao?: Execucao;
 }
 
 export interface DanceSequence {

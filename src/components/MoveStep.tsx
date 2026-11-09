@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import type { DanceMove } from "../lib/db";
+import { ExecucaoBlocos } from "./ExecucaoBlocos";
 
 interface Props {
   move: DanceMove;
@@ -16,6 +17,7 @@ function formatSec(s: number): string {
 export function MoveStep({ move, active, onComplete }: Props) {
   const [remaining, setRemaining] = useState(move.durationSec);
   const [running, setRunning] = useState(false);
+  const [verResto, setVerResto] = useState(false);
   const completedRef = useRef(false);
 
   useEffect(() => {
@@ -51,7 +53,26 @@ export function MoveStep({ move, active, onComplete }: Props) {
         <h3 className="text-nude-warm font-medium">{move.name}</h3>
         <span className="text-nude text-sm">{formatSec(remaining)}</span>
       </div>
-      <p className="text-sm text-muted mb-3">{move.description}</p>
+      {move.execucao ? (
+        <div className="mb-3">
+          <ExecucaoBlocos execucao={move.execucao} parte="essencial" />
+          <button
+            type="button"
+            onClick={() => setVerResto((v) => !v)}
+            aria-expanded={verResto}
+            className="text-nude text-xs underline mt-2"
+          >
+            Como saber se está certo
+          </button>
+          {verResto && (
+            <div className="mt-2">
+              <ExecucaoBlocos execucao={move.execucao} parte="resto" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="text-sm text-muted mb-3">{move.description}</p>
+      )}
       {move.repeat && (
         <p className="text-muted text-xs mb-3">Repetir {move.repeat}x</p>
       )}
