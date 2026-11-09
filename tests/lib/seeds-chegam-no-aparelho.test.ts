@@ -60,7 +60,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(16);
+    expect(EXERCISE_SEED_VERSION).toBe(17);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
@@ -134,6 +134,25 @@ describe("exercícios", () => {
     expect(ex?.description).toContain("esteira inclinada");
     // O link que ela colou é dela e continua lá.
     expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
+  });
+
+  // v17: a explicação no formato fixo (execucao) de todo exercício do treino.
+  // O id já existia na versão anterior; só o conteúdo muda — é o caso que um
+  // teste de "existe?" não pega.
+  it("a explicação nova chega em quem estava na versão anterior", async () => {
+    await db.exercises.put({
+      id: "hip-thrust-maquina", name: "Hip thrust na máquina", category: "gluteo",
+      equipment: ["maquina-hip-thrust"], difficulty: "iniciante", description: "antigo",
+      commonMistakes: [], exposureLevel: 3, videoUrl: "https://exemplo/video-dela",
+    } as never);
+    await db.settings.put({ key: "seeded", value: true });
+    await db.settings.put({ key: "cyclesSeeded", value: true });
+    await db.settings.put({ key: "exerciseSeedVersion", value: ANTERIOR_EXERCICIOS });
+
+    await seedDatabase();
+
+    const ex = await db.exercises.get("hip-thrust-maquina");
+    expect(ex?.execucao?.regulagem?.trim()).toBeTruthy();
   });
 
   it("os dois exercícios do padrão de levantar chegam, com o texto e o nível desta versão", async () => {

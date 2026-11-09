@@ -24,6 +24,27 @@ export const EXERCISES: Exercise[] = [
       "Empurra pelos calcanhares, queixo pra baixo e costela fechada — protege a lombar e isola o glúteo",
       "É o maior construtor de bumbum que existe: priorize ele e seja paciente com a carga",
     ],
+    execucao: {
+      posicao: "Sentada no chão, costas apoiadas na borda do banco na altura do sutiã, barra com espuma em cima do osso do quadril.",
+      movimento: [
+        "Pés no chão, na largura do quadril, um pouco à frente dos joelhos.",
+        "Queixo pra baixo e costela fechada, olhando pra frente.",
+        "Empurra o chão com os calcanhares e sobe o quadril até o corpo ficar reto do ombro ao joelho.",
+        "Segura 1 a 2 segundos apertando o bumbum e desce devagar.",
+      ],
+      ondeSentir: "Bumbum, embaixo e no meio, apertando forte no topo. Não a lombar, e não só a frente da coxa.",
+      erradoSe: [
+        "A lombar arqueia no topo e você sente as costas → sobe só até o corpo ficar reto e fecha a costela, como quem segura uma tosse.",
+        "A frente da coxa queima mais que o bumbum → afasta os pés um palmo do banco.",
+        "A parte de trás da coxa puxa ou dá cãibra → traz os pés um pouco mais perto do bumbum.",
+        "A barra machuca o osso → usa a espuma de proteção ou dobra um colchonete por cima.",
+        "Pontada ou dor aguda na lombar → para a série.",
+      ],
+      renderMais: [
+        "Pausa de 2 segundos no topo apertando o bumbum, em toda repetição.",
+        "Desce em 3 segundos, sem apoiar o bumbum no chão entre as repetições.",
+      ],
+    },
   },
   {
     id: "ponte-gluteo-band",
@@ -45,6 +66,25 @@ export const EXERCISES: Exercise[] = [
       "Empurra pelos calcanhares; se sentir na frente da coxa, traz os pés pra perto",
       "Mantém a costela fechada pra não roubar com a lombar",
     ],
+    execucao: {
+      posicao: "Deitada de barriga pra cima no colchonete, joelhos dobrados, pés no chão na largura do quadril.",
+      movimento: [
+        "Braços no chão ao lado do corpo.",
+        "Queixo pra baixo e costela fechada.",
+        "Empurra o chão com os calcanhares e sobe o quadril até ombro, quadril e joelho ficarem numa linha.",
+        "Aperta o bumbum 1 a 2 segundos lá em cima e desce devagar.",
+      ],
+      ondeSentir: "Bumbum, embaixo, apertando no topo. A lombar não trabalha.",
+      erradoSe: [
+        "Você sente a lombar → sobe menos e fecha a costela.",
+        "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
+        "A frente da coxa trabalha mais → leva os pés um pouco mais longe do bumbum.",
+      ],
+      renderMais: [
+        "Segura 3 segundos no topo em toda repetição.",
+        "Quando 20 saírem fáceis, faz com uma perna só, a outra esticada no ar.",
+      ],
+    },
   },
   {
     id: "agachamento-livre",
@@ -88,6 +128,26 @@ export const EXERCISES: Exercise[] = [
       "Ótimo pra aprender o padrão antes de pôr barra nas costas",
       "Desce devagar, sobe apertando o glúteo",
     ],
+    execucao: {
+      posicao: "Em pé, pés um pouco mais abertos que o quadril, pontas levemente pra fora, um halter em pé contra o peito, seguro pela cabeça de cima.",
+      movimento: [
+        "Puxa o ar e firma a barriga.",
+        "Desce levando o quadril pra trás e pra baixo, joelhos na direção dos pés.",
+        "Vai até a coxa ficar paralela ao chão, ou até onde a coluna continua reta.",
+        "Sobe empurrando o chão com o pé inteiro e aperta o bumbum no fim.",
+      ],
+      ondeSentir: "Frente da coxa e bumbum, embaixo. O halter fica colado no peito o tempo todo.",
+      erradoSe: [
+        "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha do segundo dedo do pé.",
+        "O calcanhar sai do chão → abre um pouco mais os pés e desce menos.",
+        "O tronco tomba e o halter se afasta do peito → cola o halter no peito e desce mais devagar.",
+        "A lombar arredonda lá embaixo → para um pouco antes, onde ela ainda fica reta.",
+      ],
+      renderMais: [
+        "Pausa de 2 segundos lá embaixo, sem relaxar.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   {
     id: "abdutor-maquina",
@@ -108,6 +168,26 @@ export const EXERCISES: Exercise[] = [
       "Segura 1s na abertura máxima — é onde arredonda a lateral",
       "Volta controlada, sem deixar o peso bater",
     ],
+    execucao: {
+      posicao: "Sentada na abdutora, costas apoiadas, pernas fechadas com as almofadas por fora dos joelhos.",
+      movimento: [
+        "Segura as alças do banco.",
+        "Inclina o tronco um pouco pra frente, sem tirar o bumbum do assento.",
+        "Abre os joelhos até onde der e segura 1 segundo.",
+        "Volta devagar, sem deixar o peso bater.",
+      ],
+      ondeSentir: "Lateral do quadril, no alto do bumbum, um pouco pra trás. É ela que arredonda o quadril de lado. Certo é sentir essa parte queimar sem jogar o tronco.",
+      erradoSe: [
+        "O tronco balança pra abrir → tira um pino e faz com o tronco parado.",
+        "O peso bate na volta → volta em 2 segundos.",
+        "Você sente só a parte de fora da coxa, perto do joelho → inclina o tronco um pouco mais à frente.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com as pernas abertas em toda repetição.",
+        "Na última série, quando não abrir mais tudo, faz mais 5 aberturas curtas.",
+      ],
+      regulagem: "Ajusta a abertura inicial (pino ou alavanca do lado) pra começar com as pernas fechadas, sem as almofadas já te abrindo. Almofadas encostadas por fora dos joelhos. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "abdutor-band-em-pe",
@@ -128,6 +208,25 @@ export const EXERCISES: Exercise[] = [
       "Ponta do pé pra frente pra mirar o glúteo médio certo",
       "Apoia a mão na parede só pra equilíbrio, não pra empurrar",
     ],
+    execucao: {
+      posicao: "Em pé de lado pra parede, caneleira no tornozelo de fora, mão de dentro apoiada na parede.",
+      movimento: [
+        "Fica em pé alta, barriga firme, ponta do pé de fora apontando pra frente.",
+        "Leva a perna de fora pro lado, esticada, sem inclinar o tronco.",
+        "Segura 1 segundo lá em cima.",
+        "Desce devagar sem encostar o pé no chão.",
+      ],
+      ondeSentir: "Lateral do quadril, no alto do bumbum, do lado da perna que sobe.",
+      erradoSe: [
+        "O tronco tomba pro lado da parede → abre menos; o movimento é pequeno mesmo.",
+        "A perna vai pra frente ou você sente a frente do quadril → leva a perna um pouco pra trás, ponta do pé pra frente.",
+        "A perna sobe no balanço → conta 2 pra subir e 2 pra descer.",
+      ],
+      renderMais: [
+        "Segura 2 segundos lá em cima.",
+        "Não encosta o pé no chão entre as repetições.",
+      ],
+    },
   },
   {
     id: "elevacao-pelvica-banco",
@@ -171,6 +270,26 @@ export const EXERCISES: Exercise[] = [
       "Desce até sentir o posterior puxar, não até a barra tocar o chão",
       "Barra/halteres rente ao corpo o tempo todo protege a lombar",
     ],
+    execucao: {
+      posicao: "Em pé, pés na largura do quadril, joelhos levemente dobrados, halteres ou barra na frente das coxas.",
+      movimento: [
+        "Puxa o ar, firma a barriga, coluna reta.",
+        "Empurra o bumbum pra trás e deixa o tronco descer, com o peso raspando nas pernas.",
+        "Para quando sentir a parte de trás da coxa esticar, perto do meio da canela ou antes.",
+        "Sobe empurrando o quadril pra frente e aperta o bumbum.",
+      ],
+      ondeSentir: "Parte de trás da coxa esticando na descida e bumbum puxando na subida. Coluna reta o tempo todo, nunca dor na lombar.",
+      erradoSe: [
+        "As costas arredondam → desce menos; para onde a coluna ainda está reta.",
+        "O joelho dobra muito e vira agachamento → joelho quase parado; quem vai pra trás é o bumbum.",
+        "O peso se afasta das pernas → raspa o peso nas coxas na descida e na subida.",
+        "Pontada na lombar → para a série.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo embaixo sentindo a coxa esticar, sem perder a coluna reta.",
+      ],
+    },
   },
   {
     id: "good-morning",
@@ -193,6 +312,25 @@ export const EXERCISES: Exercise[] = [
       "Substitui o pull-through da polia: mesma dobradiça de quadril, sem precisar da polia",
       "Respira fundo e trava o core antes de descer",
     ],
+    execucao: {
+      posicao: "Em pé, pés na largura do quadril, joelhos levemente dobrados, barra leve apoiada no alto das costas (nunca no pescoço) ou um halter abraçado no peito.",
+      movimento: [
+        "Puxa o ar e firma a barriga.",
+        "Empurra o bumbum pra trás e deixa o tronco descer, peito aberto.",
+        "Para quando sentir a parte de trás da coxa esticar, com o tronco perto de paralelo ao chão ou antes.",
+        "Sobe empurrando o quadril pra frente e aperta o bumbum.",
+      ],
+      ondeSentir: "Parte de trás da coxa esticando na descida e bumbum puxando na subida. Nunca dor na lombar.",
+      erradoSe: [
+        "As costas arredondam → desce menos e mantém o peito aberto.",
+        "O joelho dobra muito → joelho quase parado; o movimento é o bumbum indo pra trás.",
+        "Você sente a lombar trabalhando → usa menos peso e desce menos; se doer, para.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo, coluna reta.",
+      ],
+    },
   },
   // === CINTURA & ABDOMINAIS FUNCIONAIS ===
   {
@@ -293,6 +431,25 @@ export const EXERCISES: Exercise[] = [
       "Não é exercício de gomos: é puxar pra DENTRO, afinando, não engrossando",
       "Progrida pelo tempo de isometria (30 → 45 → 60s), não por carga",
     ],
+    execucao: {
+      posicao: "De quatro no colchonete, ou em pé com as mãos nos joelhos, coluna reta.",
+      movimento: [
+        "Solta todo o ar pela boca, até esvaziar.",
+        "Sem puxar ar, puxa o umbigo pra dentro e pra cima, como se fosse encostar na coluna.",
+        "Segura o tempo do treino respirando curto, só pelo peito.",
+        "Solta a barriga devagar e respira normal.",
+      ],
+      ondeSentir: "Bem fundo na barriga, abaixo do umbigo, como um cinto apertando por dentro. Os gomos da barriga ficam quietos.",
+      erradoSe: [
+        "Você prende a respiração e fica vermelha → respira curto pelo peito, sem soltar a barriga.",
+        "A barriga estufa → recomeça, esvaziando o ar de novo.",
+        "Os gomos endurecem e a barriga empurra pra fora → é puxar pra dentro, não apertar.",
+      ],
+      renderMais: [
+        "Faz quase todo dia: o efeito vem de repetir.",
+        "Quando segurar fácil de quatro, faz em pé, sem apoio.",
+      ],
+    },
   },
   {
     id: "carregamento-frontal",
@@ -321,6 +478,25 @@ export const EXERCISES: Exercise[] = [
       "Comece com o peso de 8 kg e só suba quando conseguir os 30 m sem perder a postura",
       "Levantar outra pessoa é isso com o peso vivo: tronco firme, carga à frente, força vindo de perna e quadril",
     ],
+    execucao: {
+      posicao: "Em pé, um halter pesado seguro na vertical contra o peito, as duas mãos embaixo da cabeça de cima, cotovelos apontando pro chão.",
+      movimento: [
+        "Fica em pé alta, costela fechada, barriga firme.",
+        "Caminha 20 a 30 metros em passos curtos.",
+        "Respira curto e sem parar; não prende o ar.",
+        "Para e põe o halter no chão dobrando os joelhos, costas retas.",
+      ],
+      ondeSentir: "Barriga segurando o tronco, braços e alto das costas firmes. Tronco ereto o percurso inteiro, e nada na lombar.",
+      erradoSe: [
+        "A lombar arqueia pra trás pra compensar o peso → fecha a costela e aperta o bumbum.",
+        "O halter desce e se afasta do peito → cola de volta no peito; se não der, a série acabou.",
+        "O ombro sobe em direção à orelha → desce os ombros e deixa os cotovelos apontarem pro chão.",
+      ],
+      renderMais: [
+        "Passos mais lentos, com o tronco parado.",
+        "Fecha o percurso parada 10 segundos, halter colado no peito.",
+      ],
+    },
   },
   {
     id: "prancha-antirrotacao",
@@ -343,6 +519,25 @@ export const EXERCISES: Exercise[] = [
       "Qualidade acima de repetição: 6 trocas sem girar valem mais que 20 girando",
       "Trabalha o mesmo transverso do vacuum, que é a alavanca da cintura — dois objetivos no mesmo movimento",
     ],
+    execucao: {
+      posicao: "Prancha alta no colchonete: mãos no chão embaixo dos ombros, braços esticados, pés mais abertos que o quadril.",
+      movimento: [
+        "Aperta o bumbum e a barriga, corpo reto da cabeça ao calcanhar.",
+        "Tira uma mão do chão e toca o ombro do outro lado.",
+        "Devolve a mão ao chão sem o quadril girar.",
+        "Troca de mão. Cada toque conta 1.",
+      ],
+      ondeSentir: "Barriga inteira, segurando o tronco parado. Se alguém filmasse de cima, o quadril não giraria.",
+      erradoSe: [
+        "O quadril gira quando a mão sai → abre mais os pés.",
+        "O quadril cai e a lombar afunda → aperta o bumbum; se não segurar, apoia os joelhos.",
+        "Você vai rápido e o corpo balança → conta 2 pra ir e 2 pra voltar.",
+      ],
+      renderMais: [
+        "Toque devagar: 2 segundos pra ir, 2 pra voltar.",
+        "Pés um pouco mais juntos, sem deixar o quadril girar.",
+      ],
+    },
   },
   // === COSTAS (cadeia posterior, postura) ===
   {
@@ -383,6 +578,26 @@ export const EXERCISES: Exercise[] = [
       "Não joga o tronco pra trás pra ajudar; mantém ereto",
       "Volta controlada sentindo as costas alongarem",
     ],
+    execucao: {
+      posicao: "Sentada na máquina de remada, tronco ereto ou peito no apoio, braços esticados segurando a pegada.",
+      movimento: [
+        "Desce os ombros, longe das orelhas.",
+        "Puxa a pegada até a barriga, cotovelos raspando o corpo.",
+        "Junta as omoplatas atrás e segura 1 segundo.",
+        "Volta devagar até esticar os braços, sem deixar o peso bater.",
+      ],
+      ondeSentir: "Meio das costas, entre as omoplatas. Nada no pescoço nem no alto do ombro.",
+      erradoSe: [
+        "O tronco vai pra trás pra puxar → tira um pino e deixa o tronco parado.",
+        "Os ombros sobem → desce os ombros antes de puxar.",
+        "Os cotovelos abrem pro lado → cola os cotovelos no corpo; aberto puxa pra largura das costas, que você não quer.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com a pegada na barriga.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "Altura do banco: a pegada fica na altura da barriga quando você puxa. Se tiver apoio de peito, ajusta pra alcançar a pegada com os braços esticados sem sair dele. Se tiver apoio de pés, pés firmes nele e joelhos levemente dobrados. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "puxada-frente-maquina",
@@ -442,6 +657,25 @@ export const EXERCISES: Exercise[] = [
       "Leve e com muitas reps; o objetivo é saúde de ombro e abertura",
       "Aperta as escápulas e mostra o peito no fim do movimento",
     ],
+    execucao: {
+      posicao: "Deitada de bruços no banco inclinado, peito apoiado, um halter leve em cada mão, braços pendurados embaixo dos ombros.",
+      movimento: [
+        "Cotovelos levemente dobrados, polegares pra frente.",
+        "Abre os braços pros lados e um pouco pra trás, até a linha do ombro.",
+        "Junta as omoplatas no fim e segura 1 segundo.",
+        "Desce devagar.",
+      ],
+      ondeSentir: "Parte de trás do ombro e meio das costas, entre as omoplatas. Nada no pescoço.",
+      erradoSe: [
+        "O ombro sobe em direção à orelha → desce os ombros e pega um halter mais leve.",
+        "Os braços passam da linha do ombro → para na linha; acima disso quem trabalha é o pescoço.",
+        "O peito sai do banco → peito colado no banco o tempo todo.",
+      ],
+      renderMais: [
+        "Segura 2 segundos lá em cima.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   // === PEITORAL SUPERIOR LEVE (busto) ===
   {
@@ -463,6 +697,24 @@ export const EXERCISES: Exercise[] = [
       "Inclinado joga o estímulo pra parte de cima do peito, que levanta o visual do busto",
       "Desce devagar sentindo o alongamento; sobe sem estufar os ombros",
     ],
+    execucao: {
+      posicao: "Deitada no banco inclinado (entre 30 e 45 graus), pés firmes no chão, um halter em cada mão na altura do peito.",
+      movimento: [
+        "Ombros pra trás e pra baixo, peito aberto.",
+        "Empurra os halteres até quase esticar os braços, em cima do peito.",
+        "Desce devagar até os halteres voltarem pra altura do peito, cotovelos um pouco abaixo da linha do ombro.",
+      ],
+      ondeSentir: "Peito de cima, perto da clavícula, e parte de trás do braço.",
+      erradoSe: [
+        "Você sente a frente do ombro mais que o peito → traz os cotovelos um pouco mais perto do corpo.",
+        "Os ombros sobem pra orelha → desce os ombros antes de empurrar.",
+        "A lombar arqueia muito → pés firmes no chão e bumbum colado no banco.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo.",
+      ],
+    },
   },
   {
     id: "cross-over-cabo",
@@ -483,6 +735,25 @@ export const EXERCISES: Exercise[] = [
       "Cotovelos com ângulo fixo e leve — não dobra e estica (isso vira supino)",
       "Reps altas e controle: redondo e cheio em cima, nunca quadrado",
     ],
+    execucao: {
+      posicao: "Deitada no banco inclinado (entre 30 e 45 graus), um halter em cada mão, braços esticados em cima do peito, palmas uma pra outra.",
+      movimento: [
+        "Dobra um pouco os cotovelos e mantém esse ângulo até o fim.",
+        "Abre os braços num arco largo, devagar, até sentir o peito esticar.",
+        "Fecha no mesmo arco, como quem abraça uma árvore.",
+        "Para com os halteres em cima do peito, sem bater um no outro.",
+      ],
+      ondeSentir: "Peito de cima, perto da clavícula, esticando na abertura e apertando no fim.",
+      erradoSe: [
+        "Dor ou estalo na frente do ombro → abre menos; os cotovelos param na altura do banco.",
+        "Os cotovelos dobram e esticam → vira supino; mantém o mesmo ângulo do começo ao fim.",
+        "Só o braço trabalha → desce mais devagar e pensa em juntar os cotovelos, não as mãos.",
+      ],
+      renderMais: [
+        "Abre em 3 segundos.",
+        "Aperta 1 segundo no fim, com os halteres em cima do peito.",
+      ],
+    },
   },
   // === MOBILIDADE & ALONGAMENTO ===
   {
@@ -747,6 +1018,25 @@ export const EXERCISES: Exercise[] = [
       "Não deixa o quadril rolar pra trás — fica de lado de verdade",
       "Desce controlando; metade do trabalho está na volta",
     ],
+    execucao: {
+      posicao: "Deitada de lado no colchonete, cabeça apoiada no braço, perna de baixo dobrada, perna de cima esticada na linha do corpo.",
+      movimento: [
+        "Vira a ponta do pé de cima levemente pra baixo, olhando pro chão.",
+        "Sobe a perna de cima esticada, um pouco pra trás, sem rolar o quadril pra trás.",
+        "Segura 1 segundo lá em cima.",
+        "Desce devagar sem encostar na outra perna.",
+      ],
+      ondeSentir: "Lateral do quadril, no alto do bumbum. Queima rápido quando está certo.",
+      erradoSe: [
+        "O quadril rola pra trás e a perna sobe muito → sobe menos; um palmo basta.",
+        "Você sente a frente do quadril → leva a perna um pouco pra trás da linha do corpo.",
+        "A perna vai pra frente → alinha o pé com o corpo ou um pouco atrás.",
+      ],
+      renderMais: [
+        "Segura 2 segundos lá em cima.",
+        "Não encosta uma perna na outra entre as repetições.",
+      ],
+    },
   },
   {
     id: "clamshell",
@@ -807,6 +1097,26 @@ export const EXERCISES: Exercise[] = [
       "Pé da frente longe o suficiente pra o joelho não passar muito da ponta",
       "Desce vertical em direção ao chão; sobe empurrando pelo calcanhar da frente",
     ],
+    execucao: {
+      posicao: "De costas pro banco, peito de um pé apoiado nele, o outro pé uma passada longa à frente, halteres nas mãos ao lado do corpo.",
+      movimento: [
+        "Inclina o tronco um pouco pra frente, com o peso no calcanhar da frente.",
+        "Desce reto pra baixo até a coxa da frente ficar paralela ao chão.",
+        "Sobe empurrando o calcanhar da frente.",
+        "Começa pelo lado mais fraco; o lado forte faz as mesmas repetições.",
+      ],
+      ondeSentir: "Bumbum da perna da frente, embaixo, queimando. A perna de trás só equilibra.",
+      erradoSe: [
+        "O calcanhar da frente sai do chão → afasta mais o pé da frente do banco.",
+        "Você sente só a frente da coxa → inclina o tronco um pouco mais e empurra pelo calcanhar.",
+        "O joelho da frente cai pra dentro → empurra o joelho pra fora, na linha do pé.",
+        "Você desequilibra pro lado → abre um pouco a distância entre os pés na largura, como dois trilhos, não uma corda bamba.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo.",
+      ],
+    },
   },
   {
     id: "stiff-unilateral",
@@ -824,6 +1134,25 @@ export const EXERCISES: Exercise[] = [
       "Quadril 'quadrado' (não abre pro lado) — desafio é a estabilidade",
       "Sente o glúteo e o posterior da perna apoiada esticarem e puxarem de volta",
     ],
+    execucao: {
+      posicao: "Em pé numa perna só, joelho de apoio levemente dobrado, halter na mão do lado oposto; a mão livre pode tocar a parede.",
+      movimento: [
+        "Empurra o bumbum pra trás e deixa o tronco descer, a perna livre indo pra trás esticada.",
+        "Desce até sentir a parte de trás da coxa de apoio esticar, coluna reta.",
+        "Sobe empurrando o quadril pra frente e aperta o bumbum.",
+        "Os dois lados do quadril ficam virados pro chão o tempo todo.",
+      ],
+      ondeSentir: "Parte de trás da coxa de apoio esticando na descida e bumbum do mesmo lado puxando na subida.",
+      erradoSe: [
+        "O quadril abre pro lado da perna livre → vira a ponta do pé de trás pro chão.",
+        "As costas arredondam → desce menos.",
+        "Você perde o equilíbrio → apoia a mão livre na parede; aqui o treino é o bumbum, não o equilíbrio.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo.",
+      ],
+    },
   },
   {
     id: "kickback",
@@ -843,6 +1172,25 @@ export const EXERCISES: Exercise[] = [
       "Caneleira pesada + controla a volta: a descida lenta também constrói",
       "Mantém o quadril quadrado — quem se move é só a perna, não o tronco",
     ],
+    execucao: {
+      posicao: "De quatro no colchonete, mãos embaixo dos ombros, joelhos embaixo do quadril, caneleira no tornozelo da perna que trabalha.",
+      movimento: [
+        "Barriga firme, costas retas como uma mesa.",
+        "Leva a perna pra trás e pra cima, joelho dobrado, sola do pé apontando pro teto.",
+        "Para quando a coxa ficar na linha do corpo e aperta o bumbum 1 segundo.",
+        "Desce devagar sem encostar o joelho no chão.",
+      ],
+      ondeSentir: "Bumbum da perna que sobe, embaixo e no meio. Nunca na lombar.",
+      erradoSe: [
+        "A lombar afunda quando a perna sobe → sobe menos; a coxa para na linha do corpo.",
+        "O quadril gira pro lado → mantém os dois ossos do quadril virados pro chão.",
+        "A perna sobe no balanço → sobe em 2 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos lá em cima.",
+        "Não encosta o joelho no chão entre as repetições.",
+      ],
+    },
   },
   {
     id: "kickback-cabo",
@@ -946,6 +1294,26 @@ export const EXERCISES: Exercise[] = [
       "Abre bem antes de fechar pra usar toda a amplitude",
       "Preenche a coxa interna e deixa as pernas com cara mais cheia e curvilínea",
     ],
+    execucao: {
+      posicao: "Sentada na adutora, costas apoiadas, pernas abertas com as almofadas por dentro dos joelhos.",
+      movimento: [
+        "Segura as alças do banco.",
+        "Fecha as pernas apertando as almofadas, até quase se encostarem.",
+        "Segura 1 segundo.",
+        "Abre devagar até o ponto de partida, sem deixar o peso bater.",
+      ],
+      ondeSentir: "Parte de dentro da coxa, do joelho até a virilha.",
+      erradoSe: [
+        "Dor na virilha no começo do movimento → diminui a abertura inicial na regulagem.",
+        "O peso bate na volta → abre em 2 a 3 segundos.",
+        "As costas saem do encosto → costas coladas e tira um pino.",
+      ],
+      renderMais: [
+        "Abre em 3 segundos, sentindo a parte de dentro da coxa esticar.",
+        "Segura 2 segundos com as pernas fechadas.",
+      ],
+      regulagem: "Ajusta a abertura inicial (pino ou alavanca do lado) até onde a parte de dentro da coxa estica sem dor na virilha. Almofadas por dentro dos joelhos. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "agachamento-sumo",
@@ -968,6 +1336,25 @@ export const EXERCISES: Exercise[] = [
       "Joelhos na direção dos pés, tronco ereto descendo entre as pernas",
       "Ótimo pra silhueta curvilínea — aperta o glúteo na subida",
     ],
+    execucao: {
+      posicao: "Em pé, pés bem afastados, pontas viradas pra fora, um halter em pé entre as pernas, seguro pela cabeça de cima com as duas mãos.",
+      movimento: [
+        "Puxa o ar, firma a barriga e abre o peito.",
+        "Desce reto, levando os joelhos pra fora na direção dos pés.",
+        "Vai até a coxa ficar paralela ao chão ou o halter quase tocar o chão.",
+        "Sobe empurrando o chão e aperta o bumbum no fim.",
+      ],
+      ondeSentir: "Bumbum e parte de dentro da coxa.",
+      erradoSe: [
+        "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
+        "O tronco tomba pra frente → peito aberto, olhando pra frente.",
+        "Dor na parte de dentro do joelho → vira menos as pontas dos pés pra fora.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 2 segundos lá embaixo.",
+      ],
+    },
   },
   // === ONDA EQUIPAMENTO: POLIA ===
   {
@@ -987,6 +1374,26 @@ export const EXERCISES: Exercise[] = [
       "Imagina empurrar uma parede atrás de você com o calcanhar",
       "Tronco firme — quem se move é só o quadril, não a lombar",
     ],
+    execucao: {
+      posicao: "Em pé de frente pra polia, tornozeleira na perna que trabalha, mãos apoiadas na máquina, tronco um pouco inclinado à frente.",
+      movimento: [
+        "Joelho de apoio levemente dobrado, barriga firme.",
+        "Leva a perna presa pra trás, quase esticada, empurrando com o calcanhar.",
+        "Para quando o bumbum apertar, antes de a lombar arquear.",
+        "Volta devagar sem deixar a anilha bater.",
+      ],
+      ondeSentir: "Bumbum da perna que vai pra trás, embaixo, apertando no fim.",
+      erradoSe: [
+        "A lombar arqueia pra perna ir mais alto → para antes; o movimento é curto.",
+        "O tronco balança → firma as mãos e a barriga e tira um pino.",
+        "A parte de trás da coxa trabalha mais que o bumbum → dobra um pouco o joelho da perna que trabalha.",
+      ],
+      renderMais: [
+        "Segura 1 a 2 segundos lá atrás.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "Polia no ponto mais baixo, perto do chão. Tornozeleira presa no gancho do cabo. Dá um ou dois passos pra trás até o cabo ficar esticado com os pés lado a lado. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "pull-through-polia",
@@ -1005,6 +1412,26 @@ export const EXERCISES: Exercise[] = [
       "Os braços só seguram a corda — a força vem do glúteo e do posterior",
       "Termina apertando o glúteo e fechando a costela, sem estourar a lombar",
     ],
+    execucao: {
+      posicao: "De costas pra polia baixa, corda passando entre as pernas, uma ponta em cada mão, dois passos à frente até o cabo esticar.",
+      movimento: [
+        "Pés um pouco mais abertos que o quadril, joelhos levemente dobrados.",
+        "Empurra o bumbum pra trás, deixando a corda passar entre as pernas, coluna reta.",
+        "Para quando a parte de trás da coxa esticar.",
+        "Volta empurrando o quadril pra frente e aperta o bumbum, corpo reto em cima.",
+      ],
+      ondeSentir: "Parte de trás da coxa esticando na ida e bumbum apertando na volta.",
+      erradoSe: [
+        "Os braços puxam a corda → braços soltos; quem puxa é o quadril.",
+        "As costas arredondam → desce menos.",
+        "Lá em cima o tronco vai pra trás → para com o corpo reto, bumbum apertado.",
+      ],
+      renderMais: [
+        "Segura 2 segundos em cima apertando o bumbum.",
+        "Vai pra trás em 3 segundos.",
+      ],
+      regulagem: "Polia no ponto mais baixo, perto do chão. Corda presa no gancho. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "abducao-quadril-polia",
@@ -1023,6 +1450,26 @@ export const EXERCISES: Exercise[] = [
       "Movimento pequeno e limpo vale mais que jogar a perna alto",
       "Mantém a ponta do pé apontando pra frente (não pra cima)",
     ],
+    execucao: {
+      posicao: "Em pé de lado pra polia, tornozeleira no tornozelo de fora, mão de dentro segurando a máquina.",
+      movimento: [
+        "Dá um passo pro lado, longe da polia, até o cabo ficar esticado.",
+        "Fica em pé alta, barriga firme, ponta do pé de fora apontando pra frente.",
+        "Leva a perna de fora pro lado, esticada, sem inclinar o tronco.",
+        "Volta devagar até o pé quase encostar no outro.",
+      ],
+      ondeSentir: "Lateral do quadril, no alto do bumbum, do lado da perna que abre.",
+      erradoSe: [
+        "O tronco tomba pro lado da máquina → abre menos; o movimento é pequeno.",
+        "A perna vai pra frente → leva um pouco pra trás, ponta do pé pra frente.",
+        "A anilha bate na volta → volta em 2 segundos.",
+      ],
+      renderMais: [
+        "Segura 1 a 2 segundos com a perna aberta.",
+        "Começa pelo lado mais fraco; o lado forte faz as mesmas repetições.",
+      ],
+      regulagem: "Polia no ponto mais baixo, perto do chão. Tornozeleira presa no gancho do cabo. Escolhe o peso no pino da pilha. Começa pelo mais leve.",
+    },
   },
   // === ONDA SMARTFIT JARDINS ===
   {
@@ -1039,6 +1486,27 @@ export const EXERCISES: Exercise[] = [
       "Calcanhares firmes no chão: a força vem do glúteo",
       "Pausa de 1 s no topo apertando o glúteo",
     ],
+    execucao: {
+      posicao: "Sentada na máquina, parte de cima das costas no encosto, cinto ou almofada em cima do osso do quadril.",
+      movimento: [
+        "Pés na plataforma, na largura do quadril.",
+        "Queixo pra baixo e costela fechada.",
+        "Empurra com os calcanhares e sobe o quadril até o corpo ficar reto do ombro ao joelho.",
+        "Segura 1 a 2 segundos apertando o bumbum e desce devagar.",
+      ],
+      ondeSentir: "Bumbum, embaixo e no meio, apertando forte no topo. A máquina guia o caminho; o seu trabalho é só apertar.",
+      erradoSe: [
+        "A lombar arqueia no topo → sobe só até o corpo ficar reto e fecha a costela.",
+        "A frente da coxa trabalha mais que o bumbum → põe os pés mais à frente na plataforma.",
+        "A parte de trás da coxa puxa ou dá cãibra → traz os pés um pouco mais perto.",
+        "Pontada ou dor aguda na lombar → para a série.",
+      ],
+      renderMais: [
+        "Pausa de 2 segundos no topo em toda repetição.",
+        "Desce em 3 segundos, sem deixar o peso descansar embaixo.",
+      ],
+      regulagem: "Encosto na altura da linha do sutiã. Cinto ou almofada firme em cima do osso do quadril, não na barriga. Pés na plataforma num ponto em que, lá em cima, a canela fica em pé, reta. O peso vai em anilhas ou no pino, conforme a máquina.",
+    },
   },
   {
     id: "flexora-sentada",
@@ -1054,6 +1522,26 @@ export const EXERCISES: Exercise[] = [
       "Quadril colado no banco durante toda a série",
       "Desce em 2-3 s: a volta controlada conta",
     ],
+    execucao: {
+      posicao: "Sentada na flexora, costas no encosto, rolo de baixo atrás dos tornozelos, rolo de cima travando as coxas.",
+      movimento: [
+        "Segura as alças.",
+        "Dobra os joelhos puxando o rolo pra baixo, até onde der.",
+        "Segura 1 segundo.",
+        "Volta em 2 a 3 segundos, sem deixar o peso bater.",
+      ],
+      ondeSentir: "Parte de trás da coxa, inteira, do joelho até embaixo do bumbum.",
+      erradoSe: [
+        "O bumbum levanta do banco → aperta mais o rolo de cima nas coxas.",
+        "Dor atrás do joelho → confere se o joelho está na linha do eixo da máquina.",
+        "A volta é solta e o peso bate → volta em 3 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com o joelho dobrado.",
+        "Volta em 3 segundos, sentindo a parte de trás da coxa esticar.",
+      ],
+      regulagem: "Encosto ajustado pra o joelho ficar bem na linha do eixo da máquina (a peça redonda do lado, onde o braço gira). Rolo de baixo atrás do tornozelo, logo acima do calcanhar. Rolo de cima firme em cima das coxas, perto do joelho. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "triceps-polia-corda",
@@ -1069,6 +1557,26 @@ export const EXERCISES: Exercise[] = [
       "Cotovelos parados junto às costelas",
       "Abre a corda no fim para apertar o tríceps",
     ],
+    execucao: {
+      posicao: "Em pé de frente pra polia alta, corda nas mãos, cotovelos colados ao corpo e dobrados.",
+      movimento: [
+        "Tronco levemente inclinado pra frente, barriga firme.",
+        "Estica os cotovelos empurrando a corda pra baixo.",
+        "No fim, abre as pontas da corda pros lados.",
+        "Volta devagar até o cotovelo dobrar em ângulo reto, sem mexer os ombros.",
+      ],
+      ondeSentir: "Parte de trás do braço.",
+      erradoSe: [
+        "Os cotovelos saem do corpo e sobem → cola de novo; só o antebraço se mexe.",
+        "O tronco se joga em cima da corda → tira um pino e deixa o tronco parado.",
+        "Os ombros sobem → desce os ombros.",
+      ],
+      renderMais: [
+        "Segura 1 segundo com o braço esticado, abrindo a corda.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "Polia no ponto mais alto. Corda presa no gancho. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "rosca-polia",
@@ -1084,6 +1592,25 @@ export const EXERCISES: Exercise[] = [
       "Cotovelos parados: só o antebraço se move",
       "A polia mantém tensão na descida, então desce devagar",
     ],
+    execucao: {
+      posicao: "Em pé de frente pra polia, barra ou corda nas mãos, palmas pra cima, um passo atrás.",
+      movimento: [
+        "Cotovelos colados ao corpo.",
+        "Dobra os cotovelos e traz a pegada até a altura do ombro.",
+        "Desce em 2 a 3 segundos, sem deixar a anilha encostar embaixo.",
+      ],
+      ondeSentir: "Frente do braço, com o cabo puxando até embaixo.",
+      erradoSe: [
+        "O tronco balança → tira um pino e deixa as costas paradas.",
+        "Os cotovelos vão pra frente → cola de novo ao corpo.",
+        "A anilha bate embaixo → para um pouco antes, com o cabo esticado.",
+      ],
+      renderMais: [
+        "Segura 1 segundo em cima.",
+        "Desce em 3 segundos.",
+      ],
+      regulagem: "Polia no ponto mais baixo, perto do chão. Barra reta ou corda presa no gancho. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "pallof-polia",
@@ -1099,6 +1626,26 @@ export const EXERCISES: Exercise[] = [
       "Costelas fechadas e quadril quadrado",
       "Se o tronco girar, a carga está pesada demais",
     ],
+    execucao: {
+      posicao: "Em pé de lado pra polia, puxador com as duas mãos colado no peito, pés na largura dos ombros, um passo longe da máquina.",
+      movimento: [
+        "Barriga firme, bumbum apertado, joelhos levemente dobrados.",
+        "Estica os braços à frente sem deixar o tronco girar pra polia.",
+        "Segura 2 segundos com os braços esticados.",
+        "Traz de volta ao peito. Faz as repetições e troca de lado.",
+      ],
+      ondeSentir: "Barriga, mais do lado longe da polia, segurando o tronco reto.",
+      erradoSe: [
+        "O tronco gira pra polia → chega meio passo mais perto dela ou tira um pino.",
+        "O ombro sobe → desce os ombros, braços na altura do peito.",
+        "Você prende o ar → respira curto e sem parar.",
+      ],
+      renderMais: [
+        "Segura 5 segundos com os braços esticados.",
+        "Pés mais juntos, mantendo o tronco parado.",
+      ],
+      regulagem: "Polia na altura do seu peito. Puxador de alça única preso no gancho. Escolhe o peso no pino da pilha. Começa pelo mais leve.",
+    },
   },
   {
     id: "extensao-45-gluteo",
@@ -1113,6 +1660,25 @@ export const EXERCISES: Exercise[] = [
       "Para na linha do corpo, sem arquear a lombar",
       "Aperta o glúteo no topo, sem usar impulso",
     ],
+    execucao: {
+      posicao: "No banco de 45 graus, pés presos embaixo do rolo, a almofada logo abaixo do osso do quadril, pra você conseguir dobrar no quadril.",
+      movimento: [
+        "Braços cruzados no peito, queixo recolhido, pontas dos pés levemente pra fora.",
+        "Desce o tronco dobrando no quadril, coluna reta, até sentir a parte de trás da coxa esticar.",
+        "Sobe empurrando o quadril contra a almofada e apertando o bumbum.",
+        "Para quando o corpo ficar em linha reta. Não passa disso.",
+      ],
+      ondeSentir: "Bumbum, embaixo, puxando a subida. A lombar só segura a coluna reta, não faz a força.",
+      erradoSe: [
+        "Você sente a lombar → para a subida na linha do corpo e desce menos; se doer, para a série.",
+        "Não consegue dobrar no quadril → baixa a almofada até ela ficar abaixo do osso do quadril.",
+        "Sobe no impulso → sobe em 2 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos lá em cima apertando o bumbum.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   {
     id: "coice-maquina",
@@ -1143,6 +1709,26 @@ export const EXERCISES: Exercise[] = [
       "Pés um pouco à frente e altos na plataforma puxam mais o glúteo",
       "Não trava os joelhos no topo",
     ],
+    execucao: {
+      posicao: "Costas e ombros apoiados no encosto da hack, pés na plataforma, na largura dos ombros.",
+      movimento: [
+        "Solta a trava de segurança.",
+        "Desce dobrando os joelhos, devagar, até a coxa ficar paralela à plataforma ou até onde a lombar continua colada.",
+        "Sobe empurrando pelos calcanhares.",
+        "Para em cima sem travar o joelho e trava a máquina ao terminar.",
+      ],
+      ondeSentir: "Frente da coxa e bumbum. Pés mais altos na plataforma levam mais trabalho pro bumbum.",
+      erradoSe: [
+        "A lombar descola do encosto lá embaixo → desce menos.",
+        "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
+        "O calcanhar sai da plataforma → sobe um pouco os pés.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo.",
+      ],
+      regulagem: "Ombreiras encostadas em cima dos ombros, sem apertar o pescoço. Pés no meio da plataforma, na largura dos ombros. Anilhas iguais dos dois lados. Antes de começar, acha a trava de segurança (a alavanca do lado) e testa soltar e prender sem peso.",
+    },
   },
   // === ONDA EQUIPAMENTO: BUSTO / POSTURA ===
   {
@@ -1162,6 +1748,26 @@ export const EXERCISES: Exercise[] = [
       "Leve e lento — peito feminino redondo, nunca peitoral de placa",
       "De baixo pra cima recruta a parte de cima do peito, que dá a 'prateleira'",
     ],
+    execucao: {
+      posicao: "Em pé no meio das duas polias, um puxador em cada mão, um passo à frente, tronco levemente inclinado.",
+      movimento: [
+        "Braços abertos e um pouco abaixo do quadril, cotovelos levemente dobrados.",
+        "Junta as mãos num arco, subindo até a altura do peito.",
+        "Aperta 1 segundo no centro do peito.",
+        "Volta devagar no mesmo arco.",
+      ],
+      ondeSentir: "Peito de cima, no centro, na linha do colo.",
+      erradoSe: [
+        "O ombro sobe em direção à orelha → desce os ombros e para as mãos na altura do peito, não mais alto.",
+        "Você sente a frente do ombro → abre menos na volta.",
+        "Os cotovelos dobram e esticam → mantém o mesmo ângulo do começo ao fim.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com as mãos juntas.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "As duas polias no ponto mais baixo, perto do chão. Um puxador de alça única em cada uma. Mesmo pino nas duas pilhas, começando pelo mais leve.",
+    },
   },
   {
     id: "face-pull-polia",
@@ -1180,6 +1786,26 @@ export const EXERCISES: Exercise[] = [
       "Puxa pra TESTA, não pro peito, e gira os punhos pra trás no fim",
       "Reps altas e leve: é saúde de ombro e postura, não força bruta",
     ],
+    execucao: {
+      posicao: "Em pé de frente pra polia, corda nas duas mãos, palmas pra baixo, um passo atrás até os braços esticarem.",
+      movimento: [
+        "Desce os ombros, longe das orelhas, barriga firme.",
+        "Puxa a corda em direção aos olhos, abrindo as mãos pros lados do rosto.",
+        "Cotovelos na altura dos ombros, não acima. No fim, as mãos ficam ao lado das orelhas, como quem mostra o muque.",
+        "Segura 1 segundo e volta devagar.",
+      ],
+      ondeSentir: "Parte de trás do ombro e meio das costas, entre as omoplatas. O peito abre. Nada no pescoço.",
+      erradoSe: [
+        "O pescoço e o alto do ombro trabalham → desce os ombros e tira um pino.",
+        "O tronco vai pra trás pra puxar → fica parada e tira um pino.",
+        "A corda vai pro pescoço ou pro peito → mira nos olhos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com a corda aberta perto do rosto.",
+        "Volta em 3 segundos.",
+      ],
+      regulagem: "Polia na altura da sua testa. Corda presa no gancho. Escolhe o peso no pino da pilha. Começa pelo mais leve: é exercício de postura, não de força.",
+    },
   },
   {
     id: "voador-maquina",
@@ -1198,6 +1824,26 @@ export const EXERCISES: Exercise[] = [
       "Controle sempre: o objetivo é redondo e cheio, não quadrado",
       "Costas coladas no encosto, ombros baixos",
     ],
+    execucao: {
+      posicao: "Sentada no voador, costas coladas no encosto, mãos nas pegadas ou antebraços nos apoios.",
+      movimento: [
+        "Ombros pra trás e pra baixo, peito aberto.",
+        "Fecha os braços à frente até as mãos quase se encostarem.",
+        "Aperta 1 segundo no centro do peito.",
+        "Abre devagar até sentir o peito esticar, sem passar da linha do corpo.",
+      ],
+      ondeSentir: "Centro do peito, na linha entre os seios.",
+      erradoSe: [
+        "Você sente a frente do ombro → abre menos na volta, só até a linha do corpo.",
+        "As costas descolam do encosto → tira um pino e cola as costas.",
+        "O peso bate na volta → abre em 3 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com os braços fechados.",
+        "Abre em 3 segundos.",
+      ],
+      regulagem: "Altura do banco: as pegadas ficam na altura do peito, não do ombro. Ajusta a abertura inicial (alavanca em cima ou do lado) pra começar com os braços na linha do corpo, não atrás dela. Escolhe o peso no pino da pilha.",
+    },
   },
   // === ONDA EQUIPAMENTO: FLEXIBILIDADE NO ESPALDAR ===
   {
@@ -1281,6 +1927,25 @@ export const EXERCISES: Exercise[] = [
       "Aperta o glúteo no topo 1-2s, não sobe só por subir",
       "Empurra pelos calcanhares pra tirar a coxa da frente do movimento",
     ],
+    execucao: {
+      posicao: "Sentada no chão de costas pra bola, deita a parte de cima das costas nela, pés no chão na largura do quadril.",
+      movimento: [
+        "Queixo pra baixo e costela fechada.",
+        "Sobe o quadril até o corpo ficar reto do ombro ao joelho, joelhos dobrados em ângulo reto.",
+        "Aperta o bumbum 1 a 2 segundos.",
+        "Desce devagar, segurando a bola parada.",
+      ],
+      ondeSentir: "Bumbum, embaixo, e a barriga segurando o equilíbrio.",
+      erradoSe: [
+        "A bola rola → abre um pouco mais os pés e desce mais devagar.",
+        "A lombar arqueia no topo → sobe só até ficar reta e fecha a costela.",
+        "A frente da coxa trabalha mais → leva os pés um pouco mais longe.",
+      ],
+      renderMais: [
+        "Segura 3 segundos no topo.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   {
     id: "step-up-gluteo",
@@ -1299,6 +1964,25 @@ export const EXERCISES: Exercise[] = [
       "Step mais alto = mais glúteo (desde que mantenha o calcanhar apoiado)",
       "Não dá pulinho com a perna de baixo — ela só toca de leve pra equilíbrio",
     ],
+    execucao: {
+      posicao: "De frente pro step, halteres nas mãos ao lado do corpo, um pé inteiro em cima do step.",
+      movimento: [
+        "Inclina o tronco um pouco pra frente.",
+        "Sobe empurrando o calcanhar do pé de cima, sem dar impulso com o pé de baixo.",
+        "Lá em cima, fica reta e aperta o bumbum.",
+        "Desce devagar, freando com a perna de cima. Faz todas de um lado e troca.",
+      ],
+      ondeSentir: "Bumbum da perna de cima, embaixo.",
+      erradoSe: [
+        "Você pula com o pé de baixo → deixa só a ponta dele no chão e sobe com a perna de cima.",
+        "O joelho de cima cai pra dentro → empurra o joelho pra fora, na linha do pé.",
+        "Você sente só a frente da coxa → inclina o tronco um pouco mais e empurra pelo calcanhar.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Step mais alto, até a altura do joelho, se o equilíbrio deixar.",
+      ],
+    },
   },
   {
     id: "bike-reclinada",
@@ -1398,6 +2082,26 @@ export const EXERCISES: Exercise[] = [
       "Só entra depois que o stiff já sai redondo: é a mesma dobradiça, feita com velocidade",
       "A força vem de um movimento explosivo de quadril, como fechar a porta do carro com o bumbum",
     ],
+    execucao: {
+      posicao: "Em pé, pés um pouco mais abertos que o quadril, kettlebell no chão um passo à frente.",
+      movimento: [
+        "Empurra o bumbum pra trás e pega o kettlebell com as duas mãos, costas retas.",
+        "Puxa o kettlebell pra trás entre as pernas, como quem passa uma bola por baixo.",
+        "Empurra o quadril pra frente com força e aperta o bumbum: o kettlebell sobe sozinho até a altura do peito.",
+        "Deixa ele cair de volta e já empurra o bumbum pra trás pra próxima.",
+      ],
+      ondeSentir: "Bumbum, parte de trás da coxa e fôlego. O cansaço não vem do ombro nem da lombar.",
+      erradoSe: [
+        "Os braços levantam o kettlebell → braços soltos como cordas; quem joga é o quadril.",
+        "Você agacha em vez de levar o bumbum pra trás → joelho dobra pouco, o bumbum vai longe pra trás.",
+        "Lá em cima o tronco vai pra trás e a lombar arqueia → em cima o corpo fica reto, bumbum apertado.",
+        "Dor na lombar → para e refaz o movimento sem peso.",
+      ],
+      renderMais: [
+        "Aperta o bumbum com força em cada subida, como se segurasse uma moeda.",
+        "Séries curtas e rápidas: para quando a velocidade cair.",
+      ],
+    },
   },
   // === CHUN-LI MACIA (2026-09-23) — coxa inteira, braço que levanta, costas bonitas ===
   {
@@ -1418,6 +2122,26 @@ export const EXERCISES: Exercise[] = [
       "Desce em 2-3 s: a descida controlada constrói tanto quanto a subida",
       "Plataforma pequena? Um pé por vez resolve e ainda corrige diferença entre as pernas",
     ],
+    execucao: {
+      posicao: "Deitada no leg press 45, costas e bumbum colados no encosto, pés no meio da plataforma, na largura do quadril.",
+      movimento: [
+        "Empurra a plataforma e solta as travas do lado.",
+        "Desce devagar até o joelho dobrar em ângulo reto.",
+        "Empurra com o pé inteiro.",
+        "Para em cima sem travar o joelho. Trava a plataforma ao terminar.",
+      ],
+      ondeSentir: "Frente da coxa, queimando. Não o joelho nem a lombar.",
+      erradoSe: [
+        "O bumbum descola do encosto lá embaixo → desce menos.",
+        "Os joelhos caem pra dentro → empurra os joelhos pra fora, na linha dos pés.",
+        "O joelho estica até travar lá em cima → para um pouco antes de esticar tudo.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Pausa de 1 segundo lá embaixo, sem descansar.",
+      ],
+      regulagem: "Encosto numa inclinação em que você desce até o joelho em ângulo reto sem o bumbum sair do banco. Pés no meio da plataforma. Anilhas iguais dos dois lados. Antes de começar, acha as travas (alavancas do lado) e testa soltar e prender.",
+    },
   },
   {
     id: "cadeira-extensora",
@@ -1436,6 +2160,26 @@ export const EXERCISES: Exercise[] = [
       "Segura 1 s com a perna esticada: é ali que o músculo trabalha mais",
       "Mãos segurando o banco mantêm o quadril parado",
     ],
+    execucao: {
+      posicao: "Sentada na extensora, costas no encosto, rolo apoiado na frente do tornozelo.",
+      movimento: [
+        "Segura as alças do banco.",
+        "Estica os joelhos até quase travar.",
+        "Segura 1 segundo lá em cima.",
+        "Desce em 2 a 3 segundos, sem deixar o peso bater.",
+      ],
+      ondeSentir: "Frente da coxa, ardendo no fim da série. Nada atrás do joelho.",
+      erradoSe: [
+        "Dor atrás ou na frente do joelho → confere a regulagem do encosto; se continuar, para.",
+        "O bumbum sai do banco pra subir → tira um pino.",
+        "Você chuta o peso pra cima → sobe em 2 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com a perna esticada.",
+        "Desce em 3 segundos.",
+      ],
+      regulagem: "Encosto ajustado pra o joelho ficar bem na linha do eixo da máquina (a peça redonda do lado, onde o braço gira). Rolo na frente do tornozelo, logo acima do pé, não no meio da canela. Escolhe o peso no pino da pilha.",
+    },
   },
   {
     id: "flexora-em-pe",
@@ -1454,6 +2198,25 @@ export const EXERCISES: Exercise[] = [
       "Coxa parada: só o joelho dobra",
       "Posterior pela flexora, e não por stiff pesado, é o que mantém a dobra do glúteo nítida",
     ],
+    execucao: {
+      posicao: "Em pé de frente pra parede ou pra um banco, mãos apoiadas, caneleira no tornozelo da perna que trabalha.",
+      movimento: [
+        "Joelhos lado a lado, barriga firme.",
+        "Dobra o joelho trazendo o calcanhar em direção ao bumbum, sem mexer a coxa.",
+        "Segura 1 segundo lá em cima.",
+        "Desce devagar até a perna esticar.",
+      ],
+      ondeSentir: "Parte de trás da coxa, perto do joelho. Não na lombar.",
+      erradoSe: [
+        "A coxa vai pra frente junto → deixa o joelho que trabalha ao lado do outro.",
+        "A lombar arqueia → aperta o bumbum e a barriga e sobe menos.",
+        "O pé sobe no balanço → sobe em 2 segundos.",
+      ],
+      renderMais: [
+        "Segura 2 segundos com o calcanhar perto do bumbum.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   {
     id: "rosca-martelo",
@@ -1472,6 +2235,24 @@ export const EXERCISES: Exercise[] = [
       "Cotovelo colado na lateral do corpo o tempo todo",
       "A pegada neutra (palmas frente a frente) fortalece o antebraço — é a pegada de segurar pessoa",
     ],
+    execucao: {
+      posicao: "Em pé, um halter em cada mão ao lado do corpo, palmas viradas uma pra outra.",
+      movimento: [
+        "Cotovelos colados ao corpo.",
+        "Dobra os cotovelos e sobe os halteres até a altura do ombro, palmas ainda uma pra outra.",
+        "Desce devagar até esticar.",
+      ],
+      ondeSentir: "Frente do braço e antebraço, cansando juntos. A lombar fica quieta.",
+      erradoSe: [
+        "O tronco balança → peso menor e costas paradas.",
+        "Os cotovelos vão pra frente → cola de novo ao corpo.",
+        "A lombar reclama → aperta o bumbum e a barriga; se continuar, peso menor.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Segura 1 segundo em cima.",
+      ],
+    },
   },
   {
     id: "rosca-barra-w",
@@ -1490,6 +2271,24 @@ export const EXERCISES: Exercise[] = [
       "Encosta as costas numa parede se o tronco quiser balançar",
       "Contorno de braço leve vem de repetições bem feitas, não de carga máxima",
     ],
+    execucao: {
+      posicao: "Em pé, pés na largura do quadril, barra W segura nas partes inclinadas, palmas pra cima, braços esticados na frente das coxas.",
+      movimento: [
+        "Cotovelos colados ao lado do corpo.",
+        "Dobra os cotovelos e traz a barra até a altura do peito.",
+        "Desce em 2 a 3 segundos até esticar os braços.",
+      ],
+      ondeSentir: "Frente do braço. O tronco fica parado do começo ao fim.",
+      erradoSe: [
+        "O tronco balança pra subir → peso menor e costas paradas.",
+        "Os cotovelos vão pra frente → deixa os cotovelos colados ao corpo.",
+        "Dor no punho → muda a pegada pra outro ponto da parte inclinada.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Segura 1 segundo em cima, apertando.",
+      ],
+    },
   },
   {
     id: "triceps-testa-barra-w",
@@ -1508,6 +2307,25 @@ export const EXERCISES: Exercise[] = [
       "Braço parado da altura do ombro até o cotovelo: só o antebraço se mexe",
       "Carga leve e controle: é braço firme, não braço grande",
     ],
+    execucao: {
+      posicao: "Deitada no banco reto, pés no chão, barra W segura nas partes inclinadas, braços esticados em cima do peito.",
+      movimento: [
+        "Cotovelos apontando pro teto, sem abrir.",
+        "Dobra só os cotovelos, descendo a barra devagar em direção à testa.",
+        "Para pouco antes da testa.",
+        "Estica os cotovelos de volta.",
+      ],
+      ondeSentir: "Parte de trás do braço. Não no cotovelo.",
+      erradoSe: [
+        "Dor no cotovelo → desce menos e mais devagar; se continuar, para.",
+        "Os cotovelos abrem pros lados → aponta os cotovelos pro teto.",
+        "O braço se mexe no ombro → só o cotovelo dobra; o resto do braço fica parado.",
+      ],
+      renderMais: [
+        "Desce em 3 segundos.",
+        "Segura 1 segundo com o braço esticado, apertando.",
+      ],
+    },
   },
   {
     id: "remada-unilateral-halter",
@@ -1526,6 +2344,25 @@ export const EXERCISES: Exercise[] = [
       "Pensa em levar o cotovelo ao bolso de trás",
       "Escápula pra trás e pra baixo no topo: é costas bonita, não costas larga",
     ],
+    execucao: {
+      posicao: "Joelho e mão do mesmo lado apoiados no banco, o outro pé no chão, halter na mão livre, costas retas como uma mesa.",
+      movimento: [
+        "Braço esticado embaixo do ombro.",
+        "Puxa o halter em direção ao quadril, cotovelo raspando o corpo.",
+        "Segura 1 segundo em cima.",
+        "Desce devagar até esticar o braço.",
+      ],
+      ondeSentir: "Meio das costas, entre a omoplata e a coluna, do lado que puxa.",
+      erradoSe: [
+        "O tronco gira pra subir o peso → peso menor e tronco parado.",
+        "O cotovelo abre pra fora → cola o cotovelo no corpo; aberto puxa pra largura das costas.",
+        "O ombro sobe pra orelha → leva o halter pro quadril, não pro ombro.",
+      ],
+      renderMais: [
+        "Segura 2 segundos em cima.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
   {
     id: "farmer-walk",
@@ -1544,6 +2381,25 @@ export const EXERCISES: Exercise[] = [
       "Ombro longe da orelha o percurso inteiro",
       "Se a pegada falhar antes das pernas, está no peso certo",
     ],
+    execucao: {
+      posicao: "Em pé, um halter pesado em cada mão, braços esticados ao lado do corpo.",
+      movimento: [
+        "Ombros pra trás e pra baixo, barriga firme.",
+        "Caminha 20 a 30 metros em passos curtos.",
+        "Tronco reto, sem tombar pra nenhum lado.",
+        "Para e põe os halteres no chão dobrando os joelhos, costas retas.",
+      ],
+      ondeSentir: "Mãos e antebraços apertando, barriga segurando o tronco. Ombro baixo, longe da orelha.",
+      erradoSe: [
+        "O ombro sobe em direção à orelha → desce os ombros; se não descer, a série acabou.",
+        "O corpo tomba pra um lado → passos mais curtos e barriga mais firme.",
+        "Os halteres começam a escorregar → a série acabou ali; põe no chão antes de soltar.",
+      ],
+      renderMais: [
+        "Passos lentos, com o tronco parado.",
+        "Termina parada 10 segundos segurando, ombros baixos.",
+      ],
+    },
   },
   {
     id: "extensao-lombar",
@@ -1561,6 +2417,25 @@ export const EXERCISES: Exercise[] = [
       "Olhar pro chão mantém o pescoço alinhado",
       "Para na linha do corpo: passar dela é carga na coluna, não ganho",
     ],
+    execucao: {
+      posicao: "Deitada de barriga pra baixo no colchonete, pernas esticadas, mãos ao lado da cabeça.",
+      movimento: [
+        "Aperta o bumbum e olha pro chão, pescoço comprido.",
+        "Sobe o peito do chão devagar, só até o tronco alinhar com as pernas.",
+        "Segura 1 segundo.",
+        "Desce devagar.",
+      ],
+      ondeSentir: "Músculos dos dois lados da coluna, na lombar. Cansaço, sem pontada.",
+      erradoSe: [
+        "Pontada ou dor aguda na lombar → para na hora.",
+        "A cabeça vai pra trás → olha pro chão o movimento inteiro.",
+        "Sobe no impulso e passa da linha → sobe menos e devagar.",
+      ],
+      renderMais: [
+        "Segura 3 segundos lá em cima.",
+        "Desce em 3 segundos.",
+      ],
+    },
   },
 ];
 
