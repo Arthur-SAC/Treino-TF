@@ -33,7 +33,7 @@ describe("vídeos dos exercícios", () => {
     "hip-thrust-maquina", "flexora-sentada", "triceps-polia-corda", "rosca-polia", "pallof-polia",
     "extensao-45-gluteo", "coice-maquina", "hack-machine",
     // Máquina primeiro (2026-11-09): mesma regra, ela cola o link.
-    "supino-inclinado-maquina", "remada-polia-unilateral",
+    "supino-inclinado-maquina", "remada-polia-unilateral", "hip-thrust-maquina-leve",
   ]);
 
   it("todo exercício de força/mobilidade do catálogo tem vídeo no mapa", () => {

@@ -27,6 +27,8 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "smith-squat": "gluteo-max", // leg press com pés ALTOS
   "kettlebell-swing": "gluteo-max",
   "hip-thrust-maquina": "gluteo-max",
+  // ativação da quarta: hip thrust de verdade, conta como a ponte que ele substituiu
+  "hip-thrust-maquina-leve": "gluteo-max",
   "extensao-45-gluteo": "gluteo-max",
   "coice-maquina": "gluteo-max",
   "coice-gluteo-polia": "gluteo-max",

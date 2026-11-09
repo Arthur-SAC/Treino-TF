@@ -7,14 +7,14 @@ import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
 import { separarNucleo } from "../lib/nucleo";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
-import { flexDoDia, type FlexDoDia } from "../lib/flex-progression";
+import { flexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
 import { reboladoDoDia, SEQUENCIAS_REBOLADO } from "../lib/rebolado-progression";
 import { PROGRESSAO_PELVICA } from "../lib/pelvic-progression";
 import { SEQUENCIAS_FLEX } from "../lib/flex-progression";
 import { TREINOS_POR_SEMANA } from "../lib/objetivo";
 import { posturaDoDia, SEQUENCIAS_POSTURA } from "../lib/postura-progression";
-import { rotuloDaSequencia } from "../lib/sequence-label";
+import { rotuloFlexDoDia } from "../lib/sequence-label";
 import { formatDateBR } from "../lib/format";
 import { useCycleAdvice } from "../hooks/useCycleAdvice";
 import { useResolvedGoal } from "../hooks/useResolvedGoal";
@@ -52,19 +52,6 @@ import { setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
-
-/** Rótulo e subtítulo do alongamento do dia. A montagem do rótulo é a MESMA
- *  regra do item pélvico e vem do módulo compartilhado (`rotuloDaSequencia`):
- *  a duração sai sempre do catálogo, nunca de um número cravado no item, e sem
- *  sequência o rótulo fica nu. Era uma cópia — duas escritas da mesma regra em
- *  camadas diferentes, que é como ela diverge em silêncio. O que sobra aqui é
- *  só o subtítulo, que para o alongamento é a etapa da fase. */
-function rotuloFlexDoDia(baseLabel: string, doDia: FlexDoDia): { label: string; subtitle: string } {
-  return {
-    label: rotuloDaSequencia(baseLabel, doDia.sequenceId),
-    subtitle: doDia.etapa,
-  };
-}
 
 export function Today() {
   const today = new Date();

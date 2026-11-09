@@ -621,7 +621,7 @@ export const EXERCISES: Exercise[] = [
       "Quadril e peito virados pra frente o tempo todo: quem se mexe é só o braço",
     ],
     execucao: {
-      posicao: "Em pé de frente pra polia, pés um pouco afastados, joelhos levemente dobrados, puxador de uma mão só, a outra mão apoiada na máquina.",
+      posicao: "Em pé de frente pra polia, pés um pouco afastados, joelhos levemente dobrados, puxador de uma mão só, a outra mão no quadril ou apoiada na máquina, se alcançar.",
       movimento: [
         "Dá um passo pra trás até o cabo ficar esticado com o braço estendido.",
         "Puxa o puxador até a lateral da barriga, cotovelo raspando o corpo.",
@@ -1589,6 +1589,44 @@ export const EXERCISES: Exercise[] = [
         "Desce em 3 segundos, sem deixar o peso descansar embaixo.",
       ],
       regulagem: "Se o encosto ajustar, deixa a borda dele na altura da linha do sutiã. Almofada ou cinto firme em cima do osso do quadril, não na barriga. Se a plataforma dos pés ajustar, põe num ponto em que, lá em cima, a canela fica em pé, reta. O peso vai em anilhas ou no pino, conforme a máquina.",
+    },
+  },
+  // Id próprio de propósito (2026-11-09): a carga sugerida vem do último
+  // registro do MESMO id. Com o leve da quarta no mesmo id do pesado de
+  // segunda e sexta, a sugestão pulava toda semana no exercício principal dela.
+  {
+    id: "hip-thrust-maquina-leve",
+    name: "Hip thrust leve na máquina (ativação)",
+    category: "gluteo",
+    equipment: ["maquina-hip-thrust"],
+    difficulty: "iniciante",
+    description: "A mesma máquina de hip thrust, com carga leve, logo depois do aquecimento: serve pra acordar o glúteo antes do resto do treino. Não é a série pesada — essa fica na segunda e na sexta.",
+    commonMistakes: ["Usar a carga do dia pesado", "Subir rápido sem a pausa no topo", "Arquear a lombar no topo"],
+    exposureLevel: 2,
+    startLoadKg: 10,
+    proTips: [
+      "Carga em que sobra fôlego: o objetivo é sentir o glúteo, não cansar",
+      "Pausa de 2 s no topo em toda repetição",
+    ],
+    execucao: {
+      posicao: "Recostada na máquina de hip thrust, parte de cima das costas no encosto, almofada ou cinto em cima do osso do quadril, carga leve.",
+      movimento: [
+        "Pés na largura do quadril, barriga firme, queixo pra baixo.",
+        "Empurra com os calcanhares e sobe o quadril até o corpo ficar reto do ombro ao joelho.",
+        "Segura 2 segundos apertando o bumbum o mais forte que conseguir.",
+        "Desce devagar e sobe de novo sem descansar embaixo.",
+      ],
+      ondeSentir: "Bumbum, embaixo e no meio, esquentando e apertando. Se no fim você sente o glúteo 'ligado', cumpriu o papel.",
+      erradoSe: [
+        "A série cansa a perna como um treino pesado → tira peso; aqui é só acordar o glúteo.",
+        "A lombar arqueia no topo → sobe só até o corpo ficar reto, barriga firme.",
+        "A frente da coxa trabalha mais que o bumbum → põe os pés um pouco mais longe do quadril.",
+      ],
+      renderMais: [
+        "Pausa de 3 segundos no topo nas últimas 5 repetições.",
+        "Desce em 3 segundos.",
+      ],
+      regulagem: "A mesma do hip thrust pesado: borda do encosto na altura da linha do sutiã, almofada ou cinto em cima do osso do quadril, não na barriga, e a canela em pé, reta, lá em cima. Carga leve, bem abaixo da do dia pesado.",
     },
   },
   {

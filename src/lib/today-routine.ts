@@ -123,7 +123,7 @@ const CAMINHADA_FDS: RoutineItem = {
 
 function manhaItems(dayOfYear: number, fimDeSemana: boolean, modo: ModoCaminhada): RoutineItem[] {
   const items: RoutineItem[] = [
-    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
+    { id: "alongamento-manha", block: "manha", label: "Alongamento manhã", subtitle: "Desperta quadril e coluna · inclui o vacuum", to: "/treino/movimento", linkKey: "flexManha", defaultTime: "06:00" },
   ];
   if (isBarbaDay(dayOfYear)) items.push(BARBA);
   items.push(
