@@ -82,6 +82,9 @@ export interface Settings {
   acoesTratadas: string[];
   /** Perguntado no primeiro exercício de um lado só. */
   ladoFraco: LadoFraco;
+  /** Mecânicas desbloqueadas pela sequência: id (ver `desbloqueios.ts`) -> ISO
+   *  do dia em que abriu. Desbloqueado nunca volta a trancar. */
+  desbloqueios: Record<string, string>;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -172,6 +175,8 @@ export const DEFAULTS: Settings = {
   acoesTratadas: [],
   // Perguntado no primeiro exercício de um lado só.
   ladoFraco: "",
+  // Vazio: na chegada da progressão tudo fora do núcleo começa trancado.
+  desbloqueios: {},
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

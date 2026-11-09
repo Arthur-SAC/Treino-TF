@@ -6,6 +6,7 @@ import { NOTIFICACAO_NOITE } from "../../src/lib/notification-scheduler";
 import { ITENS_PROGRESSO } from "../../src/pages/ProgressoHome";
 import { BLOCOS_GUIA } from "../../src/pages/GuiaHome";
 import * as PLACAS from "../../src/lib/placas-texto";
+import { DESBLOQUEIOS, filtrarRotina } from "../../src/lib/desbloqueios";
 
 // Lê fonte como texto pelo Vite (?raw) — o tsconfig do projeto não tem tipos do Node.
 const MANIFEST = Object.values(import.meta.glob("../../vite.config.ts", { query: "?raw", import: "default", eager: true }))[0] as string;
@@ -79,6 +80,18 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
       PLACAS.linhaDaQueda("2026-11-05", 2, "2026-11-09"),
     ];
     expect(textos.length).toBeGreaterThan(5);
+    expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
+  });
+
+  it("a tabela de desbloqueios e a rotina filtrada do Hoje", () => {
+    const textos = [
+      ...DESBLOQUEIOS.flatMap((d) => [d.titulo, d.entra, d.praQue]),
+      ...[0, 1, 2, 3, 4, 5, 6].flatMap((dow) =>
+        filtrarRotina(buildDayRoutine(dow, 1), {}).blocks.flatMap((b) => b.items)
+          .map((i) => `${i.label} ${i.subtitle ?? ""}`),
+      ),
+    ];
+    expect(textos.length).toBeGreaterThan(30);
     expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
   });
 });

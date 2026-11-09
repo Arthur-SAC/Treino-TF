@@ -26,7 +26,10 @@ import { SEQUENCES } from "../data/sequences-seed";
 // todo move do alongamento da manhã, do da noite e do assoalho — ela tinha que
 // pesquisar fora do app pra entender. Nome e descrição dos moves não mudaram:
 // sem o bump, o id já existe no aparelho e a explicação nunca chega.
-export const MOVEMENT_VERSION = 14;
+// v15: `manha-curta-vacuum`, o nível 1 do alongamento da manhã (progressão por
+// desbloqueio, 2026-11-09). Sem o bump, o Hoje aponta pra uma sequência que
+// não existe no aparelho dela.
+export const MOVEMENT_VERSION = 15;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

@@ -36,6 +36,23 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
       { name: "Respiração final", description: "Deitada, mão na barriga. 5 respirações profundas pra terminar.", durationSec: 60 },
     ],
   },
+  // Nível 1 do alongamento da manhã (progressão por desbloqueio, 2026-11-09):
+  // até o patamar 5 o Hoje serve só isto. Os dois primeiros moves da matinal
+  // (já somam 2 min) e o vacuum igual, que não pode sair do dia — ele saiu da
+  // academia e vive aqui. Não entra em SEQUENCIAS_FLEX: não é fase da trilha.
+  {
+    id: "manha-curta-vacuum",
+    name: "Alongamento manhã curto",
+    category: "mobilidade",
+    level: "iniciante",
+    durationMin: 4,
+    focus: "Curto pra pegar o hábito: acorda o quadril e a coluna em 2 min e fecha com o vacuum, que afina a cintura por dentro.",
+    moves: [
+      { name: "Respiração de quadril (deitada)", description: "Deitada de costas, mão na barriga. Inspira soltando o ventre, expira contraindo o transverso. 5 respirações lentas.", durationSec: 60 },
+      { name: "Cat-cow (4 apoios)", description: "Em 4 apoios. Inspira arqueia a coluna pra baixo (vaca), expira arredonda pra cima (gato). Suave, sem forçar.", durationSec: 60, repeat: 10 },
+      { name: "Vacuum abdominal", description: "Ainda sentada ou de quatro: expira TODO o ar e puxa o umbigo pra dentro e pra cima, como se colasse na coluna. Segura 30s respirando curto pela costela — não prende a respiração. 3 vezes. É o transverso, o cinto interno que afina a cintura por dentro; nenhum abdominal com carga faz isso.", durationSec: 110, repeat: 3 },
+    ],
+  },
   {
     id: "soltura-tronco-quadril",
     name: "Soltura de tronco e quadril (pré-dança)",

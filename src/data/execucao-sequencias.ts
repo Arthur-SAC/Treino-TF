@@ -1372,6 +1372,12 @@ const PELVIC: Record<string, Record<string, Execucao>> = {
 
 export const EXECUCAO_DAS_SEQUENCIAS: Record<string, Record<string, Execucao>> = {
   "mobilidade-pelvica-matinal": MANHA_FASE_1,
+  // Os três moves são cópia dos da matinal: a mesma explicação, sem redigitar.
+  "manha-curta-vacuum": {
+    "Respiração de quadril (deitada)": MANHA_FASE_1["Respiração de quadril (deitada)"],
+    "Cat-cow (4 apoios)": MANHA_FASE_1["Cat-cow (4 apoios)"],
+    "Vacuum abdominal": MANHA_FASE_1["Vacuum abdominal"],
+  },
   "flex-manha-amplitude": MANHA_FASE_2,
   "flex-manha-sustentacao": MANHA_FASE_3,
   "flexibilidade-intima": NOITE_FASE_1,
