@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { hojeISO } from "./today-date";
+import { seedDatabase } from "./seed";
 
 // O que entra no backup e como volta. Saiu de Settings.tsx (auditoria de
 // 2026-09-23) porque o backup deixava de fora as configurações — ciclo atual,
@@ -134,6 +135,13 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     await db.practiceLogs.bulkPut((p.practiceLogs ?? []) as never);
     await db.milestones.bulkPut((p.milestones ?? []) as never);
     await db.settings.bulkPut((p.settings ?? []) as never);
+    // Backup anterior à migração da Smartfit: o bulkPut só sobrescreve as chaves
+    // que o backup traz, então o `smartfitMigration` = 1 do aparelho sobreviveria
+    // ao ciclo/teto antigos que acabaram de voltar. Sem a chave no backup, apaga-a
+    // pra migração refazer sobre as sessões restauradas.
+    if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "smartfitMigration")) {
+      await db.settings.delete("smartfitMigration");
+    }
     await db.routineChecks.bulkPut((p.routineChecks ?? []) as never);
     await db.looks.bulkPut(desserializar(p.looks) as never);
     await db.wishlist.bulkPut((p.wishlist ?? []) as never);
@@ -153,4 +161,7 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     // ela acabou de restaurar É um backup, então o aviso de 15 dias recomeça hoje.
     await db.settings.put({ key: "ultimoBackupEm", value: hojeISO() });
   });
+  // Nada recarrega o app depois de restaurar (a tela só navega); sem isto a
+  // migração apagada acima só rodaria na próxima abertura.
+  await seedDatabase();
 }

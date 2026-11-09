@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { seedDatabase } from "../../src/lib/seed";
+import { coletarBackup, restaurarBackup } from "../../src/lib/backup-io";
 import { DEFAULTS } from "../../src/lib/settings-helpers";
 
 describe("migração da Smartfit: recomeço na Entrada", () => {
@@ -44,5 +45,41 @@ describe("migração da Smartfit: recomeço na Entrada", () => {
 
   it("DEFAULTS.aparelhosAusentes é []", () => {
     expect(DEFAULTS.aparelhosAusentes).toEqual([]);
+  });
+
+  describe("restaurar backup", () => {
+    async function backupAntigo(comMigracao: boolean) {
+      await db.workoutSessions.clear();
+      await criaSessoes(7);
+      await db.settings.put({ key: "activeCycle", value: "variacao" });
+      await db.settings.put({ key: "cycleStartSessionCount", value: 2 });
+      await db.settings.put({ key: "tetoPredio", value: { "leg-press": 100 } });
+      const p = await coletarBackup();
+      const cfg = ((p.settings ?? []) as Array<{ key: string; value: unknown }>)
+        .filter((c) => c.key !== "smartfitMigration");
+      if (comMigracao) cfg.push({ key: "smartfitMigration", value: 1 });
+      p.settings = cfg;
+      return p;
+    }
+
+    it("backup sem smartfitMigration, sobre aparelho já migrado, refaz a migração", async () => {
+      await seedDatabase();
+      const p = await backupAntigo(false);
+      await db.settings.put({ key: "smartfitMigration", value: 1 });
+      await restaurarBackup(p);
+      await seedDatabase();
+      expect((await db.settings.get("activeCycle"))?.value).toBe("entrada-1");
+      expect((await db.settings.get("cycleStartSessionCount"))?.value).toBe(7);
+      expect(await db.settings.get("tetoPredio")).toBeUndefined();
+    });
+
+    it("backup com smartfitMigration 1 não roda a migração de novo", async () => {
+      await seedDatabase();
+      const p = await backupAntigo(true);
+      await restaurarBackup(p);
+      await seedDatabase();
+      expect((await db.settings.get("activeCycle"))?.value).toBe("variacao");
+      expect((await db.settings.get("cycleStartSessionCount"))?.value).toBe(2);
+    });
   });
 });
