@@ -60,7 +60,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(15);
+    expect(EXERCISE_SEED_VERSION).toBe(16);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {

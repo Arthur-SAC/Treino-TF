@@ -30,7 +30,9 @@ export function incrementoDoEquipamento(equipment: readonly string[] = []): numb
   const SEM_CARGA = ["peso-corporal", "colchonete", "nenhum"];
   if (equipment.length > 0 && equipment.every((e) => SEM_CARGA.includes(e))) return 0;
   if (tem("caneleira")) return 1;
-  if (tem("leg-press", "maquina-", "multiestacao", "polia")) return 5;
+  if (tem("leg-press", "maquina-", "multiestacao")) return 5;
+  // A pilha da polia da Smartfit sobe de 2,5 em 2,5 kg; as máquinas, de 5 em 5.
+  if (tem("polia")) return 2.5;
   return 2;
 }
 

@@ -26,15 +26,22 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "ativacao-gluteo-band-walks": "gluteo-max", // é coice em 4 apoios, não passada lateral
   "smith-squat": "gluteo-max", // leg press com pés ALTOS
   "kettlebell-swing": "gluteo-max",
+  "hip-thrust-maquina": "gluteo-max",
+  "extensao-45-gluteo": "gluteo-max",
+  "coice-maquina": "gluteo-max",
+  "coice-gluteo-polia": "gluteo-max",
+  "pull-through-polia": "gluteo-max",
   // glúteo médio: largura do quadril
   "abdutor-maquina": "gluteo-medio",
   "abdutor-band-em-pe": "gluteo-medio",
   "abdutor-deitada": "gluteo-medio",
   "abdutor-cabo-em-pe": "gluteo-medio",
+  "abducao-quadril-polia": "gluteo-medio",
   "clamshell": "gluteo-medio",
   // quadríceps
   "leg-press-pes-medios": "quadriceps",
   "cadeira-extensora": "quadriceps",
+  "hack-machine": "quadriceps",
   "agachamento-goblet": "quadriceps",
   "agachamento-livre": "quadriceps",
   "agachamento-sumo": "quadriceps",
@@ -44,6 +51,7 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   "adutora-maquina": "adutor",
   // posterior: flexora por joelho + dobradiças
   "flexora-em-pe": "posterior",
+  "flexora-sentada": "posterior",
   "stiff": "posterior",
   "stiff-unilateral": "posterior",
   "good-morning": "posterior",
@@ -61,7 +69,10 @@ export const GRUPO_DO_EXERCICIO: Readonly<Record<string, GrupoMuscular>> = {
   // braço
   "rosca-martelo": "biceps",
   "rosca-barra-w": "biceps",
+  "rosca-polia": "biceps",
   "triceps-testa-barra-w": "triceps",
+  "triceps-polia-corda": "triceps",
+  // pallof-polia fica fora de propósito: core não entra na contagem de volume.
 };
 
 type ComExercicios = Pick<WorkoutTemplate, "exercises">;

@@ -7,7 +7,11 @@ const NOVOS = [
   "leg-press-pes-medios", "cadeira-extensora", "flexora-em-pe", "rosca-martelo", "rosca-barra-w",
   "triceps-testa-barra-w", "remada-unilateral-halter", "farmer-walk", "extensao-lombar",
 ];
-const DISPONIVEL = ["halteres", "barra", "anilhas", "banco", "leg-press", "multiestacao", "bola-suica", "espaldar", "caneleira", "colchonete"];
+const DISPONIVEL = [
+  "halteres", "barra", "anilhas", "banco", "leg-press", "polia", "maquina-hip-thrust", "maquina-abdutor",
+  "maquina-adutor", "maquina-flexora", "maquina-extensora", "maquina-voador", "maquina-remada", "colchonete",
+  "elastico", "kettlebell", "caneleira", "banco-45", "maquina-coice", "maquina-hack", "esteira",
+];
 
 describe("exercícios da Chun-Li macia", () => {
   it("os nove existem, com descrição, erros comuns, cue de acerto e dicas", () => {
@@ -18,11 +22,17 @@ describe("exercícios da Chun-Li macia", () => {
     }
   });
 
-  it("só usam equipamento da academia do prédio", () => {
+  it("só usam equipamento da Smartfit", () => {
     for (const id of NOVOS) {
       const e = EXERCISES.find((x) => x.id === id)!;
       expect({ id, fora: e.equipment.filter((q) => !DISPONIVEL.includes(q)) }).toEqual({ id, fora: [] });
     }
+  });
+
+  it("todo exercício com aparelho incerto se anuncia como (se tiver)", () => {
+    const incertos = EXERCISES.filter((e) => e.equipment.some((q) => ["banco-45", "maquina-coice", "maquina-hack", "smith"].includes(q)));
+    expect(incertos.length).toBeGreaterThan(0);
+    for (const e of incertos) expect({ id: e.id, ok: /\(se tiver\)$/.test(e.name) }).toEqual({ id: e.id, ok: true });
   });
 
   it("todo exercício com grupo muscular mapeado existe no catálogo", () => {
