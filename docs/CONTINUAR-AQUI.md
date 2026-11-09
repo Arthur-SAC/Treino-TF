@@ -28,6 +28,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | D · Nativo | botões Feito/Bebi 200 ml/Deitei nos lembretes (com dedupe ao reabrir), lembrete e aviso de backup a cada 15 dias; NATIVE_VERSION continua 1 | spec `docs/superpowers/specs/2026-10-02-nativo-design.md` · plano `docs/superpowers/plans/2026-10-02-nativo.md` |
 | E · Navegação + dívidas | 4 abas (Hoje · Progresso · Guia · Vitalidade) sem mudar rota, aba acesa por abaDaRota; zona 2 pelo modo; TREINOS_POR_SEMANA no objetivo; lista antiga de presença removida | spec `docs/superpowers/specs/2026-10-02-navegacao-e-dividas-design.md` · plano `docs/superpowers/plans/2026-10-02-navegacao-e-dividas.md` |
 | F · Smartfit Jardins | catálogo da Smart Fit (EXERCISE_SEED_VERSION 17); todos os ciclos reescritos com `substitutoId` por item e regra " cada" nos unilaterais (TEMPLATE_SEED_VERSION 18); migração única que recomeça na Entrada (`SMARTFIT_MIGRATION`, roda de novo ao restaurar backup antigo); teto do prédio e card "Hora da Smartfit" removidos (lado fraco ficou, em `src/lib/lado-fraco.ts`); "Ocupado" / "Não tem aqui" / "Voltar pro …" na sessão + lista de desfazer em Configurações (setting `aparelhosAusentes`); rotina de dia útil nova (lanche 15:30, caminhada 16:00, treino 17:00, cães 18:45, jantar 20:00, skincare 20:30, postura 20:45; variante esteira; LEMBRETES_MIGRACAO 2); formato estruturado de execução (`ExecucaoBlocos`) em todos os exercícios, substitutos, alongamentos e assoalho (MOVEMENT_VERSION 14) | spec `docs/superpowers/specs/2026-11-09-smartfit-jardins-design.md` · plano `docs/superpowers/plans/2026-11-09-smartfit-jardins.md` · **na branch `feat/smartfit-jardins`, falta publicar** |
+| G · Visual e progressão | paleta A clara (texto 2 `#7d5f5d`), card que balança, caixinha com +1, barra que enche; ícone/splash/barra de status claros (`NATIVE_VERSION` 2: **ela reinstala o APK uma vez**); sequência de dias úteis; placas de vitória, queda e desbloqueio; níveis no Hoje e nos lembretes; Conquistas no Progresso; Seu tempo e Diário fora do Hoje | spec `docs/superpowers/specs/2026-11-09-visual-e-progressao-design.md` · plano `docs/superpowers/plans/2026-11-09-visual-e-progressao.md` · **na branch `feat/visual-progressao`, falta publicar** (a fase final de correções ainda pode mexer em alguns itens) |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 
@@ -104,6 +105,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 | 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |
 | 11-09 | **Smartfit já na fase 1** (substitui a de 10-02). Unidade Jardins (Av. Dep. Pedro Valadares, 890); sai 16h do Anexo 1 da Funesa a pé, treina ~17h–18h, cães quando chega em casa. Entregue na branch `feat/smartfit-jardins` (falta publicar): **recomeço na Entrada** (migração única, sem herdar carga do prédio); **força 60 min na Smartfit e cardio fora** (caminhada de ida/volta e esteira só como variante); **"não tem aqui" por exercício** (troca pelo substituto, desfazível em Configurações). `tetoPredio`, card "Hora da Smartfit" e `no-low-pulley.test.ts` saíram. |
+| 11-09 | **Visual claro + progressão por desbloqueio.** Paleta A (ela achava escuro); sequência de dias úteis sem exceção, começando na chegada da versão; vitória ao salvar o treino, queda uma vez por quebra (só com `anterior ≥ 1`); o Hoje abre por níveis (5/10/15/20/25) e o desbloqueado nunca tranca de novo; "Seu tempo" e "Diário" saíram do Hoje. Critério dela: "o importante é que tenha essa progressão e que meu objetivo chegue logo" — por isso o núcleo nunca tranca. Vibração desligada; sem modo escuro. |
 | 11-09 | **Máquina primeiro, peso livre como plano B**; búlgaro, goblet, carregamento e farmer ficam livres; **vacuum em casa todo dia** (alongamento da manhã), fora da academia. Régua: `tests/data/maquina-primeiro.test.ts`. |
 
 ---
@@ -258,6 +260,16 @@ vez de "consertar" o teste. Nas quatro vezes o plano estava errado, não o códi
 | Roteiro de domingo · porção de cada pote | `src/data/marmita-domingo-seed.ts`, `src/lib/marmita-porcoes.ts` |
 | Três modos de estilo · migração | `src/lib/db.ts` (`StyleMode`), `src/lib/style-seed.ts` (`migrarModos`) |
 | Guia de tamanho e compra | `src/data/tamanhos-seed.ts` (números interpolados de `objetivo.ts`) |
+| Contraste AA e paleta (`PALETA`) | `src/lib/contraste.ts` |
+| Sequência de dias úteis, `estadoSequencia`, queda | `src/lib/sequencia.ts` |
+| "Faltam N treinos pra {próximo ciclo}" | `src/lib/proxima-parte.ts` |
+| Textos das placas (vitória, queda, desbloqueio, conquista) | `src/lib/placas-texto.ts` |
+| Tabela de níveis, `filtrarRotina`, `idsTrancados`, `proximoDesbloqueio` | `src/lib/desbloqueios.ts` |
+| Marcos de cintura das Conquistas | `src/lib/conquistas.ts` |
+| Fila de placas e `verificarAoAbrir` | `src/hooks/usePlacas.tsx` · `src/components/placas/*` |
+| Tela de Conquistas (dentro do Progresso) | `src/pages/Conquistas.tsx` |
+| Helper de teste que abre todos os níveis | `tests/helpers/desbloquear.ts` (`desbloquearTudo`) |
+| Settings novos | `sequenciaDesde`, `quedaVistaEm`, `desbloqueios`, `conquistasVistas` em `src/lib/settings-helpers.ts` |
 | Fotos dela | `imagens/eu`, `imagens/objetivo` — **gitignored, nunca versionar** |
 
 ---
@@ -299,6 +311,15 @@ comentários com LANCHE ~500 / JANTAR ~700.
 - A regra da oração em `problemasDaExecucao` aceita parêntese não relacionado ("(10 reps)"); o teste de dor aceita "sem doer" e exclui por nome.
 - Contar pra ela: a Entrada agora tem 5 dias de força; o assoalho usa "pinto" e "entre o saco e o ânus" (termos que já existiam) — trocar se ela preferir outros.
 - Sem vídeo ainda: 8 exercícios novos (em `SEM_VIDEO`); ela cola o link pelo player.
+
+**Visual e progressão (2026-11-09) — menores adiados:**
+
+- Rulings: texto 2 escurecido pra AA; card do treino em degradê vermelho 2 → 3 (texto branco precisa de 4,5); "{Dia} não teve treino" quando falta um único dia útil que não foi ontem; "Pronta pra {nome}" com faltam 0; queda também checada ao voltar do fundo (só registrada se ela treinou depois da quebra); Conquistas pula marco cujo título cai no regex de discrição (ex.: "Busto sem hormônio" segue só na trilha); horário e minutos da placa vêm do item efetivo do dia (modo, ajustes de horário, fase do alongamento), a tabela é só fallback.
+- Visual: humores 2-4 do MoodPicker em vermelhos vizinhos; CTA primário `bg-wine-light` com pouco peso; check do SessionRecorder com 40 px de largura; `sem-largura-fixa` sem controle positivo; ícones legados `ic_launcher*.png` (API 24-25) ainda escuros; `statusBarColor` ignorado com edge-to-edge no targetSdk 36 (inofensivo).
+- Movimento: toque na caixinha também balança o card; duplo clique antes do `animationend` pode deixar o +1 preso; `.marca-pop` sem uso; `scaleX` achata a ponta arredondada da barra em fração baixa; item concluído por fora (skincare pelo modal) não pulsa.
+- Sequência/placas: faltam testes de borda (desde em fim de semana, hoje < desde, lista fora de ordem, várias quebras), de ESC e de queda com reduced-motion; `proximaParte` com id desconhecido e `SEQUENCIA_MIGRATION` sem comentário; Placa trava o body mas quem rola é o `<main>`; a queda ao voltar do fundo pode aparecer sobre um treino em andamento.
+- Níveis: `VOZ_1_MIN` fixo (ler do seed de voz); minutos estimados de skincare 2/3 sem comentário; faltam testes do modo esteira e de vitamina D no núcleo; texto do vacuum duplicado; guarda anti-flicker do Hoje não espera `desbloqueios` carregar; "Antes de dormir" sem teste; `aberto()` duplicado no Today; teste `hoje-niveis` sem dia fixo; praticar `manha-curta-vacuum` não marca o item do Hoje nem conta pro lembrete das 6h; copy do lembrete do APK ("5 min") e do PWA ("rotina de rosto") não bate com o nível 1.
+- Final: suíte oscila sob carga (timeout em `Today.test` OFERTA_VITALIDADE; reexecutada, 228 arquivos / 1479 testes verdes); ícone do launcher e splash com T dourado (~2:1 no creme) — trocar por vetor vermelho `#c81d3a`; "às 21h" via `formatHora` na placa; "faltam 0 · abre quando voltar pro app" → "Pronta pra abrir"; `aplicarDesbloqueios` fora de transação rw (corrida de placa dupla); `placasDeDesbloqueio` com fallback estático por leitura; "5 treinos" fixo em Conquistas → `DESBLOQUEIOS[0].patamar`; conferir 320/768 px em navegador real.
 
 **Anteriores:**
 

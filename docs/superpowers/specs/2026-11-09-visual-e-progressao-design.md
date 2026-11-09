@@ -69,7 +69,7 @@ Valores do mockup aprovado — viram os tokens do `tailwind.config.ts` (substitu
 | Card | `#ffffff` |
 | Borda / sombra do card | `#f0d9d4` |
 | Texto | `#2a1416` |
-| Texto secundário | `#8a6a68` |
+| Texto secundário | `#7d5f5d` — escurecido do mockup `#8a6a68` pra passar AA |
 | Vermelho (destaque, horários, aba ativa) | `#e23b3b` |
 | Vermelho 2 (degradê) | `#c81d3a` |
 | Vermelho 3 (sombra de botão) | `#9e1430` |

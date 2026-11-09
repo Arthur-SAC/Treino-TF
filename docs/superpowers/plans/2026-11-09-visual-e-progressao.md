@@ -32,7 +32,7 @@ keyframes (sem biblioteca de animação nova), Capacitor Android (só recursos/e
 - Núcleo nunca tranca: treino, refeições, lanche, água, creatina, vitamina D, caminhada, cães, dormir. A Vitalidade, o Guia e a biblioteca nunca trancam.
 - Desbloqueado nunca volta a trancar.
 - Sem push. `git push origin main` só com permissão dela, e quem pede é o controlador.
-- Paleta A, valores exatos: fundo `#fff7f3`, card `#ffffff`, borda `#f0d9d4`, texto `#2a1416`, texto 2 `#8a6a68`, vermelho `#e23b3b`, vermelho 2 `#c81d3a`, vermelho 3 `#9e1430`, verde-água `#17a398`, roxo `#7b4fd6`, trilho `#f5e2de`.
+- Paleta A, valores exatos: fundo `#fff7f3`, card `#ffffff`, borda `#f0d9d4`, texto `#2a1416`, texto 2 `#7d5f5d` (escurecido do mockup `#8a6a68` pra passar AA), vermelho `#e23b3b`, vermelho 2 `#c81d3a`, vermelho 3 `#9e1430`, verde-água `#17a398`, roxo `#7b4fd6`, trilho `#f5e2de`.
 
 ## Review Focus
 

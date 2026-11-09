@@ -161,6 +161,35 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
   conteúdo íntimo nem a transição.
 - **Sem emoji.** pt-BR com acento.
 - Ela **não bebe**; come fora sexta, sábado e domingo de 15 em 15 (verba de 250 kcal/dia).
+- **Visual claro (2026-11-09):** ela achava o app escuro demais. Paleta A: fundo `#fff7f3`, card
+  `#ffffff`, borda `#f0d9d4`, texto `#2a1416`, texto 2 `#7d5f5d` (escurecido do mockup `#8a6a68`
+  pra passar AA), vermelho `#e23b3b` (só preenchimento e texto grande), vermelho 2 `#c81d3a`
+  (texto de destaque), vermelho 3 `#9e1430`, verde-água `#17a398` (só "feito" e conquista), roxo
+  `#7b4fd6` (só Vitalidade), trilho `#f5e2de`. Movimento só com resposta ao toque; sem som; sem
+  vibração; com "reduzir movimento" vira fade curto.
+- **Sequência = dias úteis com treino.** Segunda a sexta, sem exceção (feriado e doença
+  zeram); sábado e domingo não contam nem quebram. Conta a partir de um marco gravado na
+  chegada da versão (`sequenciaDesde`); antes dele nada conta nem derruba. A placa de queda só
+  aparece se a sequência que caiu era `anterior ≥ 1`, uma vez por quebra.
+- **O app abre por níveis.** O núcleo nunca tranca (treino, refeições, lanche, água, creatina,
+  vitamina D, caminhada, cães, dormir), nem Vitalidade, Guia e biblioteca. O resto entra pela
+  sequência e, aberto, nunca volta a trancar:
+
+  | Sequência | Entra |
+  |---|---|
+  | 0 | protetor solar de manhã (1 min) + alongamento da manhã curto, 2 min, com o vacuum |
+  | 5 | alongamento da manhã completo + assoalho nível 1, 5 min, identificação |
+  | 10 | skincare nível 2 (limpeza e hidratante à noite) + dica de sentar + dança de sábado |
+  | 15 | alongamento da noite + assoalho nível 2 (progressão normal) + voz nível 1, 2 min |
+  | 20 | skincare completo + postura (andar e 8; gingado depois) |
+  | 25 | voz completa |
+
+  Rulings: assoalho nível 1 tem 5 min (duração real da sequência de identificação; o spec dizia
+  3); voz nível 1 tem 2 min (aquecimento do seed); postura entra no 20, não antes. "Ciclo
+  concluído" e "primeira subida de carga" ficaram fora das Conquistas (não são fatos guardados
+  hoje); só os marcos de cintura de `objetivo.ts` entram.
+- **APK:** esta entrega sobe `NATIVE_VERSION` de 1 para 2 (ícone, splash e barra de status
+  claros). Ela precisa **reinstalar o APK uma vez**, por cima.
 
 ## 10. Regras técnicas que protegem o objetivo
 
