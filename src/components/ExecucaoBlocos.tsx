@@ -18,7 +18,7 @@ function Bloco({ titulo, children }: { titulo: string; children: React.ReactNode
 function Lista({ itens }: { itens: string[] }) {
   return (
     <ul className="space-y-1 text-sm list-disc pl-5">
-      {itens.map((i) => <li key={i}>{i}</li>)}
+      {itens.map((i, n) => <li key={n}>{i}</li>)}
     </ul>
   );
 }
@@ -33,7 +33,7 @@ export function ExecucaoBlocos({ execucao: e, parte = "tudo" }: Props) {
           <Bloco titulo="Posição"><p className="text-sm">{e.posicao}</p></Bloco>
           <Bloco titulo="Movimento">
             <ol className="space-y-1 text-sm list-decimal pl-5">
-              {e.movimento.map((m) => <li key={m}>{m}</li>)}
+              {e.movimento.map((m, n) => <li key={n}>{m}</li>)}
             </ol>
           </Bloco>
         </>

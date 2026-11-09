@@ -37,4 +37,30 @@ describe("problemasDaExecucao", () => {
   it("não diferencia maiúsculas", () => {
     expect(problemasDaExecucao({ ...ok, posicao: "Rotação Interna parada." }).length).toBeGreaterThan(0);
   });
+  it("pega plurais e flexões que escapavam", () => {
+    const c = (t: string) => problemasDaExecucao({ ...ok, ondeSentir: t }).length;
+    expect(c("Trabalha as rotações internas do quadril.")).toBeGreaterThan(0);
+    expect(c("Faça rotações externas.")).toBeGreaterThan(0);
+    expect(c("Boa flexão do quadril.")).toBeGreaterThan(0);
+    expect(c("Boa extensão do quadril.")).toBeGreaterThan(0);
+    expect(c("Junte as escápulas.")).toBeGreaterThan(0);
+    expect(c("Ative os transversos.")).toBeGreaterThan(0);
+    expect(c("Junte as escápulas (as pás das costas).")).toBe(0);
+    expect(c("Boa extensão do quadril — levar a perna pra trás.")).toBe(0);
+  });
+  it("aceita a tradução em qualquer ponto da mesma oração", () => {
+    const c = (t: string) => problemasDaExecucao({ ...ok, ondeSentir: t }).length;
+    expect(c("Sinta o transverso do abdômen (o músculo fundo da barriga).")).toBe(0);
+    expect(c("Sinta o transverso. Depois (algo).")).toBeGreaterThan(0);
+    expect(c("Sinta o transverso do abdômen: o músculo fundo.")).toBe(0);
+  });
+  it("normaliza NFC antes de casar", () => {
+    const nfd = "Faça rotação interna parada.".normalize("NFD");
+    expect(problemasDaExecucao({ ...ok, posicao: nfd }).length).toBeGreaterThan(0);
+  });
+  it("acusa itens só com espaços", () => {
+    expect(problemasDaExecucao({ ...ok, movimento: ["a", "  "] }).length).toBeGreaterThan(0);
+    expect(problemasDaExecucao({ ...ok, erradoSe: [" "] }).length).toBeGreaterThan(0);
+    expect(problemasDaExecucao({ ...ok, renderMais: [" "] }).length).toBeGreaterThan(0);
+  });
 });
