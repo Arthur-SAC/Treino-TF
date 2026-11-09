@@ -53,6 +53,11 @@ describe("tabela de desbloqueios", () => {
       expect(d.praQue.length).toBeGreaterThan(10);
     }
   });
+
+  it("entra e praQue não citam hora: o horário muda com o modo e mora só na etiqueta", () => {
+    const comHora = DESBLOQUEIOS.filter((d) => /\b\d{1,2}h(\d{2})?\b|\b\d{1,2}:\d{2}\b/.test(`${d.entra} ${d.praQue}`));
+    expect(comHora.map((d) => d.id)).toEqual([]);
+  });
 });
 
 describe("novosDesbloqueios", () => {

@@ -1,5 +1,5 @@
 import {
-  CONQUISTA_BOTAO, CONQUISTA_ROTULO, DESBLOQUEIO_BOTAO, tituloDesbloqueio,
+  CONQUISTA_BOTAO, CONQUISTA_ROTULO, DESBLOQUEIO_BOTAO, etiquetaHorario, tituloDesbloqueio,
 } from "../../lib/placas-texto";
 import { BOTAO_PLACA, Placa } from "./Placa";
 
@@ -29,7 +29,7 @@ export function PlacaDesbloqueio({ titulo, entra, praQue, minutos, horario, onFe
       <p className="text-muted text-sm mt-2 text-left">{praQue}</p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <span className={ETIQUETA}>{`${minutos} min`}</span>
-        {horario && <span className={ETIQUETA}>{`às ${horario}`}</span>}
+        {horario && <span className={ETIQUETA}>{etiquetaHorario(horario)}</span>}
       </div>
       <button type="button" onClick={onFechar} className={BOTAO_PLACA}>
         {DESBLOQUEIO_BOTAO}

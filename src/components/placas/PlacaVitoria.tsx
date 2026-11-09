@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ProximaParte } from "../../lib/proxima-parte";
 import {
-  ROTULO_PROXIMA_PARTE, ROTULO_SEQUENCIA, VITORIA_BOTAO, VITORIA_TITULO, linhaFaltam,
+  FIM_DE_SEMANA_NAO_CONTA, ROTULO_PROXIMA_PARTE, ROTULO_SEQUENCIA, VITORIA_BOTAO, VITORIA_TITULO, linhaFaltam,
 } from "../../lib/placas-texto";
 import { BOTAO_PLACA, BarraParte, Placa, prefereMenosMovimento } from "./Placa";
 
@@ -10,6 +10,8 @@ interface Props {
   de: number;
   para: number;
   parte: ProximaParte;
+  /** Sábado ou domingo: a sequência não sobe, então não tem faísca. */
+  fimDeSemana?: boolean;
   onFechar: () => void;
 }
 
@@ -20,7 +22,7 @@ const FAISCAS = Array.from({ length: 8 }, (_, i) => {
   return { fx: `${Math.round(Math.cos(ang) * 70)}px`, fy: `${Math.round(Math.sin(ang) * 70)}px`, cor: i % 2 ? "bg-verm" : "bg-feito" };
 });
 
-export function PlacaVitoria({ treino, de, para, parte, onFechar }: Props) {
+export function PlacaVitoria({ treino, de, para, parte, fimDeSemana = false, onFechar }: Props) {
   const reduz = prefereMenosMovimento();
   // Mostra o de e, quando a placa termina de entrar, sobe pro para.
   const [valor, setValor] = useState(reduz ? para : de);
@@ -40,7 +42,7 @@ export function PlacaVitoria({ treino, de, para, parte, onFechar }: Props) {
         <span key={valor} className="numero-salta inline-block font-serif text-6xl text-verm-2 leading-none">
           {valor}
         </span>
-        {!reduz && FAISCAS.map((f, i) => (
+        {!reduz && !fimDeSemana && FAISCAS.map((f, i) => (
           <span
             key={i}
             aria-hidden="true"
@@ -49,6 +51,7 @@ export function PlacaVitoria({ treino, de, para, parte, onFechar }: Props) {
           />
         ))}
       </div>
+      {fimDeSemana && <p className="text-muted text-sm mt-2">{FIM_DE_SEMANA_NAO_CONTA}</p>}
 
       <p className="text-muted text-xs uppercase tracking-wider mt-5">{ROTULO_PROXIMA_PARTE}</p>
       <p className="text-sm text-nude-warm mt-1">{linhaFaltam(parte.faltam, parte.proximoNome)}</p>

@@ -8,7 +8,8 @@
 // exige o patamar dele de novo, contando do zero.
 import type { DayRoutine, RoutineItem } from "./today-routine";
 import { resolveRoutineTime, type RoutineTimeOverrides } from "./routine-times";
-import { flexDoDia } from "./flex-progression";
+import { flexDoDia, SEQUENCIAS_FLEX } from "./flex-progression";
+import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCES } from "../data/sequences-seed";
 
 export type DesbloqueioId = "manha-completa" | "assoalho-1" | "skincare-2" | "sentar" | "danca"
@@ -28,7 +29,7 @@ export interface Desbloqueio {
 export type Desbloqueados = Readonly<Record<string, string>>;
 
 export const SEQ_MANHA_CURTA = "manha-curta-vacuum";
-const SEQ_ASSOALHO_1 = "pelvic-identificacao";
+export const SEQ_ASSOALHO_1 = "pelvic-identificacao";
 const VOZ_1 = "voz-aquecimento-labial-lingua";
 const VOZ_1_MIN = 2; // durationMin de VOZ_1 em voice-seed.ts
 
@@ -40,17 +41,18 @@ function duracao(id: string): number {
 
 // Horários = `defaultTime` do modo caminhada em today-routine.ts. Minutos =
 // durações do seed; skincare completo e assoalho nível 2 variam com o dia, e o
-// número é o típico.
+// número é o típico. `entra`/`praQue` não citam hora: o horário muda com o modo
+// e com /hoje/horarios, e mora só na etiqueta da placa (tempoDoDesbloqueio).
 export const DESBLOQUEIOS: readonly Desbloqueio[] = [
   {
     id: "manha-completa", patamar: 5, titulo: "Alongamento da manhã completo",
-    entra: "O alongamento das 6h volta inteiro: quadril, coluna e o vacuum, seguindo a trilha de fases.",
-    praQue: "Tecido só cede com tempo na posição; os 2 minutos pegaram o hábito, agora é o alongamento que abre o quadril.",
+    entra: "O alongamento da manhã volta inteiro: quadril, coluna e o vacuum, seguindo a trilha de fases.",
+    praQue: "Tecido só cede com tempo na posição; a versão curta pegou o hábito, agora é o alongamento que abre o quadril.",
     minutos: duracao("mobilidade-pelvica-matinal"), horario: "06:00",
   },
   {
     id: "assoalho-1", patamar: 5, titulo: "Assoalho pélvico nível 1",
-    entra: "À noite, às 21h20, entra a identificação: achar o músculo do assoalho, deitada.",
+    entra: "À noite entra a identificação: achar o músculo do assoalho, deitada.",
     praQue: "Sem achar o músculo certo, todo exercício seguinte aperta barriga, bumbum ou coxa no lugar dele.",
     minutos: duracao(SEQ_ASSOALHO_1), horario: "21:20",
   },
@@ -111,6 +113,19 @@ export const DESBLOQUEIOS: readonly Desbloqueio[] = [
 ];
 
 const aberto = (ja: Desbloqueados, id: DesbloqueioId) => Object.prototype.hasOwnProperty.call(ja, id);
+
+/** Este desbloqueio já abriu? */
+export function estaAberto(ja: Desbloqueados, id: DesbloqueioId): boolean {
+  return aberto(ja, id);
+}
+
+/** Minutos do alongamento da manhã de hoje: a versão curta enquanto a manhã
+ *  completa está trancada, senão a sequência da fase atual da trilha. */
+export function minutosAlongamentoManha(ja: Desbloqueados, praticasFlexManha: number): number {
+  return aberto(ja, "manha-completa")
+    ? duracao(flexDoDia("manha", praticasFlexManha).sequenceId)
+    : duracao(SEQ_MANHA_CURTA);
+}
 
 /** O que abre agora: patamar alcançado e ainda não desbloqueado. */
 export function novosDesbloqueios(sequencia: number, ja: Desbloqueados): Desbloqueio[] {
@@ -184,6 +199,22 @@ function nivelDoItem(i: RoutineItem, ja: Desbloqueados): RoutineItem {
     default:
       return i;
   }
+}
+
+/** Itens no nível mínimo perdem o `linkKey` (o rótulo e o destino são os da
+ *  versão curta), e com ele a regra "praticou a trilha, está feito". Esta é a
+ *  regra deles: a sequência curta conta, e a trilha completa também (fez mais
+ *  do que o nível pede). */
+const PRATICAS_DO_NIVEL_1: Partial<Record<string, readonly string[]>> = {
+  "alongamento-manha": [SEQ_MANHA_CURTA, ...SEQUENCIAS_FLEX.manha],
+  "assoalho-pelvico": [SEQ_ASSOALHO_1, ...PROGRESSAO_PELVICA],
+};
+
+/** Sequências cuja prática concluída hoje marca o item como feito, quando o
+ *  item está no nível mínimo (sem `linkKey`). Item completo ou fora da lista: []. */
+export function sequenciasDoNivel1(i: RoutineItem): readonly string[] {
+  if (i.linkKey) return [];
+  return PRATICAS_DO_NIVEL_1[i.id] ?? [];
 }
 
 /** O item do Hoje que cada desbloqueio põe (ou completa) no dia. `sentar` vive

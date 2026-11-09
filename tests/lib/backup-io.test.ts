@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { hojeISO } from "../../src/lib/today-date";
-import { coletarBackup, restaurarBackup, blobParaBase64, base64ParaBlob } from "../../src/lib/backup-io";
+import { coletarBackup, restaurarBackup, blobParaBase64, base64ParaBlob, unirDesbloqueios } from "../../src/lib/backup-io";
 
 // Auditoria de 2026-09-23: o backup deixava de fora as configurações (ciclo
 // atual, contagem de sessões do ciclo, horários, altura, início da
@@ -63,6 +63,34 @@ describe("backup completo — ida e volta", () => {
     await db.settings.put({ key: "activeCycle", value: "entrada-1" }); // o seed de um aparelho novo
     await restaurarBackup(payload);
     expect((await db.settings.get("activeCycle"))?.value).toBe("adaptacao");
+  });
+
+  it("restaurar não retranca o que já abriu nem traz placa já vista de volta", async () => {
+    await db.settings.bulkPut([
+      { key: "smartfitMigration", value: 1 },
+      { key: "entradaMigration", value: 1 },
+      { key: "desbloqueios", value: { "manha-completa": "2026-11-03", "assoalho-1": "2026-11-03" } },
+      { key: "conquistasVistas", value: ["cintura-88"] },
+    ]);
+    const payload = await coletarBackup(); // backup velho
+    // Depois do backup, o aparelho andou: abriu mais coisa e viu outra placa.
+    await db.settings.bulkPut([
+      { key: "desbloqueios", value: { "manha-completa": "2026-11-01", "skincare-2": "2026-11-10" } },
+      { key: "conquistasVistas", value: ["cintura-84"] },
+    ]);
+    await restaurarBackup(payload);
+    expect((await db.settings.get("desbloqueios"))?.value).toEqual({
+      "manha-completa": "2026-11-01", // a mais antiga
+      "assoalho-1": "2026-11-03",
+      "skincare-2": "2026-11-10",
+    });
+    expect([...((await db.settings.get("conquistasVistas"))?.value as string[])].sort()).toEqual(["cintura-84", "cintura-88"]);
+  });
+
+  it("unirDesbloqueios: união com a data mais antiga", () => {
+    expect(unirDesbloqueios({ a: "2026-11-05", b: "2026-11-01" }, { a: "2026-11-02", c: "2026-11-09" })).toEqual({
+      a: "2026-11-02", b: "2026-11-01", c: "2026-11-09",
+    });
   });
 
   // O banco falso dos testes não guarda Blob; a conversão é testada à parte,

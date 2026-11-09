@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../src/lib/db";
 import { carregarEstado, carregarConfig } from "../../src/lib/lembretes/estado";
-import { SEQUENCIAS_FLEX } from "../../src/lib/flex-progression";
+import { SEQUENCIAS_FLEX, flexDoDia } from "../../src/lib/flex-progression";
 import { setSetting } from "../../src/lib/settings-helpers";
+import { SEQ_MANHA_CURTA } from "../../src/lib/desbloqueios";
+import { SEQUENCES } from "../../src/data/sequences-seed";
 
 const AGORA = new Date(2026, 8, 28, 5, 0); // segunda
 beforeEach(async () => {
@@ -15,6 +17,12 @@ describe("carregarEstado", () => {
     await db.practiceLogs.add({ date: "2026-09-28", sequenceId: SEQUENCIAS_FLEX.noite[0], completed: true });
     const e = await carregarEstado(AGORA);
     expect([...e.feitosHoje].sort()).toEqual(["alongamento-manha", "alongamento-noite"]);
+  });
+
+  it("o alongamento curto da manhã (nível 1) também conta: o lembrete das 6h para", async () => {
+    await db.practiceLogs.add({ date: "2026-09-28", sequenceId: SEQ_MANHA_CURTA, completed: true });
+    const e = await carregarEstado(AGORA);
+    expect([...e.feitosHoje]).toEqual(["alongamento-manha"]);
   });
 
   it("água, treino de hoje, última medida e vitamina D", async () => {
@@ -59,5 +67,12 @@ describe("carregarConfig", () => {
     expect((await carregarConfig()).trancados.has("alongamento-noite")).toBe(true);
     await setSetting("desbloqueios", { "alongamento-noite": "2026-11-01" });
     expect((await carregarConfig()).trancados.has("alongamento-noite")).toBe(false);
+  });
+  it("minutos da manhã: a versão curta enquanto a manhã completa está trancada", async () => {
+    const curto = SEQUENCES.find((s) => s.id === SEQ_MANHA_CURTA)!.durationMin;
+    expect((await carregarConfig()).alongamentoManhaMin).toBe(curto);
+    await setSetting("desbloqueios", { "manha-completa": "2026-11-01" });
+    const fase = SEQUENCES.find((s) => s.id === flexDoDia("manha", 0).sequenceId)!.durationMin;
+    expect((await carregarConfig()).alongamentoManhaMin).toBe(fase);
   });
 });

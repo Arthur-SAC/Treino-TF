@@ -5,9 +5,9 @@
 import { db } from "../db";
 import { getSetting } from "../settings-helpers";
 import { hojeISO, ultimosDiasISO } from "../today-date";
-import { praticadaHoje } from "../practice-log-helpers";
+import { contarPraticasFlex, praticadaHoje } from "../practice-log-helpers";
 import { SEQUENCIAS_FLEX } from "../flex-progression";
-import { idsTrancados } from "../desbloqueios";
+import { idsTrancados, minutosAlongamentoManha, SEQ_MANHA_CURTA } from "../desbloqueios";
 import type { ConfigLembretes, EstadoLembretes } from "./planejar";
 
 export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
@@ -18,7 +18,8 @@ export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
   const concluidas = praticas.filter((p) => p.completed);
 
   const feitosHoje = new Set<string>();
-  if (marcado("alongamento-manha") || praticadaHoje(concluidas, SEQUENCIAS_FLEX.manha, hoje)) feitosHoje.add("alongamento-manha");
+  // A versão curta (nível 1, antes da manhã completa abrir) conta igual.
+  if (marcado("alongamento-manha") || praticadaHoje(concluidas, [SEQ_MANHA_CURTA, ...SEQUENCIAS_FLEX.manha], hoje)) feitosHoje.add("alongamento-manha");
   if (marcado("alongamento-noite") || praticadaHoje(concluidas, SEQUENCIAS_FLEX.noite, hoje)) feitosHoje.add("alongamento-noite");
 
   const log = await db.dailyLog.get(hoje);
@@ -42,6 +43,7 @@ export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
 }
 
 export async function carregarConfig(): Promise<ConfigLembretes> {
+  const desbloqueios = await getSetting("desbloqueios");
   return {
     notificationsEnabled: await getSetting("notificationsEnabled"),
     quietHours: await getSetting("quietHours"),
@@ -56,6 +58,7 @@ export async function carregarConfig(): Promise<ConfigLembretes> {
     activeBreakIntervalMin: await getSetting("activeBreakIntervalMin"),
     hydrationIntervalMin: await getSetting("hydrationIntervalMin"),
     hydrationGoalMl: await getSetting("hydrationGoalMl"),
-    trancados: idsTrancados(await getSetting("desbloqueios")),
+    trancados: idsTrancados(desbloqueios),
+    alongamentoManhaMin: minutosAlongamentoManha(desbloqueios, await contarPraticasFlex("manha")),
   };
 }

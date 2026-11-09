@@ -99,11 +99,14 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
   it("as placas de desbloqueio e de conquista, e as linhas da tela Conquistas", () => {
     const textos = [
       ...DESBLOQUEIOS.flatMap((d) => [
-        PLACAS.tituloDesbloqueio(d.titulo), d.entra, d.praQue, `${d.minutos} min`, `às ${d.horario ?? ""}`,
+        PLACAS.tituloDesbloqueio(d.titulo), d.entra, d.praQue, `${d.minutos} min`, PLACAS.etiquetaHorario(d.horario ?? "00:00"),
+        ...[0, 1, 4].map((n) => PLACAS.linhaProximoDesbloqueio(d.titulo, n)),
       ]),
       ...MARCOS_CINTURA.map((m) => m.titulo),
       PLACAS.textoMarcoCintura("2026-12-20"),
       ...[0, 1, 4].map((n) => PLACAS.faltamTreinos(n)),
+      PLACAS.nadaDesbloqueado(DESBLOQUEIOS[0].patamar),
+      PLACAS.FIM_DE_SEMANA_NAO_CONTA,
       "Conquistas", "Desbloqueados", "Próximos", "Marcos",
     ];
     expect(textos.length).toBeGreaterThan(50);

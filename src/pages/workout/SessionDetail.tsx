@@ -13,6 +13,7 @@ import type { ModoCaminhada } from "../../lib/objetivo";
 import { aplicarAusentes, podeMarcarAusente, type ItemTemplate } from "../../lib/troca-aparelho";
 import { setSetting } from "../../lib/settings-helpers";
 import { dadosDaSequencia, desbloquearComPlacas, usePlacas } from "../../hooks/usePlacas";
+import { ehFimDeSemana } from "../../lib/placas-texto";
 
 // Os dois primeiros textos de "Ao terminar" dependem de a zona 2 vir de algum
 // lugar hoje. Em "pausada" não vem — afirmar que a caminhada "já entrega" seria
@@ -184,7 +185,7 @@ export function SessionDetail() {
     if (template) {
       try {
         const { estado, semHoje, parte } = await dadosDaSequencia(todayISO);
-        mostrar({ tipo: "vitoria", treino: template.name, de: semHoje.atual, para: estado.atual, parte });
+        mostrar({ tipo: "vitoria", treino: template.name, de: semHoje.atual, para: estado.atual, parte, fimDeSemana: ehFimDeSemana(todayISO) });
         // Depois da vitória, um "Parabéns" por mecânica que este treino abriu.
         for (const p of await desbloquearComPlacas(estado.atual, todayISO)) mostrar(p);
       } catch {

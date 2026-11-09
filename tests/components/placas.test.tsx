@@ -68,6 +68,20 @@ describe("placas", () => {
     expect(await screen.findByText("Pronta pra Entrada · Semana 2")).toBeInTheDocument();
   });
 
+  it("vitória no fim de semana: sem faísca e diz que não conta pra sequência", async () => {
+    abrir([{ tipo: "vitoria", treino: "x", de: 4, para: 4, parte, fimDeSemana: true }]);
+    expect(await screen.findByText("Fim de semana não conta pra sequência")).toBeInTheDocument();
+    expect(document.querySelectorAll(".faisca")).toHaveLength(0);
+  });
+
+  it("vitória em dia útil: faíscas e nada de fim de semana", async () => {
+    abrir([{ tipo: "vitoria", treino: "x", de: 4, para: 5, parte }]);
+    await screen.findByText("Treino concluído");
+    expect(screen.queryByText("Fim de semana não conta pra sequência")).toBeNull();
+    // prefers-reduced-motion não está ligado no happy-dom: as 8 faíscas saem.
+    expect(document.querySelectorAll(".faisca").length).toBeGreaterThan(0);
+  });
+
   it("dois toques no botão fecham só a placa da vez, não a seguinte", async () => {
     abrir([
       { tipo: "vitoria", treino: "x", de: 0, para: 1, parte },

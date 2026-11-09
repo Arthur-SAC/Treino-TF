@@ -13,6 +13,7 @@ import { db } from "../../src/lib/db";
 import { setSetting } from "../../src/lib/settings-helpers";
 import { abaDaRota } from "../../src/lib/abas";
 import { ITENS_PROGRESSO } from "../../src/pages/ProgressoHome";
+import { DESBLOQUEIOS } from "../../src/lib/desbloqueios";
 
 // 6 dias úteis seguidos com treino: 09/11 a 13/11 e hoje.
 const DIAS = ["2026-11-09", "2026-11-10", "2026-11-11", "2026-11-12", "2026-11-13", HOJE];
@@ -34,7 +35,9 @@ describe("Conquistas", () => {
 
     const proximos = screen.getByRole("region", { name: "Próximos" });
     const assoalho = (await within(proximos).findByText("Assoalho pélvico nível 1")).closest("li")!;
-    expect(assoalho.textContent).toMatch(/faltam/);
+    // patamar 5 já batido (sequência 6) mas ainda não gravado: nada de "faltam 0".
+    expect(assoalho.textContent).toContain("pronto pra abrir no próximo treino ou ao reabrir o app");
+    expect(assoalho.textContent).not.toMatch(/faltam 0/);
     expect(assoalho.textContent).toContain("identificação");
     // patamar 10, sequência 6
     const skincare = within(proximos).getByText("Skincare nível 2").closest("li")!;
@@ -69,6 +72,13 @@ describe("Conquistas", () => {
     expect(await within(marcos).findByText("Primeiro corte novo")).toBeInTheDocument();
     expect(marcos.textContent).not.toMatch(/Busto|horm/);
     expect(within(marcos).queryByText("03/11")).toBeNull();
+  });
+
+  it("sem nada aberto, diz o patamar do primeiro desbloqueio da tabela", async () => {
+    await setSetting("desbloqueios", {});
+    render(<MemoryRouter><Conquistas /></MemoryRouter>);
+    const feitos = await screen.findByRole("region", { name: "Desbloqueados" });
+    expect(await within(feitos).findByText(`Nada ainda. O primeiro abre com ${DESBLOQUEIOS[0].patamar} treinos seguidos.`)).toBeInTheDocument();
   });
 
   it("a rota ativa a aba Progresso e o índice tem o item", () => {

@@ -3,7 +3,7 @@ import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay }
 import { getSetting, setSetting } from "./settings-helpers";
 import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { hojeISO } from "./today-date";
-import { idsTrancados } from "./desbloqueios";
+import { estaAberto, idsTrancados, type Desbloqueados } from "./desbloqueios";
 
 /** Aparece na tela de bloqueio — visível pra quem pegar o celular dela. Não
  *  descreve o que a sequência é (tests/lib/discricao-rotulos.test.ts). */
@@ -37,6 +37,14 @@ export function lembrarSkincareNoite(o: {
 }): boolean {
   if (o.trancados.has("skincare-noite")) return false;
   return o.currentMin >= o.eveningMin && o.lastEvening !== o.todayISO;
+}
+
+/** Skincare da manhã: com o skincare completo trancado, o item do Hoje é só o
+ *  protetor solar, e o lembrete fala dele (não de uma rotina que não existe). */
+export function textoSkincareManha(ja: Desbloqueados): { titulo: string; corpo: string } {
+  return estaAberto(ja, "skincare-3")
+    ? { titulo: "Skincare matinal", corpo: "Comece o dia com a sua rotina de rosto" }
+    : { titulo: "Protetor solar", corpo: "Rosto, orelhas e pescoço antes de sair" };
 }
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -93,7 +101,8 @@ async function tick() {
   const todayISO = hojeISO(now);
   const lastMorning = await getSetting("lastSkincareMorningAt");
   const lastEvening = await getSetting("lastSkincareEveningAt");
-  const trancados = idsTrancados(await getSetting("desbloqueios"));
+  const desbloqueios = await getSetting("desbloqueios");
+  const trancados = idsTrancados(desbloqueios);
 
   const [mH, mM] = morningTime.split(":").map(Number);
   const [eH, eM] = eveningTime.split(":").map(Number);
@@ -103,7 +112,8 @@ async function tick() {
 
   // Se ultrapassou o horário hoje e ainda não notificou hoje
   if (currentMin >= morningMin && lastMorning !== todayISO) {
-    notify("Skincare matinal", "Comece o dia com a sua rotina de rosto");
+    const t = textoSkincareManha(desbloqueios);
+    notify(t.titulo, t.corpo);
     await setSetting("lastSkincareMorningAt", todayISO);
   }
   if (lembrarSkincareNoite({ currentMin, eveningMin, lastEvening, todayISO, trancados })) {

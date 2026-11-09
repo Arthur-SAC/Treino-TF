@@ -46,6 +46,33 @@ describe("Hoje com os níveis — banco novo, sequência começando hoje", () =>
   });
 });
 
+describe("item no nível 1 fica feito com a prática da versão curta", () => {
+  beforeEach(async () => {
+    await db.practiceLogs.clear();
+  });
+
+  it("alongamento da manhã curto praticado hoje: caixinha marcada", async () => {
+    await db.practiceLogs.add({ date: hoje, sequenceId: "manha-curta-vacuum", completed: true, durationMin: 4 });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    const box = await screen.findByRole("checkbox", { name: /^marcar Alongamento manhã/ });
+    await waitFor(() => expect(box).toBeChecked());
+  });
+
+  it("sem prática, a do alongamento curto segue desmarcada", async () => {
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    const box = await screen.findByRole("checkbox", { name: /^marcar Alongamento manhã/ });
+    expect(box).not.toBeChecked();
+  });
+
+  it("assoalho nível 1 (identificação) praticado hoje: caixinha marcada", async () => {
+    await db.settings.put({ key: "desbloqueios", value: { "assoalho-1": "2026-11-01" } });
+    await db.practiceLogs.add({ date: hoje, sequenceId: "pelvic-identificacao", completed: true, durationMin: 5 });
+    render(<MemoryRouter><Today /></MemoryRouter>);
+    const box = await screen.findByRole("checkbox", { name: /^marcar Assoalho pélvico/ });
+    await waitFor(() => expect(box).toBeChecked());
+  });
+});
+
 describe("Skincare noite no nível 2", () => {
   it("é caixinha comum, e marcar grava o check skincare-noite", async () => {
     await db.settings.put({ key: "desbloqueios", value: { "skincare-2": "2026-11-01" } });

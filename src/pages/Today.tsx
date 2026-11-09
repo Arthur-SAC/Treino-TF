@@ -52,8 +52,9 @@ import { setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
-import { filtrarRotina, proximoDesbloqueio } from "../lib/desbloqueios";
+import { filtrarRotina, idsTrancados, proximoDesbloqueio, sequenciasDoNivel1 } from "../lib/desbloqueios";
 import { estadoSequencia } from "../lib/sequencia";
+import { linhaProximoDesbloqueio } from "../lib/placas-texto";
 
 export function Today() {
   const today = new Date();
@@ -277,9 +278,10 @@ export function Today() {
     rebolado: SEQUENCIAS_REBOLADO,
     postura: SEQUENCIAS_POSTURA,
   };
+  // Item no nível mínimo (sem linkKey): a sequência curta dele conta também.
   const praticadaNaTrilha = (item: RoutineItem): boolean => {
-    const trilha = item.linkKey ? trilhaDoItem[item.linkKey] : undefined;
-    return !!trilha && praticadaHoje(praticasDeHoje ?? [], trilha, todayISO);
+    const trilha = item.linkKey ? trilhaDoItem[item.linkKey] : sequenciasDoNivel1(item);
+    return !!trilha && trilha.length > 0 && praticadaHoje(praticasDeHoje ?? [], trilha, todayISO);
   };
   const isDone = (item: RoutineItem): boolean =>
     item.control === "link" || item.control === "skincare"
@@ -464,7 +466,7 @@ export function Today() {
       {mostrarRitmo && veredito && <RitmoCard veredito={veredito} />}
       {dayOfWeek === 0 && adesao7 && (
         <RevisaoDomingoCard
-          revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada)}
+          revisao={revisarSemana({ ...adesao7, cinturaUltima: cinturas.at(-1), cinturaAnterior: cinturas.at(-2) }, modoCaminhada, idsTrancados(desbloqueios))}
         />
       )}
       {/* Uma caixa só: a semana em cima e as contagens dos últimos 7 dias
@@ -534,7 +536,7 @@ export function Today() {
 
       {proximo && (
         <p className="text-muted text-sm pt-2">
-          Próximo desbloqueio: {proximo.d.titulo} — {proximo.faltam === 1 ? "falta 1 treino" : `faltam ${proximo.faltam} treinos`}
+          {linhaProximoDesbloqueio(proximo.d.titulo, proximo.faltam)}
         </p>
       )}
 

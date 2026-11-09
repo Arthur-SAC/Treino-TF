@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { lembrarSkincareNoite } from "../../src/lib/notification-scheduler";
+import { lembrarSkincareNoite, textoSkincareManha } from "../../src/lib/notification-scheduler";
+import { EXPOE } from "../../src/lib/discricao";
 
 // O tick do scheduler web lê o banco e chama notify; a decisão do "Skincare
 // noturno" mora numa função própria pra ser testada sem relógio.
@@ -16,5 +17,17 @@ describe("lembrete de skincare noturno (web)", () => {
   it("antes do horário ou já avisado hoje, não avisa", () => {
     expect(lembrarSkincareNoite({ ...base, currentMin: base.eveningMin - 1, trancados: new Set() })).toBe(false);
     expect(lembrarSkincareNoite({ ...base, lastEvening: HOJE, trancados: new Set() })).toBe(false);
+  });
+});
+
+describe("lembrete de skincare da manhã (web)", () => {
+  it("com o skincare completo trancado, fala do protetor solar", () => {
+    const t = textoSkincareManha({});
+    expect(t.titulo).toBe("Protetor solar");
+    expect(t.corpo).toBe("Rosto, orelhas e pescoço antes de sair");
+    expect(`${t.titulo} ${t.corpo}`).not.toMatch(EXPOE);
+  });
+  it("com o skincare completo aberto, a rotina de rosto", () => {
+    expect(textoSkincareManha({ "skincare-3": "2026-11-09" }).titulo).toBe("Skincare matinal");
   });
 });

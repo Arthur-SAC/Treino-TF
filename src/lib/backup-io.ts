@@ -104,6 +104,16 @@ export async function coletarBackup(): Promise<BackupPayload> {
   };
 }
 
+/** União de dois mapas de desbloqueio (id -> ISO): fica todo id dos dois, com
+ *  a data mais antiga. */
+export function unirDesbloqueios(a: Readonly<Record<string, string>>, b: Readonly<Record<string, string>>): Record<string, string> {
+  const r: Record<string, string> = { ...a };
+  for (const [id, data] of Object.entries(b)) {
+    if (!(id in r) || data < r[id]) r[id] = data;
+  }
+  return r;
+}
+
 /** Tudo entra com `bulkPut`: restaura cada registro com o id que tinha. Com
  *  `bulkAdd` (como era), restaurar no mesmo aparelho abortava a importação
  *  inteira no primeiro id repetido; e num aparelho novo, o que o seed já criou
@@ -134,7 +144,20 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     await db.voicePracticeLogs.bulkPut((p.voicePracticeLogs ?? []) as never);
     await db.practiceLogs.bulkPut((p.practiceLogs ?? []) as never);
     await db.milestones.bulkPut((p.milestones ?? []) as never);
+    // Progressão é save point: o que já abriu no aparelho não volta a trancar
+    // com um backup mais velho, e placa já vista não reaparece. Lê antes do
+    // bulkPut e funde depois.
+    const desbloqueiosAqui = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
+    const vistasAqui = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
     await db.settings.bulkPut((p.settings ?? []) as never);
+    const desbloqueiosBackup = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
+    const vistasBackup = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
+    if (desbloqueiosAqui || desbloqueiosBackup) {
+      await db.settings.put({ key: "desbloqueios", value: unirDesbloqueios(desbloqueiosAqui ?? {}, desbloqueiosBackup ?? {}) });
+    }
+    if (vistasAqui || vistasBackup) {
+      await db.settings.put({ key: "conquistasVistas", value: [...new Set([...(vistasAqui ?? []), ...(vistasBackup ?? [])])] });
+    }
     // Backup anterior à migração da Smartfit: o bulkPut só sobrescreve as chaves
     // que o backup traz, então o `smartfitMigration` = 1 do aparelho sobreviveria
     // ao ciclo/teto antigos que acabaram de voltar. Sem a chave no backup, apaga-a

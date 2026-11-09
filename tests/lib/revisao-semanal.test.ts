@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { revisarSemana } from "../../src/lib/revisao-semanal";
+import { idsTrancados } from "../../src/lib/desbloqueios";
 
 const CHEIA = { dias: 7, treinos: 5, diasCardio: 7, noitesNoAlvo: 7, alongamentosNoite: 7, cinturaUltima: 96.5, cinturaAnterior: 97.2 };
 
@@ -14,6 +15,19 @@ describe("revisão de domingo", () => {
       "Cintura: 96,5 cm (−0,7 desde a medida anterior)",
     ]);
     expect(r.ajuste).toMatch(/[Rr]epete/);
+  });
+
+  it("alongamento da noite trancado: a linha some, o resto fica", () => {
+    const r = revisarSemana(CHEIA, "caminhada", idsTrancados({}));
+    expect(r.linhas).toEqual([
+      "Treinos: 5 de 5",
+      "Caminhada ou esteira: 7 de 7 dias",
+      "Sono no horário: 7 de 7 noites",
+      "Cintura: 96,5 cm (−0,7 desde a medida anterior)",
+    ]);
+    // Aberto, volta.
+    const aberto = revisarSemana(CHEIA, "caminhada", idsTrancados({ "alongamento-noite": "2026-11-01" }));
+    expect(aberto.linhas).toContain("Alongamento da noite: 7 de 7");
   });
 
   it("pausada tira a linha de cardio", () => {

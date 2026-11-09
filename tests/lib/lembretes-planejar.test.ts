@@ -3,6 +3,9 @@ import { planejar, JANELA_DIAS, type ConfigLembretes, type EstadoLembretes } fro
 import { DEFAULTS } from "../../src/lib/settings-helpers";
 import { buildDayRoutine } from "../../src/lib/today-routine";
 import { hojeISO } from "../../src/lib/today-date";
+import { minutosAlongamentoManha, SEQ_MANHA_CURTA } from "../../src/lib/desbloqueios";
+import { flexDoDia } from "../../src/lib/flex-progression";
+import { SEQUENCES } from "../../src/data/sequences-seed";
 
 import { EXPOE } from "../../src/lib/discricao";
 
@@ -21,6 +24,7 @@ const cfg: ConfigLembretes = {
   hydrationIntervalMin: 60,
   hydrationGoalMl: 3000,
   trancados: new Set(),
+  alongamentoManhaMin: 10,
 };
 const vazio: EstadoLembretes = {
   feitosHoje: new Set(), aguaHojeMl: 0, treinouHoje: false,
@@ -242,6 +246,16 @@ describe("planejar — mecânica trancada não toca", () => {
     expect(noites(l)).toEqual([]);
     // O resto do dia segue: o da manhã continua tocando.
     expect(l.some((x) => x.itemId === "alongamento-manha")).toBe(true);
+  });
+  it("o lembrete da manhã fala os minutos do nível dela", () => {
+    const curto = minutosAlongamentoManha({}, 0);
+    expect(curto).toBe(SEQUENCES.find((s) => s.id === SEQ_MANHA_CURTA)!.durationMin);
+    const l = planejar(QUINTA_5H, { ...cfg, alongamentoManhaMin: curto }, vazio);
+    expect(l.find((x) => x.itemId === "alongamento-manha")!.corpo).toBe(`${curto} min de manhã`);
+    // Com a manhã completa aberta, a duração é a da fase atual da trilha.
+    const completo = minutosAlongamentoManha({ "manha-completa": "2026-11-09" }, 0);
+    expect(completo).toBe(SEQUENCES.find((s) => s.id === flexDoDia("manha", 0).sequenceId)!.durationMin);
+    expect(completo).not.toBe(curto);
   });
   it("sem nada trancado, toca como sempre", () => {
     const l = planejar(QUINTA_5H, cfg, vazio);

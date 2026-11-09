@@ -5,7 +5,7 @@ import { Voltar } from "../components/Voltar";
 import { DESBLOQUEIOS } from "../lib/desbloqueios";
 import { estadoSequencia } from "../lib/sequencia";
 import { marcosDeCinturaAtingidos } from "../lib/conquistas";
-import { diaMes, faltamTreinos } from "../lib/placas-texto";
+import { diaMes, faltamTreinos, nadaDesbloqueado } from "../lib/placas-texto";
 import { hojeISO } from "../lib/today-date";
 import { EXPOE } from "../lib/discricao";
 
@@ -49,7 +49,7 @@ export function Conquistas() {
       <section aria-labelledby="c-desbloqueados" className="space-y-2">
         <h2 id="c-desbloqueados" className="text-muted text-xs uppercase tracking-wider">Desbloqueados</h2>
         {abertos.length === 0 ? (
-          <p className="text-muted text-sm">Nada ainda. O primeiro abre com 5 treinos seguidos.</p>
+          <p className="text-muted text-sm">{nadaDesbloqueado(DESBLOQUEIOS[0].patamar)}</p>
         ) : (
           <ul className="space-y-2">
             {abertos.map((d) => (

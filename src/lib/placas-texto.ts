@@ -1,6 +1,7 @@
 // Copy fixa das placas (vitória, queda, desbloqueio e conquista) e da tela
 // Conquistas. Tudo aqui aparece na tela inteira,
 // por cima do app — passa pelo EXPOE de tests/lib/discricao-rotulos.test.ts.
+import { formatHora } from "./routine-times";
 
 export const VITORIA_TITULO = "Treino concluído";
 export const ROTULO_SEQUENCIA = "Sequência";
@@ -38,11 +39,41 @@ export function textoMarcoCintura(data: string): string {
   return `Batido na medida de ${diaMes(data)}. Conquista não se perde.`;
 }
 
-/** "faltam N treinos" das listas de próximos (Conquistas). */
+/** "faltam N treinos" das listas de próximos (Conquistas). Com o patamar já
+ *  batido (n <= 0) o desbloqueio ainda não foi gravado: abre no próximo treino
+ *  finalizado ou quando o app voltar pra frente. */
 export function faltamTreinos(n: number): string {
+  if (n <= 0) return "pronto pra abrir no próximo treino ou ao reabrir o app";
   if (n === 1) return "falta 1 treino";
-  if (n <= 0) return "faltam 0 treinos · abre quando você voltar pro app";
   return `faltam ${n} treinos`;
+}
+
+/** Linha do Hoje: "Próximo desbloqueio: X — faltam N treinos" (ou "pronto pra
+ *  abrir", com o patamar já batido). */
+export function linhaProximoDesbloqueio(titulo: string, faltam: number): string {
+  const resto = faltam <= 0 ? "pronto pra abrir" : faltam === 1 ? "falta 1 treino" : `faltam ${faltam} treinos`;
+  return `Próximo desbloqueio: ${titulo} — ${resto}`;
+}
+
+/** Conquistas sem nada aberto ainda: o patamar vem da tabela. */
+export function nadaDesbloqueado(patamar: number): string {
+  return `Nada ainda. O primeiro abre com ${patamar} treinos seguidos.`;
+}
+
+/** Etiqueta de horário da placa de desbloqueio: "às 6h", "às 21h20". */
+export function etiquetaHorario(hhmm: string): string {
+  return `às ${formatHora(hhmm)}`;
+}
+
+/** Sábado e domingo não contam nem quebram a sequência: a vitória não festeja
+ *  um número que não subiu. */
+export const FIM_DE_SEMANA_NAO_CONTA = "Fim de semana não conta pra sequência";
+
+/** "YYYY-MM-DD" cai num sábado ou domingo? */
+export function ehFimDeSemana(iso: string): boolean {
+  const [a, m, d] = iso.split("-").map(Number);
+  const dow = new Date(Date.UTC(a, m - 1, d)).getUTCDay();
+  return dow === 0 || dow === 6;
 }
 
 const DIAS_UTEIS =["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"] as const;

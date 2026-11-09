@@ -33,6 +33,9 @@ export interface ConfigLembretes {
   /** Ids de item do Hoje trancados pelo nível (`idsTrancados`): lembrete de
    *  mecânica trancada não toca (spec 2026-11-09, seção 8). */
   trancados: ReadonlySet<string>;
+  /** Minutos do alongamento da manhã de hoje (`minutosAlongamentoManha`): a
+   *  versão curta enquanto a manhã completa está trancada. */
+  alongamentoManhaMin: number;
 }
 
 export interface EstadoLembretes {
@@ -92,7 +95,7 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
     const util = dow >= 1 && dow <= 5;
 
     if (!(ehHoje && estado.feitosHoje.has("alongamento-manha")))
-      add(TIPO.alongManha, dia, 0, naHora(dia, cfg.alongamentoManhaTime), "Alongamento", "5 min de manhã", "/", { acao: "feito", itemId: "alongamento-manha" });
+      add(TIPO.alongManha, dia, 0, naHora(dia, cfg.alongamentoManhaTime), "Alongamento", `${cfg.alongamentoManhaMin} min de manhã`, "/", { acao: "feito", itemId: "alongamento-manha" });
 
     if (util) {
       // Campo apagado em Configurações grava 0: `m += 0` travava o app. Menos
