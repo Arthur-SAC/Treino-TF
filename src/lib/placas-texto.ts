@@ -1,4 +1,5 @@
-// Copy fixa das placas (vitória e queda). Tudo aqui aparece na tela inteira,
+// Copy fixa das placas (vitória, queda, desbloqueio e conquista) e da tela
+// Conquistas. Tudo aqui aparece na tela inteira,
 // por cima do app — passa pelo EXPOE de tests/lib/discricao-rotulos.test.ts.
 
 export const VITORIA_TITULO = "Treino concluído";
@@ -19,7 +20,32 @@ export function linhaFaltam(n: number, nome: string | null): string {
   return n === 1 ? `falta 1 treino pra ${nome}` : `faltam ${n} treinos pra ${nome}`;
 }
 
-const DIAS_UTEIS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"] as const;
+export const DESBLOQUEIO_BOTAO = "Entendi";
+export const CONQUISTA_ROTULO = "Conquista";
+export const CONQUISTA_BOTAO = "Continuar";
+
+export function tituloDesbloqueio(titulo: string): string {
+  return `Parabéns, ${titulo} desbloqueado`;
+}
+
+/** "14/11" de "2026-11-14". */
+export function diaMes(iso: string): string {
+  const [, m, d] = iso.split("-");
+  return `${d}/${m}`;
+}
+
+export function textoMarcoCintura(data: string): string {
+  return `Batido na medida de ${diaMes(data)}. Conquista não se perde.`;
+}
+
+/** "faltam N treinos" das listas de próximos (Conquistas). */
+export function faltamTreinos(n: number): string {
+  if (n === 1) return "falta 1 treino";
+  if (n <= 0) return "faltam 0 treinos · abre quando você voltar pro app";
+  return `faltam ${n} treinos`;
+}
+
+const DIAS_UTEIS =["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"] as const;
 
 function diaAntes(iso: string): string {
   const [a, m, d] = iso.split("-").map(Number);

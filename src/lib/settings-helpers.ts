@@ -85,6 +85,9 @@ export interface Settings {
   /** Mecânicas desbloqueadas pela sequência: id (ver `desbloqueios.ts`) -> ISO
    *  do dia em que abriu. Desbloqueado nunca volta a trancar. */
   desbloqueios: Record<string, string>;
+  /** Conquistas cuja placa ela já viu (ids como "cintura-88"). Gravado antes
+   *  de mostrar: aparece uma vez só. */
+  conquistasVistas: string[];
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -177,6 +180,7 @@ export const DEFAULTS: Settings = {
   ladoFraco: "",
   // Vazio: na chegada da progressão tudo fora do núcleo começa trancado.
   desbloqueios: {},
+  conquistasVistas: [],
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

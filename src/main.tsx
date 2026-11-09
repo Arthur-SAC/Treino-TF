@@ -66,6 +66,7 @@ import { Support } from "./pages/path/Support";
 import { Vitalidade } from "./pages/path/Vitalidade";
 import { Settings } from "./pages/Settings";
 import { ProgressoHome } from "./pages/ProgressoHome";
+import { Conquistas } from "./pages/Conquistas";
 import { GuiaHome } from "./pages/GuiaHome";
 import { seedDatabase } from "./lib/seed";
 import { seedBeauty } from "./lib/beauty-seed";
@@ -85,6 +86,7 @@ const router = createBrowserRouter(
         { index: true, element: <Today /> },
         { path: "hoje/horarios", element: <RoutineTimes /> },
         { path: "progresso", element: <ProgressoHome /> },
+        { path: "progresso/conquistas", element: <Conquistas /> },
         { path: "guia", element: <GuiaHome /> },
         { path: "treino", element: <WorkoutHome /> },
         { path: "treino/plano", element: <WeeklyPlan /> },

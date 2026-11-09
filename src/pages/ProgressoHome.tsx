@@ -9,6 +9,7 @@ export const ITENS_PROGRESSO: { label: string; sub: string; to: string }[] = [
   { label: "Fotos", sub: "Antes e agora", to: "/corpo/fotos" },
   { label: "Silhueta", sub: "As proporções", to: "/corpo/silhueta" },
   { label: "Comparação", sub: "Lado a lado", to: "/corpo/comparacao" },
+  { label: "Conquistas", sub: "o que já abriu e o que vem", to: "/progresso/conquistas" },
   { label: "Marcos", sub: "O que já foi e o que vem", to: "/trilha" },
   { label: "Até onde dá pra chegar", sub: "Os tetos, com números", to: "/treino/horizontes" },
   { label: "Progressão de carga", sub: "Quanto cada exercício subiu", to: "/treino/progressao" },

@@ -7,6 +7,8 @@
 // Save point: o desbloqueado nunca volta a trancar; depois de zerar, o próximo
 // exige o patamar dele de novo, contando do zero.
 import type { DayRoutine, RoutineItem } from "./today-routine";
+import { resolveRoutineTime, type RoutineTimeOverrides } from "./routine-times";
+import { flexDoDia } from "./flex-progression";
 import { SEQUENCES } from "../data/sequences-seed";
 
 export type DesbloqueioId = "manha-completa" | "assoalho-1" | "skincare-2" | "sentar" | "danca"
@@ -182,6 +184,42 @@ function nivelDoItem(i: RoutineItem, ja: Desbloqueados): RoutineItem {
     default:
       return i;
   }
+}
+
+/** O item do Hoje que cada desbloqueio põe (ou completa) no dia. `sentar` vive
+ *  dentro das micro-pausas: não tem linha nem horário próprio. */
+const ITEM_DO_DESBLOQUEIO: Record<DesbloqueioId, string | null> = {
+  "manha-completa": "alongamento-manha",
+  "assoalho-1": "assoalho-pelvico",
+  "skincare-2": "skincare-noite",
+  sentar: null,
+  danca: "danca-sabado",
+  "alongamento-noite": "alongamento-noite",
+  "assoalho-2": "assoalho-pelvico",
+  "voz-1": "voz",
+  "skincare-3": "skincare-noite",
+  postura: "postura",
+  "voz-2": "voz",
+};
+
+/** Minutos e horário que a placa de desbloqueio mostra. Os da tabela valem só
+ *  no modo caminhada e na fase 1 do alongamento; aqui vale o dia dela: o
+ *  horário do item na rotina de hoje (montada com o modo dela, SEM o filtro de
+ *  níveis) com os ajustes de /hoje/horarios, e os minutos da manhã completa
+ *  pela fase atual da trilha. Item fora do dia (dança numa terça): o ajuste
+ *  dela, senão o horário da tabela. */
+export function tempoDoDesbloqueio(
+  d: Desbloqueio,
+  rotina: DayRoutine,
+  horarios: RoutineTimeOverrides,
+  praticasFlexManha: number,
+): { minutos: number; horario: string | null } {
+  const minutos = d.id === "manha-completa" ? duracao(flexDoDia("manha", praticasFlexManha).sequenceId) : d.minutos;
+  const itemId = ITEM_DO_DESBLOQUEIO[d.id];
+  if (itemId === null) return { minutos, horario: d.horario };
+  const item = rotina.blocks.flatMap((b) => b.items).find((i) => i.id === itemId);
+  const horario = (item ? resolveRoutineTime(item, horarios) : horarios[itemId]) ?? d.horario;
+  return { minutos, horario };
 }
 
 /** A rotina do dia com o que está trancado fora e o que está no nível mínimo

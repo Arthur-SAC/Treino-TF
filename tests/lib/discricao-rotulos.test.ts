@@ -7,6 +7,7 @@ import { ITENS_PROGRESSO } from "../../src/pages/ProgressoHome";
 import { BLOCOS_GUIA } from "../../src/pages/GuiaHome";
 import * as PLACAS from "../../src/lib/placas-texto";
 import { DESBLOQUEIOS, filtrarRotina } from "../../src/lib/desbloqueios";
+import { MARCOS_CINTURA } from "../../src/lib/objetivo";
 
 // Lê fonte como texto pelo Vite (?raw) — o tsconfig do projeto não tem tipos do Node.
 const MANIFEST = Object.values(import.meta.glob("../../vite.config.ts", { query: "?raw", import: "default", eager: true }))[0] as string;
@@ -92,6 +93,20 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
       ),
     ];
     expect(textos.length).toBeGreaterThan(30);
+    expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
+  });
+
+  it("as placas de desbloqueio e de conquista, e as linhas da tela Conquistas", () => {
+    const textos = [
+      ...DESBLOQUEIOS.flatMap((d) => [
+        PLACAS.tituloDesbloqueio(d.titulo), d.entra, d.praQue, `${d.minutos} min`, `às ${d.horario ?? ""}`,
+      ]),
+      ...MARCOS_CINTURA.map((m) => m.titulo),
+      PLACAS.textoMarcoCintura("2026-12-20"),
+      ...[0, 1, 4].map((n) => PLACAS.faltamTreinos(n)),
+      "Conquistas", "Desbloqueados", "Próximos", "Marcos",
+    ];
+    expect(textos.length).toBeGreaterThan(50);
     expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
   });
 });

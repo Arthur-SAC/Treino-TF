@@ -5,7 +5,7 @@ describe("aba acesa pela rota", () => {
   it.each([
     ["/", "hoje"], ["/hoje/horarios", "hoje"], ["/configuracoes", "hoje"], ["/qualquer", "hoje"],
     ["/vitalidade", "vitalidade"], ["/trilha/vitalidade", "vitalidade"],
-    ["/progresso", "progresso"], ["/corpo", "progresso"], ["/corpo/medidas", "progresso"],
+    ["/progresso", "progresso"], ["/progresso/conquistas", "progresso"],["/corpo", "progresso"], ["/corpo/medidas", "progresso"],
     ["/trilha", "progresso"], ["/trilha/marcos/novo", "progresso"], ["/trilha/evolucao", "progresso"],
     ["/trilha/diario", "progresso"], ["/treino/horizontes", "progresso"], ["/treino/progressao", "progresso"],
     ["/guia", "guia"], ["/treino", "guia"], ["/treino/biblioteca", "guia"], ["/treino/movimento/x", "guia"],
