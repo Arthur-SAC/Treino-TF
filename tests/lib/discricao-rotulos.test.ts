@@ -70,11 +70,14 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
     expect(rotulos.filter((r) => EXPOE.test(r))).toEqual([]);
   });
   it("os textos das placas de vitória e queda, que cobrem a tela inteira", () => {
-    const textos = Object.values(PLACAS).flatMap((v) =>
-      typeof v === "string" ? [v]
-        : [(v as (n: number, nome: string) => string)(1, "Entrada · Semana 2"),
-           (v as (n: number, nome: string) => string)(3, "Entrada · Semana 2")],
-    );
+    const textos = [
+      ...Object.values(PLACAS as Record<string, unknown>).filter((v): v is string => typeof v === "string"),
+      ...[0, 1, 3].map((n) => PLACAS.linhaFaltam(n, "Entrada · Semana 2")),
+      PLACAS.linhaFaltam(3, null),
+      PLACAS.linhaDaQueda("2026-11-05", 1, "2026-11-06"),
+      PLACAS.linhaDaQueda("2026-11-06", 1, "2026-11-09"),
+      PLACAS.linhaDaQueda("2026-11-05", 2, "2026-11-09"),
+    ];
     expect(textos.length).toBeGreaterThan(5);
     expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
   });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 
 vi.mock("../../src/lib/plataforma", () => ({ isNativo: () => false }));
@@ -54,7 +54,6 @@ describe("App — placa de queda ao abrir", () => {
   it("mostra Sequência perdida uma vez e grava quedaVistaEm", async () => {
     const { unmount } = abrir();
     expect(await screen.findByText("Sequência perdida")).toBeInTheDocument();
-    expect(screen.getByText("Ontem não teve treino")).toBeInTheDocument();
     expect(await getSetting("quedaVistaEm")).toBe(x1);
     unmount();
 
@@ -74,5 +73,34 @@ describe("App — placa de queda ao abrir", () => {
     await new Promise((r) => setTimeout(r, 100));
     expect(screen.queryByText("Sequência perdida")).toBeNull();
     expect(await getSetting("quedaVistaEm")).toBe("");
+  });
+
+  it("voltar do fundo (visibilitychange → visible) também verifica", async () => {
+    await setSetting("sequenciaDesde", hoje);
+    abrir();
+    expect(await screen.findByText("Tela do Hoje")).toBeInTheDocument();
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByText("Sequência perdida")).toBeNull();
+
+    await setSetting("sequenciaDesde", x3);
+    expect(document.visibilityState).toBe("visible");
+    act(() => { document.dispatchEvent(new Event("visibilitychange")); });
+    expect(await screen.findByText("Sequência perdida")).toBeInTheDocument();
+    expect(await getSetting("quedaVistaEm")).toBe(x1);
+  });
+
+  it("quebra com treino depois dela: não mostra, mas grava quedaVistaEm", async () => {
+    // x3 treinou, x2 não (quebra), x1 treinou de novo: vale em qualquer dia da
+    // semana, inclusive fim de semana (hoje não precisa ser dia útil).
+    await db.workoutSessions.clear();
+    await db.workoutSessions.bulkAdd([
+      { date: x3, templateId: "t", exercises: [], durationMin: 40 },
+      { date: x1, templateId: "t", exercises: [], durationMin: 40 },
+    ]);
+    abrir();
+    expect(await screen.findByText("Tela do Hoje")).toBeInTheDocument();
+    await waitFor(async () => expect(await getSetting("quedaVistaEm")).toBe(x2));
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByText("Sequência perdida")).toBeNull();
   });
 });

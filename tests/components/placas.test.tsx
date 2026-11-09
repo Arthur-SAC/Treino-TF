@@ -3,6 +3,9 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { useEffect } from "react";
 import { PlacasProvider, usePlacas, type PlacaDados } from "../../src/hooks/usePlacas";
 import type { ProximaParte } from "../../src/lib/proxima-parte";
+import { hojeISO, somarDiasISO } from "../../src/lib/today-date";
+
+const ONTEM = somarDiasISO(hojeISO(), -1);
 
 const parte: ProximaParte = {
   proximoId: "entrada-2", proximoNome: "Entrada · Semana 2",
@@ -30,7 +33,7 @@ describe("placas", () => {
   it("mostra uma por vez: a segunda só depois de fechar a primeira", async () => {
     abrir([
       { tipo: "vitoria", treino: "Inferior A", de: 0, para: 1, parte },
-      { tipo: "queda", de: 3, diasPerdidos: 1, parte },
+      { tipo: "queda", de: 3, diasPerdidos: 1, quebra: ONTEM, parte },
     ]);
     expect(await screen.findByText("Treino concluído")).toBeInTheDocument();
     expect(screen.queryByText("Sequência perdida")).toBeNull();
@@ -60,8 +63,26 @@ describe("placas", () => {
     expect(await screen.findByText("Você está na última parte")).toBeInTheDocument();
   });
 
+  it("faltam 0 com próxima parte: Pronta pra …", async () => {
+    abrir([{ tipo: "vitoria", treino: "x", de: 0, para: 1, parte: { ...parte, faltam: 0, progresso: 1 } }]);
+    expect(await screen.findByText("Pronta pra Entrada · Semana 2")).toBeInTheDocument();
+  });
+
+  it("dois toques no botão fecham só a placa da vez, não a seguinte", async () => {
+    abrir([
+      { tipo: "vitoria", treino: "x", de: 0, para: 1, parte },
+      { tipo: "queda", de: 3, diasPerdidos: 1, quebra: ONTEM, parte },
+    ]);
+    const botao = await screen.findByRole("button", { name: "Voltar pro Hoje" });
+    act(() => {
+      fireEvent.click(botao);
+      fireEvent.click(botao);
+    });
+    expect(await screen.findByText("Sequência perdida")).toBeInTheDocument();
+  });
+
   it("queda de 1 dia: Ontem não teve treino, e a parte não volta atrás", async () => {
-    abrir([{ tipo: "queda", de: 3, diasPerdidos: 1, parte }]);
+    abrir([{ tipo: "queda", de: 3, diasPerdidos: 1, quebra: ONTEM, parte }]);
     expect(await screen.findByText("Sequência perdida")).toBeInTheDocument();
     expect(screen.getByText("Ontem não teve treino")).toBeInTheDocument();
     expect(screen.getByText("isso não volta atrás")).toBeInTheDocument();
@@ -70,12 +91,12 @@ describe("placas", () => {
   });
 
   it("queda de 2 dias: 2 dias úteis sem treino", async () => {
-    abrir([{ tipo: "queda", de: 3, diasPerdidos: 2, parte }]);
+    abrir([{ tipo: "queda", de: 3, diasPerdidos: 2, quebra: ONTEM, parte }]);
     expect(await screen.findByText("2 dias úteis sem treino")).toBeInTheDocument();
   });
 
   it("trava o scroll do body enquanto aberta e destrava ao fechar", async () => {
-    abrir([{ tipo: "queda", de: 0, diasPerdidos: 1, parte }]);
+    abrir([{ tipo: "queda", de: 0, diasPerdidos: 1, quebra: ONTEM, parte }]);
     await screen.findByText("Sequência perdida");
     expect(document.body.style.overflow).toBe("hidden");
     act(() => { fireEvent.click(screen.getByRole("button", { name: "Bora hoje" })); });
@@ -85,7 +106,7 @@ describe("placas", () => {
   it("sem provider, mostrar não quebra", () => {
     function Solto() {
       const { mostrar } = usePlacas();
-      mostrar({ tipo: "queda", de: 1, diasPerdidos: 1, parte });
+      mostrar({ tipo: "queda", de: 1, diasPerdidos: 1, quebra: ONTEM, parte });
       return <p>ok</p>;
     }
     render(<Solto />);

@@ -9,7 +9,7 @@ import { PlacaQueda } from "../components/placas/PlacaQueda";
 
 export type PlacaDados =
   | { tipo: "vitoria"; treino: string; de: number; para: number; parte: ProximaParte }
-  | { tipo: "queda"; de: number; diasPerdidos: number; parte: ProximaParte }
+  | { tipo: "queda"; de: number; diasPerdidos: number; quebra: string; parte: ProximaParte }
   | { tipo: "desbloqueio"; titulo: string; entra: string; praQue: string; minutos: number; horario: string | null }
   | { tipo: "conquista"; titulo: string; texto: string };
 
@@ -41,14 +41,16 @@ export async function dadosDaSequencia(
   };
 }
 
-/** Ao abrir o app: se uma quebra nova aconteceu, grava que foi vista ANTES de
- *  mostrar (garante uma vez só, mesmo se o app fechar com a placa aberta). */
+/** Ao abrir (ou voltar pro) app: se uma quebra nova aconteceu, grava que foi
+ *  vista ANTES de mostrar (garante uma vez só, mesmo se o app fechar com a placa
+ *  aberta). Se ela já treinou depois da quebra, a notícia é velha: só grava. */
 async function verificarAoAbrir(mostrar: (p: PlacaDados) => void): Promise<void> {
   const { estado, parte } = await dadosDaSequencia(hojeISO());
   const vista = await getSetting("quedaVistaEm");
   if (!deveMostrarQueda(estado, vista) || estado.quebra === null) return;
   await setSetting("quedaVistaEm", estado.quebra);
-  mostrar({ tipo: "queda", de: estado.anterior, diasPerdidos: estado.diasPerdidos, parte });
+  if (estado.atual > 0) return;
+  mostrar({ tipo: "queda", de: estado.anterior, diasPerdidos: estado.diasPerdidos, quebra: estado.quebra, parte });
 }
 
 interface NaFila {
@@ -61,22 +63,34 @@ interface NaFila {
 export function PlacasProvider({ children }: { children: ReactNode }) {
   const [fila, setFila] = useState<NaFila[]>([]);
   const proximoId = useRef(0);
-  const verificou = useRef(false);
+  const verificando = useRef(false);
 
   const mostrar = useCallback((dados: PlacaDados) => {
     proximoId.current += 1;
     const id = proximoId.current;
     setFila((f) => [...f, { id, dados }]);
   }, []);
-  const fechar = useCallback(() => setFila((f) => f.slice(1)), []);
+  // Por id: dois toques no botão não pulam a placa seguinte.
+  const fechar = useCallback((id: number) => setFila((f) => f.filter((x) => x.id !== id)), []);
 
   useEffect(() => {
-    // StrictMode roda o efeito duas vezes; a verificação é uma por abertura.
-    if (verificou.current) return;
-    verificou.current = true;
-    // Se o banco falhar (ou fechar no meio), só não aparece placa: a abertura
-    // do app não pode quebrar por causa dela.
-    verificarAoAbrir(mostrar).catch(() => {});
+    const verificar = () => {
+      // Uma verificação por vez (StrictMode e visibilitychange podem se cruzar).
+      if (verificando.current) return;
+      verificando.current = true;
+      // Se o banco falhar (ou fechar no meio), só não aparece placa: a abertura
+      // do app não pode quebrar por causa dela.
+      verificarAoAbrir(mostrar)
+        .catch(() => {})
+        .finally(() => { verificando.current = false; });
+    };
+    // No celular o app quase nunca reabre do zero: volta do fundo.
+    const aoVoltar = () => {
+      if (document.visibilityState === "visible") verificar();
+    };
+    verificar();
+    document.addEventListener("visibilitychange", aoVoltar);
+    return () => document.removeEventListener("visibilitychange", aoVoltar);
   }, [mostrar]);
 
   const api = useMemo(() => ({ mostrar }), [mostrar]);
@@ -85,27 +99,24 @@ export function PlacasProvider({ children }: { children: ReactNode }) {
   return (
     <PlacasContext.Provider value={api}>
       {children}
-      {atual && <PlacaAtual key={atual.id} dados={atual.dados} onFechar={fechar} />}
+      {atual && <PlacaAtual key={atual.id} id={atual.id} dados={atual.dados} fechar={fechar} />}
     </PlacasContext.Provider>
   );
 }
 
-function PlacaAtual({ dados, onFechar }: { dados: PlacaDados; onFechar: () => void }) {
+function PlacaAtual({ id, dados, fechar }: { id: number; dados: PlacaDados; fechar: (id: number) => void }) {
+  const onFechar = useCallback(() => fechar(id), [fechar, id]);
   // Desbloqueio e conquista são desenhados na Task 10; até lá não travam a fila.
-  // O ref segura o StrictMode, que rodaria o efeito duas vezes e pularia duas.
   const semDesenho = dados.tipo === "desbloqueio" || dados.tipo === "conquista";
-  const pulou = useRef(false);
   useEffect(() => {
-    if (!semDesenho || pulou.current) return;
-    pulou.current = true;
-    onFechar();
+    if (semDesenho) onFechar();
   }, [semDesenho, onFechar]);
 
   if (dados.tipo === "vitoria") {
     return <PlacaVitoria treino={dados.treino} de={dados.de} para={dados.para} parte={dados.parte} onFechar={onFechar} />;
   }
   if (dados.tipo === "queda") {
-    return <PlacaQueda de={dados.de} diasPerdidos={dados.diasPerdidos} parte={dados.parte} onFechar={onFechar} />;
+    return <PlacaQueda de={dados.de} diasPerdidos={dados.diasPerdidos} quebra={dados.quebra} parte={dados.parte} onFechar={onFechar} />;
   }
   return null;
 }
