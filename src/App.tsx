@@ -6,6 +6,7 @@ import { startScheduler, stopScheduler } from "./lib/notification-scheduler";
 import { useLembretes } from "./lib/lembretes/useLembretes";
 import { isNativo } from "./lib/plataforma";
 import { useRolagemPorTela } from "./hooks/useRolagemPorTela";
+import { PlacasProvider } from "./hooks/usePlacas";
 
 function App() {
   useLembretes();
@@ -26,12 +27,16 @@ function App() {
   return (
     <OnboardingGate>
       <div className="h-screen h-[100dvh] flex flex-col">
-        <main ref={main} className="flex-1 overflow-y-auto overscroll-contain pt-seguro">
-          <div key={pathname} className="tela-entra">
-            <Outlet />
-          </div>
-        </main>
-        <BottomNav />
+        {/* As placas (vitória/queda) saem logo depois do BottomNav, como irmãs
+            do <main>: dentro do .tela-entra o transform prenderia o `fixed`. */}
+        <PlacasProvider>
+          <main ref={main} className="flex-1 overflow-y-auto overscroll-contain pt-seguro">
+            <div key={pathname} className="tela-entra">
+              <Outlet />
+            </div>
+          </main>
+          <BottomNav />
+        </PlacasProvider>
       </div>
     </OnboardingGate>
   );

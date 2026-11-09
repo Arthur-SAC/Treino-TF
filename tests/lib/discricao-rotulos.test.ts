@@ -5,6 +5,7 @@ import { posturaDoDia, ATE_GINGADO } from "../../src/lib/postura-progression";
 import { NOTIFICACAO_NOITE } from "../../src/lib/notification-scheduler";
 import { ITENS_PROGRESSO } from "../../src/pages/ProgressoHome";
 import { BLOCOS_GUIA } from "../../src/pages/GuiaHome";
+import * as PLACAS from "../../src/lib/placas-texto";
 
 // Lê fonte como texto pelo Vite (?raw) — o tsconfig do projeto não tem tipos do Node.
 const MANIFEST = Object.values(import.meta.glob("../../vite.config.ts", { query: "?raw", import: "default", eager: true }))[0] as string;
@@ -67,5 +68,14 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
       ...BLOCOS_GUIA.flatMap((b) => [b.titulo, ...b.itens.map((i) => i.label)]),
     ];
     expect(rotulos.filter((r) => EXPOE.test(r))).toEqual([]);
+  });
+  it("os textos das placas de vitória e queda, que cobrem a tela inteira", () => {
+    const textos = Object.values(PLACAS).flatMap((v) =>
+      typeof v === "string" ? [v]
+        : [(v as (n: number, nome: string) => string)(1, "Entrada · Semana 2"),
+           (v as (n: number, nome: string) => string)(3, "Entrada · Semana 2")],
+    );
+    expect(textos.length).toBeGreaterThan(5);
+    expect(textos.filter((t) => EXPOE.test(t))).toEqual([]);
   });
 });

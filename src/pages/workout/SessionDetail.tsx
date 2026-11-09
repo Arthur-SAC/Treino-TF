@@ -12,6 +12,7 @@ import { useSetting } from "../../hooks/useSetting";
 import type { ModoCaminhada } from "../../lib/objetivo";
 import { aplicarAusentes, podeMarcarAusente, type ItemTemplate } from "../../lib/troca-aparelho";
 import { setSetting } from "../../lib/settings-helpers";
+import { dadosDaSequencia, usePlacas } from "../../hooks/usePlacas";
 
 // Os dois primeiros textos de "Ao terminar" dependem de a zona 2 vir de algum
 // lugar hoje. Em "pausada" não vem — afirmar que a caminhada "já entrega" seria
@@ -46,6 +47,7 @@ export function SessionDetail() {
   const [ocupados, setOcupados] = useState<Record<string, string>>({});
   const { templateId } = useParams<{ templateId: string }>();
   const navigate = useNavigate();
+  const { mostrar } = usePlacas();
   const template = useLiveQuery(
     async () => (templateId ? await db.workoutTemplates.get(templateId) : undefined),
     [templateId],
@@ -176,6 +178,17 @@ export function SessionDetail() {
 
   async function finishSession() {
     await persist(recorded, feedback);
+    // A placa de vitória sai com a sequência já contando o treino de hoje e
+    // fica por cima do Hoje (o host mora no App, fora desta tela).
+    // Se a leitura falhar, o treino já está salvo: ela volta pro Hoje sem placa.
+    if (template) {
+      try {
+        const { estado, semHoje, parte } = await dadosDaSequencia(todayISO);
+        mostrar({ tipo: "vitoria", treino: template.name, de: semHoje.atual, para: estado.atual, parte });
+      } catch {
+        // sem placa
+      }
+    }
     // Volta pro Hoje: é de lá que ela abre o treino, e é lá que o dia continua.
     navigate("/", { replace: true });
   }
