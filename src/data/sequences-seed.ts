@@ -134,7 +134,7 @@ const SEQUENCIAS_BASE: DanceSequence[] = [
     name: "Noite · flexão profunda e rotação",
     category: "mobilidade",
     level: "intermediario",
-    durationMin: 15,
+    durationMin: 14,
     focus: "Fase 2 da noite: abre o que as posições que ela quer pedem — flexão profunda de quadril, rotação interna e externa, adutor solto. Espacate não entra aqui e não é necessário para nada disso. Para antes da dor.",
     moves: [
       { name: "Aquecimento", description: "Círculos de quadril e balanço de perna, 90s. Corpo já morno do dia, mas nunca pular.", durationSec: 90 },

@@ -191,16 +191,19 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
 
   // Botões de troca, ao lado do cabeçalho. Só aparecem se a página mandou a
   // prop: nem todo item tem substituto. Alvo de toque confortável (min-h-10).
+  // Série marcada ✓ e ainda não salva se perderia no remount da troca: some também.
+  const temSerieFeita = sets.some((s) => s.done);
+  const podeTrocar = !salvou && !temSerieFeita;
   const botaoTroca = "px-3 min-h-10 rounded-md text-xs bg-bg-deep border border-bg-border text-muted";
   const trocas = (
     <>
-      {(onOcupado || onNaoTemAqui) && !salvou && (
+      {(onOcupado || onNaoTemAqui) && podeTrocar && (
         <div className="flex gap-2 mt-2">
           {onOcupado && <button type="button" onClick={onOcupado} className={botaoTroca}>Ocupado</button>}
           {onNaoTemAqui && <button type="button" onClick={onNaoTemAqui} className={botaoTroca}>Não tem aqui</button>}
         </div>
       )}
-      {onVoltarAoOriginal && (
+      {onVoltarAoOriginal && podeTrocar && (
         <div className="mt-2">
           <button type="button" onClick={onVoltarAoOriginal} className={botaoTroca}>Voltar pro {nomeOriginal}</button>
         </div>

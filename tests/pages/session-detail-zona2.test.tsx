@@ -36,11 +36,14 @@ describe("SessionDetail · 'Ao terminar' segue o modo da caminhada", () => {
     await abrir("esteira");
     await waitFor(() => expect(document.body.textContent).toMatch(/É ela a zona 2 de hoje/));
     expect(document.body.textContent).not.toMatch(/Sem cardio/);
+    expect(document.body.textContent).toMatch(/jantar é às 20:30/);
+    expect(document.body.textContent).not.toMatch(/em até 30 min/);
     expect(document.body.textContent).not.toMatch(/caminhada de 5 km do trabalho para casa, às 16h/);
   });
 
-  it("caminhada: mantém a caminhada de 5 km", async () => {
+  it("caminhada: ~4 km até a academia e ~1 km de volta, sem o trajeto antigo do trabalho", async () => {
     await abrir("caminhada");
-    expect(document.body.textContent).toMatch(/caminhada de 5 km/);
+    expect(document.body.textContent).toMatch(/~4 km até a academia e ~1 km de volta/);
+    expect(document.body.textContent).not.toMatch(/do trabalho para casa/);
   });
 });

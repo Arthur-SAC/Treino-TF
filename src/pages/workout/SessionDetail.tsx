@@ -28,12 +28,12 @@ function dicasZona2(modo: ModoCaminhada): string[] {
     // Sem a dica de água compartilhada: a segunda frase já manda levar água.
     return [
       "Agora a esteira inclinada: ~6% a 5 km/h, 1 h sem parar, ofegante mas falando em frases curtas. É ela a zona 2 de hoje.",
-      "Leva água, não se segura no corrimão, e deixa o jantar pronto pra comer em até 30 min depois.",
+      "Leva água e não se segura no corrimão. A esteira acaba por volta das 19h, os cães vêm depois e o jantar é às 20:30 — deixa ele pronto de manhã.",
     ];
   }
   return [
-    "O cardio pós-treino (15-20 min, último item) é leve e é o acelerador da fase 1. A zona 2 de verdade continua sendo a caminhada de 5 km do trabalho para casa — não precisa de outra caminhada depois do treino.",
-    "O passeio lento com os cães, depois da caminhada, é movimento bônus (bom pra saúde) em cima disso.",
+    "O cardio pós-treino (15-20 min, último item) é leve e é o acelerador da fase 1. A zona 2 de verdade continua sendo a caminhada: ~4 km até a academia e ~1 km de volta pra casa depois do treino — não precisa de outra caminhada além dessa.",
+    "O passeio lento com os cães, depois que você chega em casa, é movimento bônus (bom pra saúde) em cima disso.",
     "Bebe água — você sua mais no calor de Aracaju.",
   ];
 }
@@ -72,10 +72,11 @@ export function SessionDetail() {
     (template?.exercises.some((e) => e.block === "maquina") ?? false) &&
     (template?.exercises.some((e) => e.block === "solo") ?? false);
   // Ausência permanente e "Ocupado" usam a mesma troca (mesma regra do " cada").
-  const efetivo = useMemo(
-    () => (template ? aplicarAusentes(template, [...ausentes, ...Object.keys(ocupados)]) : undefined),
-    [template, ausentes, ocupados],
-  );
+  const efetivo = useMemo(() => {
+    if (!template) return undefined;
+    const equipPorId = new Map((exercises ?? []).map((e) => [e.id, e.equipment]));
+    return aplicarAusentes(template, [...ausentes, ...Object.keys(ocupados)], (id) => equipPorId.get(id));
+  }, [template, exercises, ausentes, ocupados]);
   const ordenados = useMemo(
     () => (efetivo ? ordenarPorBloco(semCardioPosTreinoNaEsteira(efetivo.exercises, modoCaminhada), soloPrimeiro) as ItemTemplate[] : []),
     [efetivo, soloPrimeiro, modoCaminhada],

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { WorkoutTemplate } from "../../src/lib/db";
-import { aplicarAusentes, podeMarcarAusente, repsDoSubstituto, UNILATERAIS, type ItemTemplate } from "../../src/lib/troca-aparelho";
+import { aplicarAusentes, blocoDoEquipamento, podeMarcarAusente, repsDoSubstituto, UNILATERAIS, type ItemTemplate } from "../../src/lib/troca-aparelho";
 
 function deepFreeze<T>(o: T): T {
   if (o && typeof o === "object") {
@@ -83,5 +83,35 @@ describe("repsDoSubstituto", () => {
     expect(repsDoSubstituto("15-20", "kickback")).toBe("15-20 cada");
     expect(repsDoSubstituto("12 cada", "kickback")).toBe("12 cada");
     expect(repsDoSubstituto("10-12", "hip-thrust-barra")).toBe("10-12");
+  });
+});
+
+describe("bloco do substituto pelo equipamento", () => {
+  const t = (): WorkoutTemplate => ({
+    id: "b", name: "B", dayOfWeek: 1, durationMin: 30,
+    exercises: [
+      { exerciseId: "hip-thrust-maquina", sets: 3, repsTarget: "12", restSec: 75, block: "maquina", substitutoId: "hip-thrust-barra" },
+      { exerciseId: "coice-gluteo-polia", sets: 3, repsTarget: "12", restSec: 30, block: "solo", substitutoId: "leg-press-pes-medios" },
+      { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento", substitutoId: "hip-thrust-barra" },
+    ],
+  });
+  const equip = (id: string) => (id === "leg-press-pes-medios" ? ["leg-press"] : ["barra", "banco"]);
+
+  it("blocoDoEquipamento: maquina-* e leg-press são aparelho; o resto é solo", () => {
+    expect(blocoDoEquipamento(["maquina-hip-thrust"])).toBe("maquina");
+    expect(blocoDoEquipamento(["leg-press"])).toBe("maquina");
+    expect(blocoDoEquipamento(["barra", "banco"])).toBe("solo");
+    expect(blocoDoEquipamento(["halteres"])).toBe("solo");
+  });
+
+  it("substituto sem aparelho sai do bloco maquina; com aparelho entra nele", () => {
+    const r = aplicarAusentes(t(), ["hip-thrust-maquina", "coice-gluteo-polia"], equip);
+    expect(r.exercises[0]).toMatchObject({ exerciseId: "hip-thrust-barra", block: "solo" });
+    expect(r.exercises[1]).toMatchObject({ exerciseId: "leg-press-pes-medios", block: "maquina" });
+  });
+
+  it("aquecimento/final não mudam de bloco, e sem lookup o bloco original fica", () => {
+    expect(aplicarAusentes(t(), ["cardio-leve-esteira"], equip).exercises[2].block).toBe("aquecimento");
+    expect(aplicarAusentes(t(), ["hip-thrust-maquina"]).exercises[0].block).toBe("maquina");
   });
 });

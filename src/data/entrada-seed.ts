@@ -212,7 +212,7 @@ const SEMANA_3: WorkoutTemplate[] = [
     purpose: "3 séries em tudo. O hip thrust na máquina já tem carga de verdade — anote o peso e suba quando sobrar fôlego.",
     exercises: [
       { exerciseId: "cardio-leve-esteira", sets: 1, repsTarget: "5min", restSec: 0, block: "aquecimento" },
-      { exerciseId: "hip-thrust-maquina", sets: 3, repsTarget: "12", restSec: 75, block: "maquina", substitutoId: "hip-thrust-barra", notes: "Queixo pra baixo, costela fechada, empurre pelo calcanhar e aperte o glúteo 1 s no topo" },
+      { exerciseId: "hip-thrust-maquina", sets: 3, repsTarget: "12", restSec: 75, block: "maquina", substitutoId: "hip-thrust-barra", notes: "Queixo pra baixo, costela fechada (barriga firme, como quem segura uma tosse), empurre pelo calcanhar e aperte o glúteo 1 s no topo" },
       { exerciseId: "leg-press-pes-medios", sets: 3, repsTarget: "12", restSec: 75, block: "maquina", substitutoId: "agachamento-goblet" },
       { exerciseId: "abdutor-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "abducao-quadril-polia" },
       { exerciseId: "adutora-maquina", sets: 3, repsTarget: "15", restSec: 45, block: "maquina", substitutoId: "agachamento-sumo", notes: "Coxa interna — silhueta cheia" },

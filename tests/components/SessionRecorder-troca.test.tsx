@@ -38,10 +38,23 @@ describe("SessionRecorder — Ocupado e Não tem aqui", () => {
 
   it("some depois de salvar uma série", async () => {
     render(<SessionRecorder {...base} onSave={() => {}} onOcupado={() => {}} onNaoTemAqui={() => {}} />);
+    expect(screen.getByRole("button", { name: "Ocupado" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Não tem aqui" })).toBeInTheDocument();
     fireEvent.change(screen.getByPlaceholderText("reps"), { target: { value: "15" } });
     fireEvent.click(screen.getByRole("button", { name: "Salvar exercício" }));
     await waitFor(() => expect(screen.queryByRole("button", { name: "Ocupado" })).toBeNull());
     expect(screen.queryByRole("button", { name: "Não tem aqui" })).toBeNull();
+  });
+
+  it("com 1 série ✓, Ocupado/Não tem aqui/Voltar não aparecem", () => {
+    render(<SessionRecorder {...base} onSave={() => {}} onOcupado={() => {}} onNaoTemAqui={() => {}} onVoltarAoOriginal={() => {}} nomeOriginal="Abdutora" />);
+    expect(screen.getByRole("button", { name: "Ocupado" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Voltar pro Abdutora" })).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText("reps"), { target: { value: "15" } });
+    fireEvent.click(screen.getByRole("button", { name: "Marcar feita" }));
+    expect(screen.queryByRole("button", { name: "Ocupado" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Não tem aqui" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Voltar pro/ })).toBeNull();
   });
 
   it("mostra Voltar pro {nome} quando recebe a prop", () => {

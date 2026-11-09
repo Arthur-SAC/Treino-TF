@@ -121,7 +121,7 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
 
 1. ✅ (2026-11-09) **Pedir fotos ou a lista de aparelhos da unidade dela.** Não supor o catálogo de uma
    Smartfit genérica.
-2. ✅ (2026-11-09) **Mini-entrada de 1–2 semanas** com exposição baixa (máquinas sentadas, área de
+2. ✅ (2026-11-09) **Entrada de 3 semanas** (semana 1 = aprender as máquinas com carga leve) com exposição baixa (máquinas sentadas, área de
    aparelhos) — a Smartfit é cheia e pública, e ela cancela treino quando aparece gente.
 3. ✅ (2026-11-09, Smart Fit Jardins) **Reescrever hipertrofia, refinamento e manutenção** (`src/data/cycles-seed.ts`) com os
    aparelhos reais, mantendo as regras da seção 2 e estas faixas semanais:

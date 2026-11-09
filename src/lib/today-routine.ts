@@ -307,7 +307,9 @@ function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
   return [
     ...(caminhada && caminhada.block === "tarde" ? [caminhada] : []),
     { id: "treino", block: "tarde", label: "Treino do dia", subtitle: subtituloTreino(modo), to: "/treino", control: "link", linkKey: "workout", defaultTime: "17:00" },
-    caes("semana", modo),
+    // Na esteira os cães (19:15) vêm depois da esteira (18:00), que mora no
+    // bloco da noite: ficam lá também, pra ordem na tela ser a ordem do dia.
+    ...(modo === "esteira" ? [] : [caes("semana", modo)]),
   ];
 }
 
@@ -329,6 +331,7 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
     };
     base = [
       noModo(CAMINHADA_TRABALHO, modo)!,
+      { ...caes("semana", modo), block: "noite" },
       ...NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
     ];
   }

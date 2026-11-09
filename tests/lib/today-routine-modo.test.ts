@@ -70,7 +70,10 @@ describe("rotina pelo modo das caminhadas", () => {
       expect(tarde.map((i) => i.id)).not.toContain("postura");
       expect(t("postura")).toBe("21:15");
       expect(tarde.find((i) => i.id === "treino")!.defaultTime).toBe("17:00");
-      expect(tarde.find((i) => i.id === "caes")!.defaultTime).toBe("19:15");
+      // Os cães (19:15) vêm depois da esteira (18:00): moram na noite, logo depois dela.
+      expect(tarde.map((i) => i.id)).not.toContain("caes");
+      expect(noite.find((i) => i.id === "caes")!.defaultTime).toBe("19:15");
+      expect(noite.map((i) => i.id).indexOf("caes")).toBe(noite.map((i) => i.id).indexOf("caminhada-trabalho") + 1);
       expect(tarde.find((i) => i.id === "treino")!.subtitle).toBe("Força primeiro; a esteira vem logo depois");
       for (const b of ["tarde", "noite"]) {
         const h = horas(bloco(dow, b, "esteira"));
@@ -145,4 +148,21 @@ describe("rotina pelo modo das caminhadas", () => {
     expect(l("pausada")).not.toMatch(/meia hora antes do treino/);
     expect(l("caminhada")).toMatch(/coma antes de sair às 16h/);
   });
+});
+
+describe("ordem de exibição segue o horário", () => {
+  const paraMin = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3));
+  for (const modo of ["caminhada", "esteira", "pausada"] as const) {
+    for (let dia = 0; dia < 7; dia++) {
+      it(`${modo}, dia ${dia}: horários não decrescem na ordem da tela`, () => {
+        const horas = buildDayRoutine(dia, 1, [], modo).blocks
+          .flatMap((b) => b.items)
+          .filter((i) => i.defaultTime)
+          .map((i) => ({ id: i.id, min: paraMin(i.defaultTime!) }));
+        for (let k = 1; k < horas.length; k++) {
+          expect(horas[k].min, `${horas[k - 1].id} → ${horas[k].id}`).toBeGreaterThanOrEqual(horas[k - 1].min);
+        }
+      });
+    }
+  }
 });
