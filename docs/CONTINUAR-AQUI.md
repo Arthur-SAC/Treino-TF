@@ -104,6 +104,7 @@ alimentar são 16h e o jantar — ambos déficit agudo depois de esforço, não 
 | 10-02 | Widget **fora** (tela inicial exposta em casa não receptiva + código nativo sem teste). Ela instala o APK só no fim das cinco entregas. |
 | 10-02 | Navegação em **4 abas**: Hoje · Progresso · Guia · Vitalidade. Nenhuma rota mudou; a aba acesa vem de `abaDaRota`. |
 | 11-09 | **Smartfit já na fase 1** (substitui a de 10-02). Unidade Jardins (Av. Dep. Pedro Valadares, 890); sai 16h do Anexo 1 da Funesa a pé, treina ~17h–18h, cães quando chega em casa. Entregue na branch `feat/smartfit-jardins` (falta publicar): **recomeço na Entrada** (migração única, sem herdar carga do prédio); **força 60 min na Smartfit e cardio fora** (caminhada de ida/volta e esteira só como variante); **"não tem aqui" por exercício** (troca pelo substituto, desfazível em Configurações). `tetoPredio`, card "Hora da Smartfit" e `no-low-pulley.test.ts` saíram. |
+| 11-09 | **Máquina primeiro, peso livre como plano B**; búlgaro, goblet, carregamento e farmer ficam livres; **vacuum em casa todo dia** (alongamento da manhã), fora da academia. Régua: `tests/data/maquina-primeiro.test.ts`. |
 
 ---
 

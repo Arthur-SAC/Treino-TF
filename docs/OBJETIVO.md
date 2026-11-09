@@ -137,6 +137,13 @@ Quando ela trocar de academia (a ordem vale também pra fase 1):
    abdutora/adutora, leg press, extensora, peck deck, remada e halteres; smith, coice, 45° e
    hack entram "se tiver" (o app tem o "não tem aqui" por exercício). O teste
    `no-low-pulley.test.ts` era da academia do prédio e foi aposentado.
+   **Máquina primeiro, peso livre como plano B** (decisão dela, 2026-11-09): onde máquina ou
+   polia rende igual, ela é o exercício e o livre é o substituto (supino inclinado na máquina
+   "se tiver", remadas, roscas e tríceps na polia, hip thrust leve no lugar da ponte, pallof no
+   lugar da prancha antirrotação, pull-through no lugar do swing). **Búlgaro, goblet,
+   carregamento frontal e farmer ficam livres** — rendem mais pro objetivo. **Vacuum em casa
+   todo dia** (alongamento da manhã), fora dos treinos de academia. Régua:
+   `tests/data/maquina-primeiro.test.ts`.
 5. **Comida da fase 2:** o app troca sozinho pra manutenção/superávit pela cintura
    (`resolveGoal`, trava 88). O **advisor de ciclo** libera a hipertrofia com cintura ≤ 84
    (fim da fase 1) ou platô de cintura — corrigido na entrega 2.
