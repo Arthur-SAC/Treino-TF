@@ -1561,7 +1561,7 @@ export const EXERCISES: Exercise[] = [
     category: "gluteo",
     equipment: ["maquina-hip-thrust"],
     difficulty: "iniciante",
-    description: "Sentada na máquina com as costas apoiadas e o cinto sobre o quadril. Empurra o quadril para cima apertando o glúteo e desce devagar. A máquina guia o movimento, então você foca só em sentir o glúteo.",
+    description: "Recostada na máquina, quase deitada, com a parte de cima das costas no encosto e o cinto sobre o osso do quadril. Empurra o quadril para cima apertando o glúteo e desce devagar. A máquina guia o movimento, então você foca só em sentir o glúteo.",
     commonMistakes: ["Arquear a lombar no topo", "Empurrar com a ponta dos pés em vez do calcanhar", "Descer soltando o peso"],
     exposureLevel: 2,
     startLoadKg: 20,
@@ -2637,6 +2637,19 @@ export const EXERCISE_VIDEOS: Record<string, string> = {
   "remada-unilateral-halter": "https://www.youtube.com/watch?v=WrF-rpwax4k",
   "farmer-walk": "https://www.youtube.com/watch?v=xb1GMZacM8w",
   "extensao-lombar": "https://www.youtube.com/watch?v=uBhiUlMAUM0",
+  // Aparelhos da Smartfit (2026-11-10) — conferidos pelo oEmbed do YouTube
+  // (título e canal). O link que ela colar vence: a migração nunca sobrescreve.
+  "hip-thrust-maquina": "https://www.youtube.com/watch?v=4ksQt-cEfng",
+  "hip-thrust-maquina-leve": "https://www.youtube.com/watch?v=4ksQt-cEfng",
+  "flexora-sentada": "https://www.youtube.com/watch?v=rdZS_kgnjZs",
+  "triceps-polia-corda": "https://www.youtube.com/watch?v=7le1JRUUagM",
+  "rosca-polia": "https://www.youtube.com/watch?v=HBQNoU4Ws0M",
+  "pallof-polia": "https://www.youtube.com/watch?v=BWJFot3XCQ8",
+  "extensao-45-gluteo": "https://www.youtube.com/watch?v=6Wq0CT622ic",
+  "coice-maquina": "https://www.youtube.com/watch?v=lJqJvUXuVyc",
+  "hack-machine": "https://www.youtube.com/watch?v=Whp712OHPl8",
+  "supino-inclinado-maquina": "https://www.youtube.com/watch?v=Q9wHSxunDlU",
+  "remada-polia-unilateral": "https://www.youtube.com/watch?v=jfQNkSD4jpk",
 };
 
 for (const e of EXERCISES) {

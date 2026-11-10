@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { planejar, JANELA_DIAS, type ConfigLembretes, type EstadoLembretes } from "../../src/lib/lembretes/planejar";
 import { DEFAULTS } from "../../src/lib/settings-helpers";
-import { buildDayRoutine } from "../../src/lib/today-routine";
+import { buildDayRoutine, horarioNoiteEsteira } from "../../src/lib/today-routine";
 import { hojeISO } from "../../src/lib/today-date";
 import { minutosAlongamentoManha, SEQ_MANHA_CURTA } from "../../src/lib/desbloqueios";
 import { flexDoDia } from "../../src/lib/flex-progression";
@@ -198,6 +198,23 @@ describe("os padrões batem com os horários do Hoje", () => {
   it("alongamentos", () => {
     expect(DEFAULTS.alongamentoManhaTime).toBe(hora("alongamento-manha"));
     expect(DEFAULTS.alongamentoNoiteTime).toBe(hora("alongamento-noite"));
+  });
+  it("no modo esteira o alongamento da noite toca na hora do Hoje nos dias úteis, e no padrão no fim de semana", () => {
+    const l = planejar(QUINTA_5H, { ...cfg, modoCaminhada: "esteira" }, vazio);
+    const along = (dia: string) => doDia(l, dia).filter((x) => x.titulo === "Alongamento" && x.quando.getHours() >= 12).map((x) => hhmm(x.quando));
+    const doHoje = buildDayRoutine(4, 1, undefined, "esteira").blocks.flatMap((b) => b.items).find((i) => i.id === "alongamento-noite")!.defaultTime;
+    expect(doHoje).toBe("22:00");
+    expect(along("2026-09-24")).toEqual([doHoje]);
+    expect(along("2026-09-26")).toEqual(["21:30"]);
+    // Sem o modo (horário ajustado à mão), vale o de Configurações.
+    expect(doDia(planejar(QUINTA_5H, cfg, vazio), "2026-09-24").some((x) => hhmm(x.quando) === "21:30" && x.titulo === "Alongamento")).toBe(true);
+  });
+  it("horarioNoiteEsteira devolve a hora do Hoje no modo esteira (o skincare do PWA lê daqui) e null fora dele", () => {
+    const itemEsteira = buildDayRoutine(2, 1, undefined, "esteira").blocks.flatMap((b) => b.items).find((i) => i.id === "skincare-noite")!;
+    expect(horarioNoiteEsteira("skincare-noite", 2, "esteira")).toBe(itemEsteira.defaultTime);
+    expect(horarioNoiteEsteira("skincare-noite", 6, "esteira")).toBeNull();
+    expect(horarioNoiteEsteira("skincare-noite", 2, "caminhada")).toBeNull();
+    expect(DEFAULTS.eveningReminderTime).toBe(hora("skincare-noite"));
   });
   it("hora de desligar fica fora do silêncio e antes de dormir", () => {
     expect(DEFAULTS.dormirReminderTime < DEFAULTS.quietHours.from).toBe(true);

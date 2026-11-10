@@ -30,7 +30,8 @@ import { hojeISO } from "./today-date";
 // v15: cardio leve pós-treino, acelerador da fase 1 (2026-11-04).
 // v16: catálogo da Smartfit Jardins (aparelhos novos, incrementos de polia e máquina; a flexora em pé é com caneleira, sem aparelho).
 // v17: explicação no formato fixo (execucao) em todo exercício e substituto do treino (2026-11-09).
-export const EXERCISE_SEED_VERSION = 17;
+// v18: hip thrust na máquina descrito recostada (dizia "Sentada") e vídeos dos aparelhos da Smartfit (2026-11-10).
+export const EXERCISE_SEED_VERSION = 18;
 
 // v10: os ciclos e a Fase de Entrada perderam o bloco de cardio final (ele
 // virou a caminhada do trabalho) e as orientações foram reescritas.

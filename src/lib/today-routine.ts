@@ -313,6 +313,23 @@ function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
   ];
 }
 
+/** Noite de dia útil no modo esteira: treino 17:00 → esteira 18:00 → cães 19:15
+ *  → jantar 20:30 → skincare 21:00 → postura 21:15 → voz 21:30 → assoalho 21:45
+ *  → alongamento 22:00 → dormir 22:30. Nada começa nos 30 min depois do jantar
+ *  começar (ela está comendo). */
+const HORARIO_NOITE_ESTEIRA: Readonly<Record<string, string>> = {
+  jantar: "20:30", "skincare-noite": "21:00", postura: "21:15", voz: "21:30",
+  "assoalho-pelvico": "21:45", "alongamento-noite": "22:00",
+};
+
+/** O horário que o Hoje mostra pra um item da noite quando o modo esteira o
+ *  empurra (dia útil); `null` fora disso. Os lembretes leem daqui, pra não
+ *  tocarem meia hora antes do que o Hoje diz. */
+export function horarioNoiteEsteira(itemId: string, dayOfWeek: number, modo: ModoCaminhada): string | null {
+  if (modo !== "esteira" || dayOfWeek < 1 || dayOfWeek > 5) return null;
+  return HORARIO_NOITE_ESTEIRA[itemId] ?? null;
+}
+
 /** Sexta e sábado ela sai com a noiva (e domingo, de 15 em 15): o jantar
  *  lembra que existe plano pra isso, no lugar de fingir que ela janta a
  *  marmita (auditoria 2026-09-23). */
@@ -321,18 +338,10 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
   let base = NOITE;
   if (modo === "esteira" && diaUtil) {
-    // Treino 17:00 → esteira 18:00 → cães 19:15 → jantar 20:30 → skincare 21:00
-    // → postura 21:15 → voz 21:30 → assoalho 21:45 → alongamento 22:00 → dormir
-    // 22:30. Nada começa nos 30 min depois do jantar começar (ela está comendo),
-    // e a ordem do array segue o horário.
-    const horario: Record<string, string> = {
-      jantar: "20:30", "skincare-noite": "21:00", postura: "21:15", voz: "21:30",
-      "assoalho-pelvico": "21:45", "alongamento-noite": "22:00",
-    };
     base = [
       noModo(CAMINHADA_TRABALHO, modo)!,
       { ...caes("semana", modo), block: "noite" },
-      ...NOITE.map((i) => (horario[i.id] ? { ...i, defaultTime: horario[i.id] } : i)),
+      ...NOITE.map((i) => (HORARIO_NOITE_ESTEIRA[i.id] ? { ...i, defaultTime: HORARIO_NOITE_ESTEIRA[i.id] } : i)),
     ];
   }
   // Fora do modo esteira, o jantar de dia útil é às 20:00 (chega da academia,

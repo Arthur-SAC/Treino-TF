@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
-import { getSetting, setSetting } from "./settings-helpers";
+import { getSetting, setSetting, DEFAULTS } from "./settings-helpers";
+import { horarioNoiteEsteira } from "./today-routine";
 import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { hojeISO } from "./today-date";
 import { estaAberto, idsTrancados, type Desbloqueados } from "./desbloqueios";
@@ -97,7 +98,13 @@ async function tick() {
 
   // Skincare matinal/noturno (uma vez por dia)
   const morningTime = await getSetting("morningReminderTime");
-  const eveningTime = await getSetting("eveningReminderTime");
+  // No modo esteira o Hoje empurra o skincare da noite pra 21:00 nos dias
+  // úteis; o lembrete acompanha, a não ser que ela tenha ajustado o horário.
+  const eveningSetting = await getSetting("eveningReminderTime");
+  const eveningTime =
+    (eveningSetting === DEFAULTS.eveningReminderTime &&
+      horarioNoiteEsteira("skincare-noite", now.getDay(), await getSetting("modoCaminhada"))) ||
+    eveningSetting;
   const todayISO = hojeISO(now);
   const lastMorning = await getSetting("lastSkincareMorningAt");
   const lastEvening = await getSetting("lastSkincareEveningAt");

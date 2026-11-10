@@ -3,7 +3,7 @@
 // regra do Hoje: check marcado ou prática concluída de qualquer sequência da
 // trilha (praticadaHoje com a trilha inteira).
 import { db } from "../db";
-import { getSetting } from "../settings-helpers";
+import { getSetting, DEFAULTS } from "../settings-helpers";
 import { hojeISO, ultimosDiasISO } from "../today-date";
 import { contarPraticasFlex, praticadaHoje } from "../practice-log-helpers";
 import { SEQUENCIAS_FLEX } from "../flex-progression";
@@ -44,12 +44,13 @@ export async function carregarEstado(agora: Date): Promise<EstadoLembretes> {
 
 export async function carregarConfig(): Promise<ConfigLembretes> {
   const desbloqueios = await getSetting("desbloqueios");
+  const alongamentoNoiteTime = await getSetting("alongamentoNoiteTime");
   return {
     notificationsEnabled: await getSetting("notificationsEnabled"),
     quietHours: await getSetting("quietHours"),
     focusModeUntil: await getSetting("focusModeUntil"),
     alongamentoManhaTime: await getSetting("alongamentoManhaTime"),
-    alongamentoNoiteTime: await getSetting("alongamentoNoiteTime"),
+    alongamentoNoiteTime,
     workoutReminderTime: await getSetting("workoutReminderTime"),
     dormirReminderTime: await getSetting("dormirReminderTime"),
     vitaminaDTime: await getSetting("vitaminaDTime"),
@@ -60,5 +61,7 @@ export async function carregarConfig(): Promise<ConfigLembretes> {
     hydrationGoalMl: await getSetting("hydrationGoalMl"),
     trancados: idsTrancados(desbloqueios),
     alongamentoManhaMin: minutosAlongamentoManha(desbloqueios, await contarPraticasFlex("manha")),
+    // Horário ajustado à mão em Configurações vence o do modo esteira.
+    modoCaminhada: alongamentoNoiteTime === DEFAULTS.alongamentoNoiteTime ? await getSetting("modoCaminhada") : undefined,
   };
 }

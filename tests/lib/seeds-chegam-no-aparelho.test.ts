@@ -60,7 +60,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // estes dois números faz o teste correspondente falhar na hora — e só ele:
   // os testes de conteúdo abaixo, sozinhos, não bastam (ver regra 4).
   it("EXERCISE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(EXERCISE_SEED_VERSION).toBe(17);
+    expect(EXERCISE_SEED_VERSION).toBe(18);
   });
 
   it("TEMPLATE_SEED_VERSION é a versão revisada nesta rodada", () => {
@@ -153,6 +153,8 @@ describe("exercícios", () => {
 
     const ex = await db.exercises.get("hip-thrust-maquina");
     expect(ex?.execucao?.regulagem?.trim()).toBeTruthy();
+    // v18: a descrição dizia "Sentada" num exercício feito recostada.
+    expect(ex?.description).toMatch(/^Recostada/);
     // O link que ela colou é dela e continua lá.
     expect(ex?.videoUrl).toBe("https://exemplo/video-dela");
   });

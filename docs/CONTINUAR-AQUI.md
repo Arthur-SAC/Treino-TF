@@ -303,15 +303,15 @@ comentários com LANCHE ~500 / JANTAR ~700.
 **Smartfit Jardins (2026-11-09) — menores adiados:**
 
 - Alguns exercícios seguem com equipment espaldar/bola-suíça/multiestação.
-- A `description` de `hip-thrust-maquina` ainda diz "Sentada"; "costela fechada" segue sem tradução em proTips/descrições antigas (a note do `e3-seg` já foi traduzida).
+- ✅ (2026-11-10) `hip-thrust-maquina` descrito recostada (EXERCISE_SEED_VERSION 18). "Costela fechada" segue sem tradução em proTips/descrições antigas (a note do `e3-seg` já foi traduzida).
 - O vídeo de `flexora-em-pe` pode mostrar a versão de máquina.
 - Cast `as ItemTemplate` em `troca-aparelho.ts`; teste de `podeMarcarAusente` com 3 casos num `it`;  `ocupados` guarda valor nunca lido; `textoDeAquecimento` lê o template cru.
-- No modo esteira, o lembrete do alongamento da noite (setting global 21:30) diverge do item do Hoje (22:00); o lembrete de skincare do PWA (20:30) também diverge do item do Hoje (21:00).
+- ✅ (2026-11-10) No modo esteira, os lembretes do alongamento da noite e do skincare do PWA seguem o Hoje (`horarioNoiteEsteira` em `today-routine.ts`), salvo horário ajustado à mão em Configurações.
 - O bloco de um substituto trocado vem do equipamento (`blocoDoEquipamento`): só `maquina-*`/`leg-press` contam como área de aparelhos; substituto de polia/multiestação cai em "Na área livre".
 - "Ocupado"/"Não tem aqui"/"Voltar" somem assim que há uma série ✓ ou o exercício é salvo (o remount da troca perderia o que ela marcou); pra trocar depois disso, ela precisa desmarcar a série.
 - A regra da oração em `problemasDaExecucao` aceita parêntese não relacionado ("(10 reps)"); o teste de dor aceita "sem doer" e exclui por nome.
-- Contar pra ela: a Entrada agora tem 5 dias de força; o assoalho usa "pinto" e "entre o saco e o ânus" (termos que já existiam) — trocar se ela preferir outros.
-- Sem vídeo ainda: 8 exercícios novos (em `SEM_VIDEO`); ela cola o link pelo player.
+- Termos do assoalho ("pinto", "entre o saco e o ânus"): ela viu e decidiu manter (2026-11-10).
+- ✅ (2026-11-10) Os 11 aparelhos da Smartfit têm vídeo (conferidos pelo oEmbed); o link que ela colar vence.
 
 **Visual e progressão (2026-11-09) — menores adiados:**
 
