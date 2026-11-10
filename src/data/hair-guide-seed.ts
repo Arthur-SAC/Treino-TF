@@ -50,7 +50,19 @@ export const HAIR_GUIDE: GuideSection[] = [
       "Entre lavagens: refresca com borrifada de água + um pouco de leave-in/gel e amassa, em vez de lavar de novo.",
       "Seca com camiseta de algodão ou toalha de microfibra amassando — nunca esfregando (o atrito gera frizz).",
       "Budget Brasil: creme Salon Line #TodeCacho (~R$12–18), geleia de linhaça Lola (~R$25–35), difusor universal avulso (~R$30–60).",
-      "Sol forte de Aracaju: em exposição longa, boné ou um leave-in com FPS antes de sair — protege o fio e a cor do cacho.",
+    ],
+  },
+  {
+    id: "clima-aracaju",
+    title: "Clima de Aracaju (umidade, sol, maresia)",
+    intro: "O que mais desmancha o cacho aqui é a umidade alta, o sol forte e a maresia — não a água. O São Francisco é água mole.",
+    tips: [
+      "Gel de fixação forte SEMPRE por último: é a capa contra a umidade. Custo-benefício: #todecacho Mix Verde 550 g (~R$ 31); gelatina Juba 500 g (~R$ 52) se preferir a linha. Se arrepiar em dia úmido, troca pela outra.",
+      "Shampoo antirresíduo a cada 2–4 semanas (ex.: 1º sábado do mês), antes da máscara: tira o acúmulo de gel, óleo e maresia que deixa o cacho pesado. Skala Anti Resíduos 325 ml, ~R$ 12.",
+      "Boné na caminhada das 16h: o sol quebra a proteína da superfície do fio.",
+      "Dia úmido: difusor morno/baixo seca melhor que ao ar — secando devagar, o cacho incha antes de o gel firmar.",
+      "Filtro de chuveiro: só se o teste der água dura. Teste: 300 ml de água da torneira numa garrafa + 10 gotas de sabonete neutro, agita. Muita espuma e água clara = mole. Crosta branca no chuveiro também denuncia água dura.",
+      "Manutenção do wolf cut a cada 6–8 semanas, a seco, sem desbaste.",
     ],
   },
 ];

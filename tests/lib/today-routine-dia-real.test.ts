@@ -43,7 +43,7 @@ describe("horários da tarde batem com o dia real", () => {
     const c = acha(1, "caminhada-trabalho")!;
     expect(c.defaultTime).toBe("16:00");
     expect(c.label).toBe("Caminhada até a academia");
-    expect(c.subtitle).toBe("~4 km até lá e ~1 km na volta — os mesmos 5 km de sempre");
+    expect(c.subtitle).toBe("~4 km até lá e ~1 km na volta · antes de sair: protetor de novo e boné");
   });
 
   it("o treino é às 17:00, na academia, com cardio leve no fim", () => {

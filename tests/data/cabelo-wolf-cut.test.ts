@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { MILESTONES } from "../../src/data/milestones-seed";
 import { PRODUCTS } from "../../src/data/products-seed";
 import { db } from "../../src/lib/db";
-import { seedBeauty } from "../../src/lib/beauty-seed";
+import { seedBeauty, NOVOS_V2, PRODUCT_SEED_VERSION, ROUTINE_SEED_VERSION } from "../../src/lib/beauty-seed";
 
 // A meta de cabelo mudou em 2026-07: corte cacheado andrógino/feminino (wolf
 // cut) com a rotina Juba — nada de crescer até abaixo dos ombros, nada de pixie.
@@ -54,7 +54,67 @@ describe("os produtos chegam no aparelho dela", () => {
     await db.products.add({ name: "Meu protetor", category: "skincare" } as never);
     await seedBeauty();
     const produtos = await db.products.toArray();
-    expect(produtos.filter((p) => p.category !== "haircare").map((p) => p.name)).toEqual(["Meu protetor"]);
+    // Só o dela e os que nasceram na v2 — nada do seed antigo volta.
+    const outros = produtos.filter((p) => p.category !== "haircare").map((p) => p.name);
+    expect(outros.filter((n) => !NOVOS_V2.has(n))).toEqual(["Meu protetor"]);
+    expect(outros).not.toContain("Sabonete íntimo Lucretin / Dermacyd");
     expect(produtos.some((p) => /Juba/.test(p.name))).toBe(true);
+  });
+});
+
+describe("kit de custo-benefício (v2) chega no aparelho dela", () => {
+  beforeEach(async () => {
+    await db.products.clear();
+    await db.skincareRoutines.clear();
+    await db.settings.clear();
+  });
+
+  it("PRODUCT_SEED_VERSION e ROUTINE_SEED_VERSION são as revisadas nesta rodada", () => {
+    expect(PRODUCT_SEED_VERSION).toBe(2);
+    expect(ROUTINE_SEED_VERSION).toBe(4);
+  });
+
+  it("tira o kit caro que ela não mexeu, mantém o que ela comprou e põe o novo", async () => {
+    await db.settings.put({ key: "beautySeeded", value: true });
+    await db.settings.put({ key: "routineSeedVersion", value: ROUTINE_SEED_VERSION });
+    await db.settings.put({ key: "productSeedVersion", value: PRODUCT_SEED_VERSION - 1 });
+    await db.products.bulkAdd([
+      { name: "Bepantol Derma Pré + Pós", category: "skincare", notes: "Cicatrizante. Use em cicatrizes recentes nas costas. Acelera reparação." },
+      { name: "Retinol 0,3% Skinceuticals", category: "skincare", notes: "1-2x/semana à noite (alternar com glicólico). Estimula renovação. Pode irritar — começa devagar.", boughtAt: "2026-08-01" },
+      { name: "Gel de fixação", category: "haircare", notes: "Última camada; forma a casquinha que o óleo quebra depois de seco." },
+    ] as never);
+
+    await seedBeauty();
+
+    const produtos = await db.products.toArray();
+    const nomes = produtos.map((p) => p.name);
+    expect(nomes).not.toContain("Bepantol Derma Pré + Pós");
+    expect(nomes).toContain("Retinol 0,3% Skinceuticals");
+    expect(nomes.some((n) => /Adapaleno/.test(n))).toBe(true);
+    expect(nomes.some((n) => /antirresíduo/.test(n))).toBe(true);
+    expect(produtos.find((p) => p.name === "Gel de fixação")?.notes).toMatch(/umidade/);
+    // Rodar de novo não duplica.
+    await seedBeauty();
+    expect(await db.products.count()).toBe(produtos.length);
+  });
+
+  it("as rotinas novas chegam em quem estava na versão anterior: sem Bepantol, com adapaleno e 15h30", async () => {
+    await db.settings.put({ key: "beautySeeded", value: true });
+    await db.settings.put({ key: "productSeedVersion", value: PRODUCT_SEED_VERSION });
+    await db.settings.put({ key: "routineSeedVersion", value: ROUTINE_SEED_VERSION - 1 });
+    await db.skincareRoutines.add({
+      name: "Costas · tratamento de cicatrizes (noturno)", time: "evening", target: "back",
+      steps: [{ productName: "Hidratante corporal (ou Bepantol Derma nas marcas mais recentes)", technique: "", waitMin: 0 }],
+    } as never);
+
+    await seedBeauty();
+
+    const rotinas = await db.skincareRoutines.toArray();
+    const costas = rotinas.filter((r) => r.name.startsWith("Costas"));
+    expect(costas).toHaveLength(1);
+    const texto = JSON.stringify(costas[0].steps);
+    expect(texto).toMatch(/Adapaleno/);
+    expect(texto).not.toMatch(/Bepantol Derma nas marcas/);
+    expect(JSON.stringify(rotinas.find((r) => r.name === "Rosto · manhã")?.steps)).toMatch(/15h30/);
   });
 });

@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { HAIR_GUIDE } from "../../src/data/hair-guide-seed";
 
 describe("HAIR_GUIDE", () => {
-  it("tem 4 seções com tips não-vazias e ids únicos", () => {
-    expect(HAIR_GUIDE).toHaveLength(4);
+  it("tem 5 seções com tips não-vazias e ids únicos", () => {
+    expect(HAIR_GUIDE).toHaveLength(5);
     const ids = new Set<string>();
     for (const s of HAIR_GUIDE) {
       expect(s.id).toBeTruthy();
@@ -11,6 +11,6 @@ describe("HAIR_GUIDE", () => {
       expect(s.tips.length).toBeGreaterThan(0);
       ids.add(s.id);
     }
-    expect(ids.size).toBe(4);
+    expect(ids.size).toBe(5);
   });
 });

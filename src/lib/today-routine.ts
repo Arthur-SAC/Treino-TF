@@ -289,7 +289,7 @@ const CAMINHADA_TRABALHO: RoutineItem = {
   id: "caminhada-trabalho",
   block: "tarde",
   label: "Caminhada até a academia",
-  subtitle: "~4 km até lá e ~1 km na volta — os mesmos 5 km de sempre",
+  subtitle: "~4 km até lá e ~1 km na volta · antes de sair: protetor de novo e boné",
   control: "walk",
   to: "/treino/exercicio/cardio-zona2",
   defaultTime: "16:00",
