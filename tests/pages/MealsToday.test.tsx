@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
-import { EFFORT_LABEL } from "../../src/lib/meal-plan";
+import { EFFORT_LABEL, variantDoDia } from "../../src/lib/meal-plan";
 import { hojeISO } from "../../src/lib/today-date";
 import { MealsToday } from "../../src/pages/path/MealsToday";
 
@@ -33,40 +33,43 @@ describe("MealsToday", () => {
   // A queixa original era um item que promete uma coisa e grava outra: marcar
   // a refeição sem ter escolhido variante gravava `plan.defaultMeals[i]` — a
   // opção 1 — sem dizer que era ela.
-  it("diz qual opção está no card, e que é sugestão enquanto ela não escolheu", async () => {
+  // Desde 2026-11-10 o card mostra a opção que o cardápio marca pro dia da
+  // semana, e diz que é "a de hoje" enquanto ela não escolheu outra.
+  it("diz qual opção está no card, e que é a do dia enquanto ela não escolheu", async () => {
     render(<MemoryRouter><MealsToday /></MemoryRouter>);
-    const sugestoes = await screen.findAllByText(/· sugestão/);
+    const sugestoes = await screen.findAllByText(/· a de hoje/);
     expect(sugestoes).toHaveLength(4);
   });
 
   it("traz o selo de esforço, como as outras duas telas de refeição", async () => {
     render(<MemoryRouter><MealsToday /></MemoryRouter>);
-    await screen.findAllByText(/· sugestão/);
+    await screen.findAllByText(/· a de hoje/);
     const plan = INITIAL_PLAN;
-    const esforcos = plan.slots.map((s) => s.variants[0].effort).filter(Boolean);
+    const dia = new Date().getDay();
+    const esforcos = plan.slots.map((s) => variantDoDia(s.variants, dia)?.effort).filter(Boolean);
     expect(esforcos.length).toBeGreaterThan(0);
     for (const e of new Set(esforcos)) {
       expect(screen.getAllByText(EFFORT_LABEL[e!]).length).toBeGreaterThan(0);
     }
   });
 
-  it("marcar grava exatamente os foods que o card mostra (a opção 1 do slot, não `defaultMeals` por índice)", async () => {
+  it("marcar grava exatamente os foods que o card mostra (a opção do dia, não `defaultMeals` por índice)", async () => {
     render(<MemoryRouter><MealsToday /></MemoryRouter>);
     const caixas = await screen.findAllByLabelText("Não feito");
     fireEvent.click(caixas[0]); // café
     await waitFor(async () => {
       const gravada = (await db.meals.toArray()).find((m) => m.mealType === "cafe");
-      expect(gravada?.foods).toEqual(INITIAL_PLAN.slots[0].variants[0].foods);
+      expect(gravada?.foods).toEqual(variantDoDia(INITIAL_PLAN.slots[0].variants, new Date().getDay())!.foods);
       expect(gravada?.checked).toBe(true);
     });
   });
 
-  it("quando ela já escolheu uma opção, o card mostra o rótulo dela e some o 'sugestão'", async () => {
+  it("quando ela já escolheu uma opção, o card mostra o rótulo dela e some o 'a de hoje'", async () => {
     const escolhida = INITIAL_PLAN.slots[2].variants[1]; // opção 2 do lanche
     await db.meals.add({ date: hojeISO(), mealType: "lanche", foods: escolhida.foods, checked: false });
     render(<MemoryRouter><MealsToday /></MemoryRouter>);
     expect(await screen.findByText(escolhida.label)).toBeInTheDocument();
-    expect(screen.queryByText(`${escolhida.label} · sugestão`)).not.toBeInTheDocument();
+    expect(screen.queryByText(`${escolhida.label} · a de hoje`)).not.toBeInTheDocument();
   });
 
   // Auditoria de 2026-09-23: o Hoje marca em routineChecks, esta tela contava

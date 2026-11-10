@@ -8,13 +8,13 @@ describe("INITIAL_PLAN", () => {
     expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(175);
   });
 
-  it("tem 4 períodos, cada um com a contagem exata de variantes esperada (café 5, os demais 3), todas com ingredientes", () => {
+  it("tem 4 períodos, cada um com a contagem exata de variantes esperada (jantar 3, os demais 2), todas com ingredientes", () => {
     expect(INITIAL_PLAN.slots).toHaveLength(4);
     const types = INITIAL_PLAN.slots.map((s) => s.mealType);
     expect(types).toEqual(["cafe", "almoco", "lanche", "jantar"]);
-    // Café tem 5: as 3 opções originais + as 2 que migraram do lanche das 16h
-    // (gordura não atrapalha de manhã, atrapalha antes do treino das 17h45).
-    const expectedVariants: Record<string, number> = { cafe: 5, almoco: 3, lanche: 3, jantar: 3 };
+    // Cardápio refeito em 2026-11-10: a opção do dia + uma troca em cada
+    // refeição; o jantar tem a sardinha de terça e quinta como terceira.
+    const expectedVariants: Record<string, number> = { cafe: 2, almoco: 2, lanche: 2, jantar: 3 };
     for (const slot of INITIAL_PLAN.slots) {
       expect(slot.variants.length).toBe(expectedVariants[slot.mealType]);
       for (const v of slot.variants) {
@@ -44,7 +44,7 @@ describe("INITIAL_PLAN", () => {
   // cujas kcal declaradas não batiam com os próprios macros e derrubava a opção
   // 2 pra 338 contra o alvo 350; a frente 5 tirou esse alimento do cardápio, e
   // a proteção contra o desvio continua.
-  it("as três opções do lanche ficam perto do alvo — trocar de opção não muda o dia", () => {
+  it("as opções do lanche ficam perto do alvo — trocar de opção não muda o dia", () => {
     const lanche = INITIAL_PLAN.slots.find((s) => s.mealType === "lanche")!;
     for (const v of lanche.variants) {
       const kcal = v.foods.reduce((s, f) => s + f.kcal, 0);
@@ -85,7 +85,7 @@ describe("INITIAL_PLAN", () => {
   // 10-15g proteína) — 145 kcal e até 32g de proteína a menos que as outras
   // três (~470-550 kcal, 21-42g proteína) num slot calibrado pra 500 kcal.
   // Proteína é a alavanca que ela menos pode perder (construção de glúteo).
-  it("as cinco opções do café ficam parecidas em kcal, e nenhuma cai abaixo de 20g de proteína", () => {
+  it("as opções do café ficam parecidas em kcal, e nenhuma cai abaixo de 20g de proteína", () => {
     const cafe = INITIAL_PLAN.slots.find((s) => s.mealType === "cafe")!;
     for (const v of cafe.variants) {
       const kcal = v.foods.reduce((s, f) => s + f.kcal, 0);
@@ -99,5 +99,32 @@ describe("INITIAL_PLAN", () => {
   it("defaultMeals é derivado das variantes 0", () => {
     expect(INITIAL_PLAN.defaultMeals).toHaveLength(4);
     expect(INITIAL_PLAN.defaultMeals[0]).toEqual(INITIAL_PLAN.slots[0].variants[0].foods);
+  });
+
+  // A semana montada (2026-11-10): o Hoje mostra a opção do dia e a lista de
+  // compras conta por ela. Dia sem opção ou com duas deixaria as duas telas
+  // sem resposta certa.
+  it("cada dia da semana tem exatamente uma opção marcada em cada refeição", () => {
+    const furos: string[] = [];
+    for (const slot of INITIAL_PLAN.slots) {
+      for (let dia = 0; dia < 7; dia++) {
+        const n = slot.variants.filter((v) => v.dias?.includes(dia)).length;
+        if (n !== 1) furos.push(`${slot.mealType} dia ${dia}: ${n}`);
+      }
+    }
+    expect(furos).toEqual([]);
+  });
+
+  it("a semana respeita os limites: patinho até 3x, sardinha ao menos 2x, atum sem dia fixo", () => {
+    const todas = INITIAL_PLAN.slots.flatMap((s) => s.variants);
+    const dias = (re: RegExp) => todas.filter((v) => re.test(v.label)).reduce((n, v) => n + (v.dias?.length ?? 0), 0);
+    expect(dias(/patinho/i)).toBeLessThanOrEqual(3);
+    expect(dias(/sardinha/i)).toBeGreaterThanOrEqual(2);
+    expect(dias(/atum/i)).toBe(0);
+  });
+
+  it("patinho nos dias de glúteo (seg, qua, sex)", () => {
+    const almoco = INITIAL_PLAN.slots.find((s) => s.mealType === "almoco")!;
+    expect(almoco.variants.find((v) => /patinho/i.test(v.label))?.dias).toEqual([1, 3, 5]);
   });
 });

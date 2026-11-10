@@ -18,7 +18,7 @@ describe("lista de compras da semana", () => {
   it("compra mais do que a lista de uma rodada só — a semana tem 7 dias", () => {
     const semana = buildWeeklyShoppingList(plano);
     const ovos = semana.find((i) => i.item === "Ovos")!;
-    // Café tem 5 opções; 3 delas levam ovo. Uma rodada só cobriria 5 cafés.
+    // O café do dia (3 ovos) entra nos 7 dias da semana montada.
     expect(ovos.qtyExata).toBeGreaterThan(7);
   });
 
@@ -39,9 +39,21 @@ describe("lista de compras da semana", () => {
 
   it("traz os ingredientes do cardápio novo", () => {
     const itens = buildWeeklyShoppingList(plano).map((i) => i.item.toLowerCase());
-    expect(itens.some((i) => i.includes("atum"))).toBe(true);
-    expect(itens.some((i) => i.includes("castanha de caju"))).toBe(true);
+    expect(itens.some((i) => i.includes("sardinha"))).toBe(true);
+    expect(itens.some((i) => i.includes("patinho"))).toBe(true);
+    expect(itens.some((i) => i.includes("acerola"))).toBe(true);
     expect(itens.some((i) => i.includes("feijão de corda"))).toBe(true);
+  });
+
+  // Cardápio montado por dia (2026-11-10): a compra é a semana que o Hoje
+  // mostra, e a opção sem dia fixo (troca livre) não entra no carrinho.
+  it("conta cada opção pelos dias em que ela entra na semana", () => {
+    const semana = buildWeeklyShoppingList(plano);
+    const qtd = (nome: string) => semana.find((i) => i.item === nome)?.qtyExata;
+    expect(qtd("Carne moída patinho")).toBe(195 * 3); // seg, qua, sex
+    expect(qtd("Sardinha em óleo (lata)")).toBe(4); // 2 latas × ter, qui
+    expect(qtd("Ovos")).toBe(3 * 7); // café 1 todo dia; omelete e café 2 são troca livre
+    expect(semana.find((i) => /atum/i.test(i.item))).toBeUndefined();
   });
 
   it("continua ordenada por categoria e item, como a lista de uma rodada", () => {

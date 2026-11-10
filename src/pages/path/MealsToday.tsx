@@ -2,7 +2,7 @@ import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal } from "../../lib/db";
-import { getActiveMealPlan, variantEscolhida, EFFORT_LABEL } from "../../lib/meal-plan";
+import { getActiveMealPlan, variantEscolhida, variantDoDia, EFFORT_LABEL } from "../../lib/meal-plan";
 import { RecipeModal, MEAL_TYPE_LABEL } from "../../components/RecipeModal";
 import { hojeISO } from "../../lib/today-date";
 
@@ -16,6 +16,7 @@ const ITEM_DO_HOJE: Record<Meal["mealType"], string> = {
 
 export function MealsToday() {
   const today = hojeISO();
+  const diaDaSemana = new Date(`${today}T12:00:00`).getDay();
   const plan = useLiveQuery(() => getActiveMealPlan(), []);
   const meals = useLiveQuery(() => db.meals.where("date").equals(today).toArray(), [today]);
   // O Hoje marca refeição em routineChecks; esta tela contava só db.meals, e o
@@ -57,7 +58,7 @@ export function MealsToday() {
   const kcalDe = (type: Meal["mealType"], index: number) => {
     const meal = meals?.find((m) => m.mealType === type);
     const variants = plan.slots.find((s) => s.mealType === type)?.variants ?? [];
-    const foods = meal?.foods ?? (variantEscolhida(variants, meal) ?? variants[0])?.foods ?? plan.defaultMeals[index] ?? [];
+    const foods = meal?.foods ?? (variantEscolhida(variants, meal) ?? variantDoDia(variants, diaDaSemana))?.foods ?? plan.defaultMeals[index] ?? [];
     return foods.reduce((s, f) => s + f.kcal, 0);
   };
   const totalKcal = MEAL_ORDER.filter(({ type }) => feita(type)).reduce((s, { type, index }) => s + kcalDe(type, index), 0);
@@ -89,9 +90,10 @@ export function MealsToday() {
           const meal = meals?.find((m) => m.mealType === type);
           const variants = plan.slots.find((s) => s.mealType === type)?.variants ?? [];
           const escolhida = variantEscolhida(variants, meal);
-          // Sem escolha do dia, o card mostra a opção 1 — mas mostra QUE é ela,
-          // com o mesmo selo de esforço das outras duas telas de refeição.
-          const exibida = escolhida ?? variants[0];
+          // Sem escolha do dia, o card mostra a opção que o cardápio marca pra
+          // este dia da semana — e mostra QUE é ela, com o mesmo selo de esforço
+          // das outras duas telas de refeição.
+          const exibida = escolhida ?? variantDoDia(variants, diaDaSemana);
           const foods = meal?.foods ?? exibida?.foods ?? plan.defaultMeals[index] ?? [];
           const checked = feita(type);
           const kcal = foods.reduce((s, f) => s + f.kcal, 0);
@@ -117,7 +119,7 @@ export function MealsToday() {
               </div>
               {exibida && (
                 <p className="ml-9 mb-2 text-xs text-muted flex items-center gap-2 flex-wrap">
-                  <span>{escolhida ? exibida.label : `${exibida.label} · sugestão`}</span>
+                  <span>{escolhida ? exibida.label : `${exibida.label} · a de hoje`}</span>
                   {exibida.effort && (
                     <span className="text-[10px] uppercase tracking-wider text-muted border border-bg-border rounded px-1.5 py-0.5">
                       {EFFORT_LABEL[exibida.effort]}

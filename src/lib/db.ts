@@ -126,6 +126,11 @@ export interface MealVariant {
    *  se um alimento mudar e outra combinação passar a ser melhor, o teste
    *  quebra em vez de a marca continuar apontando para o lugar errado. */
   recomendada?: boolean;
+  /** Dias da semana (0 = domingo) em que esta é a refeição do cardápio. O Hoje
+   *  mostra a opção do dia e a lista de compras conta a semana por estes dias.
+   *  Opção sem `dias` é troca livre: aparece pra escolher, mas não entra na
+   *  semana montada. (Cardápio por dia pedido por ela em 2026-11-10.) */
+  dias?: number[];
 }
 
 export interface MealSlot {

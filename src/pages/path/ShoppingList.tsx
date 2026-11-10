@@ -33,8 +33,9 @@ export function ShoppingList() {
 
       <p className="text-muted text-sm mb-1">
         A semana fechada: {PORCOES_POR_SEMANA} cafés, {PORCOES_POR_SEMANA} almoços,{" "}
-        {PORCOES_POR_SEMANA} lanches e {PORCOES_POR_SEMANA} jantares, com as opções distribuídas por
-        igual. É o carrinho inteiro — não precisa multiplicar nada no mercado.
+        {PORCOES_POR_SEMANA} lanches e {PORCOES_POR_SEMANA} jantares, cada dia com a opção que o
+        Hoje mostra. É o carrinho inteiro — não precisa multiplicar nada no mercado. Jantou fora? A
+        porção do dia vai pro congelador e entra na semana seguinte.
       </p>
       <p className="text-muted text-xs mb-4">
         As quantidades sobem pro que se compra de verdade (peso em múltiplos de 50 g). Onde a conta

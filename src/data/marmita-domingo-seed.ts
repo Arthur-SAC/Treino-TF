@@ -25,6 +25,10 @@ export interface EtapaMarmita {
 /** Decisão dela (2026-08-11): ~1h30 de domingo. Teto do tempo DELA, não da panela. */
 export const MARMITA_TETO_MIN = 90;
 
+// Reescrito em 2026-11-10 junto com o cardápio montado por dia: as quantidades
+// são as da semana que o Hoje mostra (4 almoços de frango, 3 de patinho, 5
+// jantares de frango desfiado, 2 de sardinha de lata — essa não vai ao fogo no
+// domingo). O ovo saiu do lote: o café do dia é ovo mexido na hora.
 export const ROTEIRO_DOMINGO: readonly EtapaMarmita[] = [
   {
     id: "vespera-feijao",
@@ -33,8 +37,8 @@ export const ROTEIRO_DOMINGO: readonly EtapaMarmita[] = [
     maoNaMassaMin: 3,
     sozinhoMin: 480,
     comoFazer:
-      "Cobre 300g de feijão de corda com água numa vasilha grande e deixa na pia até de manhã. São 3 minutos que economizam meia hora de domingo — feijão sem molho cozinha o dobro do tempo.",
-    rende: "Feijão de corda pronto pra ir à pressão logo cedo — 6 a 7 conchas na semana.",
+      "Cobre 400 g de feijão de corda com água numa vasilha grande e deixa na pia até de manhã. São 3 minutos que economizam meia hora de domingo — feijão sem molho cozinha o dobro do tempo.",
+    rende: "Feijão de corda pronto pra ir à pressão logo cedo — 8 conchas na semana.",
   },
   {
     id: "pressao-feijao",
@@ -43,58 +47,58 @@ export const ROTEIRO_DOMINGO: readonly EtapaMarmita[] = [
     maoNaMassaMin: 5,
     sozinhoMin: 25,
     comoFazer:
-      "Escorre o feijão, joga na pressão com alho, cebola, louro e água dois dedos acima. Fecha e liga em fogo alto. Quando pegar pressão, baixa e conta 18 minutos. Sal só no fim. Esta é a primeira panela porque é a que mais demora sozinha.",
-    rende: "6 a 7 conchas — cobre o almoço e o jantar da semana toda.",
+      "Escorre o feijão, joga na pressão com alho, cebola, louro e água dois dedos acima. Fecha e liga em fogo alto. Quando pegar pressão, baixa e conta 15-18 minutos. Sal só no fim. Esta é a primeira panela porque é a que mais demora sozinha.",
+    rende: "Potes de 100 g pros 7 almoços e de 50 g pros 2 jantares de sardinha.",
   },
   {
     id: "frango-lote",
     ordem: 2,
-    titulo: "Frango na segunda panela",
+    titulo: "Frango do jantar na segunda panela",
     maoNaMassaMin: 6,
     sozinhoMin: 25,
     comoFazer:
-      "Enquanto o feijão trabalha: 1 kg de frango (coxa desossada sai mais barata que o peito e serve igual) em água com sal, alho e louro. Pressão por 20 minutos, ou fervendo por 30. Não precisa olhar.",
-    rende: "1 kg — desfia depois e vira o almoço e o jantar de 4 a 5 dias.",
-  },
-  {
-    id: "ovos-lote",
-    ordem: 3,
-    titulo: "Ovos cozidos da semana",
-    maoNaMassaMin: 4,
-    sozinhoMin: 10,
-    comoFazer:
-      "Terceira boca do fogão: água fervendo, 12 ovos, 10 minutos cronometrados pra gema dura. Esfria em água fria e guarda com casca na geladeira — descasca só na hora.",
-    rende: "12 ovos — o café da manhã de quase a semana inteira.",
+      "Enquanto o feijão trabalha: 1,2 kg de peito de frango em água com sal, alho e louro. Pressão por 20 minutos, ou fervendo por 30. Não precisa olhar. É PEITO: coxa tem bem mais gordura na mesma porção e muda a conta do dia.",
+    rende: "1,2 kg cru — desfiado, vira os 5 jantares (170 g cada) e o frango da omelete.",
   },
   {
     id: "arroz-lote",
-    ordem: 4,
+    ordem: 3,
     titulo: "Arroz do lote",
     maoNaMassaMin: 6,
     sozinhoMin: 18,
     comoFazer:
-      "Quando o feijão sair da pressão, entra o arroz: alho refogado no azeite, 3 xícaras de arroz, água na proporção 2:1, tampado em fogo baixo por 18 minutos. Não mexe.",
-    rende: "Arroz de 5 a 6 refeições.",
+      "Quando o feijão sair da pressão, entra o arroz: alho refogado no azeite, 500 g de arroz, água na proporção 2:1, tampado em fogo baixo por 18 minutos. Não mexe.",
+    rende: "Potes de 150 g pros 4 almoços de frango e de 160 g pros 2 jantares de sardinha.",
   },
   {
     id: "macaxeira-beterraba",
-    ordem: 5,
+    ordem: 4,
     titulo: "Macaxeira e beterraba",
     maoNaMassaMin: 12,
     sozinhoMin: 25,
     comoFazer:
-      "Descasca 1 kg de macaxeira e corta em pedaços grandes — é a etapa mais braçal do dia, e é por isso que ela vem depois, quando as outras panelas já estão trabalhando sozinhas. Cozinha em água com sal por 20-25 minutos. Na panela do lado, beterrabas INTEIRAS e com casca cobertas de água, 15 minutos na pressão. Descascar antes é o erro: com casca ela não sangra a cor na água, e depois de morna a casca sai só esfregando com a mão. Guarda em pote separado — beterraba tinge o resto da marmita.",
-    rende: "Carboidrato e legume de 4 a 5 refeições — inclusive a macaxeira fria que vai no lanche do trabalho.",
+      "Descasca 1,6 kg de macaxeira e corta em pedaços grandes — é a etapa mais braçal do dia, e é por isso que ela vem depois, quando as outras panelas já estão trabalhando sozinhas. Cozinha em água com sal por 20-25 minutos e tira o fio do meio. Na panela do lado, 1 kg de beterraba INTEIRA e com casca, 15 minutos na pressão. Descascar antes é o erro: com casca ela não sangra a cor na água, e depois de morna a casca sai só esfregando com a mão. Guarda em pote separado — beterraba tinge o resto da marmita.",
+    rende: "Macaxeira de 150 g pros 3 almoços de patinho e os 5 jantares; beterraba pros mesmos dias.",
   },
   {
-    id: "pate-atum",
-    ordem: 6,
-    titulo: "Patê de atum (sem fogo)",
-    maoNaMassaMin: 6,
+    id: "patinho-lote",
+    ordem: 5,
+    titulo: "Patinho refogado",
+    maoNaMassaMin: 12,
     sozinhoMin: 0,
     comoFazer:
-      "Enquanto a macaxeira cozinha: escorre 2 latas de atum em água, amassa com garfo junto de 4 colheres de sopa de iogurte natural, suco de 1 limão, cebolinha picada, sal e pimenta. Pote fechado na geladeira.",
-    rende: "6 porções — o lanche do trabalho dos 3 primeiros dias (depois disso, atum não guarda bem).",
+      "Refoga 1 cebola e 4 dentes de alho, junta 600 g de patinho moído, sal, pimenta e 3 colheres de sopa de molho de tomate. Fogo alto por 8-10 minutos, até a água que a carne solta secar.",
+    rende: "3 potes de 150 g — os almoços de segunda, quarta e sexta.",
+  },
+  {
+    id: "frango-grelhado",
+    ordem: 6,
+    titulo: "Frango grelhado do almoço",
+    maoNaMassaMin: 15,
+    sozinhoMin: 0,
+    comoFazer:
+      "800 g de peito em filés, temperados com sal, alho e limão por 10 minutos. Frigideira em fogo alto com fio de azeite, 4-5 minutos de cada lado, em duas levas pra não cozinhar no vapor.",
+    rende: "4 porções de 150 g grelhado — os almoços de terça, quinta, sábado e domingo.",
   },
   {
     id: "desfiar-porcionar",
@@ -103,7 +107,7 @@ export const ROTEIRO_DOMINGO: readonly EtapaMarmita[] = [
     maoNaMassaMin: 20,
     sozinhoMin: 0,
     comoFazer:
-      "Desfia o frango com dois garfos e refoga rápido com cebola, alho e tomate. Deixa tudo esfriar destampado antes de fechar os potes — pote fechado quente vira água no fundo e estraga em dois dias. Monta as marmitas do almoço já prontas: proteína, arroz, feijão, legume.",
+      "Desfia o frango cozido com dois garfos e refoga rápido com cebola, alho e tomate. Deixa tudo esfriar destampado antes de fechar os potes — pote fechado quente vira água no fundo e estraga em dois dias. Geladeira: o que vai até quarta. Congelador: o resto. Toda noite, passa o pote do dia seguinte pra geladeira.",
     rende: "As marmitas da semana montadas — dia útil vira esquentar, não cozinhar.",
   },
 ];

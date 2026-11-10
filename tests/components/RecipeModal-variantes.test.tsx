@@ -14,39 +14,40 @@ beforeEach(async () => {
   await seedPath();
 });
 
+// Usa o jantar: desde 2026-11-10 é a refeição com três opções (as outras têm duas).
 describe("RecipeModal — as três opções", () => {
   it("mostra as três variantes da refeição, com o rótulo de cada uma", async () => {
-    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    render(<RecipeModal mealType="jantar" onClose={() => {}} />);
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     expect(opcoes).toHaveLength(3);
   });
 
   it("só expandir uma variante não grava nada", async () => {
     const user = userEvent.setup();
-    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    render(<RecipeModal mealType="jantar" onClose={() => {}} />);
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
     // expandiu (o modo de preparo da opção aparece), mas nada foi gravado
     await screen.findByRole("button", { name: /escolhi essa/i });
     const meals = await db.meals.toArray();
-    expect(meals.find((m) => m.mealType === "lanche")).toBeUndefined();
+    expect(meals.find((m) => m.mealType === "jantar")).toBeUndefined();
   });
 
   it("expandir e confirmar 'Escolhi essa' grava a refeição do dia", async () => {
     const user = userEvent.setup();
-    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    render(<RecipeModal mealType="jantar" onClose={() => {}} />);
     const opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
     await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
     const meals = await db.meals.toArray();
-    const lanche = meals.find((m) => m.mealType === "lanche");
-    expect(lanche).toBeDefined();
-    expect(lanche!.foods.length).toBeGreaterThan(0);
+    const jantar = meals.find((m) => m.mealType === "jantar");
+    expect(jantar).toBeDefined();
+    expect(jantar!.foods.length).toBeGreaterThan(0);
   });
 
   it("confirmar uma segunda vez (outra opção) atualiza o mesmo registro, sem duplicar", async () => {
     const user = userEvent.setup();
-    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    render(<RecipeModal mealType="jantar" onClose={() => {}} />);
     let opcoes = await screen.findAllByRole("button", { name: /opção/i });
     await user.click(opcoes[1]);
     await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
@@ -56,7 +57,7 @@ describe("RecipeModal — as três opções", () => {
     await user.click(await screen.findByRole("button", { name: /escolhi essa/i }));
 
     const meals = await db.meals.toArray();
-    const lanches = meals.filter((m) => m.mealType === "lanche");
+    const lanches = meals.filter((m) => m.mealType === "jantar");
     expect(lanches).toHaveLength(1);
   });
 
@@ -70,17 +71,17 @@ describe("RecipeModal — as três opções", () => {
     // foods da primeira variante — exatamente como ficaria depois de um
     // "toggleMeal" em MealsToday ou de uma confirmação anterior no modal.
     const plan = await getActiveMealPlan();
-    const slot = plan!.slots.find((s) => s.mealType === "lanche")!;
+    const slot = plan!.slots.find((s) => s.mealType === "jantar")!;
     const variantJaEscolhida = slot.variants[0];
     await db.meals.add({
       date: hojeISO(),
-      mealType: "lanche",
+      mealType: "jantar",
       foods: variantJaEscolhida.foods,
       checked: true,
     });
 
     const user = userEvent.setup();
-    render(<RecipeModal mealType="lanche" onClose={() => {}} />);
+    render(<RecipeModal mealType="jantar" onClose={() => {}} />);
 
     // A variante já escolhida abre expandida por padrão, então o botão de
     // confirmação dela já está visível sem precisar tocar no cabeçalho.
@@ -88,7 +89,7 @@ describe("RecipeModal — as três opções", () => {
     await user.click(botaoConfirmar);
 
     const meals = await db.meals.toArray();
-    const lanches = meals.filter((m) => m.mealType === "lanche");
+    const lanches = meals.filter((m) => m.mealType === "jantar");
     expect(lanches).toHaveLength(1);
     expect(lanches[0].checked).toBe(true);
   });

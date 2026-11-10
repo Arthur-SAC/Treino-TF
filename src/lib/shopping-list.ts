@@ -66,16 +66,22 @@ function arredondaParaCompra(qty: number, unit: string): number {
  * número diferente de opções (o café tem 5, os demais 3), então uma rodada de
  * café já cobre 5 dias enquanto uma de almoço cobre 3.
  *
- * Aqui o fator é calculado por período — `PORCOES_POR_SEMANA / nº de variantes`
- * —, de modo que a soma feche exatamente sete refeições de cada período,
- * distribuídas por igual entre as opções daquele período.
+ * Com o cardápio montado por dia (`dias` em cada opção), o fator de cada
+ * opção é o número de dias em que ela entra — a compra é a semana que o Hoje
+ * vai mostrar. Período sem `dias` (plano antigo) usa `PORCOES_POR_SEMANA / nº
+ * de variantes`: sete refeições distribuídas por igual entre as opções.
  */
 export function buildWeeklyShoppingList(plan: MealPlan): WeeklyShoppingItem[] {
   const map = new Map<string, WeeklyShoppingItem>();
   for (const slot of plan.slots) {
     if (slot.variants.length === 0) continue;
-    const fator = PORCOES_POR_SEMANA / slot.variants.length;
+    // Cardápio montado por dia (desde 2026-11-10): cada opção conta os dias em
+    // que entra na semana, e a opção sem dia fixo (troca livre) não entra na
+    // compra. Sem nenhum `dias` no período, vale a divisão por igual de antes.
+    const porDia = slot.variants.some((v) => v.dias && v.dias.length > 0);
     for (const variant of slot.variants) {
+      const fator = porDia ? (variant.dias?.length ?? 0) : PORCOES_POR_SEMANA / slot.variants.length;
+      if (fator === 0) continue;
       for (const ing of variant.ingredients) {
         const key = `${ing.item}__${ing.unit}`;
         const existing = map.get(key);

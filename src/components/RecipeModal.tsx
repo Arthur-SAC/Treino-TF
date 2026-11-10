@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Meal, type MealVariant } from "../lib/db";
-import { getActiveMealPlan, EFFORT_LABEL, variantEscolhida } from "../lib/meal-plan";
+import { getActiveMealPlan, EFFORT_LABEL, variantEscolhida, variantDoDia, diasDaOpcao } from "../lib/meal-plan";
 import { RecomendadaBadge } from "./RecomendadaBadge";
 import { hojeISO } from "../lib/today-date";
 
@@ -34,7 +34,7 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
   const [expandedId, setExpandedId] = useState<string | undefined>(undefined);
 
   const chosenVariant = variantEscolhida(variants, meal);
-  const defaultExpandedId = chosenVariant?.id ?? variants[0]?.id;
+  const defaultExpandedId = chosenVariant?.id ?? variantDoDia(variants, new Date(`${hojeISO()}T12:00:00`).getDay())?.id;
   const effectiveExpandedId = expandedId ?? defaultExpandedId;
 
   /** Grava a escolha do dia. Guarda: se a variante já é a escolhida de hoje,
@@ -136,6 +136,9 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
                     </span>
                   )}
                   {v.recomendada && <RecomendadaBadge />}
+                  {diasDaOpcao(v) && (
+                    <span className="block text-[11px] text-muted mt-0.5">No cardápio: {diasDaOpcao(v)}</span>
+                  )}
                   {/* Marcador curto: quem repete o estado por extenso é o
                       botão de ação lá dentro, e duas frases iguais no mesmo
                       card só fazem a pessoa ler duas vezes. */}

@@ -17,6 +17,23 @@ export function variantEscolhida(variants: MealVariant[], meal: Meal | undefined
   return variants.find((v) => JSON.stringify(v.foods) === JSON.stringify(meal.foods));
 }
 
+/** A opção que o cardápio marca para este dia da semana (0 = domingo). Sem
+ *  opção com `dias` cobrindo o dia, cai na recomendada e, por fim, na primeira
+ *  — instalações com plano antigo continuam iguais. */
+export function variantDoDia(variants: MealVariant[], dayOfWeek: number): MealVariant | undefined {
+  return variants.find((v) => v.dias?.includes(dayOfWeek)) ?? variants.find((v) => v.recomendada) ?? variants[0];
+}
+
+const DIA_CURTO = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+
+/** "seg · qua · sex", "todo dia" ou null (opção sem dia fixo). Segunda primeiro,
+ *  que é como ela pensa a semana. */
+export function diasDaOpcao(v: MealVariant): string | null {
+  if (!v.dias || v.dias.length === 0) return null;
+  if (v.dias.length === 7) return "todo dia";
+  return [1, 2, 3, 4, 5, 6, 0].filter((d) => v.dias!.includes(d)).map((d) => DIA_CURTO[d]).join(" · ");
+}
+
 /** Rótulo legível do selo de esforço — compartilhado entre RecipeModal e
  *  MealPlanView pra evitar duas telas com o mesmo dado descrito de dois
  *  jeitos diferentes. */

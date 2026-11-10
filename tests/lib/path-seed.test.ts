@@ -32,8 +32,8 @@ describe("seedPath", () => {
     expect(plan.kcalDaily).toBe(2200);
     expect(plan.proteinG).toBeGreaterThanOrEqual(175);
     expect(plan.slots).toHaveLength(4);
-    // Café tem 5 variantes: as 3 originais + as 2 que migraram do lanche das
-    // 16h (a gordura não atrapalha de manhã, atrapalha antes do treino).
-    expect(plan.slots[0].variants.length).toBe(5);
+    // Desde 2026-11-10: duas opções de café — a do dia e uma troca livre.
+    expect(plan.slots[0].variants.length).toBe(2);
+    expect(plan.slots[0].variants[0].dias).toEqual([0, 1, 2, 3, 4, 5, 6]);
   });
 });

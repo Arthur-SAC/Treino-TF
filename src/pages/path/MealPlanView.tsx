@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import type { MealSlot, MealVariant } from "../../lib/db";
-import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL } from "../../lib/meal-plan";
+import { getActiveMealPlan, CINTURA_LIBERA_SUPERAVIT_CM, EFFORT_LABEL, diasDaOpcao } from "../../lib/meal-plan";
 import { RecomendadaBadge } from "../../components/RecomendadaBadge";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { comerForaDoModo } from "../../data/comer-fora-seed";
@@ -52,6 +52,9 @@ function VariantDetails({ v }: { v: MealVariant }) {
           {v.recomendada && <RecomendadaBadge />}
           {" "}
           <span className="text-nude text-xs">{open ? "▾" : "▸"}</span>
+          <span className="block text-[11px] text-muted mt-0.5">
+            {diasDaOpcao(v) ? `No cardápio: ${diasDaOpcao(v)}` : "Troca livre — sem dia fixo"}
+          </span>
         </span>
         <span className="text-muted text-xs">{v.foods.reduce((s, f) => s + f.kcal, 0)} kcal</span>
       </button>
@@ -195,10 +198,10 @@ export function MealPlanView() {
           não erra o dia — nenhuma cai abaixo do piso de gordura —, mas essa é a que rende mais.
         </p>
         <p className="text-muted text-xs leading-relaxed mt-2">
-          <span className="text-nude-warm">Duas exceções que valem a pena:</span> duas vezes por semana
-          troque o almoço ou o jantar pela opção de peixe (tainha ou sardinha) — é a gordura que o resto do
-          cardápio não tem. E a beterraba rende mais 2 a 3 horas depois de comida, então em dia que importa
-          ela vai no almoço ou num jantar cedo, não à noite.
+          <span className="text-nude-warm">A semana já vem montada:</span> cada opção diz os dias em que
+          entra, e o Hoje mostra a do dia. O patinho fica nos almoços de segunda, quarta e sexta (os dias de
+          glúteo, com mais carboidrato e a beterraba), e a sardinha de lata no jantar de terça e quinta — é o
+          único peixe da semana. As opções sem dia fixo são troca livre, quando enjoar.
         </p>
       </div>
 

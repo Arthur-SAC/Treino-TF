@@ -45,8 +45,10 @@ describe("o roteiro de domingo cabe no domingo dela", () => {
   // refeições. Se o roteiro não produz proteína em lote, a etiqueta mente.
   it("o roteiro produz proteína em lote", () => {
     const texto = ROTEIRO_DOMINGO.map((e) => `${e.titulo} ${e.rende}`).join(" ").toLowerCase();
+    // Desde 2026-11-10 o lote é o da semana montada: frango (almoço e jantar)
+    // e patinho. Ovo saiu (o café é mexido na hora) e atum também (o lanche
+    // do dia é o iogurte; o patê virou troca livre, feito na véspera).
     expect(texto).toMatch(/frango/);
-    expect(texto).toMatch(/ovo/);
-    expect(texto).toMatch(/atum/);
+    expect(texto).toMatch(/patinho/);
   });
 });

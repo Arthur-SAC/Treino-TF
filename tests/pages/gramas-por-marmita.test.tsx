@@ -6,6 +6,7 @@ import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { MealPlanView } from "../../src/pages/path/MealPlanView";
 import { RecipeModal } from "../../src/components/RecipeModal";
+import { variantDoDia } from "../../src/lib/meal-plan";
 
 // Ela monta as marmitas de almoço e jantar no domingo, na balança. Os gramas
 // sempre existiram no dado (`qtyG`), mas a tela mostrava só o nome do alimento
@@ -56,10 +57,11 @@ describe("gramas de cada alimento na tela do plano", () => {
       </MemoryRouter>,
     );
 
-    const jantar1 = INITIAL_PLAN.slots.find((s) => s.mealType === "jantar")!.variants[0];
+    // O modal abre na opção do dia da semana (cardápio montado por dia).
+    const jantar1 = variantDoDia(INITIAL_PLAN.slots.find((s) => s.mealType === "jantar")!.variants, new Date().getDay())!;
     await waitFor(() => expect(screen.getByText(new RegExp(jantar1.label.slice(0, 20)))).toBeInTheDocument());
 
-    const mudo = jantar1.foods.find((f) => !f.name.includes(String(f.qtyG)))!;
+    const mudo = jantar1.foods.find((f) => !f.name.includes(String(f.qtyG))) ?? jantar1.foods[0];
     await waitFor(() =>
       expect(screen.getAllByText(new RegExp(`\\b${mudo.qtyG}\\s*g\\b`)).length).toBeGreaterThan(0),
     );

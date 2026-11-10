@@ -25,8 +25,8 @@ describe("tela do roteiro de domingo", () => {
         <MarmitaDomingo />
       </MemoryRouter>,
     );
-    // 62 min de mão na massa — o número que decide se ela começa ou não.
-    expect(screen.getByText(/62 min/)).toBeInTheDocument();
+    // 79 min de mão na massa — o número que decide se ela começa ou não.
+    expect(screen.getByText(/79 min/)).toBeInTheDocument();
   });
 
   // O roteiro fala do lote inteiro ("1 kg de frango"), que é o número de pôr no
