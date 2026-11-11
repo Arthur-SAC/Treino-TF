@@ -5,7 +5,7 @@ import { deriveDefaultMeals } from "../lib/meal-plan";
 // 2026-09-23). Contra o gasto real de 2.700-2.900 (CONSUMO em objetivo.ts) dá
 // ~500-700 de déficit: ela escolheu 2.200 e não 2.000 porque déficit maior
 // derruba testosterona, e firmeza, libido e força são metade dos objetivos.
-// Proteína ~193g · Gordura ~55g · Carbo ~231g · ~0,45-0,6 kg/semana (refeito em 2026-11-10)
+// Proteína ~169g · Gordura ~56g · Carbo ~253g · ~0,45-0,6 kg/semana (econômico, 2026-11-11)
 // Comida barata e local de Aracaju/Nordeste (feira, não academia). Variante 0 = base do dia.
 /** Piso de proteína de CADA opção, por refeição. A soma dos quatro é
  *  CONSUMO.proteinaGMin — é isso que faz o piso do dia valer para qualquer
@@ -48,43 +48,47 @@ export const PROTEINA_PISO_POR_REFEICAO: Record<MealSlot["mealType"], number> = 
  *  próprio de 5 g (é pré-treino) e nunca poderia cumprir um piso. */
 export const GORDURA_PISO_PCT = 20;
 
-// Cardápio refeito em 2026-11-10 a pedido dela ("recalcular tudo pensando no
-// resultado mais rápido e melhor"). As 2.200 kcal ficam — foi ela quem escolheu
-// contra 2.000, pela testosterona. O que mudou é a distribuição:
+// Cardápio econômico (2026-11-11). Ela pediu pra caber em ~R$ 500-600 por mês:
+// "ganho pouco dinheiro". As 2.200 kcal ficam (decisão dela, pela
+// testosterona) e nenhuma refeição encolheu — o que mudou foi DE ONDE vem a
+// comida:
 //
-// 1. Proteína de ~211 g para ~190 g. O objetivo pede 150-160 g
-//    (CONSUMO.proteinaGMin); o excedente não protegia mais músculo, só tirava
-//    o lugar do carboidrato que alimenta o treino.
-// 2. O carboidrato foi para perto do treino: o lanche das 15h30 passou a ~500
-//    kcal com ~77 g de carboidrato (antecede 4 km a pé e a força), e o café,
-//    que antecede uma manhã sentada, ficou com menos.
-// 3. Duas opções por refeição (o jantar tem três), cada uma com os DIAS em que
-//    ela entra (`dias`): o Hoje mostra a do dia e a lista de compras conta a
-//    semana montada, não uma divisão por igual.
-// 4. Patinho só nos almoços de glúteo (seg/qua/sex): é o almoço com mais
-//    carboidrato e ferro, e carne vermelha todo dia passaria do recomendado.
-// 5. Sardinha DE LATA no jantar de terça e quinta (decisão dela: sempre a
-//    enlatada). É o único peixe do cardápio — o ômega-3 da semana.
-// 6. A fruta com vitamina C entrou no almoço, contada nas 2.200 — antes saía
-//    da verba de 250 kcal.
+// 1. Sem whey e sem iogurte. Proteína vem de frango (a mais barata por grama),
+//    ovo, feijão e soja texturizada (PTS) misturada no frango e na carne moída —
+//    a PTS é a proteína mais barata do mercado (~R$ 0,03/g).
+// 2. Patinho virou acém moído com soja, nos mesmos 3 almoços (seg/qua/sex).
+// 3. Sardinha de lata continua ter/qui (decisão dela: sempre a enlatada), mas
+//    1 lata por jantar, completada com ovo. Ainda é o ômega-3 da semana.
+// 4. Óleo de soja/canola no lugar do azeite. Azeite fica opcional na salada.
+// 5. Fruta com vitamina C da feira (goiaba, caju, acerola, laranja — a que
+//    estiver barata) no lugar da polpa de acerola fixa.
+// 6. Proteína do dia ~169 g: menos que os ~190 de antes, ainda acima do alvo de
+//    150-160. Frango é barato, então a folga custa pouco.
+// 7. Cada opção diz os DIAS em que entra (`dias`): o Hoje mostra a do dia e a
+//    lista de compras conta a semana montada.
 const TODOS_OS_DIAS = [0, 1, 2, 3, 4, 5, 6];
 
-const ACEROLA = {
+const FRUTA_C = {
   // Não é enfeite: vitamina C junto da refeição multiplica a absorção do ferro
   // do feijão (não-heme), que é a fonte de ferro dos dias sem carne vermelha.
-  name: "Acerola (100 g) — ou caju, goiaba ou laranja",
+  name: "Fruta com vitamina C (100 g) — goiaba, caju, acerola ou 1 laranja",
   qtyG: 100,
-  kcal: 33,
-  proteinG: 0,
-  carbG: 8,
+  kcal: 50,
+  proteinG: 1,
+  carbG: 12,
   fatG: 0,
   preparation:
-    "Inteira, ou suco batido na hora sem açúcar e sem coar — beba em até 30 min. Polpa congelada serve e é a mais barata. Trocas: caju 100 g, goiaba 100 g ou laranja 150 g. Café ou chá preto ficam 1 h longe do almoço: atrapalham o ferro.",
+    "A que estiver mais barata na feira na semana. Inteira, ou suco batido na hora sem açúcar e sem coar. Café ou chá preto ficam 1 h longe do almoço: atrapalham o ferro.",
+};
+const FRUTA_C_INGREDIENTE: Ingredient = {
+  item: "Fruta com vitamina C (goiaba, caju, acerola ou laranja)",
+  qty: 100,
+  unit: "g",
+  category: "hortifruti",
 };
 
 const SLOTS: MealSlot[] = [
   // ─── CAFÉ DA MANHÃ (~450 kcal) ────────────────────────────────────────────
-  // Antecede uma manhã sentada: proteína e gordura, pouco carboidrato.
   {
     mealType: "cafe",
     targetKcal: 450,
@@ -93,37 +97,37 @@ const SLOTS: MealSlot[] = [
         id: "cafe-1",
         recomendada: true,
         dias: TODOS_OS_DIAS,
-        label: "Opção 1 · Ovos mexidos, cuscuz & whey",
+        label: "Opção 1 · Cuscuz com ovo mexido & frango desfiado",
         effort: "5-min",
         foods: [
           {
-            name: "Ovos mexidos (3 un) com fio de azeite",
+            name: "Ovos mexidos (3 un) com fio de óleo",
             qtyG: 150,
             kcal: 243,
             proteinG: 19,
             carbG: 1,
             fatG: 18,
             preparation:
-              "Bate os ovos (3) com uma pitada de sal. Frigideira antiaderente em fogo médio-baixo com um fio de azeite (uma colher de chá rasa). Mexe sem parar por 2-3 min, até ficar cremoso.",
+              "Bate os ovos (3) com uma pitada de sal. Frigideira antiaderente em fogo médio-baixo com um fio de óleo (uma colher de chá rasa). Mexe sem parar por 2-3 min, até ficar cremoso.",
           },
           {
-            name: "Cuscuz de milho (80g cozido, sem manteiga)",
-            qtyG: 80,
-            kcal: 123,
-            proteinG: 3,
-            carbG: 26,
-            fatG: 2,
-            preparation:
-              "Hidrata 27 g de flocão com água morna e uma pitada de sal, descansa 5 min. Cuscuzeira por 10 min, ou micro-ondas por 3-4 min. Nunca manteiga.",
-          },
-          {
-            name: "Whey protein (20 g de pó) batido com água",
-            qtyG: 20,
-            kcal: 80,
-            proteinG: 16,
-            carbG: 2,
+            name: "Cuscuz de milho (100g cozido, sem manteiga)",
+            qtyG: 100,
+            kcal: 154,
+            proteinG: 4,
+            carbG: 32,
             fatG: 1,
-            preparation: "Dissolve no shaker com água gelada. 30 segundos.",
+            preparation:
+              "Hidrata 34 g de flocão com água morna e uma pitada de sal, descansa 5 min. Cuscuzeira por 10 min, ou micro-ondas por 3-4 min.",
+          },
+          {
+            name: "Frango desfiado do lote (40g)",
+            qtyG: 40,
+            kcal: 66,
+            proteinG: 12,
+            carbG: 0,
+            fatG: 2,
+            preparation: "Do pote do lote de domingo. Esquenta junto com o ovo no fim, ou vai frio por cima do cuscuz.",
           },
           {
             name: "Café preto sem açúcar",
@@ -137,55 +141,47 @@ const SLOTS: MealSlot[] = [
         ],
         ingredients: [
           { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
-          { item: "Flocão de milho (cuscuz)", qty: 27, unit: "g", category: "carboidrato" },
-          { item: "Whey protein", qty: 20, unit: "g", category: "laticinio" },
-          { item: "Azeite", qty: 3, unit: "ml", category: "gordura" },
+          { item: "Flocão de milho (cuscuz)", qty: 34, unit: "g", category: "carboidrato" },
+          // 54 crus rendem os 40 desfiados.
+          { item: "Peito de frango", qty: 54, unit: "g", category: "proteina" },
+          { item: "Óleo de soja (ou canola)", qty: 3, unit: "ml", category: "gordura" },
           { item: "Café", qty: 10, unit: "g", category: "mercearia" },
         ],
       },
       {
         id: "cafe-2",
-        label: "Opção 2 · Ovos cozidos & vitamina de whey",
+        label: "Opção 2 · Ovos cozidos & pão com frango",
         // Ovo cozido é o prato mais loteável que existe: 10 min de fervura de
         // uma vez, na véspera ou no domingo, e de manhã é só descascar.
         effort: "lote-domingo",
         foods: [
           {
-            name: "Ovos cozidos (2 un)",
-            qtyG: 110,
-            kcal: 155,
-            proteinG: 13,
+            name: "Ovos cozidos (3 un)",
+            qtyG: 150,
+            kcal: 216,
+            proteinG: 19,
             carbG: 1,
-            fatG: 11,
+            fatG: 15,
             preparation:
               "Água fervendo, coloca os ovos, 10 min para gema dura. Esfria em água fria. Com casca, duram 5 dias na geladeira — dá pra cozinhar vários de uma vez.",
           },
           {
-            name: "Leite desnatado (200ml)",
-            qtyG: 200,
-            kcal: 70,
-            proteinG: 7,
-            carbG: 10,
-            fatG: 0,
-            preparation: "Base da vitamina. Bate tudo no liquidificador com gelo, 30 segundos.",
+            name: "Pão francês (1 un)",
+            qtyG: 50,
+            kcal: 150,
+            proteinG: 5,
+            carbG: 29,
+            fatG: 2,
+            preparation: "Abre e recheia com o frango. Na chapa 1 min, se quiser quente.",
           },
           {
-            name: "Whey protein (20 g de pó)",
-            qtyG: 20,
-            kcal: 80,
-            proteinG: 16,
-            carbG: 2,
+            name: "Frango desfiado do lote (30g)",
+            qtyG: 30,
+            kcal: 50,
+            proteinG: 9,
+            carbG: 0,
             fatG: 1,
-            preparation: "Vai no liquidificador junto com o leite e a banana.",
-          },
-          {
-            name: "Banana pequena",
-            qtyG: 100,
-            kcal: 84,
-            proteinG: 1,
-            carbG: 20,
-            fatG: 0,
-            preparation: "Bate junto na vitamina.",
+            preparation: "Do pote do lote de domingo, dentro do pão.",
           },
           {
             // Selênio. Duas unidades bastam e são o teto — em excesso faz mal.
@@ -197,13 +193,22 @@ const SLOTS: MealSlot[] = [
             fatG: 5,
             preparation: "Ao natural. Duas e só duas por dia — é o teto seguro.",
           },
+          {
+            name: "Café preto sem açúcar",
+            qtyG: 200,
+            kcal: 2,
+            proteinG: 0,
+            carbG: 0,
+            fatG: 0,
+            preparation: "Coa normal, sem açúcar.",
+          },
         ],
         ingredients: [
-          { item: "Ovos", qty: 2, unit: "un", category: "proteina" },
-          { item: "Leite", qty: 200, unit: "ml", category: "laticinio" },
-          { item: "Whey protein", qty: 20, unit: "g", category: "laticinio" },
-          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
+          { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
+          { item: "Pão francês", qty: 1, unit: "un", category: "carboidrato" },
+          { item: "Peito de frango", qty: 40, unit: "g", category: "proteina" },
           { item: "Castanha-do-pará", qty: 2, unit: "un", category: "mercearia" },
+          { item: "Café", qty: 10, unit: "g", category: "mercearia" },
         ],
       },
     ],
@@ -223,21 +228,21 @@ const SLOTS: MealSlot[] = [
         effort: "lote-domingo",
         foods: [
           {
-            name: "Frango grelhado (150g já grelhado)",
-            qtyG: 150,
-            kcal: 248,
-            proteinG: 47,
+            name: "Frango grelhado (130g já grelhado)",
+            qtyG: 130,
+            kcal: 215,
+            proteinG: 41,
             carbG: 0,
-            fatG: 6,
+            fatG: 5,
             preparation:
-              "A grama é DEPOIS de grelhar: 200 g crus viram os 150 g do prato. Tempera com sal, alho amassado e limão, 10 min. Frigideira em fogo alto com fio de azeite, 4-5 min de cada lado. Números de PEITO — coxa tem bem mais gordura na mesma porção.",
+              "A grama é DEPOIS de grelhar: 175 g crus viram os 130 g do prato. Tempera com sal, alho amassado e limão, 10 min. Frigideira em fogo alto com fio de óleo, 4-5 min de cada lado. Números de PEITO — coxa tem bem mais gordura na mesma porção.",
           },
           {
-            name: "Arroz cozido (150g)",
-            qtyG: 150,
-            kcal: 163,
-            proteinG: 3,
-            carbG: 34,
+            name: "Arroz cozido (110g)",
+            qtyG: 110,
+            kcal: 120,
+            proteinG: 2,
+            carbG: 25,
             fatG: 0,
             preparation:
               "Do lote de domingo. Refoga alho, adiciona o arroz, cobre com água (2:1). Fogo baixo tampado ~18 min.",
@@ -262,52 +267,64 @@ const SLOTS: MealSlot[] = [
               "Folhas lavadas (molho de vinagre 10 min), tomate em cubos e cebola em rodelas finas. Em pote separado, tempera na hora.",
           },
           {
-            name: "Azeite extra-virgem (1/2 cs)",
-            qtyG: 6,
-            kcal: 53,
+            // 1 cs inteira: é o óleo que segura o piso de gordura do dia
+            // (hormônio) num cardápio de carne magra.
+            name: "Óleo de soja ou azeite (1 cs)",
+            qtyG: 12,
+            kcal: 100,
             proteinG: 0,
             carbG: 0,
-            fatG: 6,
-            preparation: "Rega a salada na hora, com limão.",
+            fatG: 11,
+            preparation: "Rega a salada e o arroz na hora, com limão. Azeite é melhor no cru, se couber no mês; óleo serve.",
           },
-          ACEROLA,
+          FRUTA_C,
         ],
         ingredients: [
-          // 200 crus rendem os 150 grelhados: carne perde ~25% de água no fogo.
-          { item: "Peito de frango", qty: 200, unit: "g", category: "proteina" },
-          { item: "Arroz", qty: 80, unit: "g", category: "carboidrato" },
+          // 175 crus rendem os 130 grelhados: carne perde ~25% de água no fogo.
+          { item: "Peito de frango", qty: 175, unit: "g", category: "proteina" },
+          { item: "Arroz", qty: 60, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 30, unit: "g", category: "hortifruti" },
-          { item: "Azeite", qty: 6, unit: "ml", category: "gordura" },
+          { item: "Óleo de soja (ou canola)", qty: 12, unit: "ml", category: "gordura" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
-          { item: "Acerola (ou polpa congelada)", qty: 100, unit: "g", category: "hortifruti" },
+          FRUTA_C_INGREDIENTE,
         ],
       },
       {
         id: "almoco-2",
-        // Dias de glúteo: o almoço com mais carboidrato e ferro, e a beterraba.
+        // Dias de perna: o almoço com mais carboidrato e ferro, e a beterraba.
         dias: [1, 3, 5],
-        label: "Opção 2 · Patinho, macaxeira & beterraba",
+        label: "Opção 2 · Carne moída com soja, macaxeira & beterraba",
         effort: "lote-domingo",
         foods: [
           {
-            name: "Carne moída patinho (150g já refogada)",
-            qtyG: 150,
-            kcal: 242,
-            proteinG: 35,
+            name: "Carne moída de acém (80g já refogada)",
+            qtyG: 80,
+            kcal: 172,
+            proteinG: 21,
             carbG: 0,
-            fatG: 12,
+            fatG: 10,
             preparation:
-              "Do lote de domingo: 195 g crus viram os 150 g. Refoga 1/2 cebola + 2 dentes de alho, junta a carne, sal, pimenta e 1 cs de molho de tomate. Fogo alto ~8-10 min, até a água secar. Sem azeite no prato: o patinho já traz a gordura.",
+              "Do lote de domingo: 105 g crus viram os 80 g. Refoga 1/2 cebola + 2 dentes de alho, junta a carne, sal, pimenta e 1 cs de molho de tomate. Fogo alto ~8-10 min, até a água secar. Pede pro açougue moer o acém na hora.",
           },
           {
-            name: "Macaxeira cozida (150g)",
-            qtyG: 150,
-            kcal: 187,
-            proteinG: 2,
-            carbG: 45,
+            name: "Soja texturizada hidratada (90g — 30 g seca), refogada junto",
+            qtyG: 90,
+            kcal: 99,
+            proteinG: 15,
+            carbG: 9,
+            fatG: 0,
+            preparation:
+              "Hidrata a soja seca em água quente com sal por 10 min, espreme bem com a mão e junta na panela da carne. Pega o gosto do tempero e ninguém percebe a diferença no prato.",
+          },
+          {
+            name: "Macaxeira cozida (100g)",
+            qtyG: 100,
+            kcal: 125,
+            proteinG: 1,
+            carbG: 30,
             fatG: 0,
             preparation:
               "Do lote de domingo. Descasca, corta, cozinha em água com sal 20-25 min até o garfo entrar fácil. Tira o fio do meio.",
@@ -332,26 +349,28 @@ const SLOTS: MealSlot[] = [
               "Do lote de domingo, em cubos. Pote SEPARADO: beterraba tinge tudo de rosa. Vem nos dias de treino de perna de propósito.",
           },
           {
-            name: "Salada de folhas",
-            qtyG: 100,
-            kcal: 25,
+            name: "Salada de folhas com óleo (1/2 cs)",
+            qtyG: 106,
+            kcal: 78,
             proteinG: 1,
             carbG: 5,
-            fatG: 0,
-            preparation: "Folhas lavadas com limão e sal.",
+            fatG: 6,
+            preparation: "Folhas lavadas com limão, sal e o fio de óleo ou azeite.",
           },
-          ACEROLA,
+          FRUTA_C,
         ],
         ingredients: [
-          { item: "Carne moída patinho", qty: 195, unit: "g", category: "proteina" },
-          { item: "Macaxeira (aipim)", qty: 150, unit: "g", category: "carboidrato" },
+          { item: "Carne moída de acém", qty: 105, unit: "g", category: "proteina" },
+          { item: "Soja texturizada (PTS)", qty: 30, unit: "g", category: "proteina" },
+          { item: "Macaxeira (aipim)", qty: 100, unit: "g", category: "carboidrato" },
           { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Beterraba", qty: 120, unit: "g", category: "hortifruti" },
           { item: "Alface", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
           { item: "Molho de tomate", qty: 15, unit: "g", category: "mercearia" },
-          { item: "Acerola (ou polpa congelada)", qty: 100, unit: "g", category: "hortifruti" },
+          { item: "Óleo de soja (ou canola)", qty: 6, unit: "ml", category: "gordura" },
+          FRUTA_C_INGREDIENTE,
         ],
       },
     ],
@@ -367,8 +386,8 @@ const SLOTS: MealSlot[] = [
   // 2. ≥30g de proteína em toda opção (PROTEINA_PISO_POR_REFEICAO): lanche
   //    fraco em proteína descontrola o jantar, o ponto de falha real dela.
   //
-  // É a maior refeição de carboidrato do dia desde 2026-11-10: é ela que
-  // sustenta a caminhada e o treino.
+  // É a maior refeição de carboidrato do dia: é ela que sustenta a caminhada e
+  // o treino. Desde 2026-11-11 é comida de marmita, sem whey nem iogurte.
   {
     mealType: "lanche",
     targetKcal: 500,
@@ -377,27 +396,37 @@ const SLOTS: MealSlot[] = [
         id: "lanche-1",
         recomendada: true,
         dias: TODOS_OS_DIAS,
-        label: "Opção 1 · Iogurte com whey, aveia, banana & melancia",
-        effort: "zero-preparo",
+        label: "Opção 1 · Cuscuz recheado com frango, banana & melancia",
+        effort: "lote-domingo",
         foods: [
           {
-            name: "Iogurte natural desnatado (170g)",
-            qtyG: 170,
-            kcal: 68,
-            proteinG: 7,
-            carbG: 10,
-            fatG: 0,
-            preparation: "Direto do pote, gelado. Sem geladeira no trabalho: bolsa térmica com gelo reutilizável.",
+            name: "Cuscuz de milho (130g cozido)",
+            qtyG: 130,
+            kcal: 200,
+            proteinG: 5,
+            carbG: 42,
+            fatG: 1,
+            preparation:
+              "Hidrata 44 g de flocão com água morna e sal, 5 min; cuscuzeira 10 min ou micro-ondas 4 min. Faz de manhã junto com o do café e leva no pote.",
           },
           {
-            name: "Whey protein (30 g de pó) & aveia em flocos (40 g)",
-            qtyG: 70,
-            kcal: 270,
-            proteinG: 30,
-            carbG: 27,
-            fatG: 3,
+            name: "Frango desfiado do lote (50g)",
+            qtyG: 50,
+            kcal: 83,
+            proteinG: 16,
+            carbG: 0,
+            fatG: 2,
             preparation:
-              "Leva o pó e a aveia já medidos num potinho. Na hora, joga por cima do iogurte e mexe — sem cozinhar, sem liquidificador.",
+              "Sai pronto do lote de domingo, já refogado junto com a soja. Por cima do cuscuz, no mesmo pote. Come frio ou 1 min no micro-ondas do trabalho.",
+          },
+          {
+            name: "Soja texturizada hidratada (60g — 20 g seca), refogada junto",
+            qtyG: 60,
+            kcal: 66,
+            proteinG: 10,
+            carbG: 6,
+            fatG: 0,
+            preparation: "Vem misturada no frango desfiado do lote — no pote é uma coisa só.",
           },
           {
             name: "Banana média",
@@ -406,7 +435,7 @@ const SLOTS: MealSlot[] = [
             proteinG: 1,
             carbG: 24,
             fatG: 0,
-            preparation: "Ao natural, picada por cima do iogurte ou à parte.",
+            preparation: "Ao natural.",
           },
           {
             // Barata em Aracaju e na mesma direção da beterraba, com efeito
@@ -417,71 +446,66 @@ const SLOTS: MealSlot[] = [
             proteinG: 1,
             carbG: 19,
             fatG: 0,
-            preparation: "Cortada em cubos num pote fechado — dura 3 dias na geladeira, então corta duas vezes na semana. Come gelada.",
+            preparation: "Cortada em cubos num pote fechado — dura uns 4 dias na geladeira, então corta duas vezes na semana. Come gelada.",
           },
         ],
         ingredients: [
-          { item: "Iogurte natural desnatado", qty: 170, unit: "g", category: "laticinio" },
-          { item: "Whey protein", qty: 30, unit: "g", category: "laticinio" },
-          { item: "Aveia em flocos", qty: 40, unit: "g", category: "carboidrato" },
+          { item: "Flocão de milho (cuscuz)", qty: 44, unit: "g", category: "carboidrato" },
+          // 68 crus rendem os 50 desfiados.
+          { item: "Peito de frango", qty: 68, unit: "g", category: "proteina" },
+          { item: "Soja texturizada (PTS)", qty: 20, unit: "g", category: "proteina" },
           { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
           { item: "Melancia", qty: 250, unit: "g", category: "hortifruti" },
         ],
       },
       {
         id: "lanche-2",
-        label: "Opção 2 · Pão com patê de atum & banana",
-        // Atum: no máximo 2-3 vezes por semana, por causa do mercúrio. Por isso
-        // não tem dia fixo — é a troca pra quando enjoar do iogurte.
+        label: "Opção 2 · Pão francês com frango & banana",
+        // Troca livre, quando enjoar do cuscuz.
         effort: "5-min",
         foods: [
           {
-            name: "Pão de forma (3 fatias)",
-            qtyG: 75,
-            kcal: 195,
-            proteinG: 6,
-            carbG: 36,
+            name: "Pão francês (2 un)",
+            qtyG: 100,
+            kcal: 300,
+            proteinG: 9,
+            carbG: 58,
             fatG: 3,
-            preparation: "Direto do pacote, ou 1 min na torradeira.",
+            preparation: "Da padaria do dia, ou congelado e 2 min na chapa/forno.",
           },
           {
-            // Iogurte no lugar de maionese: maionese sozinha colocaria ~10 g de
-            // gordura num lanche com teto de 5 g.
-            name: "Patê de atum caseiro (1 lata escorrida + iogurte)",
-            qtyG: 130,
-            kcal: 125,
-            proteinG: 27,
-            carbG: 2,
-            fatG: 1,
-            preparation:
-              "UMA LATA INTEIRA por lanche — é dela que vem a proteína. Escorre bem a lata de atum em água e amassa com 2 colheres de sopa de iogurte natural, suco de meio limão, cebolinha, sal e pimenta. Faz na véspera; dura até 3 dias na geladeira em pote fechado. No máximo 2-3 vezes por semana (mercúrio).",
+            name: "Frango desfiado do lote (50g)",
+            qtyG: 50,
+            kcal: 83,
+            proteinG: 16,
+            carbG: 0,
+            fatG: 2,
+            preparation: "Do mesmo pote do lote de domingo. Divide entre os dois pães.",
           },
           {
-            name: "Banana (2 pequenas)",
-            qtyG: 160,
-            kcal: 134,
-            proteinG: 2,
-            carbG: 32,
+            name: "Soja texturizada hidratada (45g — 15 g seca), refogada junto",
+            qtyG: 45,
+            kcal: 50,
+            proteinG: 8,
+            carbG: 5,
+            fatG: 0,
+            preparation: "Vem misturada no frango desfiado do lote.",
+          },
+          {
+            name: "Banana pequena",
+            qtyG: 100,
+            kcal: 84,
+            proteinG: 1,
+            carbG: 20,
             fatG: 0,
             preparation: "Ao natural.",
           },
-          {
-            name: "Iogurte natural desnatado (100g)",
-            qtyG: 100,
-            kcal: 40,
-            proteinG: 4,
-            carbG: 6,
-            fatG: 0,
-            preparation: "Direto do pote, gelado.",
-          },
         ],
         ingredients: [
-          { item: "Pão de forma", qty: 3, unit: "fatias", category: "carboidrato" },
-          { item: "Atum em água (lata)", qty: 140, unit: "g", category: "proteina" },
-          { item: "Iogurte natural desnatado", qty: 130, unit: "g", category: "laticinio" },
-          { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
-          { item: "Cebolinha", qty: 5, unit: "g", category: "hortifruti" },
-          { item: "Banana", qty: 2, unit: "un", category: "hortifruti" },
+          { item: "Pão francês", qty: 2, unit: "un", category: "carboidrato" },
+          { item: "Peito de frango", qty: 68, unit: "g", category: "proteina" },
+          { item: "Soja texturizada (PTS)", qty: 15, unit: "g", category: "proteina" },
+          { item: "Banana", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
     ],
@@ -499,27 +523,36 @@ const SLOTS: MealSlot[] = [
         id: "jantar-1",
         recomendada: true,
         dias: [0, 1, 3, 5, 6],
-        label: "Opção 1 · Frango desfiado, macaxeira & legumes",
+        label: "Opção 1 · Frango desfiado com soja, macaxeira & legumes",
         effort: "lote-domingo",
         foods: [
           {
-            name: "Frango desfiado (170g)",
-            qtyG: 170,
-            kcal: 281,
-            proteinG: 53,
+            name: "Frango desfiado (110g)",
+            qtyG: 110,
+            kcal: 182,
+            proteinG: 34,
             carbG: 0,
-            fatG: 7,
+            fatG: 4,
             preparation:
-              "Do lote de domingo: 230 g crus viram 170 g. Cozinha em água com sal e alho ~20 min na pressão, desfia com dois garfos e refoga com cebola, alho e tomate.",
+              "Do lote de domingo: 150 g crus viram 110 g. Cozinha em água com sal e alho ~20 min na pressão, desfia com dois garfos e refoga com cebola, alho e tomate.",
           },
           {
-            name: "Macaxeira cozida (150g)",
-            qtyG: 150,
-            kcal: 187,
-            proteinG: 2,
-            carbG: 45,
+            name: "Soja texturizada hidratada (60g — 20 g seca), refogada junto",
+            qtyG: 60,
+            kcal: 66,
+            proteinG: 10,
+            carbG: 6,
             fatG: 0,
-            preparation: "Do lote de domingo. Esquenta 2 min e tempera com o azeite.",
+            preparation: "Já vai misturada no refogado do frango no domingo — no prato vira uma coisa só.",
+          },
+          {
+            name: "Macaxeira cozida (170g)",
+            qtyG: 170,
+            kcal: 212,
+            proteinG: 2,
+            carbG: 51,
+            fatG: 0,
+            preparation: "Do lote de domingo. Esquenta 2 min e tempera com o óleo.",
           },
           {
             name: "Legumes refogados — beterraba & quiabo (150g)",
@@ -532,7 +565,7 @@ const SLOTS: MealSlot[] = [
               "A beterraba já sai cozida do lote: corta em cubos. O quiabo em rodelas, refogado em fogo médio com alho ~8 min. Junta a beterraba no fim, só pra aquecer.",
           },
           {
-            name: "Azeite (1 cs)",
+            name: "Óleo ou azeite (1 cs)",
             qtyG: 12,
             kcal: 100,
             proteinG: 0,
@@ -542,52 +575,63 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Peito de frango", qty: 230, unit: "g", category: "proteina" },
-          { item: "Macaxeira (aipim)", qty: 150, unit: "g", category: "carboidrato" },
+          { item: "Peito de frango", qty: 150, unit: "g", category: "proteina" },
+          { item: "Soja texturizada (PTS)", qty: 20, unit: "g", category: "proteina" },
+          { item: "Macaxeira (aipim)", qty: 170, unit: "g", category: "carboidrato" },
           { item: "Beterraba", qty: 120, unit: "g", category: "hortifruti" },
           { item: "Quiabo", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 50, unit: "g", category: "hortifruti" },
           { item: "Alho", qty: 10, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 50, unit: "g", category: "hortifruti" },
-          { item: "Azeite", qty: 12, unit: "ml", category: "gordura" },
+          { item: "Óleo de soja (ou canola)", qty: 12, unit: "ml", category: "gordura" },
         ],
       },
       {
         id: "jantar-2",
         // Terça e quinta, os dias de braço e costas. Decisão dela: sempre a
-        // sardinha de lata. Ômega-3 barato e o cálcio da espinha.
+        // sardinha de lata. Ômega-3 barato e o cálcio da espinha. Uma lata só
+        // desde 2026-11-11 (custo); o ovo completa a proteína.
         dias: [2, 4],
-        label: "Opção 2 · Sardinha de lata acebolada, arroz & feijão",
+        label: "Opção 2 · Sardinha de lata com ovo, arroz & feijão",
         effort: "5-min",
         foods: [
           {
-            // 2 latas em óleo, escorridas (~84 g drenados cada). Valores de
-            // sardinha em óleo drenada; variam um pouco por marca.
-            name: "Sardinha em óleo (2 latas escorridas, ~170g)",
-            qtyG: 170,
-            kcal: 354,
-            proteinG: 42,
+            // 1 lata em óleo, escorrida (~84 g drenados). Valores de sardinha
+            // em óleo drenada; variam um pouco por marca.
+            name: "Sardinha em óleo (1 lata escorrida, ~84g)",
+            qtyG: 84,
+            kcal: 177,
+            proteinG: 21,
             carbG: 0,
-            fatG: 20,
+            fatG: 10,
             preparation:
-              "Escorre BEM o óleo das 2 latas. Frigideira quente sem óleo: cebola e tomate em rodelas por 3 min, junta a sardinha e deixa 2 min só pra aquecer. Limão e coentro no fim. Sem sal — a lata já tem. Os ~170 g são o peso depois de escorrer: confira o peso drenado no rótulo (~84 g por lata).",
+              "Escorre BEM o óleo da lata. Frigideira quente sem óleo: cebola e tomate em rodelas por 3 min, junta a sardinha e deixa 2 min só pra aquecer. Limão e coentro no fim. Sem sal — a lata já tem. Os ~84 g são o peso depois de escorrer.",
           },
           {
-            name: "Arroz cozido (160g)",
-            qtyG: 160,
-            kcal: 173,
-            proteinG: 3,
-            carbG: 37,
+            name: "Ovos mexidos na mesma frigideira (3 un)",
+            qtyG: 150,
+            kcal: 216,
+            proteinG: 19,
+            carbG: 1,
+            fatG: 15,
+            preparation: "Depois da sardinha, quebra os ovos na mesma frigideira e mexe 2 min — sem óleo extra, o da sardinha basta.",
+          },
+          {
+            name: "Arroz cozido (120g)",
+            qtyG: 120,
+            kcal: 130,
+            proteinG: 2,
+            carbG: 28,
             fatG: 0,
             preparation: "Do lote de domingo — 2 min no micro-ondas.",
           },
           {
-            name: "Feijão de corda / macassar (meia concha, 50g cozido)",
-            qtyG: 50,
-            kcal: 48,
-            proteinG: 4,
-            carbG: 8,
-            fatG: 0,
+            name: "Feijão de corda / macassar (1 concha, 100g cozido)",
+            qtyG: 100,
+            kcal: 95,
+            proteinG: 7,
+            carbG: 16,
+            fatG: 1,
             preparation: "Do lote de domingo — esquenta junto com o arroz.",
           },
           {
@@ -601,9 +645,10 @@ const SLOTS: MealSlot[] = [
           },
         ],
         ingredients: [
-          { item: "Sardinha em óleo (lata)", qty: 2, unit: "un", category: "proteina" },
-          { item: "Arroz", qty: 85, unit: "g", category: "carboidrato" },
-          { item: "Feijão de corda (macassar)", qty: 25, unit: "g", category: "carboidrato" },
+          { item: "Sardinha em óleo (lata)", qty: 1, unit: "un", category: "proteina" },
+          { item: "Ovos", qty: 3, unit: "un", category: "proteina" },
+          { item: "Arroz", qty: 64, unit: "g", category: "carboidrato" },
+          { item: "Feijão de corda (macassar)", qty: 50, unit: "g", category: "carboidrato" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
           { item: "Cebola", qty: 70, unit: "g", category: "hortifruti" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
@@ -653,7 +698,7 @@ const SLOTS: MealSlot[] = [
             preparation: "Alface e tomate com limão e sal.",
           },
           {
-            name: "Azeite (1/2 cs)",
+            name: "Óleo ou azeite (1/2 cs)",
             qtyG: 6,
             kcal: 53,
             proteinG: 0,
@@ -668,7 +713,7 @@ const SLOTS: MealSlot[] = [
           { item: "Flocão de milho (cuscuz)", qty: 34, unit: "g", category: "carboidrato" },
           { item: "Alface", qty: 80, unit: "g", category: "hortifruti" },
           { item: "Tomate", qty: 80, unit: "g", category: "hortifruti" },
-          { item: "Azeite", qty: 6, unit: "ml", category: "gordura" },
+          { item: "Óleo de soja (ou canola)", qty: 6, unit: "ml", category: "gordura" },
           { item: "Limão", qty: 1, unit: "un", category: "hortifruti" },
         ],
       },
@@ -681,14 +726,13 @@ export const INITIAL_PLAN: Omit<MealPlan, "id"> = {
   goal: "deficit",
   kcalDaily: 2200,
   // Batem com a soma real da variante 0 (ver tests/data/meal-plan-coerencia.test.ts):
-  // 2216 kcal, 193g proteína, 231g carbo, 55g gordura (cardápio refeito em
-  // 2026-11-10: proteína desceu de 211 pra perto do objetivo e o carboidrato
-  // foi pro lanche pré-treino). Histórico: a queda de 2300 para
-  // 2200 (2026-09-23) saiu do carboidrato do lanche e do jantar — proteína e
-  // gordura ficaram onde estavam.
-  proteinG: 193,
-  carbG: 231,
-  fatG: 55,
+  // 2224 kcal, 169g proteína, 253g carbo, 56g gordura (cardápio econômico de
+  // 2026-11-11: sem whey, iogurte e patinho; antes 193 g de proteína).
+  // Histórico: 2026-11-10 o carboidrato foi pro lanche pré-treino; 2026-09-23
+  // a queda de 2300 para 2200 saiu do carboidrato do lanche e do jantar.
+  proteinG: 169,
+  carbG: 253,
+  fatG: 56,
   slots: SLOTS,
   defaultMeals: deriveDefaultMeals(SLOTS),
 };
@@ -802,13 +846,13 @@ export const MAINTENANCE_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · manutenção (2750 kcal)",
   goal: "manutencao",
   kcalDaily: 2750,
-  // Soma real da variante 0 com o boost: 2766 kcal, 206g proteína, 302g carbo,
-  // 81g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
+  // Soma real da variante 0 com o boost: 2774 kcal, 182g proteína, 324g carbo,
+  // 80g gordura. A gordura não é sobra de conta: abaixo de ~20% das kcal ela
   // derruba testosterona, e é a testosterona que sustenta metade dos objetivos
   // desta fase (ver a frente 2).
-  proteinG: 206,
-  carbG: 302,
-  fatG: 79,
+  proteinG: 182,
+  carbG: 324,
+  fatG: 80,
   slots: MAINTENANCE_SLOTS,
   defaultMeals: deriveDefaultMeals(MAINTENANCE_SLOTS),
 };
@@ -817,11 +861,11 @@ export const SURPLUS_PLAN: Omit<MealPlan, "id"> = {
   name: "Plano · superávit leve (2950 kcal)",
   goal: "superavit",
   kcalDaily: 2950,
-  // Soma real da variante 0 com o boost: 2966 kcal, 232g proteína, 331g carbo,
-  // 77g gordura.
-  proteinG: 232,
-  carbG: 331,
-  fatG: 77,
+  // Soma real da variante 0 com o boost: 2974 kcal, 208g proteína, 353g carbo,
+  // 78g gordura.
+  proteinG: 208,
+  carbG: 353,
+  fatG: 78,
   slots: SURPLUS_SLOTS,
   defaultMeals: deriveDefaultMeals(SURPLUS_SLOTS),
 };

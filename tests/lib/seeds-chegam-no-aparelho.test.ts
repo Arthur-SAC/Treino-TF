@@ -71,7 +71,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // vivia privada dentro de path-seed.ts, e nada aqui alcançava. Foi a mesma
   // configuração que deixou seedStyle rodar sem versão nenhuma por meses.
   it("MEAL_PLAN_VERSION é a versão revisada nesta rodada", () => {
-    expect(MEAL_PLAN_VERSION).toBe(17);
+    expect(MEAL_PLAN_VERSION).toBe(18);
   });
 
   // A versão do estilo também vivia privada dentro do módulo — era o último
@@ -462,10 +462,10 @@ describe("plano alimentar", () => {
     const manutencao = (await db.mealPlans.toArray()).find((p) => p.goal === "manutencao")!;
     expect(manutencao.kcalDaily).toBe(2750);
     expect(manutencao.name).toContain("2750");
-    // v17: o cardápio montado por dia chega junto, com os dias de cada opção.
+    // v18: o cardápio econômico chega junto, com os dias de cada opção.
     const deficitNovo = (await db.mealPlans.toArray()).find((p) => p.goal === "deficit")!;
     const almoco = deficitNovo.slots.find((s) => s.mealType === "almoco")!;
-    expect(almoco.variants.find((v) => /patinho/i.test(v.label))?.dias).toEqual([1, 3, 5]);
+    expect(almoco.variants.find((v) => /carne mo[íi]da/i.test(v.label))?.dias).toEqual([1, 3, 5]);
     const jantar = deficitNovo.slots.find((s) => s.mealType === "jantar")!;
     expect(jantar.variants.find((v) => /sardinha/i.test(v.label))?.dias).toEqual([2, 4]);
 
@@ -475,7 +475,7 @@ describe("plano alimentar", () => {
       p.slots.flatMap((s) => s.variants.flatMap((v) => v.foods.map((f) => f.name))),
     );
     expect(nomes.filter((n) => /peito de peru/i.test(n))).toEqual([]);
-    expect(nomes.some((n) => /patê de atum/i.test(n))).toBe(true);
+    expect(nomes.some((n) => /soja texturizada/i.test(n))).toBe(true);
   });
   it("o déficit a 2.200 chega em quem estava com o plano de 2.300", async () => {
     await db.settings.put({ key: "pathSeeded", value: true });

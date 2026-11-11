@@ -29,7 +29,7 @@ import { ALL_MEAL_PLANS, INITIAL_PLAN } from "../data/meal-plan-seed";
 // v16: macros declarados de manutenção e superávit voltam a bater com a comida (eram os de 3.000/3.300).
 // v17: cardápio refeito pelo objetivo e montado por dia (`dias`): proteína ~193, lanche pré-treino maior,
 //      patinho seg/qua/sex, sardinha de lata ter/qui, fruta com vitamina C no almoço (2026-11-10).
-export const MEAL_PLAN_VERSION = 17;
+export const MEAL_PLAN_VERSION = 18; // v18 (2026-11-11): cardápio econômico — sem whey, iogurte e patinho
 // v8: o marco da fase 1 passou a citar a meta de CONSUMO (2.200), não um número solto.
 // v9: os meses e pesos dos marcos saem das fases (entrega 2). A regravação
 // reancora as datas dos marcos não concluídos no dia da atualização — o que

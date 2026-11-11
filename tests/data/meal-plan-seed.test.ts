@@ -5,7 +5,9 @@ describe("INITIAL_PLAN", () => {
   it("é um plano de déficit calibrado", () => {
     expect(INITIAL_PLAN.goal).toBe("deficit");
     expect(INITIAL_PLAN.kcalDaily).toBe(2200);
-    expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(175);
+    // Cardápio econômico (2026-11-11): acima do alvo de 150-160, sem a folga
+    // de ~190 que custava whey e iogurte.
+    expect(INITIAL_PLAN.proteinG).toBeGreaterThanOrEqual(160);
   });
 
   it("tem 4 períodos, cada um com a contagem exata de variantes esperada (jantar 3, os demais 2), todas com ingredientes", () => {
@@ -24,7 +26,7 @@ describe("INITIAL_PLAN", () => {
     }
   });
 
-  it("a variante 0 de cada período soma ~2200 kcal e ~190g proteína no dia", () => {
+  it("a variante 0 de cada período soma ~2200 kcal e ao menos 160g de proteína no dia", () => {
     let kcal = 0;
     let protein = 0;
     for (const slot of INITIAL_PLAN.slots) {
@@ -36,7 +38,7 @@ describe("INITIAL_PLAN", () => {
     // Mesma tolerância de 5% usada em tests/data/meal-plan-coerencia.test.ts.
     expect(kcal).toBeGreaterThanOrEqual(2090);
     expect(kcal).toBeLessThanOrEqual(2310);
-    expect(protein).toBeGreaterThanOrEqual(175);
+    expect(protein).toBeGreaterThanOrEqual(160);
   });
 
   // As três opções do lanche têm que ser intercambiáveis: escolher a 2 em vez
@@ -115,16 +117,24 @@ describe("INITIAL_PLAN", () => {
     expect(furos).toEqual([]);
   });
 
-  it("a semana respeita os limites: patinho até 3x, sardinha ao menos 2x, atum sem dia fixo", () => {
+  it("a semana respeita os limites: carne vermelha até 3x, sardinha ao menos 2x, atum sem dia fixo", () => {
     const todas = INITIAL_PLAN.slots.flatMap((s) => s.variants);
     const dias = (re: RegExp) => todas.filter((v) => re.test(v.label)).reduce((n, v) => n + (v.dias?.length ?? 0), 0);
-    expect(dias(/patinho/i)).toBeLessThanOrEqual(3);
+    expect(dias(/carne mo[íi]da|patinho/i)).toBeLessThanOrEqual(3);
     expect(dias(/sardinha/i)).toBeGreaterThanOrEqual(2);
     expect(dias(/atum/i)).toBe(0);
   });
 
-  it("patinho nos dias de glúteo (seg, qua, sex)", () => {
+  it("carne moída com soja nos dias de perna (seg, qua, sex)", () => {
     const almoco = INITIAL_PLAN.slots.find((s) => s.mealType === "almoco")!;
-    expect(almoco.variants.find((v) => /patinho/i.test(v.label))?.dias).toEqual([1, 3, 5]);
+    expect(almoco.variants.find((v) => /carne mo[íi]da/i.test(v.label))?.dias).toEqual([1, 3, 5]);
+  });
+
+  // Cardápio econômico (2026-11-11), pedido dela por dinheiro: whey e iogurte
+  // eram os itens mais caros por grama de proteína. Se voltarem, que seja por
+  // decisão dela, não por descuido.
+  it("o déficit não depende de whey nem de iogurte", () => {
+    const itens = INITIAL_PLAN.slots.flatMap((s) => s.variants.flatMap((v) => v.ingredients.map((i) => i.item)));
+    expect(itens.filter((i) => /whey|iogurte/i.test(i))).toEqual([]);
   });
 });

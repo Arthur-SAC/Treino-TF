@@ -30,7 +30,7 @@ describe("seedPath", () => {
     await seedPath();
     const plan = (await db.mealPlans.toArray())[0];
     expect(plan.kcalDaily).toBe(2200);
-    expect(plan.proteinG).toBeGreaterThanOrEqual(175);
+    expect(plan.proteinG).toBeGreaterThanOrEqual(160);
     expect(plan.slots).toHaveLength(4);
     // Desde 2026-11-10: duas opções de café — a do dia e uma troca livre.
     expect(plan.slots[0].variants.length).toBe(2);

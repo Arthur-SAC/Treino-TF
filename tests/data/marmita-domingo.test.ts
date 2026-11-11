@@ -49,6 +49,6 @@ describe("o roteiro de domingo cabe no domingo dela", () => {
     // e patinho. Ovo saiu (o café é mexido na hora) e atum também (o lanche
     // do dia é o iogurte; o patê virou troca livre, feito na véspera).
     expect(texto).toMatch(/frango/);
-    expect(texto).toMatch(/patinho/);
+    expect(texto).toMatch(/carne moída/);
   });
 });

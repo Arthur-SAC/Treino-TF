@@ -40,8 +40,8 @@ describe("lista de compras da semana", () => {
   it("traz os ingredientes do cardápio novo", () => {
     const itens = buildWeeklyShoppingList(plano).map((i) => i.item.toLowerCase());
     expect(itens.some((i) => i.includes("sardinha"))).toBe(true);
-    expect(itens.some((i) => i.includes("patinho"))).toBe(true);
-    expect(itens.some((i) => i.includes("acerola"))).toBe(true);
+    expect(itens.some((i) => i.includes("carne moída de acém"))).toBe(true);
+    expect(itens.some((i) => i.includes("vitamina c"))).toBe(true);
     expect(itens.some((i) => i.includes("feijão de corda"))).toBe(true);
   });
 
@@ -50,9 +50,9 @@ describe("lista de compras da semana", () => {
   it("conta cada opção pelos dias em que ela entra na semana", () => {
     const semana = buildWeeklyShoppingList(plano);
     const qtd = (nome: string) => semana.find((i) => i.item === nome)?.qtyExata;
-    expect(qtd("Carne moída patinho")).toBe(195 * 3); // seg, qua, sex
-    expect(qtd("Sardinha em óleo (lata)")).toBe(4); // 2 latas × ter, qui
-    expect(qtd("Ovos")).toBe(3 * 7); // café 1 todo dia; omelete e café 2 são troca livre
+    expect(qtd("Carne moída de acém")).toBe(105 * 3); // seg, qua, sex
+    expect(qtd("Sardinha em óleo (lata)")).toBe(2); // 1 lata × ter, qui
+    expect(qtd("Ovos")).toBe(3 * 7 + 3 * 2); // café 1 todo dia + jantar de sardinha; omelete e café 2 são troca livre
     expect(semana.find((i) => /atum/i.test(i.item))).toBeUndefined();
   });
 

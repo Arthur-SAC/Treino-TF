@@ -199,9 +199,9 @@ export function MealPlanView() {
         </p>
         <p className="text-muted text-xs leading-relaxed mt-2">
           <span className="text-nude-warm">A semana já vem montada:</span> cada opção diz os dias em que
-          entra, e o Hoje mostra a do dia. O patinho fica nos almoços de segunda, quarta e sexta (os dias de
-          glúteo, com mais carboidrato e a beterraba), e a sardinha de lata no jantar de terça e quinta — é o
-          único peixe da semana. As opções sem dia fixo são troca livre, quando enjoar.
+          entra, e o Hoje mostra a do dia. A carne moída com soja fica nos almoços de segunda, quarta e sexta
+          (os dias de perna, com mais carboidrato e a beterraba), e a sardinha de lata no jantar de terça e
+          quinta — é o único peixe da semana. As opções sem dia fixo são troca livre, quando enjoar.
         </p>
       </div>
 

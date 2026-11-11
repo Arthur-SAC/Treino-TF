@@ -60,7 +60,7 @@ describe("a lista de compras acompanha o cardápio de Aracaju", () => {
     const lista = buildShoppingList({ ...INITIAL_PLAN, id: 1 } as MealPlan).map((i) =>
       i.item.toLowerCase(),
     );
-    expect(lista.some((i) => i.includes("atum"))).toBe(true);
+    expect(lista.some((i) => i.includes("soja texturizada"))).toBe(true);
     expect(lista.some((i) => i.includes("castanha-do-pará"))).toBe(true);
     expect(lista.some((i) => i.includes("sardinha"))).toBe(true);
     expect(lista.some((i) => i.includes("feijão de corda"))).toBe(true);

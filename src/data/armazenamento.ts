@@ -68,6 +68,16 @@ export const ARMAZENAMENTO: Record<string, string> = {
     "Com casca escurece em 2 a 3 dias. Descasca no dia da compra: em pedaços, congela crua no saco (meses) e cozinha direto do congelado, ou deixa coberta de água na geladeira por 3 dias. Cozida: 3 a 4 dias na geladeira.",
   "Batata doce":
     "Fora da geladeira, em lugar seco e escuro: 1 a 2 semanas. Cozida: 4 dias na geladeira.",
+  "Soja texturizada (PTS)":
+    "Seca dura meses: pote fechado no armário, longe da umidade. Hidratada e refogada, vale o mesmo que a carne: 3 a 4 dias na geladeira ou 3 meses no congelador.",
+  "Carne moída de acém":
+    "Moída estraga mais rápido que a peça: cru, só 1 dia na geladeira. Pede pra moer na hora e, se não cozinhar no mesmo dia, congela achatada no saco (descongela rápido). Refogada: 3 a 4 dias na geladeira.",
+  "Óleo de soja (ou canola)":
+    "Armário, longe do fogão, tampado. Óleo usado de fritura não volta pro frasco.",
+  "Pão francês":
+    "No calor endurece em 1 dia. Compra a semana, corta ao meio e congela no saco: 2 min na chapa ou no forno e volta crocante.",
+  "Fruta com vitamina C (goiaba, caju, acerola ou laranja)":
+    "Goiaba e caju maduros duram 2 a 3 dias, até na geladeira; laranja dura 2 semanas na geladeira. Compra a semana assim: laranja pros últimos dias, a fruta mole pros primeiros. Acerola: lava, seca e congela inteira.",
   "Molho de tomate":
     "Aberto, passa pra pote de vidro na geladeira (5 dias) ou congela em forminha de gelo.",
 };
