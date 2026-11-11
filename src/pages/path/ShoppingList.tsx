@@ -3,6 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import type { IngredientCategory } from "../../lib/db";
 import { buildWeeklyShoppingList, PORCOES_POR_SEMANA } from "../../lib/shopping-list";
 import { getActiveMealPlan } from "../../lib/meal-plan";
+import { comoGuardar } from "../../data/armazenamento";
 
 const CATEGORY_LABEL: Record<IngredientCategory, string> = {
   proteina: "Proteínas",
@@ -50,17 +51,28 @@ export function ShoppingList() {
             <div key={cat} className="card">
               <h2 className="text-nude-warm font-medium mb-2">{CATEGORY_LABEL[cat]}</h2>
               <ul className="space-y-2 text-sm">
-                {catItems.map((i) => (
-                  <li key={`${i.item}-${i.unit}`} className="flex justify-between gap-2">
-                    <span className="text-nude-warm">{i.item}</span>
-                    <span className="text-muted text-xs whitespace-nowrap">
-                      {i.qty} {i.unit}
-                      {i.qty !== i.qtyExata && (
-                        <span className="text-nude ml-1">(usa {i.qtyExata})</span>
+                {catItems.map((i) => {
+                  const guardar = comoGuardar(i.item);
+                  return (
+                    <li key={`${i.item}-${i.unit}`}>
+                      <div className="flex justify-between gap-2">
+                        <span className="text-nude-warm">{i.item}</span>
+                        <span className="text-muted text-xs whitespace-nowrap">
+                          {i.qty} {i.unit}
+                          {i.qty !== i.qtyExata && (
+                            <span className="text-nude ml-1">(usa {i.qtyExata})</span>
+                          )}
+                        </span>
+                      </div>
+                      {guardar && (
+                        <details className="mt-0.5">
+                          <summary className="text-xs text-muted cursor-pointer">Como guardar</summary>
+                          <p className="text-xs text-muted mt-1 leading-relaxed">{guardar}</p>
+                        </details>
                       )}
-                    </span>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           );
