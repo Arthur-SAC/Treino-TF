@@ -29,7 +29,10 @@ import { SEQUENCES } from "../data/sequences-seed";
 // v15: `manha-curta-vacuum`, o nível 1 do alongamento da manhã (progressão por
 // desbloqueio, 2026-11-09). Sem o bump, o Hoje aponta pra uma sequência que
 // não existe no aparelho dela.
-export const MOVEMENT_VERSION = 15;
+// v16: a base da dança (báscula, lado a lado, 8, onda, peso no ritmo) nas
+// TRÊS fases da noite, com nome de mobilidade (2026-11-17): ela não tem lugar
+// seguro pra dançar, e em casa isso passa por alongamento.
+export const MOVEMENT_VERSION = 16;
 
 export async function seedMovement(): Promise<void> {
   const seeded = await db.settings.get("movementSeeded");

@@ -416,6 +416,97 @@ const NIVELAR: Record<string, Execucao> = {
   "Flexor do quadril ajoelhada": NIVELAR_FLEXOR,
 };
 
+// A base da dança disfarçada de mobilidade (2026-11-17), nas três fases da
+// noite com o mesmo texto. Movimento pequeno e solto: é coordenação, não força.
+const BASE_EM_PE = "Em pé, pés na largura do quadril, joelhos soltos (nunca travados), mãos na cintura.";
+
+const GINGADO: Record<string, Execucao> = {
+  "Báscula da pelve em pé": {
+    posicao: BASE_EM_PE,
+    movimento: [
+      "Leva só a pelve pra frente, como se o osso do púbis subisse um pouco.",
+      "Volta e leva a pelve pra trás, o bumbum saindo um pouco.",
+      "Começa devagar, 8 de cada, e depois deixa virar um balanço contínuo até completar o tempo.",
+    ],
+    ondeSentir: "Parte baixa da barriga e bumbum se revezando; a lombar só acompanha.",
+    erradoSe: [
+      "Os ombros vão e voltam junto → mão no peito; ele fica parado e só a pelve mexe.",
+      "Puxa ou dói na lombar → movimento menor e joelhos mais soltos; para se doer.",
+    ],
+    renderMais: [
+      "Solta o ar quando a pelve vai pra frente: o movimento fica mais solto.",
+    ],
+  },
+  "Pelve de um lado pro outro": {
+    posicao: BASE_EM_PE,
+    movimento: [
+      "Leva só o quadril pra direita, como se fosse encostar numa parede do lado.",
+      "Passa pelo meio e leva pra esquerda.",
+      "Começa marcando cada lado e depois deixa virar um balanço contínuo.",
+    ],
+    ondeSentir: "Lateral da cintura e do quadril, um lado de cada vez.",
+    erradoSe: [
+      "Os ombros balançam junto → imagina um copo de água em cima da cabeça.",
+      "Um joelho trava → os dois ficam sempre um pouco dobrados.",
+      "Dói no quadril ou na lombar → movimento menor; para se doer.",
+    ],
+    renderMais: [
+      "O lado da pelve que sobe fica mais alto quando o joelho de baixo dobra um pouco mais.",
+    ],
+  },
+  "Oito com o quadril": {
+    posicao: BASE_EM_PE,
+    movimento: [
+      "Junta o frente e trás com o lado a lado: o quadril vai pra direita, passa pela frente, vai pra esquerda e volta por trás.",
+      "O desenho é um 8 deitado no chão, bem devagar no começo.",
+      "30 segundos num sentido, 30 no outro.",
+    ],
+    ondeSentir: "Cintura inteira trabalhando em volta, com a lombar solta.",
+    erradoSe: [
+      "Vira um círculo em vez de 8 → para no meio e marca a troca de lado antes de seguir.",
+      "O tronco gira junto → olha um ponto fixo à frente; o peito aponta pra ele o tempo todo.",
+      "Dói na lombar → desenho menor; para se doer.",
+    ],
+    renderMais: [
+      "Depois de pegar o desenho, deixa os joelhos dobrarem um de cada vez acompanhando o 8.",
+    ],
+  },
+  "Onda da coluna": {
+    posicao: "Em pé, pés na largura do quadril, joelhos soltos, braços soltos do lado do corpo.",
+    movimento: [
+      "Leva o peito pra frente, como se alguém puxasse por um fio no meio do peito.",
+      "Deixa o movimento descer: a barriga vai pra frente e o peito volta, depois a pelve vai pra frente e a barriga volta.",
+      "Termina com os joelhos dobrando um pouco e recomeça pelo peito. Bem devagar, 6 a 8 ondas.",
+    ],
+    ondeSentir: "A coluna mexendo por partes, de cima pra baixo, como uma onda.",
+    erradoSe: [
+      "O corpo inteiro vai junto como uma tábua → faz uma parte de cada vez, até separar.",
+      "Joga a cabeça pra trás → a cabeça acompanha o peito, sem liderar.",
+      "Dói nas costas → onda menor; para se doer.",
+    ],
+    renderMais: [
+      "Olha num espelho de lado quando puder: a onda aparece nítida no reflexo.",
+    ],
+  },
+  "Peso de um pé pro outro no ritmo": {
+    posicao: "Em pé, pés um pouco mais afastados que o quadril, joelhos soltos, uma música no fone.",
+    movimento: [
+      "No tempo da música, passa o peso todo pro pé direito, deixando o joelho esquerdo dobrar e o quadril ir pra direita.",
+      "No próximo tempo, passa o peso pro pé esquerdo, com o quadril indo junto.",
+      "Os pés não saem do chão; quem anda é o peso.",
+    ],
+    ondeSentir: "O quadril balançando sozinho a cada troca de pé.",
+    erradoSe: [
+      "O tronco tomba pro lado → o peito fica no meio; quem vai pro lado é o quadril.",
+      "Perde o ritmo → volta pra metade da velocidade, um tempo sim e um não.",
+      "Dói no joelho → menos dobra; para se doer.",
+    ],
+    renderMais: [
+      "Escolhe uma música de que você gosta: o corpo solta mais.",
+    ],
+  },
+};
+
 const AQUECIMENTO_NOITE: Execucao = {
   posicao: "Em pé, ao lado de uma parede ou de um móvel firme.",
   movimento: [
@@ -507,6 +598,7 @@ const NOITE_FASE_1: Record<string, Execucao> = {
     erradoSe: ["O tronco gira junto → peito parado, mexe só da cintura pra baixo."],
     renderMais: ["Círculo igual dos dois lados, tamanho e velocidade."],
   },
+  ...GINGADO,
   ...NIVELAR,
   "Posição do gafanhoto (alongamento adutor)": {
     posicao: "Em pé, pés bem afastados, pontas pra frente, mãos nas coxas.",
@@ -602,6 +694,7 @@ const NOITE_FASE_1: Record<string, Execucao> = {
 
 const NOITE_FASE_2: Record<string, Execucao> = {
   Aquecimento: AQUECIMENTO_NOITE,
+  ...GINGADO,
   ...NIVELAR,
   "Joelho ao peito profundo": JOELHO_POR_FORA_DO_OMBRO("60 segundos"),
   "Rotação interna 90/90": GIRO_SOBRE_A_PERNA_DE_TRAS("45 segundos"),
@@ -629,6 +722,7 @@ const NOITE_FASE_2: Record<string, Execucao> = {
 
 const NOITE_FASE_3: Record<string, Execucao> = {
   Aquecimento: AQUECIMENTO_NOITE,
+  ...GINGADO,
   ...NIVELAR,
   "Flexão profunda sustentada": {
     ...JOELHO_POR_FORA_DO_OMBRO("2 minutos"),
