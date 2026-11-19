@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
 import type { LadoFraco } from "./lado-fraco";
+import { FASES_ACEITAS_PADRAO, type FasesAceitas } from "./ofertas";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -88,6 +89,10 @@ export interface Settings {
   /** Conquistas cuja placa ela já viu (ids como "cintura-88"). Gravado antes
    *  de mostrar: aparece uma vez só. */
   conquistasVistas: string[];
+  /** Ofertas adiadas ("Agora não"): id da oferta -> ISO da recusa. Espera 7 dias. */
+  ofertasRecusadas: Record<string, string>;
+  /** Maior fase aceita por trilha (1-based). A migração da Task 6 põe a atual. */
+  fasesAceitas: FasesAceitas;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -181,6 +186,8 @@ export const DEFAULTS: Settings = {
   // Vazio: na chegada da progressão tudo fora do núcleo começa trancado.
   desbloqueios: {},
   conquistasVistas: [],
+  ofertasRecusadas: {},
+  fasesAceitas: { ...FASES_ACEITAS_PADRAO },
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

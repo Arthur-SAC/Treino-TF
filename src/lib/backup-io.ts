@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { hojeISO } from "./today-date";
 import { seedDatabase } from "./seed";
+import { FASES_ACEITAS_PADRAO, unirFasesAceitas, unirRecusadas, type FasesAceitas } from "./ofertas";
 
 // O que entra no backup e como volta. Saiu de Settings.tsx (auditoria de
 // 2026-09-23) porque o backup deixava de fora as configurações — ciclo atual,
@@ -149,11 +150,22 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     // bulkPut e funde depois.
     const desbloqueiosAqui = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
     const vistasAqui = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
+    const recusadasAqui = (await db.settings.get("ofertasRecusadas"))?.value as Record<string, string> | undefined;
+    const fasesAqui = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
     await db.settings.bulkPut((p.settings ?? []) as never);
     const desbloqueiosBackup = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
     const vistasBackup = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
     if (desbloqueiosAqui || desbloqueiosBackup) {
       await db.settings.put({ key: "desbloqueios", value: unirDesbloqueios(desbloqueiosAqui ?? {}, desbloqueiosBackup ?? {}) });
+    }
+    // Recusa vale a mais recente; fase aceita vale a maior (save point também).
+    const recusadasBackup = (await db.settings.get("ofertasRecusadas"))?.value as Record<string, string> | undefined;
+    const fasesBackup = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
+    if (recusadasAqui || recusadasBackup) {
+      await db.settings.put({ key: "ofertasRecusadas", value: unirRecusadas(recusadasAqui ?? {}, recusadasBackup ?? {}) });
+    }
+    if (fasesAqui || fasesBackup) {
+      await db.settings.put({ key: "fasesAceitas", value: unirFasesAceitas(fasesAqui ?? FASES_ACEITAS_PADRAO, fasesBackup ?? FASES_ACEITAS_PADRAO) });
     }
     if (vistasAqui || vistasBackup) {
       await db.settings.put({ key: "conquistasVistas", value: [...new Set([...(vistasAqui ?? []), ...(vistasBackup ?? [])])] });
