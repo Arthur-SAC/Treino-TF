@@ -6,6 +6,7 @@ import { useResolvedGoal } from "./useResolvedGoal";
 import { FASES } from "../lib/objetivo";
 import { waistGuard } from "../lib/silhouette";
 import { waistTrend, hipTrend } from "../lib/measurement-trend";
+import { cargaPassouDaSugestao } from "../lib/carga-ciclo";
 import { recommendCycleChange, type CycleAdvice } from "../lib/cycle-advisor";
 
 export function useCycleAdvice(): CycleAdvice | null {
@@ -17,8 +18,23 @@ export function useCycleAdvice(): CycleAdvice | null {
   const goal = useResolvedGoal();
   const totalSessions = useLiveQuery(() => db.workoutSessions.count(), []);
   const measurements = useLiveQuery(() => db.measurements.orderBy("date").toArray(), []);
+  // Só a Entrada usa a carga; nos outros ciclos nem consulta.
+  const cargaAcima = useLiveQuery(async () => {
+    if (!activeCycle.startsWith("entrada-")) return false;
+    const [sessions, exercises, templates] = await Promise.all([
+      db.workoutSessions.toArray(),
+      db.exercises.toArray(),
+      db.workoutTemplates.toArray(),
+    ]);
+    return cargaPassouDaSugestao(
+      sessions,
+      new Map(exercises.map((e) => [e.id, e])),
+      new Map(templates.map((t) => [t.id, t])),
+      sessions.length - cycleStart,
+    );
+  }, [activeCycle, cycleStart]);
 
-  if (totalSessions === undefined || measurements === undefined) return null;
+  if (totalSessions === undefined || measurements === undefined || cargaAcima === undefined) return null;
 
   const sessionsInCycle = totalSessions - cycleStart;
   const threshold = CYCLES.find((c) => c.id === activeCycle)?.threshold ?? Number.POSITIVE_INFINITY;
@@ -38,5 +54,6 @@ export function useCycleAdvice(): CycleAdvice | null {
     waistTrend: waistTrend(measurements),
     hipTrend: hipTrend(measurements),
     waistGuardTriggered: guard.triggered,
+    cargaAcimaDaSugerida: cargaAcima,
   });
 }

@@ -23,6 +23,8 @@ export interface CycleAdviceInput {
   waistTrend: Trend;
   hipTrend: Trend;
   waistGuardTriggered: boolean;
+  /** Na última sessão do ciclo, todo exercício com carga passou da sugestão do app. */
+  cargaAcimaDaSugerida?: boolean;
 }
 
 export interface CycleAdvice {
@@ -35,6 +37,18 @@ export function recommendCycleChange(i: CycleAdviceInput): CycleAdvice | null {
   const to = NEXT[i.activeCycle];
   if (!to) return null;
   const floorReached = i.sessionsInCycle >= i.threshold;
+
+  if (i.activeCycle.startsWith("entrada-")) {
+    // A Entrada é rampa de exposição; quem já carrega mais que a sugestão não
+    // precisa esperar o piso de sessões.
+    if (i.cargaAcimaDaSugerida) {
+      return { recommend: true, toCycle: to, reason: "A carga que você já usa passou da que o app sugeria. Dá pra avançar de semana." };
+    }
+    if (floorReached) {
+      return { recommend: true, toCycle: to, reason: `Você completou ${i.sessionsInCycle} sessões do ciclo. Pronta pro próximo.` };
+    }
+    return null;
+  }
 
   if (i.activeCycle === "variacao") {
     // Antes pedia WHR 0,73 — o alvo do FIM da fase 2 — pra ENTRAR na fase 2:
