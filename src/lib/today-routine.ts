@@ -5,7 +5,12 @@
 import type { ModoCaminhada } from "./objetivo";
 
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
-export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare";
+export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare" | "dela";
+/** Item "dela" (spec 2026-11-19): tempo que é só dela — sem caixinha, nunca
+ *  conta em adesão, revisão nem lembrete. Quem filtra usa `ehDela`. */
+export function ehDela(i: RoutineItem): boolean {
+  return i.control === "dela";
+}
 export type RoutineLinkKey = "skincareMorning" | "skincareNight" | "workout" | "pelvic" | "flexManha" | "flexNoite" | "rebolado" | "postura";
 export type RoutineMealType = "cafe" | "almoco" | "lanche" | "jantar";
 
@@ -128,7 +133,7 @@ function manhaItems(dayOfYear: number, fimDeSemana: boolean, modo: ModoCaminhada
   if (isBarbaDay(dayOfYear)) items.push(BARBA);
   items.push(
     { id: "skincare-manha", block: "manha", label: "Skincare manhã", subtitle: "Toque pro roteiro guiado", control: "skincare", linkKey: "skincareMorning", skincareTime: "morning", defaultTime: "06:25" },
-    { id: "cafe-marmita", block: "manha", label: "Café + whey · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
+    { id: "cafe-marmita", block: "manha", label: "Café · montar marmita", subtitle: "Toque pra ver a receita · não esquece a marmita", control: "recipe", mealType: "cafe", defaultTime: "06:35" },
     CREATINA,
     { id: "sol-manha", block: "manha", label: "Sol · 10–15 min", subtitle: "Braços e pernas — a pele produz vitamina D", note: "Rosto com protetor. No fim de semana ou no almoço, sem pressa.", optional: true },
   );
@@ -165,7 +170,7 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 // Fica logo ANTES do alongamento da noite de propósito: os dois pedem o mesmo
 // chão e o mesmo momento de privacidade, então é uma ida ao chão em vez de
 // duas. O custo caro não é a duração, é começar.
-const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "A sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:20" };
+const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "A sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:05" };
 /** Uma linha por pausa, cada uma com a própria caixinha e o próprio horário.
  *
  *  Era um item só ("Micro-pausas de postura") com um contador "0 de 6" ao
@@ -314,12 +319,13 @@ function tardeSemana(modo: ModoCaminhada): RoutineItem[] {
 }
 
 /** Noite de dia útil no modo esteira: treino 17:00 → esteira 18:00 → cães 19:15
- *  → jantar 20:30 → skincare 21:00 → postura 21:15 → voz 21:30 → assoalho 21:45
- *  → alongamento 22:00 → dormir 22:30. Nada começa nos 30 min depois do jantar
- *  começar (ela está comendo). */
+ *  (até 20:15) → jantar 20:30 → bloco do app (skincare 21:00, alongamento
+ *  21:05, postura/voz/assoalho 21:05) → com ela 21:30 → leitura 22:15 → dormir
+ *  22:30. É o horário normal (jantar 20:15, app 20:45, com ela 21:15) empurrado
+ *  15 min, pra o jantar não cair antes de os cães acabarem (spec 2026-11-19). */
 const HORARIO_NOITE_ESTEIRA: Readonly<Record<string, string>> = {
-  jantar: "20:30", "skincare-noite": "21:00", postura: "21:15", voz: "21:30",
-  "assoalho-pelvico": "21:45", "alongamento-noite": "22:00",
+  jantar: "20:30", "skincare-noite": "21:00", "alongamento-noite": "21:05",
+  postura: "21:05", voz: "21:05", "assoalho-pelvico": "21:05", "com-ela": "21:30",
 };
 
 /** O horário que o Hoje mostra pra um item da noite quando o modo esteira o
@@ -330,25 +336,50 @@ export function horarioNoiteEsteira(itemId: string, dayOfWeek: number, modo: Mod
   return HORARIO_NOITE_ESTEIRA[itemId] ?? null;
 }
 
+/** Sexta e sábado à noite são dela (spec 2026-11-19): o app não põe nada além
+ *  do jantar e do sono. Também vale pros lembretes. */
+export function noiteLivre(dayOfWeek: number): boolean {
+  return dayOfWeek === 5 || dayOfWeek === 6;
+}
+
+const NOITE_LIVRE: RoutineItem = { id: "noite-livre", block: "noite", label: "Noite livre", subtitle: "Desenho, escrita, RPG ou conversa", control: "dela", defaultTime: "18:00" };
+
+/** Blocos dela da noite de segunda a quinta e domingo. Ficam fora do app. */
+const NOITE_DELA: RoutineItem[] = [
+  { id: "com-ela", block: "noite", label: "Noite livre", subtitle: "Desenho, escrita, RPG ou conversa", control: "dela", defaultTime: "21:15" },
+  { id: "leitura", block: "noite", label: "Leitura", subtitle: "Na cama, até dormir", control: "dela", defaultTime: "22:15" },
+];
+
 /** Sexta e sábado ela sai com a noiva (e domingo, de 15 em 15): o jantar
  *  lembra que existe plano pra isso, no lugar de fingir que ela janta a
  *  marmita (auditoria 2026-09-23). */
 function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
   const fora = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0;
   const diaUtil = dayOfWeek >= 1 && dayOfWeek <= 5;
-  let base = NOITE;
+  const livre = noiteLivre(dayOfWeek);
+  // Sexta e sábado: só o jantar, a noite dela e o sono.
+  const doApp = livre ? NOITE.filter((i) => i.id === "jantar" || i.id === "dormir") : NOITE;
+  const dela = livre ? [NOITE_LIVRE] : NOITE_DELA;
+  const dormir = doApp.filter((i) => i.id === "dormir");
+  const semDormir = doApp.filter((i) => i.id !== "dormir");
+  // Ordem da tela = ordem do horário: a noite livre de sexta/sábado (18:00)
+  // vem antes do jantar; nos outros dias os blocos dela vêm depois do bloco do app.
+  let base: RoutineItem[] = livre ? [...dela, ...semDormir, ...dormir] : [...semDormir, ...dela, ...dormir];
   if (modo === "esteira" && diaUtil) {
+    // Sexta: a noite livre (18:00) abre a noite, junto da esteira.
     base = [
+      ...base.filter((i) => i.id === "noite-livre"),
       noModo(CAMINHADA_TRABALHO, modo)!,
       { ...caes("semana", modo), block: "noite" },
-      ...NOITE.map((i) => (HORARIO_NOITE_ESTEIRA[i.id] ? { ...i, defaultTime: HORARIO_NOITE_ESTEIRA[i.id] } : i)),
+      ...base.filter((i) => i.id !== "noite-livre").map((i) => (HORARIO_NOITE_ESTEIRA[i.id] ? { ...i, defaultTime: HORARIO_NOITE_ESTEIRA[i.id] } : i)),
     ];
-  }
-  // Fora do modo esteira, o jantar de dia útil é às 20:00 (chega da academia,
-  // cães às 18:45); o horário de fim de semana não muda.
-  if (diaUtil && modo !== "esteira") {
+  } else if (dayOfWeek === 5) {
+    // Sexta mantém o jantar das 20:00 (chega da academia, cães às 18:45).
     base = base.map((i) => (i.id === "jantar" ? { ...i, defaultTime: "20:00" } : i));
   }
+  // Dia útil fora da sexta e domingo: o jantar é o padrão do NOITE (20:15);
+  // sábado também sai do NOITE, mas com o horário próprio abaixo.
+  if (dayOfWeek === 6) base = base.map((i) => (i.id === "jantar" ? { ...i, defaultTime: "19:30" } : i));
   if (!fora) return base;
   return base.map((i) =>
     i.id === "jantar"
@@ -358,18 +389,18 @@ function noiteDoDia(dayOfWeek: number, modo: ModoCaminhada): RoutineItem[] {
 }
 
 const NOITE: RoutineItem[] = [
-  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "19:30" },
-  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:30" },
-  // Sentar ficou nas micro-pausas; aqui é andar, 8 e gingado (decisão dela,
-  // 2026-10-02: cada prática no momento em que ela é usada). Rótulo neutro de
-  // propósito — o Hoje fica aberto em ambiente não receptivo.
-  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "20:45" },
-  { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:00" },
-  ASSOALHO,
+  { id: "jantar", block: "noite", label: "Jantar (pós-treino)", subtitle: "Toque para ver a receita — deixe pronto de manhã, decidir com fome nunca dá certo", control: "recipe", mealType: "jantar", defaultTime: "20:15" },
+  { id: "skincare-noite", block: "noite", label: "Skincare noite", subtitle: "Rosto + clareamentos num roteiro só", control: "skincare", linkKey: "skincareNight", skincareTime: "evening", defaultTime: "20:45" },
   // Mesma progressão do alongamento da manhã, trilha própria (ver
   // flex-progression.ts): a noite trabalha flexão profunda e rotação, e
   // misturar a contagem com a manhã faria uma trilha mascarar a outra.
-  { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "21:30" },
+  { id: "alongamento-noite", block: "noite", label: "Alongamento noite", subtitle: "Flexibilidade profunda de quadril", to: "/treino/movimento", linkKey: "flexNoite", defaultTime: "20:50" },
+  ASSOALHO,
+  // Sentar ficou nas micro-pausas; aqui é andar, 8 e gingado (decisão dela,
+  // 2026-10-02: cada prática no momento em que ela é usada). Rótulo neutro de
+  // propósito — o Hoje fica aberto em ambiente não receptivo.
+  { id: "postura", block: "noite", label: "Postura", subtitle: "Andar, 8 com o quadril e gingado, um por dia", to: "/treino/movimento", linkKey: "postura", defaultTime: "21:05" },
+  { id: "voz", block: "noite", label: "Voz · 5 min", subtitle: "Só melhora com frequência — igual à mobilidade", to: "/beleza/voz", defaultTime: "21:05" },
   // O alvo NÃO fica escrito aqui: quem monta o subtítulo é a tela Hoje, a
   // partir do horário do próprio item (que a usuária ajusta em /hoje/horarios).
   { id: "dormir", block: "noite", label: "Dormir", subtitle: "Meta: 7–7,5 h até as 6h · marcar registra a hora real que você deitou — sono curto sobe o cortisol e guarda gordura na barriga", defaultTime: "22:30" },

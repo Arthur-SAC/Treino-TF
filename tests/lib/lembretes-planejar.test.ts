@@ -203,9 +203,11 @@ describe("os padrões batem com os horários do Hoje", () => {
     const l = planejar(QUINTA_5H, { ...cfg, modoCaminhada: "esteira" }, vazio);
     const along = (dia: string) => doDia(l, dia).filter((x) => x.titulo === "Alongamento" && x.quando.getHours() >= 12).map((x) => hhmm(x.quando));
     const doHoje = buildDayRoutine(4, 1, undefined, "esteira").blocks.flatMap((b) => b.items).find((i) => i.id === "alongamento-noite")!.defaultTime;
-    expect(doHoje).toBe("22:00");
+    expect(doHoje).toBe("21:05"); // spec 2026-11-19
     expect(along("2026-09-24")).toEqual([doHoje]);
-    expect(along("2026-09-26")).toEqual(["21:30"]);
+    // Spec 2026-11-19: sábado à noite é dela (sem alongamento); o domingo segue o padrão de Configurações.
+    expect(along("2026-09-26")).toEqual([]);
+    expect(along("2026-09-27")).toEqual(["21:30"]);
     // Sem o modo (horário ajustado à mão), vale o de Configurações.
     expect(doDia(planejar(QUINTA_5H, cfg, vazio), "2026-09-24").some((x) => hhmm(x.quando) === "21:30" && x.titulo === "Alongamento")).toBe(true);
   });

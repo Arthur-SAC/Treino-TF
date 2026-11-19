@@ -85,7 +85,7 @@ describe("Today (backbone)", () => {
 
   it("abre a receita da refeição direto no Hoje (sem ir pra outra aba)", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    const cafe = await screen.findByRole("button", { name: "Café + whey · montar marmita" });
+    const cafe = await screen.findByRole("button", { name: "Café · montar marmita" });
     fireEvent.click(cafe);
     // a receita do café localizado (cuscuz sem manteiga) abre no próprio card
     expect((await screen.findAllByText(/Cuscuz de milho/i)).length).toBeGreaterThan(0);
@@ -219,9 +219,12 @@ describe("prática concluída marca o item do Hoje", () => {
     await db.practiceLogs.clear();
     await db.practiceLogs.add({ date: "2020-01-01", sequenceId: "flexibilidade-intima", completed: true } as never);
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText("Noite");
-    const box = screen.getAllByRole("checkbox").find((c) => /^marcar Alongamento noite/.test(c.getAttribute("aria-label") ?? ""));
-    expect(box?.getAttribute("aria-checked")).toBe("false");
+    // Spec 2026-11-19: a noite agora tem itens dela sempre visíveis, então o título "Noite"
+    // aparece antes dos desbloqueios chegarem do banco — espera o item em si.
+    await waitFor(() => {
+      const box = screen.getAllByRole("checkbox").find((c) => /^marcar Alongamento noite/.test(c.getAttribute("aria-label") ?? ""));
+      expect(box?.getAttribute("aria-checked")).toBe("false");
+    });
   });
 });
 });

@@ -5,7 +5,7 @@
 import { isWithinQuietHours } from "../notifications";
 import { hojeISO } from "../today-date";
 import { backupVencido } from "../backup-lembrete";
-import { horarioNoiteEsteira } from "../today-routine";
+import { horarioNoiteEsteira, noiteLivre } from "../today-routine";
 import type { ModoCaminhada } from "../objetivo";
 
 export interface Lembrete {
@@ -128,7 +128,8 @@ export function planejar(agora: Date, cfg: ConfigLembretes, estado: EstadoLembre
     if (treino && !(ehHoje && estado.treinouHoje))
       add(TIPO.treino, dia, 0, naHora(dia, cfg.workoutReminderTime), "Treino", `${treino} · olhe a lotação no app da academia antes de sair`);
 
-    if (!(ehHoje && estado.feitosHoje.has("alongamento-noite")))
+    // Sexta e sábado à noite são dela: o app não tem alongamento nesse horário.
+    if (!noiteLivre(dow) && !(ehHoje && estado.feitosHoje.has("alongamento-noite")))
       add(TIPO.alongNoite, dia, 0, naHora(dia, (cfg.modoCaminhada && horarioNoiteEsteira("alongamento-noite", dow, cfg.modoCaminhada)) || cfg.alongamentoNoiteTime), "Alongamento", "Antes de deitar", "/", { acao: "feito", itemId: "alongamento-noite" });
 
     add(TIPO.dormir, dia, 0, naHora(dia, cfg.dormirReminderTime), "Hora de desligar", "Tela longe, deitar às 22h30", "/", { acao: "deitei" });

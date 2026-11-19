@@ -41,8 +41,9 @@ describe("tabela de desbloqueios", () => {
   it("horários e minutos vêm do seed", () => {
     const h = Object.fromEntries(DESBLOQUEIOS.map((d) => [d.id, d.horario]));
     expect(h).toMatchObject({
-      "skincare-2": "20:30", "assoalho-1": "21:20", "alongamento-noite": "21:30",
-      "voz-1": "21:00", postura: "20:45", danca: "17:30", sentar: null,
+      // Horários da noite pelo spec 2026-11-19 (bloco do app 20:45; postura/voz/assoalho 21:05 provisório).
+      "skincare-2": "20:45", "assoalho-1": "21:05", "alongamento-noite": "20:50",
+      "voz-1": "21:05", postura: "21:05", danca: "17:30", sentar: null,
     });
     const m = Object.fromEntries(DESBLOQUEIOS.map((d) => [d.id, d.minutos]));
     expect(m["assoalho-1"]).toBe(SEQUENCES.find((s) => s.id === "pelvic-identificacao")!.durationMin);

@@ -14,7 +14,7 @@ describe("horários da rotina", () => {
     expect(acharItem("cafe-marmita").defaultTime).toBeDefined();
     expect(acharItem("almoco").defaultTime).toBe("12:00");
     expect(acharItem("lanche-saida").defaultTime).toBe("15:30");
-    expect(acharItem("jantar").defaultTime).toBe("20:00");
+    expect(acharItem("jantar").defaultTime).toBe("20:15"); // spec 2026-11-19
   });
 
   it("a sequência da saída bate com o dia real: lanche, caminhada, treino, cães", () => {
@@ -89,7 +89,7 @@ describe("horários da rotina", () => {
 
 describe("resolveRoutineTime", () => {
   it("usa o padrão quando não há ajuste", () => {
-    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("20:00");
+    expect(resolveRoutineTime(acharItem("jantar"), {})).toBe("20:15"); // spec 2026-11-19
   });
 
   it("o ajuste da usuária vence o padrão", () => {

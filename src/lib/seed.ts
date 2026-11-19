@@ -184,12 +184,16 @@ export async function seedDatabase(): Promise<void> {
     ["workoutReminderTime", "18:15", "15:50"],
     // O skincare da noite sai de cima do jantar (20:00) pras 20:30.
     ["eveningReminderTime", "20:00", "20:30"],
+    // 2026-11-19 (rotina em linha do tempo): o bloco do app começa 20:45, depois do
+    // jantar com ela na chamada (20:15); o alongamento da noite vai pras 20:50.
+    ["eveningReminderTime", "20:30", "20:45"],
+    ["alongamentoNoiteTime", "21:30", "20:50"],
     ["hydrationGoalMl", 2000, 3000],
     ["quietHours", { from: "22:00", to: "08:00" }, { from: "22:30", to: "06:00" }],
   ];
   // Uma vez só: se depois ela escolher um valor antigo de propósito (é tudo
   // editável em Configurações), a próxima abertura não pode desfazer.
-  const LEMBRETES_MIGRACAO = 2;
+  const LEMBRETES_MIGRACAO = 3;
   const lembretesFeita = await db.settings.get("lembretesMigracao");
   if (((lembretesFeita?.value as number) ?? 0) < LEMBRETES_MIGRACAO) {
     for (const [key, antigo, novo] of ANTIGOS) {

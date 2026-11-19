@@ -68,20 +68,20 @@ describe("SessionDetail — desbloqueio ao bater o patamar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Entendi" }));
 
     expect(await screen.findByText("Parabéns, Assoalho pélvico nível 1 desbloqueado")).toBeInTheDocument();
-    expect(screen.getByText("às 21h20")).toBeInTheDocument();
+    expect(screen.getByText("às 21h05")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Entendi" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
 
     expect(await getSetting("desbloqueios")).toEqual({ "manha-completa": HOJE, "assoalho-1": HOJE });
   });
 
-  it("no modo esteira, o horário vem da rotina do modo (assoalho às 21h45)", async () => {
+  it("no modo esteira, o horário vem da rotina do modo (assoalho às 21h05, spec 2026-11-19)", async () => {
     await setSetting("modoCaminhada", "esteira");
     await abrirEFinalizar();
     fireEvent.click(await screen.findByRole("button", { name: "Voltar pro Hoje" }));
     fireEvent.click(await screen.findByRole("button", { name: "Entendi" }));
     expect(await screen.findByText("Parabéns, Assoalho pélvico nível 1 desbloqueado")).toBeInTheDocument();
-    expect(screen.getByText("às 21h45")).toBeInTheDocument();
+    expect(screen.getByText("às 21h05")).toBeInTheDocument();
   });
 });
 

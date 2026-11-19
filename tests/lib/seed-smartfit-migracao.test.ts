@@ -96,7 +96,7 @@ describe("migração 2 dos lembretes (horário da Smartfit)", () => {
     await comLembretes("18:15", 1);
     await seedDatabase();
     expect((await db.settings.get("workoutReminderTime"))?.value).toBe("15:50");
-    expect((await db.settings.get("lembretesMigracao"))?.value).toBe(2);
+    expect((await db.settings.get("lembretesMigracao"))?.value).toBe(3); // migração 3: spec 2026-11-19
   });
 
   it("não sobrescreve um horário que ela já mudou", async () => {

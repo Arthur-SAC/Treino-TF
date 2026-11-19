@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { shouldNotifyNow, isWithinWorkingHours, notify, shouldRemindOncePerDay } from "./notifications";
 import { getSetting, setSetting, DEFAULTS } from "./settings-helpers";
-import { horarioNoiteEsteira } from "./today-routine";
+import { horarioNoiteEsteira, noiteLivre } from "./today-routine";
 import { SEQUENCIAS_POSTURA } from "./postura-progression";
 import { hojeISO } from "./today-date";
 import { estaAberto, idsTrancados, type Desbloqueados } from "./desbloqueios";
@@ -123,7 +123,8 @@ async function tick() {
     notify(t.titulo, t.corpo);
     await setSetting("lastSkincareMorningAt", todayISO);
   }
-  if (lembrarSkincareNoite({ currentMin, eveningMin, lastEvening, todayISO, trancados })) {
+  // Sexta e sábado à noite são dela: sem skincare no app nesses dias.
+  if (!noiteLivre(now.getDay()) && lembrarSkincareNoite({ currentMin, eveningMin, lastEvening, todayISO, trancados })) {
     notify("Skincare noturno", "Hora da rotina noturna antes de dormir");
     await setSetting("lastSkincareEveningAt", todayISO);
   }

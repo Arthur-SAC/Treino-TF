@@ -5,8 +5,9 @@ const itensDoDia = (dow: number, diaDoAno: number) =>
   buildDayRoutine(dow, diaDoAno).blocks.flatMap((b) => b.items);
 
 describe("barba e voz na rotina diária", () => {
-  it("a voz é item de todo dia, à noite", () => {
-    for (let dow = 0; dow < 7; dow++) {
+  // Spec 2026-11-19: sexta e sábado à noite são dela, sem voz.
+  it("a voz é item de todo dia com bloco do app, à noite", () => {
+    for (const dow of [0, 1, 2, 3, 4]) {
       const voz = itensDoDia(dow, 1).find((i) => i.id === "voz");
       expect({ dow, temVoz: Boolean(voz) }).toEqual({ dow, temVoz: true });
       expect(voz!.block).toBe("noite");

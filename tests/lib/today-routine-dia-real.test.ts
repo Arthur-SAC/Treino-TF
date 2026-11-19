@@ -58,9 +58,9 @@ describe("horários da tarde batem com o dia real", () => {
     expect(c.subtitle).toBe("Quando chegar em casa");
   });
 
-  it("o jantar é às 20:00 e não chama as 20h de hora ruim", () => {
+  it("o jantar é às 20:15 (spec 2026-11-19) e não chama as 20h de hora ruim", () => {
     const j = acha(1, "jantar")!;
-    expect(j.defaultTime).toBe("20:00");
+    expect(j.defaultTime).toBe("20:15");
     expect(j.subtitle).not.toMatch(/às 20h/);
   });
 
@@ -73,7 +73,7 @@ describe("horários da tarde batem com o dia real", () => {
   it("nenhum item de dia útil no modo caminhada fica entre 16:00 e 18:45 além de caminhada e treino", () => {
     for (const dow of [1, 2, 3, 4, 5]) {
       const dentro = itensDe(dow)
-        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "18:45")
+        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "18:45" && i.control !== "dela") // noite livre de sexta (18:00) é trecho dela, spec 2026-11-19
         .map((i) => i.id)
         .sort();
       expect(dentro).toEqual(["caminhada-trabalho", "treino"]);

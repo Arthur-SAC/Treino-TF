@@ -57,18 +57,20 @@ describe("rotina pelo modo das caminhadas", () => {
   it("esteira em dia útil: a esteira vem logo depois da força, na noite, e o resto se reorganiza", () => {
     for (const dow of [1, 2, 3, 4, 5]) {
       const noite = bloco(dow, "noite", "esteira");
+      const comApp = dow !== 5; // sexta à noite é dela (spec 2026-11-19)
       const tarde = bloco(dow, "tarde", "esteira");
       const est = noite.find((i) => i.id === "caminhada-trabalho")!;
       expect(est).toMatchObject({ defaultTime: "18:00", control: "walk", to: "/treino/exercicio/cardio-zona2", label: "Esteira inclinada · 1 h" });
       expect(est.subtitle).toBe("Logo depois da força: ~6% a 5 km/h, 1 h, ofegante mas falando em frases curtas");
       expect(tarde.map((i) => i.id)).not.toContain("caminhada-trabalho");
       const t = (id: string) => noite.find((i) => i.id === id)?.defaultTime;
+      // Spec 2026-11-19: o horário normal (jantar 20:15, app 20:45, com ela 21:15) empurrado 15 min no modo esteira.
       expect(t("jantar")).toBe("20:30");
-      expect(t("skincare-noite")).toBe("21:00");
-      expect(t("voz")).toBe("21:30");
-      // A postura volta pra noite (21:15, depois do jantar e do skincare): às 16:45 cairia entre a caminhada e o treino.
+      if (comApp) expect(t("skincare-noite")).toBe("21:00");
+      if (comApp) expect(t("voz")).toBe("21:05");
+      // A postura volta pra noite (bloco do app, depois do jantar e do skincare): às 16:45 cairia entre a caminhada e o treino.
       expect(tarde.map((i) => i.id)).not.toContain("postura");
-      expect(t("postura")).toBe("21:15");
+      if (comApp) expect(t("postura")).toBe("21:05");
       expect(tarde.find((i) => i.id === "treino")!.defaultTime).toBe("17:00");
       // Os cães (19:15) vêm depois da esteira (18:00): moram na noite, logo depois dela.
       expect(tarde.map((i) => i.id)).not.toContain("caes");
@@ -85,17 +87,18 @@ describe("rotina pelo modo das caminhadas", () => {
   it("esteira: nada se sobrepõe entre 16:00 e 19:15 (treino 17:00, esteira 18:00 de 1 h)", () => {
     for (const dow of [1, 2, 3, 4, 5]) {
       const dentro = itens(dow, "esteira")
-        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "19:15")
+        .filter((i) => i.defaultTime && i.defaultTime >= "16:00" && i.defaultTime < "19:15" && i.control !== "dela")
         .map((i) => [i.id, i.defaultTime]);
       expect(dentro).toEqual([["treino", "17:00"], ["caminhada-trabalho", "18:00"]]);
     }
   });
 
-  it("caminhada e pausada: nenhum item de dia útil começa entre 20:00 e 20:30 além do jantar", () => {
+  // Spec 2026-11-19: o jantar passou pras 20:15 (sexta continua 20:00); o bloco do app começa 30 min depois.
+  it("caminhada e pausada: nenhum item de dia útil começa nos 30 min do jantar além do jantar", () => {
     for (const modo of ["caminhada", "pausada"] as const) {
       for (const dow of [1, 2, 3, 4, 5]) {
         const dentro = itens(dow, modo)
-          .filter((i) => i.defaultTime && i.defaultTime >= "20:00" && i.defaultTime < "20:30")
+          .filter((i) => i.defaultTime && i.defaultTime >= "20:00" && i.defaultTime < "20:30" && i.control !== "dela")
           .map((i) => i.id);
         expect(dentro).toEqual(["jantar"]);
       }
@@ -113,30 +116,31 @@ describe("rotina pelo modo das caminhadas", () => {
           .map((i) => i.id);
         expect(dentro, `${modo} dow ${dow}`).toEqual([]);
         const hs = bloco(dow, "noite", modo).map((i) => i.defaultTime).filter(Boolean).map((h) => min(h!));
-        expect(hs, `${modo} dow ${dow}`).toEqual([...new Set(hs)].sort((x, y) => x - y));
+        // Spec 2026-11-19: postura, voz e assoalho dividem o horário provisório 21:05, então não decrescente (não estritamente).
+        expect(hs, `${modo} dow ${dow}`).toEqual([...hs].sort((x, y) => x - y));
       }
     }
   });
 
-  it("pausada: treino às 17:00 e jantar às 20:00 nos dias úteis", () => {
+  it("pausada: treino às 17:00 e jantar às 20:15 nos dias úteis (spec 2026-11-19)", () => {
     const t = bloco(2, "tarde", "pausada").find((i) => i.id === "treino")!;
     expect(t.defaultTime).toBe("17:00");
-    expect(bloco(2, "noite", "pausada").find((i) => i.id === "jantar")!.defaultTime).toBe("20:00");
+    expect(bloco(2, "noite", "pausada").find((i) => i.id === "jantar")!.defaultTime).toBe("20:15");
   });
 
   it("esteira no fim de semana não muda: continua de manhã e a postura fica na noite", () => {
     for (const dow of [0, 6]) {
       expect(bloco(dow, "manha", "esteira").map((i) => i.id)).toContain("caminhada-fds");
-      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "postura")!.defaultTime).toBe("20:45");
-      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "jantar")!.defaultTime).toBe("19:30");
+      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "postura")?.defaultTime).toBe(dow === 0 ? "21:05" : undefined); // sábado é noite livre (spec 2026-11-19)
+      expect(bloco(dow, "noite", "esteira").find((i) => i.id === "jantar")!.defaultTime).toBe(dow === 0 ? "20:15" : "19:30");
     }
   });
 
-  it("caminhada em dia útil continua como era", () => {
+  it("caminhada em dia útil continua como era (noite pelo spec 2026-11-19)", () => {
     const tarde = bloco(2, "tarde", "caminhada").map((i) => [i.id, i.defaultTime]);
     expect(tarde).toEqual([["lanche-saida", "15:30"], ["caminhada-trabalho", "16:00"], ["treino", "17:00"], ["caes", "18:45"]]);
     const noite = bloco(2, "noite", "caminhada").map((i) => [i.id, i.defaultTime]).slice(0, 4);
-    expect(noite).toEqual([["jantar", "20:00"], ["skincare-noite", "20:30"], ["postura", "20:45"], ["voz", "21:00"]]);
+    expect(noite).toEqual([["jantar", "20:15"], ["skincare-noite", "20:45"], ["alongamento-noite", "20:50"], ["assoalho-pelvico", "21:05"]]);
   });
 
   it("o lanche da semana não cita a caminhada fora do modo caminhada", () => {
@@ -157,7 +161,8 @@ describe("ordem de exibição segue o horário", () => {
       it(`${modo}, dia ${dia}: horários não decrescem na ordem da tela`, () => {
         const horas = buildDayRoutine(dia, 1, [], modo).blocks
           .flatMap((b) => b.items)
-          .filter((i) => i.defaultTime)
+          // Spec 2026-11-19: "noite livre" de sexta/sábado (18:00) marca um trecho dela, não um evento.
+          .filter((i) => i.defaultTime && i.control !== "dela")
           .map((i) => ({ id: i.id, min: paraMin(i.defaultTime!) }));
         for (let k = 1; k < horas.length; k++) {
           expect(horas[k].min, `${horas[k - 1].id} → ${horas[k].id}`).toBeGreaterThanOrEqual(horas[k - 1].min);

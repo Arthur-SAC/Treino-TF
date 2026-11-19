@@ -50,9 +50,10 @@ describe("o que o app promete, ele oferece", () => {
     expect(errados).toEqual([]);
   });
 
-  it("mas ele continua existindo nos sete dias — o que constrói é frequência", () => {
+  // Spec 2026-11-19: sexta e sábado à noite são dela, sem nada do app além do sono.
+  it("mas ele continua existindo em todo dia com bloco do app — o que constrói é frequência", () => {
     const faltando: number[] = [];
-    for (let d = 0; d < 7; d++) {
+    for (const d of [0, 1, 2, 3, 4]) {
       const tem = buildDayRoutine(d, 100).blocks.some((b) =>
         b.items.some((i) => i.id === "assoalho-pelvico"),
       );
@@ -64,11 +65,12 @@ describe("o que o app promete, ele oferece", () => {
   // Uma ida ao chão em vez de duas: as duas coisas pedem o mesmo chão e o
   // mesmo momento de privacidade, e separá-las por horas dobraria o custo de
   // começar — que é a parte cara.
-  it("o assoalho cai logo antes do alongamento da noite", () => {
+  // Spec 2026-11-19: o alongamento (20:50) abre o bloco do app e o assoalho vem logo depois.
+  it("o assoalho cai logo depois do alongamento da noite", () => {
     const itens = buildDayRoutine(3, 100).blocks.flatMap((b) => b.items);
     const iAssoalho = itens.findIndex((i) => i.id === "assoalho-pelvico");
     const iAlongamento = itens.findIndex((i) => i.id === "alongamento-noite");
     expect(iAssoalho).toBeGreaterThanOrEqual(0);
-    expect(iAlongamento).toBe(iAssoalho + 1);
+    expect(iAssoalho).toBe(iAlongamento + 1);
   });
 });

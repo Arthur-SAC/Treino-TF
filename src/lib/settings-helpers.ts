@@ -107,7 +107,7 @@ export const DEFAULTS: Settings = {
   // Os horários dos itens de skincare e treino da rotina do Hoje (auditoria
   // 2026-09-23): eram 8h e 22h, e o silêncio 22h-8h engolia os dois.
   morningReminderTime: "06:25",
-  eveningReminderTime: "20:30",
+  eveningReminderTime: "20:45",
   // 15:50: dez minutos antes de ela sair do trabalho a pé pra Smart Fit (16h).
   workoutReminderTime: "15:50",
   activeBreakIntervalMin: 90,
@@ -169,7 +169,7 @@ export const DEFAULTS: Settings = {
   vitalidadeDesde: "",
   creatinaInicio: "",
   alongamentoManhaTime: "06:00",
-  alongamentoNoiteTime: "21:30",
+  alongamentoNoiteTime: "20:50",
   // 22h e não 22h30: às 22h30 o silêncio já começou e engoliria o lembrete.
   dormirReminderTime: "22:00",
   vitaminaDTime: "12:00",
