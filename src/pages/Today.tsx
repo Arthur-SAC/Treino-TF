@@ -63,6 +63,8 @@ import { sequenciaDoCatalogo } from "../lib/sequence-label";
 import { OfertaCard } from "../components/OfertaCard";
 import { SequenciaModal } from "../components/SequenciaModal";
 import type { SkincareRoutine } from "../lib/db";
+import { estadoSequencia } from "../lib/sequencia";
+import { linhaProximoDesbloqueio } from "../lib/placas-texto";
 
 /** Minutos da sequência no catálogo (0 se não existir). */
 function duracaoSeq(id: string): number {
@@ -92,8 +94,6 @@ const ITEM_NOITE_DA_TRILHA: Partial<Record<Trilha, string>> = {
 function sequenciaDoDestino(to: string | undefined): string | undefined {
   return to?.match(/^\/treino\/movimento\/([^/?#]+)$/)?.[1];
 }
-import { estadoSequencia } from "../lib/sequencia";
-import { linhaProximoDesbloqueio } from "../lib/placas-texto";
 
 export function Today() {
   const today = new Date();
@@ -661,7 +661,9 @@ export function Today() {
         </section>
       )}
 
-      {proximo && !oferta && (
+      {/* Só como informação do que ainda está longe: o que já está pronto
+          vem pelo card "Pronta pra próxima" (ou foi recusado por ela). */}
+      {proximo && proximo.faltam > 0 && !oferta && (
         <p className="text-muted text-sm pt-2">
           {linhaProximoDesbloqueio(proximo.d.titulo, proximo.faltam)}
         </p>

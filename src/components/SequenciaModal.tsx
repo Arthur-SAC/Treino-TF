@@ -60,9 +60,11 @@ export function SequenciaModal({ sequenceId, onClose, onConcluir }: {
                   onSave={(url) => { void db.danceSequences.update(doBanco.id, { videoUrl: url || undefined }); }}
                 />
               )}
-              <p className="text-muted text-xs uppercase tracking-wider mb-2">
-                Passo {Math.min(ativo + 1, sequence.moves.length)} de {sequence.moves.length}
-              </p>
+              {sequence.moves.length > 0 && (
+                <p className="text-muted text-xs uppercase tracking-wider mb-2">
+                  Passo {Math.min(ativo + 1, sequence.moves.length)} de {sequence.moves.length}
+                </p>
+              )}
               <div className="space-y-2 mb-4">
                 {sequence.moves.map((move, i) => (
                   <MoveStep

@@ -10,6 +10,7 @@ import { getSetting, setSetting } from "../../src/lib/settings-helpers";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { NUCLEO_IDS } from "../../src/lib/nucleo";
 import { Today } from "../../src/pages/Today";
+import { SequenciaModal } from "../../src/components/SequenciaModal";
 import { desbloquearTudo } from "../helpers/desbloquear";
 
 const HOJE = "2026-11-18"; // quarta
@@ -166,6 +167,18 @@ describe("Hoje — Pronta pra próxima", () => {
     expect(await getSetting("desbloqueios")).toEqual({});
   });
 
+  // Revisão 2026-11-19: depois de recusar, a linha "Próximo desbloqueio: X —
+  // pronto pra abrir" voltava sem nada pra tocar — contradiz a recusa.
+  it("depois de recusar, nem o card nem um 'pronto pra abrir' aparecem", async () => {
+    await sequenciaDe5();
+    abrir();
+    await screen.findByText("Alongamento da manhã completo");
+    fireEvent.click(screen.getByRole("button", { name: "Agora não" }));
+    await waitFor(() => expect(screen.queryByText("Pronta pra próxima")).not.toBeInTheDocument());
+    expect(screen.queryByText(/pronto pra abrir/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Próximo desbloqueio/)).not.toBeInTheDocument();
+  });
+
   it("parte da noite mostra o rodízio", async () => {
     await sequenciaDe5();
     await setSetting("desbloqueios", { "manha-completa": "2026-11-01" });
@@ -186,5 +199,14 @@ describe("Hoje — o bloco da noite cabe em 30 min", () => {
     expect(await screen.findByRole("button", { name: /^Assoalho pélvico/ })).toBeInTheDocument();
     expect(screen.queryByText(/^Postura/)).not.toBeInTheDocument();
     expect(screen.queryByText(/^Voz/)).not.toBeInTheDocument();
+  });
+});
+
+describe("SequenciaModal", () => {
+  it("sequência sem passos não mostra 'Passo 0 de 0'", async () => {
+    await db.danceSequences.put({ id: "vazia", name: "Vazia", category: "mobilidade", level: "iniciante", durationMin: 3, focus: "x", moves: [] });
+    render(<SequenciaModal sequenceId="vazia" onClose={() => {}} />);
+    expect(await screen.findByRole("button", { name: "Concluir" })).toBeInTheDocument();
+    expect(screen.queryByText(/Passo 0 de 0/)).not.toBeInTheDocument();
   });
 });
