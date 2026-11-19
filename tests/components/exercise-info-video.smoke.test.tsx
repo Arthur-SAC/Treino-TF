@@ -22,10 +22,10 @@ describe("ExerciseInfoModal vídeo", () => {
   });
 
   it("embute o player quando há link do YouTube", () => {
-    const { container } = render(
+    render(
       <ExerciseInfoModal exercise={{ ...ex, videoUrl: "https://youtu.be/dQw4w9WgXcQ" }} onClose={() => {}} />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Assistir o vídeo" }));
-    expect(container.querySelector("iframe")).not.toBeNull();
+    expect(document.querySelector("iframe")).not.toBeNull();
   });
 });

@@ -4,6 +4,7 @@ import { db, type Meal, type MealVariant } from "../lib/db";
 import { getActiveMealPlan, EFFORT_LABEL, variantEscolhida, variantDoDia, diasDaOpcao } from "../lib/meal-plan";
 import { RecomendadaBadge } from "./RecomendadaBadge";
 import { hojeISO } from "../lib/today-date";
+import { NaFrente } from "./NaFrente";
 
 export const MEAL_TYPE_LABEL: Record<Meal["mealType"], string> = {
   cafe: "Café da manhã",
@@ -58,6 +59,7 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
     const foods = meal?.foods ?? plan?.defaultMeals[MEAL_INDEX[mealType]] ?? [];
     const recipeFoods = foods.filter((f) => f.preparation);
     return (
+      <NaFrente>
       <div
         className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 p-4"
         onClick={onClose}
@@ -95,10 +97,12 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
           )}
         </div>
       </div>
+      </NaFrente>
     );
   }
 
   return (
+    <NaFrente>
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 p-4"
       onClick={onClose}
@@ -188,5 +192,6 @@ export function RecipeModal({ mealType, onClose }: { mealType: Meal["mealType"];
         </div>
       </div>
     </div>
+    </NaFrente>
   );
 }

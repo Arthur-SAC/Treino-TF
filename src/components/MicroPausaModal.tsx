@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { pausaDaVez } from "../lib/micro-pausas";
 import { sentarDaVez } from "../lib/sentar";
 import type { MicroPausa } from "../data/micro-pausas-seed";
+import { NaFrente } from "./NaFrente";
 
 const DISCRICAO_LABEL: Record<MicroPausa["discricao"], string> = {
   invisivel: "Discreto — dá pra fazer na mesa",
@@ -23,6 +24,7 @@ export function MicroPausaModal({ n, diaDoAno, mostrarSentar, onClose, onFeito }
   }
 
   return (
+    <NaFrente>
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 p-4"
       onClick={onClose}
@@ -70,5 +72,6 @@ export function MicroPausaModal({ n, diaDoAno, mostrarSentar, onClose, onFeito }
         </button>
       </div>
     </div>
+    </NaFrente>
   );
 }

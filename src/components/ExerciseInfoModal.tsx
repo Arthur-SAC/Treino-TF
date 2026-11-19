@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { db, type Exercise } from "../lib/db";
 import { VideoSection } from "./VideoSection";
 import { ExecucaoBlocos } from "./ExecucaoBlocos";
+import { NaFrente } from "./NaFrente";
 
 interface Props {
   exercise: Exercise;
@@ -24,6 +25,7 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
   }, [onClose]);
 
   return (
+    <NaFrente>
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 backdrop-blur-sm"
       onClick={onClose}
@@ -112,5 +114,6 @@ export function ExerciseInfoModal({ exercise, onClose }: Props) {
         </div>
       </div>
     </div>
+    </NaFrente>
   );
 }

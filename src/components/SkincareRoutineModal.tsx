@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type SkincareRoutine } from "../lib/db";
 import { hojeISO } from "../lib/today-date";
+import { NaFrente } from "./NaFrente";
 
 /** Roteiro de skincare consolidado do período (manhã/noite): junta TODAS as
  *  rotinas daquele horário numa sequência guiada — produto, técnica e o tempo
@@ -32,6 +33,7 @@ export function SkincareRoutineModal({ time, onClose }: { time: SkincareRoutine[
   }
 
   return (
+    <NaFrente>
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2a1416]/40 p-4"
       onClick={onClose}
@@ -75,5 +77,6 @@ export function SkincareRoutineModal({ time, onClose }: { time: SkincareRoutine[
         )}
       </div>
     </div>
+    </NaFrente>
   );
 }
