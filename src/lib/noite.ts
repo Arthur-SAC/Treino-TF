@@ -55,34 +55,42 @@ function paraHHMM(min: number): string {
   return `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
 }
 
-/** Tira do dia os itens do rodÃ­zio que nÃ£o couberem e dÃ¡ horÃ¡rio sequencial aos
- *  que ficam, logo depois do alongamento. SÃ³ mexe nos itens do rodÃ­zio. */
+/** O bloco do app é sequencial: o alongamento começa logo depois do skincare
+ *  e os itens do rodízio logo depois do alongamento. Tira do dia os do rodízio
+ *  que não couberem (teto e, por segurança, o início do "com ela"). Só mexe no
+ *  alongamento (horário) e nos itens do rodízio. */
 export function ajustarNoite(r: DayRoutine, minutosDe: (itemId: string) => number): DayRoutine {
   const bloco = r.blocks.find((b) => b.id === "noite");
   if (!bloco) return r;
   const presentes = bloco.items.filter((i) => ehRodizio(i.id));
   if (presentes.length === 0) return r;
 
-  const ids = presentes.map((i) => i.id);
-  const escolhidos = rodizioDaSemana(ids, minutosDe)[r.dayOfWeek] ?? [];
-  const alongamento = bloco.items.find((i) => i.id === "alongamento-noite");
-  const refHorario = alongamento?.defaultTime;
-  let t = refHorario ? paraMin(refHorario) + minutosDe("alongamento-noite") : null;
+  const escolhidos = rodizioDaSemana(presentes.map((i) => i.id), minutosDe)[r.dayOfWeek] ?? [];
+  const skincare = bloco.items.find((i) => i.id === "skincare-noite");
+  const comEla = bloco.items.find((i) => i.id === "com-ela");
+  let alongamento = bloco.items.find((i) => i.id === "alongamento-noite");
+  if (alongamento && skincare?.defaultTime) {
+    alongamento = { ...alongamento, defaultTime: paraHHMM(paraMin(skincare.defaultTime) + minutosDe("skincare-noite")) };
+  }
+  let t = alongamento?.defaultTime ? paraMin(alongamento.defaultTime) + minutosDe("alongamento-noite") : null;
+  const limite = comEla?.defaultTime ? paraMin(comEla.defaultTime) : null;
 
-  const ficam: RoutineItem[] = escolhidos.map((id) => {
+  const ficam: RoutineItem[] = [];
+  for (const id of escolhidos) {
     const item = presentes.find((i) => i.id === id)!;
-    if (t === null) return item;
-    const novo = { ...item, defaultTime: paraHHMM(t) };
-    t += minutosDe(id);
-    return novo;
-  });
+    if (t === null) { ficam.push(item); continue; }
+    const fim = t + minutosDe(id);
+    if (limite !== null && fim > limite) continue;
+    ficam.push({ ...item, defaultTime: paraHHMM(t) });
+    t = fim;
+  }
 
-  // Os que ficam entram no lugar do primeiro item do rodÃ­zio, em ordem de horÃ¡rio.
+  // Os que ficam entram no lugar do primeiro item do rodízio, em ordem de execução.
   const primeiro = bloco.items.findIndex((i) => ehRodizio(i.id));
   const itens: RoutineItem[] = [];
   bloco.items.forEach((i, idx) => {
     if (idx === primeiro) itens.push(...ficam);
-    if (!ehRodizio(i.id)) itens.push(i);
+    if (!ehRodizio(i.id)) itens.push(i.id === "alongamento-noite" && alongamento ? alongamento : i);
   });
   return { ...r, blocks: r.blocks.map((b) => (b === bloco ? { ...b, items: itens } : b)) };
 }

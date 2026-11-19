@@ -55,32 +55,46 @@ function noite(r: DayRoutine) {
 }
 
 describe("ajustarNoite", () => {
-  const base = buildDayRoutine(1, 1, [], "esteira" as never);
+  const min = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+  const rod = (r: DayRoutine) => noite(r).filter((i) => (RODIZIO_NOITE as readonly string[]).includes(i.id));
 
-  it("mantém fixos e dela, tira o que não coube e dá horário sequencial", () => {
-    const antes = noite(base).map((i) => i.id);
-    const r = ajustarNoite(base, minutosDe);
-    const itens = noite(r);
-    const ids = itens.map((i) => i.id);
-    for (const f of ["jantar", "skincare-noite", "alongamento-noite", "com-ela", "leitura", "dormir"]) {
-      expect(ids).toContain(f);
-    }
-    const rod = itens.filter((i) => (RODIZIO_NOITE as readonly string[]).includes(i.id));
-    const soma = rod.reduce((a, i) => a + minutosDe(i.id), 0);
-    expect(soma).toBeLessThanOrEqual(6);
-    expect(rod.length).toBeLessThan(antes.filter((i) => (RODIZIO_NOITE as readonly string[]).includes(i)).length + 1);
-    const alo = itens.find((i) => i.id === "alongamento-noite")!;
-    if (rod.length) {
-      const [h, m] = alo.defaultTime!.split(":").map(Number);
-      const fim = h * 60 + m + 21;
-      const [h2, m2] = rod[0].defaultTime!.split(":").map(Number);
-      expect(h2 * 60 + m2).toBe(fim);
-    }
+  for (const modo of ["caminhada", "esteira"] as const) {
+    it(`bloco sequencial e termina antes do com ela (${modo})`, () => {
+      const r = ajustarNoite(buildDayRoutine(2, 2, [], modo), minutosDe);
+      const itens = noite(r);
+      const get = (id: string) => itens.find((i) => i.id === id)!;
+      const sk = get("skincare-noite"), al = get("alongamento-noite"), ce = get("com-ela");
+      expect(min(al.defaultTime!)).toBe(min(sk.defaultTime!) + 3);
+      const ficam = rod(r);
+      expect(ficam.length).toBeGreaterThan(0);
+      let t = min(al.defaultTime!) + 21;
+      for (const i of ficam) {
+        expect(min(i.defaultTime!)).toBe(t);
+        t += minutosDe(i.id);
+      }
+      expect(t).toBeLessThanOrEqual(min(ce.defaultTime!));
+      expect(itens.map((i) => i.id)).toEqual(expect.arrayContaining(["jantar", "com-ela", "leitura", "dormir"]));
+    });
+  }
+
+  it("2+ itens recebem horarios sequenciais e o que estoura o com ela cai", () => {
+    const m = (id: string) => (id === "postura" ? 2 : id === "voz" ? 2 : minutosDe(id));
+    const ficam = rod(ajustarNoite(buildDayRoutine(1, 1, [], "caminhada"), m));
+    expect(ficam.map((i) => i.id)).toEqual(["postura", "voz"]);
+    expect(min(ficam[1].defaultTime!)).toBe(min(ficam[0].defaultTime!) + 2);
   });
 
-  it("não mexe em dia sem bloco do app e é pura", () => {
-    const sex = buildDayRoutine(5, 5, [], "esteira" as never);
+  it("item travado (fora da rotina) nunca entra", () => {
+    const base = buildDayRoutine(1, 1, [], "caminhada");
+    const sem: DayRoutine = { ...base, blocks: base.blocks.map((b) => ({ ...b, items: b.items.filter((i) => i.id !== "voz") })) };
+    const ids = noite(ajustarNoite(sem, minutosDe)).map((i) => i.id);
+    expect(ids).not.toContain("voz");
+  });
+
+  it("nao mexe em dia sem bloco do app e e pura", () => {
+    const sex = buildDayRoutine(5, 5, [], "esteira");
     expect(ajustarNoite(sex, minutosDe)).toEqual(sex);
-    expect(ajustarNoite(base, minutosDe)).toEqual(ajustarNoite(base, minutosDe));
+    const seg = buildDayRoutine(1, 1, [], "caminhada");
+    expect(ajustarNoite(seg, minutosDe)).toEqual(ajustarNoite(seg, minutosDe));
   });
 });
