@@ -55,10 +55,10 @@ function paraHHMM(min: number): string {
   return `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
 }
 
-/** O bloco do app é sequencial: o alongamento começa logo depois do skincare
- *  e os itens do rodízio logo depois do alongamento. Tira do dia os do rodízio
- *  que não couberem (teto e, por segurança, o início do "com ela"). Só mexe no
- *  alongamento (horário) e nos itens do rodízio. */
+/** O bloco do app Ã© sequencial: o alongamento comeÃ§a logo depois do skincare
+ *  e os itens do rodÃ­zio logo depois do alongamento. Tira do dia os do rodÃ­zio
+ *  que nÃ£o couberem (teto e, por seguranÃ§a, o inÃ­cio do "com ela"). SÃ³ mexe no
+ *  alongamento (horÃ¡rio) e nos itens do rodÃ­zio. */
 export function ajustarNoite(r: DayRoutine, minutosDe: (itemId: string) => number): DayRoutine {
   const bloco = r.blocks.find((b) => b.id === "noite");
   if (!bloco) return r;
@@ -85,7 +85,7 @@ export function ajustarNoite(r: DayRoutine, minutosDe: (itemId: string) => numbe
     t = fim;
   }
 
-  // Os que ficam entram no lugar do primeiro item do rodízio, em ordem de execução.
+  // Os que ficam entram no lugar do primeiro item do rodÃ­zio, em ordem de execuÃ§Ã£o.
   const primeiro = bloco.items.findIndex((i) => ehRodizio(i.id));
   const itens: RoutineItem[] = [];
   bloco.items.forEach((i, idx) => {

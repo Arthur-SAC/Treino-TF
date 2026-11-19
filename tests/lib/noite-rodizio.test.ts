@@ -77,7 +77,18 @@ describe("ajustarNoite", () => {
     });
   }
 
-  it("2+ itens recebem horarios sequenciais e o que estoura o com ela cai", () => {
+  it("o que estoura o com ela cai e o resto fica antes dele", () => {
+    // 3 min cada: o teto escolhe postura e voz, mas o com ela (21:12) so deixa a postura terminar antes
+    const base = buildDayRoutine(1, 1, [], "caminhada");
+    const cedo: DayRoutine = { ...base, blocks: base.blocks.map((b) => ({ ...b, items: b.items.map((i) => (i.id === "com-ela" ? { ...i, defaultTime: "21:12" } : i)) })) };
+    const m3 = (id: string) => (RODIZIO_NOITE as readonly string[]).includes(id) ? 3 : minutosDe(id);
+    const ficam = rod(ajustarNoite(cedo, m3));
+    const ids = ficam.map((i) => i.id);
+    expect(ids).toEqual(["postura"]);
+    for (const i of ficam) expect(min(i.defaultTime!) + 3).toBeLessThanOrEqual(min("21:12"));
+  });
+
+  it("2+ itens recebem horarios sequenciais", () => {
     const m = (id: string) => (id === "postura" ? 2 : id === "voz" ? 2 : minutosDe(id));
     const ficam = rod(ajustarNoite(buildDayRoutine(1, 1, [], "caminhada"), m));
     expect(ficam.map((i) => i.id)).toEqual(["postura", "voz"]);
