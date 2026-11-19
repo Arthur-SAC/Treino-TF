@@ -1,22 +1,18 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { db } from "../lib/db";
-import { getSetting, setSetting, type Settings } from "../lib/settings-helpers";
+import { getSetting, setSetting } from "../lib/settings-helpers";
 import { estadoSequencia, deveMostrarQueda, type EstadoSequencia } from "../lib/sequencia";
 import { proximaParte, type ProximaParte } from "../lib/proxima-parte";
-import { hojeISO, diaDoAno } from "../lib/today-date";
-import { novosDesbloqueios, tempoDoDesbloqueio, type Desbloqueio } from "../lib/desbloqueios";
-import { buildDayRoutine } from "../lib/today-routine";
-import { contarPraticasFlex } from "../lib/practice-log-helpers";
+import { hojeISO } from "../lib/today-date";
 import { marcosDeCinturaAtingidos, idDoMarcoCintura } from "../lib/conquistas";
 import { textoMarcoCintura } from "../lib/placas-texto";
 import { PlacaVitoria } from "../components/placas/PlacaVitoria";
 import { PlacaQueda } from "../components/placas/PlacaQueda";
-import { PlacaConquista, PlacaDesbloqueio } from "../components/placas/PlacaDesbloqueio";
+import { PlacaConquista } from "../components/placas/PlacaDesbloqueio";
 
 export type PlacaDados =
   | { tipo: "vitoria"; treino: string; de: number; para: number; parte: ProximaParte; fimDeSemana?: boolean }
   | { tipo: "queda"; de: number; diasPerdidos: number; quebra: string; parte: ProximaParte }
-  | { tipo: "desbloqueio"; titulo: string; entra: string; praQue: string; minutos: number; horario: string | null }
   | { tipo: "conquista"; titulo: string; texto: string };
 
 interface PlacasApi {
@@ -47,66 +43,9 @@ export async function dadosDaSequencia(
   };
 }
 
-/** Grava em `desbloqueios` o que a sequência acabou de abrir, com data = hoje,
- *  e devolve só os novos, na ordem da tabela. Nunca tira chave (save point). */
-export async function aplicarDesbloqueios(sequencia: number, hoje: string): Promise<Desbloqueio[]> {
-  // Ler e gravar numa transação só: o "Finalizar" e o visibilitychange podem
-  // chegar juntos, e sem ela os dois liam o mesmo `ja` e devolviam os mesmos
-  // novos — duas placas de "Parabéns" pro mesmo desbloqueio. Transações rw na
-  // mesma tabela rodam uma depois da outra; a segunda já vê a gravação.
-  return db.transaction("rw", db.settings, async () => {
-    const ja = await getSetting("desbloqueios");
-    const novos = novosDesbloqueios(sequencia, ja);
-    if (novos.length === 0) return [];
-    await setSetting("desbloqueios", { ...ja, ...Object.fromEntries(novos.map((d) => [d.id, hoje])) });
-    return novos;
-  });
-}
-
-/** Lê, e se a leitura falhar devolve o reserva: a placa sai com o horário e os
- *  minutos da tabela, mas sai. */
-async function ouReserva<T>(ler: () => Promise<T>, reserva: T): Promise<T> {
-  try {
-    return await ler();
-  } catch {
-    return reserva;
-  }
-}
-
-/** "YYYY-MM-DD" -> Date na meia-noite LOCAL (dia da semana e do ano certos). */
-function diaLocal(iso: string): Date {
-  const [a, m, d] = iso.split("-").map(Number);
-  return new Date(a, m - 1, d);
-}
-
-/** Uma placa por desbloqueio novo, com o horário e os minutos do dia dela
- *  (modo das caminhadas, ajustes de /hoje/horarios, fase do alongamento). O
- *  desbloqueio já foi gravado quando isto roda: se uma leitura falhar, a placa
- *  cai no horário e nos minutos fixos da tabela — o "Parabéns" nunca se perde. */
-export async function placasDeDesbloqueio(novos: readonly Desbloqueio[], hoje: string): Promise<PlacaDados[]> {
-  if (novos.length === 0) return [];
-  const dia = diaLocal(hoje);
-  const modo = await ouReserva<Settings["modoCaminhada"] | null>(() => getSetting("modoCaminhada"), null);
-  const horarios = await ouReserva<Settings["routineTimes"]>(() => getSetting("routineTimes"), {});
-  const praticasManha = await ouReserva<number | null>(() => contarPraticasFlex("manha"), null);
-  const tabela = (d: Desbloqueio) => ({ minutos: d.minutos, horario: d.horario });
-  return novos.map((d): PlacaDados => {
-    let tempo = tabela(d);
-    if (modo !== null && praticasManha !== null) {
-      try {
-        tempo = tempoDoDesbloqueio(d, buildDayRoutine(dia.getDay(), diaDoAno(dia), [], modo), horarios, praticasManha);
-      } catch {
-        // fica o da tabela
-      }
-    }
-    return { tipo: "desbloqueio", titulo: d.titulo, entra: d.entra, praQue: d.praQue, ...tempo };
-  });
-}
-
-/** Aplica os desbloqueios da sequência e devolve as placas deles. */
-export async function desbloquearComPlacas(sequencia: number, hoje: string): Promise<PlacaDados[]> {
-  return placasDeDesbloqueio(await aplicarDesbloqueios(sequencia, hoje), hoje);
-}
+// Desbloqueio não grava mais sozinho (spec 2026-11-19, seção 4): bater o
+// patamar vira o card "Pronta pra próxima" no Hoje, e só o "Aceitar" grava em
+// `desbloqueios`. Por isso a placa de "Parabéns, X desbloqueado" saiu daqui.
 
 /** Marcos de cintura batidos e ainda não vistos: grava em `conquistasVistas`
  *  ANTES de devolver (uma vez só, mesmo se o app fechar com a placa aberta). */
@@ -119,11 +58,10 @@ async function conquistasNovas(): Promise<PlacaDados[]> {
   return novos.map((m): PlacaDados => ({ tipo: "conquista", titulo: m.titulo, texto: textoMarcoCintura(m.data) }));
 }
 
-/** Ao abrir (ou voltar pro) app, nesta ordem: queda, desbloqueios, conquistas.
+/** Ao abrir (ou voltar pro) app, nesta ordem: queda, conquistas.
  *  Queda: se uma quebra nova aconteceu, grava que foi vista ANTES de mostrar
  *  (uma vez só, mesmo se o app fechar com a placa aberta); se ela já treinou
- *  depois da quebra, a notícia é velha: só grava. Desbloqueios: um treino salvo
- *  sem "Finalizar" destrava aqui. */
+ *  depois da quebra, a notícia é velha: só grava. */
 async function verificarAoAbrir(mostrar: (p: PlacaDados) => void): Promise<void> {
   const hoje = hojeISO();
   const { estado, parte } = await dadosDaSequencia(hoje);
@@ -134,7 +72,6 @@ async function verificarAoAbrir(mostrar: (p: PlacaDados) => void): Promise<void>
       mostrar({ tipo: "queda", de: estado.anterior, diasPerdidos: estado.diasPerdidos, quebra: estado.quebra, parte });
     }
   }
-  for (const p of await desbloquearComPlacas(estado.atual, hoje)) mostrar(p);
   for (const p of await conquistasNovas()) mostrar(p);
 }
 
@@ -201,13 +138,6 @@ function PlacaAtual({ id, dados, fechar }: { id: number; dados: PlacaDados; fech
       );
     case "queda":
       return <PlacaQueda de={dados.de} diasPerdidos={dados.diasPerdidos} quebra={dados.quebra} parte={dados.parte} onFechar={onFechar} />;
-    case "desbloqueio":
-      return (
-        <PlacaDesbloqueio
-          titulo={dados.titulo} entra={dados.entra} praQue={dados.praQue}
-          minutos={dados.minutos} horario={dados.horario} onFechar={onFechar}
-        />
-      );
     case "conquista":
       return <PlacaConquista titulo={dados.titulo} texto={dados.texto} onFechar={onFechar} />;
   }

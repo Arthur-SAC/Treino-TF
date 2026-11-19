@@ -1,5 +1,5 @@
-// Ao abrir o app: treino salvo sem "Finalizar" destrava mesmo assim, e o marco
-// de cintura aparece uma vez só. Ordem: queda, desbloqueios, conquistas.
+// Ao abrir o app: o marco de cintura aparece uma vez só, depois da queda. O
+// desbloqueio não abre mais sozinho (spec 2026-11-19): vira oferta no Hoje.
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
@@ -36,14 +36,16 @@ beforeEach(async () => {
 });
 
 describe("App — desbloqueios e conquistas ao abrir", () => {
-  it("5 treinos salvos sem finalizar: abre as duas placas de desbloqueio e grava", async () => {
+  // Spec 2026-11-19: o patamar vira oferta no Hoje ("Pronta pra próxima") e só
+  // o "Aceitar" grava. Ao abrir o app, nada é gravado nem festejado sozinho.
+  it("5 treinos salvos sem finalizar: nenhuma placa de desbloqueio e nada gravado", async () => {
     await setSetting("sequenciaDesde", "2026-11-03");
     await sessoes(["2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", HOJE]);
     abrir();
-    expect(await screen.findByText("Parabéns, Alongamento da manhã completo desbloqueado")).toBeInTheDocument();
-    expect(await getSetting("desbloqueios")).toEqual({ "manha-completa": HOJE, "assoalho-1": HOJE });
-    fireEvent.click(screen.getByRole("button", { name: "Entendi" }));
-    expect(await screen.findByText("Parabéns, Assoalho pélvico nível 1 desbloqueado")).toBeInTheDocument();
+    expect(await screen.findByText("Tela do Hoje")).toBeInTheDocument();
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByText(/desbloqueado/)).toBeNull();
+    expect(await getSetting("desbloqueios")).toEqual({});
   });
 
   it("cintura abaixo de 88: placa de conquista uma vez, gravada em conquistasVistas", async () => {

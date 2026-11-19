@@ -2,10 +2,10 @@ import { Voltar } from "../../components/Voltar";
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { db, type PracticeLog } from "../../lib/db";
+import { db } from "../../lib/db";
 import { MoveStep } from "../../components/MoveStep";
 import { VideoSection } from "../../components/VideoSection";
-import { hojeISO } from "../../lib/today-date";
+import { registrarPratica } from "../../lib/practice-log-helpers";
 
 export function SequenceDetail() {
   const { id } = useParams<{ id: string }>();
@@ -31,13 +31,7 @@ export function SequenceDetail() {
 
   async function finish() {
     if (!sequence) return;
-    await db.practiceLogs.add({
-      date: hojeISO(),
-      sequenceId: sequence.id,
-      completed: true,
-      durationMin: sequence.durationMin,
-      notes: notes.trim() || undefined,
-    } as PracticeLog);
+    await registrarPratica(sequence, notes);
     // Volta pra tela de origem — quase sempre o Hoje, que já marca o item
     // sozinho pela prática registrada. Aberta direto, sem histórico, cai na
     // lista do Movimento.

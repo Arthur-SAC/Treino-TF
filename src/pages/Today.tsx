@@ -5,7 +5,7 @@ import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
 import { useSetting } from "../hooks/useSetting";
-import { separarNucleo } from "../lib/nucleo";
+import { NUCLEO_IDS } from "../lib/nucleo";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia } from "../lib/flex-progression";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado, praticadaHoje } from "../lib/practice-log-helpers";
@@ -48,11 +48,50 @@ import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
 import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
-import { setSetting } from "../lib/settings-helpers";
+import { getSetting, setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
-import { filtrarRotina, idsTrancados, proximoDesbloqueio, sequenciasDoNivel1 } from "../lib/desbloqueios";
+import {
+  DESBLOQUEIOS, estaAberto, filtrarRotina, idsTrancados, proximoDesbloqueio, SEQ_ASSOALHO_1,
+  sequenciasDoNivel1, tempoDoDesbloqueio, type Desbloqueados,
+} from "../lib/desbloqueios";
+import { ajustarNoite, rodizioDaSemana, RODIZIO_NOITE } from "../lib/noite";
+import { contagemLiberada, ofertaDaVez, type Oferta, type Trilha } from "../lib/ofertas";
+import { linhaDoTempo, textoDoRodizio } from "../lib/linha-do-tempo";
+import { sequenciaDoCatalogo } from "../lib/sequence-label";
+import { OfertaCard } from "../components/OfertaCard";
+import { SequenciaModal } from "../components/SequenciaModal";
+import type { SkincareRoutine } from "../lib/db";
+
+/** Minutos da sequência no catálogo (0 se não existir). */
+function duracaoSeq(id: string): number {
+  return sequenciaDoCatalogo(id)?.durationMin ?? 0;
+}
+
+/** Minutos típicos do skincare completo da noite NO BLOCO DO APP: o roteiro do
+ *  rosto, 1 min por passo. A espera do sérum (5 min) corre junto com o
+ *  alongamento, que vem logo depois — não ocupa o teto. Os clareamentos do
+ *  corpo são do banho (18h–20h, antes do jantar), também fora do teto. Sem os
+ *  roteiros carregados: os 3 passos do rosto. */
+function minutosSkincareNoiteCompleto(noite: readonly SkincareRoutine[] | undefined): number {
+  return noite?.find((r) => r.target === "face")?.steps.length ?? 3;
+}
+
+/** Item da noite que cada oferta põe ou muda — é o que entra na conta do rodízio. */
+const ITEM_NOITE_DO_DESBLOQUEIO: Partial<Record<string, string>> = {
+  "voz-1": "voz", "voz-2": "voz", postura: "postura",
+  "assoalho-1": "assoalho-pelvico", "assoalho-2": "assoalho-pelvico",
+  "skincare-2": "skincare-noite", "skincare-3": "skincare-noite",
+};
+const ITEM_NOITE_DA_TRILHA: Partial<Record<Trilha, string>> = {
+  flexNoite: "alongamento-noite", pelvica: "assoalho-pelvico", postura: "postura",
+};
+
+/** "/treino/movimento/<id>" -> id: esses itens abrem a sequência na frente. */
+function sequenciaDoDestino(to: string | undefined): string | undefined {
+  return to?.match(/^\/treino\/movimento\/([^/?#]+)$/)?.[1];
+}
 import { estadoSequencia } from "../lib/sequencia";
 import { linhaProximoDesbloqueio } from "../lib/placas-texto";
 
@@ -98,7 +137,10 @@ export function Today() {
   // oferecidas pela página Vitalidade não entram nesta conta — elas treinam
   // outra coisa e não podem pular fases desta escada.
   const pelvicFeitas = useLiveQuery(() => contarPraticasDaProgressao(), []);
-  const pelvicHoje = pelvicDoDia(pelvicFeitas ?? 0);
+  // A fase só sobe quando ela aceita (spec 2026-11-19, seção 4): as trilhas
+  // recebem a contagem cortada no fim da fase aceita; a oferta recebe a crua.
+  const fasesAceitas = useSetting("fasesAceitas");
+  const pelvicHoje = pelvicDoDia(contagemLiberada("pelvica", pelvicFeitas ?? 0, fasesAceitas));
   // Duração e lugar vêm da sequência do dia, não de texto fixo no item: a
   // rotina tem sequências de 3 a 7 min, e "dá pra fazer sentada" é falso na
   // identificação (deitada) e na integração com o quadril (em pé).
@@ -113,26 +155,26 @@ export function Today() {
   // praticar de manhã não pode empurrar a fase da noite.
   const praticasFlexManha = useLiveQuery(() => contarPraticasFlex("manha"), []);
   const praticasFlexNoite = useLiveQuery(() => contarPraticasFlex("noite"), []);
-  const flexManhaHoje = flexDoDia("manha", praticasFlexManha ?? 0);
-  const flexNoiteHoje = flexDoDia("noite", praticasFlexNoite ?? 0);
+  const flexManhaLiberada = contagemLiberada("flexManha", praticasFlexManha ?? 0, fasesAceitas);
+  const flexManhaHoje = flexDoDia("manha", flexManhaLiberada);
+  const flexNoiteHoje = flexDoDia("noite", contagemLiberada("flexNoite", praticasFlexNoite ?? 0, fasesAceitas));
   const flexManhaRotulo = rotuloFlexDoDia("Alongamento manhã", flexManhaHoje);
   const flexNoiteRotulo = rotuloFlexDoDia("Alongamento noite", flexNoiteHoje);
   // Rebolado de sábado com a progressão de resistência (auditoria 2026-09-23:
   // a trilha existia e nenhuma tela a servia).
   const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
-  const reboladoHoje = reboladoDoDia(praticasRebolado ?? 0);
+  const reboladoHoje = reboladoDoDia(contagemLiberada("rebolado", praticasRebolado ?? 0, fasesAceitas));
   // Postura (andar → 8 → gingado), com o gingado liberado pela contagem —
   // mesmo padrão dos alongamentos. Conta até ONTEM: a prática de hoje não
   // pode virar o item do dia depois de marcada.
   const praticasPostura = useLiveQuery(() => contarPraticasPostura(todayISO), [todayISO]);
-  const posturaHoje = posturaDoDia(diaDoAno(today), praticasPostura ?? 0);
+  const posturaHoje = posturaDoDia(diaDoAno(today), contagemLiberada("postura", praticasPostura ?? 0, fasesAceitas));
   const posturaRotulo = rotuloFlexDoDia("Postura", posturaHoje);
   // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
   const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
 
   const walkGoalMin = useSetting("walkGoalMin");
   const modoCaminhada = useSetting("modoCaminhada");
-  const extrasRecolhidos = useSetting("extrasRecolhidos");
 
   // Alvo de micro-pausas derivado da mesma configuração que dispara os
   // lembretes — 7h→16h a cada 90 min = 6. Sem alvo, "3 hoje" não dizia se era
@@ -186,7 +228,30 @@ export function Today() {
   // Níveis de desbloqueio (spec 2026-11-09, seção 8): o trancado sai e o que
   // está no nível mínimo vem na versão mínima — antes de tudo o que lê a rotina.
   const desbloqueios = useSetting("desbloqueios");
-  const routine = filtrarRotina(buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada), desbloqueios);
+  const rotinaDoDia = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada);
+  // Minutos reais do bloco do app à noite, pra o teto de 30 min (noite.ts):
+  // sequência do dia de cada trilha, voz pela tabela de desbloqueios, skincare
+  // 3 min no nível 2 e o roteiro do rosto no completo. Item trancado vale 0.
+  const skincareNoiteCompleto = minutosSkincareNoiteCompleto(eveningRoutines);
+  const minutosDaNoite = (ja: Desbloqueados) => (itemId: string): number => {
+    switch (itemId) {
+      case "skincare-noite":
+        return !estaAberto(ja, "skincare-2") ? 0 : estaAberto(ja, "skincare-3") ? skincareNoiteCompleto : 3;
+      case "alongamento-noite":
+        return estaAberto(ja, "alongamento-noite") ? duracaoSeq(flexNoiteHoje.sequenceId) : 0;
+      case "postura":
+        return duracaoSeq(posturaHoje.sequenceId);
+      case "assoalho-pelvico":
+        return duracaoSeq(estaAberto(ja, "assoalho-2") ? pelvicHoje.sequenceId : SEQ_ASSOALHO_1);
+      case "voz":
+        return DESBLOQUEIOS.find((d) => d.id === (estaAberto(ja, "voz-2") ? "voz-2" : "voz-1"))!.minutos;
+      default:
+        return 0;
+    }
+  };
+  // O bloco da noite é sequencial e cabe em 30 min: ajusta DEPOIS do filtro de
+  // níveis (só o que está aberto entra na conta) e ANTES da linha do tempo.
+  const routine = ajustarNoite(filtrarRotina(rotinaDoDia, desbloqueios), minutosDaNoite(desbloqueios));
   const routineTimes = useSetting("routineTimes");
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
@@ -261,6 +326,7 @@ export function Today() {
   // os movimentos da SUA pausa, num rodízio do catálogo. Com um booleano, as
   // seis abriam os mesmos três movimentos.
   const [pausaAberta, setPausaAberta] = useState<number | null>(null);
+  const [sequenciaAberta, setSequenciaAberta] = useState<string | null>(null);
 
   const linkDone = (item: RoutineItem): boolean => {
     if (item.linkKey === "workout") return (sessionsToday ?? 0) > 0;
@@ -391,6 +457,67 @@ export function Today() {
   const proximo = datasDeTreino
     ? proximoDesbloqueio(estadoSequencia(datasDeTreino, sequenciaDesde, todayISO).atual, desbloqueios)
     : null;
+  // "Pronta pra próxima" (spec 2026-11-19, seção 4): um aviso por vez, e só
+  // com tudo o que ele lê já carregado (sem piscar um aviso errado).
+  const ofertasRecusadas = useSetting("ofertasRecusadas");
+  const carregadoPraOferta = !!datasDeTreino && pelvicFeitas !== undefined && praticasFlexManha !== undefined &&
+    praticasFlexNoite !== undefined && praticasRebolado !== undefined && praticasPostura !== undefined;
+  // Disse "Agora não" hoje: nenhum outro aviso até amanhã (o próximo pode vir no dia seguinte).
+  const recusouHoje = Object.values(ofertasRecusadas).includes(todayISO);
+  const ofertaCrua: Oferta | null = carregadoPraOferta && !recusouHoje
+    ? ofertaDaVez({
+        hoje: todayISO,
+        ciclo: advice,
+        sequencia: estadoSequencia(datasDeTreino!, sequenciaDesde, todayISO).atual,
+        ja: desbloqueios,
+        recusadas: ofertasRecusadas,
+        contagens: {
+          flexManha: praticasFlexManha!, flexNoite: praticasFlexNoite!, pelvica: pelvicFeitas!,
+          rebolado: praticasRebolado!, postura: praticasPostura!,
+        },
+        fasesAceitas,
+      })
+    : null;
+  // Horário e minutos do desbloqueio no dia dela (modo, ajustes, fase da manhã).
+  const oferta: Oferta | null = ofertaCrua?.tipo === "desbloqueio"
+    ? { ...ofertaCrua, ...tempoDoDesbloqueio(DESBLOQUEIOS.find((d) => d.id === ofertaCrua.id)!, rotinaDoDia, routineTimes, flexManhaLiberada) }
+    : ofertaCrua;
+  // O que a parte nova faz com a noite: rodízio de antes × depois de aceitar.
+  const rodizioDaOferta = ((): string | undefined => {
+    if (!oferta || oferta.tipo === "ciclo") return undefined;
+    const item = oferta.tipo === "desbloqueio" ? ITEM_NOITE_DO_DESBLOQUEIO[oferta.id] : ITEM_NOITE_DA_TRILHA[oferta.trilha];
+    if (!item) return undefined;
+    const jaDepois = oferta.tipo === "desbloqueio" ? { ...desbloqueios, [oferta.id]: todayISO } : desbloqueios;
+    const abertos = (ja: Desbloqueados) => RODIZIO_NOITE.filter((id) => !idsTrancados(ja).has(id));
+    const minAntes = minutosDaNoite(desbloqueios);
+    const minBase = minutosDaNoite(jaDepois);
+    const minDepois = oferta.tipo === "fase" ? (id: string) => (id === item ? oferta.minutos : minBase(id)) : minBase;
+    return textoDoRodizio(
+      rodizioDaSemana(abertos(desbloqueios), minAntes),
+      rodizioDaSemana(abertos(jaDepois), minDepois),
+      item,
+    );
+  })();
+
+  async function aceitar(o: Oferta) {
+    if (o.tipo === "desbloqueio") {
+      const ja = await getSetting("desbloqueios");
+      await setSetting("desbloqueios", { ...ja, [o.id]: todayISO });
+    } else if (o.tipo === "fase") {
+      const f = await getSetting("fasesAceitas");
+      await setSetting("fasesAceitas", { ...f, [o.trilha]: Math.max(f[o.trilha] ?? 1, o.fase) });
+    } else {
+      // Mesmo que o "Ativar" da tela Ciclos, sem o confirm: o "Aceitar" já é ela confirmando.
+      await setSetting("activeCycle", o.para);
+      await setSetting("cycleStartSessionCount", await db.workoutSessions.count());
+    }
+  }
+
+  async function agoraNao(o: Oferta) {
+    const r = await getSetting("ofertasRecusadas");
+    await setSetting("ofertasRecusadas", { ...r, [o.id]: todayISO });
+  }
+
   const ultimaMedida = measurementsAsc?.at(-1);
   // 14 dias de adesão pro treinador: a mesma janela do lembrete de medir.
   const adesao14 = useAdesao(todayISO, 14, alvoSono);
@@ -414,36 +541,45 @@ export function Today() {
       ? variacaoDesdePartida(projecao.partida, ultimaMedida)
       : null;
 
-  // Núcleo × extras (pedido dela em 2026-11-03): o mesmo RoutineRow, a
-  // mesma marcação — só muda onde o item aparece. Ver src/lib/nucleo.ts.
-  const { nucleo, extras } = separarNucleo(routine);
+  // Linha do tempo (spec 2026-11-19): uma lista só, na ordem das horas. O
+  // núcleo (pedido dela em 2026-11-03, ver src/lib/nucleo.ts) continua sendo o
+  // que conta pro prazo — aparece no horário dele, com a contagem em cima.
+  const { diaInteiro, horas, semana } = linhaDoTempo(routine, routineTimes);
+  const nucleo = [...diaInteiro, ...horas, ...semana].filter((i) => NUCLEO_IDS.has(i.id));
   const nucleoFeitos = nucleo.filter(isDone).length;
-  const extrasTotal = extras.reduce((n, b) => n + b.items.length, 0);
-  const linha = (item: RoutineItem) => (
-    <RoutineRow
-      key={item.id}
-      item={{
-        ...item,
-        subtitle: subtitleFor(item),
-        label: labelFor(item),
-        to: toFor(item),
-      }}
-      hora={horaDe(item)}
-      done={isDone(item)}
-      onToggle={() => void handleToggle(item)}
-      rightSlot={rightSlotFor(item)}
-      navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
-      onOpen={
-        item.control === "recipe" && item.mealType
-          ? () => setRecipeMealType(item.mealType!)
-          : item.control === "skincare" && item.skincareTime
-            ? () => setSkincareTime(item.skincareTime!)
-            : item.control === "breaks"
-              ? () => setPausaAberta(item.breakIndex ?? 0)
-              : undefined
-      }
-    />
-  );
+  const linha = (item: RoutineItem) => {
+    const to = toFor(item);
+    const sequenciaId = sequenciaDoDestino(to);
+    return (
+      <li key={item.id} data-item={item.id} className={NUCLEO_IDS.has(item.id) ? "border-l-2 border-verm/60 pl-2" : undefined}>
+        <RoutineRow
+          item={{
+            ...item,
+            subtitle: subtitleFor(item),
+            label: labelFor(item),
+            to,
+          }}
+          hora={horaDe(item)}
+          done={isDone(item)}
+          onToggle={() => void handleToggle(item)}
+          rightSlot={rightSlotFor(item)}
+          navValue={item.control === "link" ? (isDone(item) ? "feito ✓" : "ver →") : undefined}
+          sequenciaId={sequenciaId}
+          onOpen={
+            item.control === "recipe" && item.mealType
+              ? () => setRecipeMealType(item.mealType!)
+              : item.control === "skincare" && item.skincareTime
+                ? () => setSkincareTime(item.skincareTime!)
+                : item.control === "breaks"
+                  ? () => setPausaAberta(item.breakIndex ?? 0)
+                  : sequenciaId
+                    ? () => setSequenciaAberta(sequenciaId)
+                    : undefined
+          }
+        />
+      </li>
+    );
+  };
 
   return (
     <div className="p-4 pb-24 space-y-3">
@@ -457,6 +593,15 @@ export function Today() {
         </div>
         <Link to="/configuracoes" className="text-muted text-xs underline">configurações</Link>
       </div>
+
+      {oferta && (
+        <OfertaCard
+          oferta={oferta}
+          rodizio={rodizioDaOferta}
+          onAceitar={() => void aceitar(oferta)}
+          onAgoraNao={() => void agoraNao(oferta)}
+        />
+      )}
 
       <TodayCard title={`✦ ${activeFocus.title}`} subtitle={activeFocus.subtitle} to={activeFocus.to} variant="highlight" />
 
@@ -491,50 +636,32 @@ export function Today() {
         </Link>
       </div>
 
-      <section className="card !p-3 space-y-2 border-nude/40" aria-labelledby="nucleo-titulo">
-        <div className="px-1 pt-1">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 id="nucleo-titulo" className="text-nude font-medium">O que decide o seu prazo</h2>
-            <span className="text-nude-warm text-sm tabular-nums">{nucleoFeitos} de {nucleo.length}</span>
-          </div>
-          <div className="mt-2 h-1.5 rounded-pill bg-bg-deep overflow-hidden" aria-hidden="true">
-            <div
-              className={`h-full w-full origin-left rounded-pill barra-enche ${nucleo.length > 0 && nucleoFeitos === nucleo.length ? "bg-feito" : "bg-verm"}`}
-              style={{ transform: `scaleX(${nucleo.length ? nucleoFeitos / nucleo.length : 0})` }}
-            />
-          </div>
-          <p className="text-muted text-xs mt-2">
-            {nucleoFeitos === nucleo.length && nucleo.length > 0
-              ? "Feito. O dia já contou pro prazo — o resto é extra."
-              : "Comida, movimento e sono. Num dia ruim, isto basta."}
-          </p>
-        </div>
-        {nucleo.map(linha)}
-      </section>
-
-      <div className="flex items-center justify-between pt-3">
-        <h2 className="text-muted text-xs uppercase tracking-wider">Extras</h2>
-        <button
-          type="button"
-          onClick={() => void db.settings.put({ key: "extrasRecolhidos", value: !extrasRecolhidos })}
-          className="text-xs text-nude underline decoration-dotted px-2 py-1 -mr-2"
-          aria-expanded={!extrasRecolhidos}
-        >
-          {extrasRecolhidos ? `mostrar (${extrasTotal})` : "recolher"}
-        </button>
+      <div className="px-1 flex items-baseline justify-between gap-2">
+        <p className="text-muted text-xs">
+          O que decide o seu prazo <span className="opacity-80">· marcado com a linha vermelha</span>
+        </p>
+        <span className="text-nude-warm text-sm tabular-nums">{nucleoFeitos} de {nucleo.length}</span>
       </div>
 
-      {!extrasRecolhidos && extras.map((block) => (
-        <section key={block.id} className="space-y-2">
-          <div className="flex items-center gap-2 pt-2">
-            <h3 className="text-muted text-xs uppercase tracking-wider">{block.label}</h3>
-            {block.timeHint && <span className="text-nude text-xs ml-auto opacity-80">{block.timeHint}</span>}
-          </div>
-          {block.items.map(linha)}
+      {diaInteiro.length > 0 && (
+        <section className="space-y-2" aria-labelledby="dia-todo-titulo">
+          <h2 id="dia-todo-titulo" className="text-muted text-xs uppercase tracking-wider pt-1">O dia todo</h2>
+          <ul className="space-y-2">{diaInteiro.map(linha)}</ul>
         </section>
-      ))}
+      )}
 
-      {proximo && (
+      <ol aria-label="Linha do tempo" className="space-y-2">
+        {horas.map(linha)}
+      </ol>
+
+      {semana.length > 0 && (
+        <section className="space-y-2" aria-labelledby="semana-titulo">
+          <h2 id="semana-titulo" className="text-muted text-xs uppercase tracking-wider pt-3">Esta semana</h2>
+          <ul className="space-y-2">{semana.map(linha)}</ul>
+        </section>
+      )}
+
+      {proximo && !oferta && (
         <p className="text-muted text-sm pt-2">
           {linhaProximoDesbloqueio(proximo.d.titulo, proximo.faltam)}
         </p>
@@ -544,6 +671,7 @@ export function Today() {
 
       {recipeMealType && <RecipeModal mealType={recipeMealType} onClose={() => setRecipeMealType(null)} />}
       {skincareTime && <SkincareRoutineModal time={skincareTime} onClose={() => setSkincareTime(null)} />}
+      {sequenciaAberta && <SequenciaModal sequenceId={sequenciaAberta} onClose={() => setSequenciaAberta(null)} />}
       {pausaAberta !== null && (
         <MicroPausaModal
           n={pausaAberta}

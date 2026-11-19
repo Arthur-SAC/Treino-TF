@@ -11,6 +11,8 @@ export interface RoutineRowProps {
   onOpen?: () => void; // itens control:"recipe": abre a receita ao tocar no corpo
   /** Horário já resolvido (ajuste da usuária ou padrão), formatado pra exibir. */
   hora?: string;
+  /** Sequência que o corpo abre na frente da tela (com `onOpen`). */
+  sequenciaId?: string;
 }
 
 function Body({ item, done, hora }: { item: RoutineItem; done: boolean; hora?: string }) {
@@ -79,12 +81,28 @@ function useMovimento(done: boolean) {
   };
 }
 
-export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, hora }: RoutineRowProps) {
+export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, hora, sequenciaId }: RoutineRowProps) {
   const isLink = item.control === "link";
   const m = useMovimento(done);
   const cls = `card flex items-start gap-3 ${item.optional ? "opacity-90" : ""} ${m.balancaCls}`;
   const box = <Box done={done} pula={m.pula} maisUm={m.maisUm} onFimPulo={m.fimPulo} onFimMaisUm={m.fimMaisUm} />;
   const toggle = m.marcar(onToggle);
+
+  // Tempo dela (spec 2026-11-19): roxo claro, sem caixinha, sem toque. Nunca
+  // conta como feito nem como falha — só ocupa o lugar dele na linha do tempo.
+  if (item.control === "dela") {
+    return (
+      <div data-dela className="rounded-card border border-vital/30 bg-vital/10 p-4 flex items-start gap-3">
+        <span className="flex-1 min-w-0">
+          <span className="flex items-baseline gap-2">
+            {hora && <span className="flex-none text-xs tabular-nums text-vital">{hora}</span>}
+            <span className="text-sm font-medium text-nude-warm">{item.label}</span>
+          </span>
+          {item.subtitle && <span className="block text-xs text-muted mt-0.5">{item.subtitle}</span>}
+        </span>
+      </div>
+    );
+  }
 
   if (isLink && item.to) {
     return (
@@ -136,6 +154,23 @@ export function RoutineRow({ item, done, onToggle, rightSlot, navValue, onOpen, 
         <Body item={item} done={done} hora={hora} />
         <span className="flex-none self-center text-xs text-nude">{done ? "feito ✓" : "abrir →"}</span>
       </button>
+    );
+  }
+
+  // Sequência do dia (alongamento, assoalho, postura, dança): a caixinha marca
+  // e o corpo abre o "como fazer" na frente do Hoje, sem sair dele (spec
+  // 2026-11-19). `sequenciaId` fica no botão: é o que diz qual sequência abre.
+  if (onOpen && sequenciaId) {
+    return (
+      <div className={cls} {...m.cartaProps}>
+        <button type="button" role="checkbox" aria-checked={done} aria-label={`marcar ${item.label}`} onClick={toggle} className="flex-none p-3 -m-3">
+          {box}
+        </button>
+        <button type="button" onClick={onOpen} aria-label={item.label} data-sequencia={sequenciaId} className="flex-1 min-w-0 text-left">
+          <Body item={item} done={done} hora={hora} />
+        </button>
+        <span className="flex-none self-center text-xs text-nude">{done ? "feito ✓" : "abrir →"}</span>
+      </div>
     );
   }
 

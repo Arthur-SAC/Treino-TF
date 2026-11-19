@@ -1,9 +1,17 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { INITIAL_PLAN } from "../../src/data/meal-plan-seed";
 import { Today } from "../../src/pages/Today";
+
+// Estes testes olham as mecânicas dos itens; o teto de 30 min da noite tira do
+// dia o que não cabe no rodízio (spec 2026-11-19) e tem os próprios testes
+// (tests/lib/noite-rodizio.test.ts). Aqui o bloco da noite fica inteiro.
+vi.mock("../../src/lib/noite", async (importOriginal) => {
+  const real = await importOriginal<typeof import("../../src/lib/noite")>();
+  return { ...real, ajustarNoite: (r: unknown) => r };
+});
 import { desbloquearTudo } from "../helpers/desbloquear";
 import { hojeISO } from "../../src/lib/today-date";
 import { RECOMECO_DATA } from "../../src/lib/objetivo";
@@ -31,23 +39,25 @@ beforeEach(async () => {
 });
 
 describe("Today (backbone)", () => {
-  it("renderiza os blocos da rotina do dia", async () => {
+  // Spec 2026-11-19: os blocos (Manhã, No trabalho, Noite) viraram uma linha
+  // do tempo só, com o que vale o dia todo em cima.
+  it("renderiza a rotina do dia numa linha do tempo", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    expect(await screen.findByText("Manhã")).toBeInTheDocument();
-    expect(screen.getByText("No trabalho")).toBeInTheDocument();
-    // Noite só tem extras trancáveis: espera os desbloqueios chegarem do banco.
-    expect(await screen.findByText("Noite")).toBeInTheDocument();
+    expect(await screen.findByRole("list", { name: "Linha do tempo" })).toBeInTheDocument();
+    expect(screen.getByText("O dia todo")).toBeInTheDocument();
+    expect(await screen.findByText("Dormir")).toBeInTheDocument();
   });
 
   it("o item Postura leva pra sequência do dia e mostra a duração", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    const link = await screen.findByRole("link", { name: /Postura · \d+ min/ });
-    expect(link.getAttribute("href")).toMatch(/^\/treino\/movimento\/(corporal-caminhada|corporal-oito-quadril)$/);
+    // Spec 2026-11-19: abre a sequência na frente do Hoje; o botão diz qual.
+    const botao = await screen.findByRole("button", { name: /Postura · \d+ min/ });
+    expect(botao.getAttribute("data-sequencia")).toMatch(/^(corporal-caminhada|corporal-oito-quadril)$/);
   });
 
   it("não mostra Seu tempo nem Diário (saíram do Hoje; ficam no Progresso)", async () => {
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText("Noite");
+    await screen.findByText("Dormir");
     expect(screen.queryByText(/Seu tempo/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Diário/i)).not.toBeInTheDocument();
   });
@@ -68,7 +78,7 @@ describe("Today (backbone)", () => {
   it("cada micro-pausa é uma linha com caixinha própria", async () => {
     const ehFimDeSemana = [0, 6].includes(new Date().getDay());
     render(<MemoryRouter><Today /></MemoryRouter>);
-    await screen.findByText("Manhã");
+    await screen.findByText("Água");
 
     if (ehFimDeSemana) {
       expect(screen.queryAllByText("Micro-pausa")).toHaveLength(0);
@@ -191,10 +201,11 @@ describe("Today: o item de assoalho pélvico não promete o que a sequência nã
       const esperado = rotuloPelvicoDoDia(pelvicDoDia(n));
       await screen.findByText(esperado.subtitle);
 
-      const link = await screen.findByRole("link", { name: /assoalho pélvico/i });
-      const destino = link.getAttribute("href") ?? "";
+      // Spec 2026-11-19: o item abre a sequência na frente; o botão diz qual.
+      const botao = await screen.findByRole("button", { name: /assoalho pélvico/i });
+      const destino = botao.getAttribute("data-sequencia") ?? "";
       for (const id of OFERTA_VITALIDADE) {
-        expect({ n, destino }).not.toEqual({ n, destino: `/treino/movimento/${id}` });
+        expect({ n, destino }).not.toEqual({ n, destino: id });
       }
       unmount();
     }

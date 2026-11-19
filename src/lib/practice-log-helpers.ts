@@ -12,8 +12,21 @@ import { PROGRESSAO_PELVICA } from "./pelvic-progression";
 import { SEQUENCIAS_FLEX, type MomentoFlex } from "./flex-progression";
 import { SEQUENCIAS_REBOLADO } from "./rebolado-progression";
 import { DESDE_ENTREGA_B, SEQUENCIAS_POSTURA } from "./postura-progression";
-import { ultimosDiasISO } from "./today-date";
+import { hojeISO, ultimosDiasISO } from "./today-date";
 import type { PracticeLog } from "./db";
+
+/** Grava a sequência concluída hoje. Uma função só pra tela da sequência e pro
+ *  "como fazer" que abre na frente do Hoje (spec 2026-11-19): duas gravações
+ *  escritas à mão divergiriam no formato do log, e o Hoje marca o item por ele. */
+export async function registrarPratica(seq: { id: string; durationMin: number }, notas?: string): Promise<void> {
+  await db.practiceLogs.add({
+    date: hojeISO(),
+    sequenceId: seq.id,
+    completed: true,
+    durationMin: seq.durationMin,
+    notes: notas?.trim() || undefined,
+  } as PracticeLog);
+}
 
 /** A sequência do dia foi praticada hoje? É o que marca sozinho o item do Hoje
  *  (assoalho, alongamentos, rebolado) quando ela conclui a sequência — antes

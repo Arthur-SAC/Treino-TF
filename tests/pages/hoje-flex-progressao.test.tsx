@@ -57,8 +57,9 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
     // quebrada.
     await screen.findByText(subManha(0));
 
-    const link = await screen.findByRole("link", { name: /alongamento manh/i });
-    expect(link.getAttribute("href")).toBe(`/treino/movimento/${esperado.sequenceId}`);
+    // Spec 2026-11-19: o item abre a sequência na frente; o botão diz qual.
+    const botao = await screen.findByRole("button", { name: /alongamento manh/i });
+    expect(botao.getAttribute("data-sequencia")).toBe(esperado.sequenceId);
   });
 
   it("depois de 28 práticas de manhã, aponta pra fase 2", async () => {
@@ -69,8 +70,9 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
     expect(esperado.sequenceId).toBe("flex-manha-amplitude");
     await screen.findByText(subManha(ATE_FLEX_FASE_2));
 
-    const link = await screen.findByRole("link", { name: /alongamento manh/i });
-    expect(link.getAttribute("href")).toBe(`/treino/movimento/${esperado.sequenceId}`);
+    // Spec 2026-11-19: o item abre a sequência na frente; o botão diz qual.
+    const botao = await screen.findByRole("button", { name: /alongamento manh/i });
+    expect(botao.getAttribute("data-sequencia")).toBe(esperado.sequenceId);
   });
 
   it("práticas da manhã não avançam a trilha da noite", async () => {
@@ -85,8 +87,8 @@ describe("Today: os dois alongamentos progridem, cada trilha por si", () => {
     expect(noiteEsperada.sequenceId).toBe("flexibilidade-intima");
     await screen.findByText(subNoite(0));
 
-    const linkNoite = await screen.findByRole("link", { name: /alongamento noite/i });
-    expect(linkNoite.getAttribute("href")).toBe(`/treino/movimento/${noiteEsperada.sequenceId}`);
+    const botaoNoite = await screen.findByRole("button", { name: /alongamento noite/i });
+    expect(botaoNoite.getAttribute("data-sequencia")).toBe(noiteEsperada.sequenceId);
   });
 
   it("o rótulo mostra a duração da sequência do dia, não um número fixo", async () => {

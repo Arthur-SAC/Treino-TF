@@ -1,10 +1,17 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { db } from "../../src/lib/db";
 import { Today } from "../../src/pages/Today";
 import { desbloquearTudo } from "../helpers/desbloquear";
 import { hojeISO } from "../../src/lib/today-date";
+
+// A Postura entra no rodízio da noite (teto de 30 min, spec 2026-11-19) e não
+// aparece todo dia; aqui o que importa é o item, então o bloco fica inteiro.
+vi.mock("../../src/lib/noite", async (importOriginal) => {
+  const real = await importOriginal<typeof import("../../src/lib/noite")>();
+  return { ...real, ajustarNoite: (r: unknown) => r };
+});
 
 const todayISO = hojeISO();
 const todayDow = new Date().getDay();

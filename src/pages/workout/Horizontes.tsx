@@ -2,7 +2,7 @@ import { Voltar } from "../../components/Voltar";
 import { GuideAccordion } from "../../components/GuideAccordion";
 import { HORIZONTES } from "../../data/horizontes-seed";
 import { usePartida } from "../../hooks/usePartida";
-import { linhaDoTempo } from "../../lib/linha-do-tempo";
+import { linhaDosPrazos } from "../../lib/linha-do-tempo";
 
 export function Horizontes() {
   // A linha do tempo sai da medição de partida dela (entrega 2, 2026-09-23).
@@ -20,7 +20,7 @@ export function Horizontes() {
       </p>
       {/* Enquanto o banco responde, sem a linha do tempo — senão pisca
           "aparece depois da sua primeira medição" pra quem já mediu. */}
-      <GuideAccordion sections={carregando ? HORIZONTES : [...HORIZONTES, linhaDoTempo(projecao)]} />
+      <GuideAccordion sections={carregando ? HORIZONTES : [...HORIZONTES, linhaDosPrazos(projecao)]} />
       <p className="text-muted text-[0.7rem] mt-4">
         Os números de WHR são estimativas pra dar um norte — cada corpo responde do seu jeito.
       </p>
