@@ -58,26 +58,46 @@ function paraHHMM(min: number): string {
 /** O bloco do app é sequencial: o alongamento começa logo depois do skincare
  *  e os itens do rodízio logo depois do alongamento. Tira do dia os do rodízio
  *  que não couberem (teto e, por segurança, o início do "com ela"). Só mexe no
- *  alongamento (horário) e nos itens do rodízio. */
-export function ajustarNoite(r: DayRoutine, minutosDe: (itemId: string) => number): DayRoutine {
+ *  alongamento (horário) e nos itens do rodízio.
+ *
+ *  `horarios` = os ajustes de /hoje/horarios (`routineTimes`). Item que ela
+ *  ajustou fica no horário dela (não é reescrito, nem cortado) e o que vem
+ *  depois segue a partir dele; a sequência parte do skincare resolvido e o
+ *  corte usa o "com ela" resolvido. */
+export function ajustarNoite(
+  r: DayRoutine,
+  minutosDe: (itemId: string) => number,
+  horarios: Readonly<Record<string, string>> = {},
+): DayRoutine {
   const bloco = r.blocks.find((b) => b.id === "noite");
   if (!bloco) return r;
   const presentes = bloco.items.filter((i) => ehRodizio(i.id));
   if (presentes.length === 0) return r;
 
+  const hora = (i: RoutineItem | undefined) => (i ? horarios[i.id] ?? i.defaultTime : undefined);
   const escolhidos = rodizioDaSemana(presentes.map((i) => i.id), minutosDe)[r.dayOfWeek] ?? [];
   const skincare = bloco.items.find((i) => i.id === "skincare-noite");
   const comEla = bloco.items.find((i) => i.id === "com-ela");
   let alongamento = bloco.items.find((i) => i.id === "alongamento-noite");
-  if (alongamento && skincare?.defaultTime) {
-    alongamento = { ...alongamento, defaultTime: paraHHMM(paraMin(skincare.defaultTime) + minutosDe("skincare-noite")) };
+  const inicioSkincare = hora(skincare);
+  if (alongamento && inicioSkincare && horarios[alongamento.id] === undefined) {
+    alongamento = { ...alongamento, defaultTime: paraHHMM(paraMin(inicioSkincare) + minutosDe("skincare-noite")) };
   }
-  let t = alongamento?.defaultTime ? paraMin(alongamento.defaultTime) + minutosDe("alongamento-noite") : null;
-  const limite = comEla?.defaultTime ? paraMin(comEla.defaultTime) : null;
+  const inicioAlongamento = hora(alongamento);
+  let t = inicioAlongamento ? paraMin(inicioAlongamento) + minutosDe("alongamento-noite") : null;
+  const fimDoBloco = hora(comEla);
+  const limite = fimDoBloco ? paraMin(fimDoBloco) : null;
 
   const ficam: RoutineItem[] = [];
   for (const id of escolhidos) {
     const item = presentes.find((i) => i.id === id)!;
+    const dela = horarios[id];
+    if (dela !== undefined) {
+      // O ajuste dela vence: fica onde ela pôs, e o próximo vem depois.
+      ficam.push(item);
+      t = paraMin(dela) + minutosDe(id);
+      continue;
+    }
     if (t === null) { ficam.push(item); continue; }
     const fim = t + minutosDe(id);
     if (limite !== null && fim > limite) continue;

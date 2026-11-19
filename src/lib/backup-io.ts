@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { hojeISO } from "./today-date";
 import { seedDatabase } from "./seed";
-import { FASES_ACEITAS_PADRAO, unirFasesAceitas, unirRecusadas, type FasesAceitas } from "./ofertas";
+import { FASES_ACEITAS_PADRAO, unirFasesAceitas, unirFasesAceitasDesde, unirRecusadas, type FasesAceitas, type FasesAceitasDesde } from "./ofertas";
 
 // O que entra no backup e como volta. Saiu de Settings.tsx (auditoria de
 // 2026-09-23) porque o backup deixava de fora as configurações — ciclo atual,
@@ -152,6 +152,7 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     const vistasAqui = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
     const recusadasAqui = (await db.settings.get("ofertasRecusadas"))?.value as Record<string, string> | undefined;
     const fasesAqui = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
+    const desdeAqui = (await db.settings.get("fasesAceitasDesde"))?.value as FasesAceitasDesde | undefined;
     await db.settings.bulkPut((p.settings ?? []) as never);
     const desbloqueiosBackup = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
     const vistasBackup = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
@@ -161,11 +162,20 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     // Recusa vale a mais recente; fase aceita vale a maior (save point também).
     const recusadasBackup = (await db.settings.get("ofertasRecusadas"))?.value as Record<string, string> | undefined;
     const fasesBackup = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
+    // O bulkPut acima já trouxe o `desde` do backup, se ele tinha um.
+    const desdeBackup = p.settings && (p.settings as Array<{ key: string }>).some((s) => s.key === "fasesAceitasDesde")
+      ? (await db.settings.get("fasesAceitasDesde"))?.value as FasesAceitasDesde | undefined
+      : undefined;
     if (recusadasAqui || recusadasBackup) {
       await db.settings.put({ key: "ofertasRecusadas", value: unirRecusadas(recusadasAqui ?? {}, recusadasBackup ?? {}) });
     }
     if (fasesAqui || fasesBackup) {
       await db.settings.put({ key: "fasesAceitas", value: unirFasesAceitas(fasesAqui ?? FASES_ACEITAS_PADRAO, fasesBackup ?? FASES_ACEITAS_PADRAO) });
+      // O `desde` acompanha a fase que venceu (empate: o maior).
+      await db.settings.put({
+        key: "fasesAceitasDesde",
+        value: unirFasesAceitasDesde(fasesAqui ?? FASES_ACEITAS_PADRAO, desdeAqui ?? {}, fasesBackup ?? FASES_ACEITAS_PADRAO, desdeBackup ?? {}),
+      });
     }
     if (vistasAqui || vistasBackup) {
       await db.settings.put({ key: "conquistasVistas", value: [...new Set([...(vistasAqui ?? []), ...(vistasBackup ?? [])])] });

@@ -3,7 +3,7 @@ import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
 import { MEDIDAS_PARTIDA } from "./objetivo";
 import { hojeISO } from "./today-date";
-import { faseDaContagem, FASES_ACEITAS_PADRAO, type FasesAceitas, type Trilha } from "./ofertas";
+import { faseDaContagem, FASES_ACEITAS_PADRAO, inicioDaFase, type FasesAceitas, type Trilha } from "./ofertas";
 import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado } from "./practice-log-helpers";
 
 // Exportadas (não apenas locais a seedDatabase) por uma razão concreta: seis
@@ -191,10 +191,15 @@ export async function seedDatabase(): Promise<void> {
     };
     const aceitasAntes = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
     const fases: FasesAceitas = { ...FASES_ACEITAS_PADRAO };
+    // `desde` = início da fase gravada: a contagem liberada continua igual à
+    // crua pra quem já estava avançada (nada muda no dia dela).
+    const desde: Record<Trilha, number> = { flexManha: 0, flexNoite: 0, pelvica: 0, rebolado: 0, postura: 0 };
     for (const t of Object.keys(fases) as Trilha[]) {
       fases[t] = Math.max(aceitasAntes?.[t] ?? 1, faseDaContagem(t, contagens[t]));
+      desde[t] = inicioDaFase(t, fases[t]);
     }
     await db.settings.put({ key: "fasesAceitas", value: fases });
+    await db.settings.put({ key: "fasesAceitasDesde", value: desde });
     const abertos = ((await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined) ?? {};
     if (!abertos["alongamento-noite"]) {
       await db.settings.put({ key: "desbloqueios", value: { ...abertos, "alongamento-noite": hojeISO() } });

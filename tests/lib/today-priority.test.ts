@@ -87,3 +87,23 @@ describe("currentBlock / timeBlockFocus", () => {
     }
   });
 });
+
+// Revisão final 2026-11-19, item 5: sexta e sábado das 18h em diante são dela —
+// o destaque não manda skincare nem alongamento, e não leva pra tarefa nenhuma.
+describe("timeBlockFocus na noite livre", () => {
+  it("sexta e sábado depois das 18h: texto neutro, sem link", () => {
+    for (const dow of [5, 6]) {
+      for (const h of [18, 19, 21, 23]) {
+        const f = timeBlockFocus(h, dow);
+        expect(f.title).toBe("Noite livre");
+        expect(f.subtitle).toBe("O resto do dia é seu");
+        expect(f.to).toBeUndefined();
+      }
+    }
+  });
+  it("outros dias à noite seguem com o bloco do app; sábado 17h ainda é a dança", () => {
+    expect(timeBlockFocus(21, 3).title).toBe("Antes de dormir");
+    expect(timeBlockFocus(21, 0).title).toBe("Antes de dormir");
+    expect(timeBlockFocus(17, 6).title.toLowerCase()).toContain("dança");
+  });
+});

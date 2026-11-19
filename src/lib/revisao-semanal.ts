@@ -34,7 +34,8 @@ export function revisarSemana(d: DadosDaSemana, modo: ModoCaminhada, trancados: 
   const linhas = [`Treinos: ${Math.min(d.treinos, TREINOS_POR_SEMANA)} de ${TREINOS_POR_SEMANA}`];
   if (modo !== "pausada") linhas.push(`Caminhada ou esteira: ${d.diasCardio} de ${d.dias} dias`);
   linhas.push(`Sono no horário: ${d.noitesNoAlvo} de ${d.dias} noites`);
-  if (!trancados.has("alongamento-noite")) linhas.push(`Alongamento da noite: ${d.alongamentosNoite} de ${d.dias}`);
+  // Denominador = noites com bloco do app (sexta e sábado são dela).
+  if (!trancados.has("alongamento-noite")) linhas.push(`Alongamento da noite: ${d.alongamentosNoite} de ${d.noitesComBloco}`);
   if (d.cinturaUltima === undefined) {
     linhas.push("Cintura: sem medida ainda");
   } else if (d.cinturaAnterior === undefined) {

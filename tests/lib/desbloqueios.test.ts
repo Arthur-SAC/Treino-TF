@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   DESBLOQUEIOS,
-  novosDesbloqueios,
   proximoDesbloqueio,
   filtrarRotina,
   idsTrancados,
@@ -58,23 +57,6 @@ describe("tabela de desbloqueios", () => {
   it("entra e praQue não citam hora: o horário muda com o modo e mora só na etiqueta", () => {
     const comHora = DESBLOQUEIOS.filter((d) => /\b\d{1,2}h(\d{2})?\b|\b\d{1,2}:\d{2}\b/.test(`${d.entra} ${d.praQue}`));
     expect(comHora.map((d) => d.id)).toEqual([]);
-  });
-});
-
-describe("novosDesbloqueios", () => {
-  it("nada no zero", () => {
-    expect(novosDesbloqueios(0, {})).toEqual([]);
-  });
-  it("no 5 abre manhã completa e assoalho 1", () => {
-    expect(novosDesbloqueios(5, {}).map((d) => d.id)).toEqual(["manha-completa", "assoalho-1"]);
-  });
-  it("no 12, com os do 5 já abertos, abre os do 10", () => {
-    expect(novosDesbloqueios(12, { "manha-completa": "x", "assoalho-1": "x" }).map((d) => d.id)).toEqual([
-      "skincare-2", "sentar", "danca",
-    ]);
-  });
-  it("save point: o já desbloqueado não aparece nem some", () => {
-    expect(novosDesbloqueios(3, { "skincare-2": "x" })).toEqual([]);
   });
 });
 

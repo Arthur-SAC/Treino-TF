@@ -9,8 +9,6 @@
 // Por id, não por rótulo: o id é o que o check do dia guarda, e o mesmo id
 // troca de copy por modo (`caminhada-trabalho` vira esteira) e de bloco.
 
-import type { DayRoutine, RoutineBlockGroup, RoutineItem } from "./today-routine";
-
 export const NUCLEO_IDS: ReadonlySet<string> = new Set([
   // comida
   "cafe-marmita", "almoco", "lanche-saida", "jantar",
@@ -21,21 +19,3 @@ export const NUCLEO_IDS: ReadonlySet<string> = new Set([
   // sono
   "dormir",
 ]);
-
-export interface HojeSeparado {
-  /** Na ordem do dia (a ordem dos blocos), não agrupado por tipo. */
-  nucleo: RoutineItem[];
-  /** Os blocos de sempre sem os itens do núcleo; bloco que esvazia sai. */
-  extras: RoutineBlockGroup[];
-}
-
-export function separarNucleo(routine: DayRoutine): HojeSeparado {
-  const nucleo: RoutineItem[] = [];
-  const extras: RoutineBlockGroup[] = [];
-  for (const bloco of routine.blocks) {
-    const resto: RoutineItem[] = [];
-    for (const item of bloco.items) (NUCLEO_IDS.has(item.id) ? nucleo : resto).push(item);
-    if (resto.length > 0) extras.push({ ...bloco, items: resto });
-  }
-  return { nucleo, extras };
-}

@@ -37,6 +37,17 @@ function abrir() {
   );
 }
 
+/** Avança a sequência aberta até o último passo, pelo "pular →" de cada um. */
+async function pularAteOFim() {
+  await screen.findByText(/^Passo 1 de/);
+  for (let i = 0; i < 50; i++) {
+    const pular = screen.queryByRole("button", { name: "pular →" });
+    if (!pular) break;
+    fireEvent.click(pular);
+    await Promise.resolve();
+  }
+}
+
 const antes = (a: HTMLElement, b: HTMLElement) =>
   !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
 
@@ -117,13 +128,14 @@ describe("Hoje — o alongamento abre na frente da tela", () => {
       expect(el).not.toBeNull();
       return el as HTMLElement;
     });
-    expect(await within(janela).findByRole("button", { name: "Concluir" })).toBeInTheDocument();
+    expect(await within(janela).findByText(/^Passo 1 de/)).toBeInTheDocument();
     expect(screen.queryByText("Tela do movimento")).not.toBeInTheDocument();
   });
 
   it("Concluir grava a prática e marca o item", async () => {
     abrir();
     fireEvent.click(await screen.findByRole("button", { name: /^Alongamento manhã/ }));
+    await pularAteOFim();
     fireEvent.click(await screen.findByRole("button", { name: "Concluir" }));
     await waitFor(async () => {
       const logs = await db.practiceLogs.where("date").equals(HOJE).toArray();
@@ -208,5 +220,22 @@ describe("SequenciaModal", () => {
     render(<SequenciaModal sequenceId="vazia" onClose={() => {}} />);
     expect(await screen.findByRole("button", { name: "Concluir" })).toBeInTheDocument();
     expect(screen.queryByText(/Passo 0 de 0/)).not.toBeInTheDocument();
+  });
+
+  // Revisão final, item 8: um toque errado não pode gravar prática.
+  it("Concluir só aparece no último passo", async () => {
+    await db.danceSequences.put({
+      id: "tres", name: "Três", category: "mobilidade", level: "iniciante", durationMin: 3, focus: "x",
+      moves: ["A", "B", "C"].map((name) => ({ name, description: name, durationSec: 30 })),
+    });
+    render(<SequenciaModal sequenceId="tres" onClose={() => {}} />);
+    expect(await screen.findByText("Passo 1 de 3")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Concluir" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "pular →" }));
+    expect(await screen.findByText("Passo 2 de 3")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Concluir" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "pular →" }));
+    expect(await screen.findByText("Passo 3 de 3")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Concluir" })).toBeInTheDocument();
   });
 });

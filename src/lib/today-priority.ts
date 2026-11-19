@@ -1,3 +1,5 @@
+import { noiteLivre } from "./today-routine";
+
 export interface FocusState {
   cycleAdvice: { recommend: boolean; reason: string } | null;
   waistGuardTriggered: boolean;
@@ -49,7 +51,12 @@ export function currentBlock(hour: number): "manha" | "trabalho" | "tarde" | "no
   return "noite";
 }
 
-export function timeBlockFocus(hour: number, dayOfWeek: number): { title: string; subtitle: string; to: string } {
+export function timeBlockFocus(hour: number, dayOfWeek: number): { title: string; subtitle: string; to?: string } {
+  // Sexta e sábado das 18h em diante são dela (spec 2026-11-19): nada de
+  // tarefa, nem link pra uma.
+  if (hour >= 18 && noiteLivre(dayOfWeek)) {
+    return { title: "Noite livre", subtitle: "O resto do dia é seu" };
+  }
   const block = currentBlock(hour);
   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
   if (block === "manha") {

@@ -3,7 +3,8 @@ import { db } from "../../src/lib/db";
 import { seedDatabase } from "../../src/lib/seed";
 import { coletarBackup, restaurarBackup } from "../../src/lib/backup-io";
 import { SEQUENCIAS_FLEX, ATE_FLEX_FASE_2, ATE_FLEX_FASE_3 } from "../../src/lib/flex-progression";
-import { faseDaContagem, type FasesAceitas } from "../../src/lib/ofertas";
+import { contagemLiberada, faseDaContagem, inicioDaFase, type FasesAceitas, type FasesAceitasDesde } from "../../src/lib/ofertas";
+import { PROGRESSAO_PELVICA } from "../../src/lib/pelvic-progression";
 import { hojeISO } from "../../src/lib/today-date";
 
 async function praticasFlexNoite(n: number) {
@@ -17,6 +18,7 @@ describe("migração da rotina em linha do tempo", () => {
     await db.practiceLogs.clear();
     await db.settings.delete("rotinaLinhaMigracao");
     await db.settings.delete("fasesAceitas");
+    await db.settings.delete("fasesAceitasDesde");
     await db.settings.delete("desbloqueios");
   });
 
@@ -56,5 +58,35 @@ describe("migração da rotina em linha do tempo", () => {
     await restaurarBackup(p);
     const f = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas;
     expect(f.flexNoite).toBe(faseDaContagem("flexNoite", 40));
+  });
+
+  // Revisão final, item 1: a migração grava `desde` = início da fase calculada,
+  // pra a contagem liberada continuar igual à crua — nada muda no dia dela.
+  it("grava desde = início da fase e a sequência do dia não muda", async () => {
+    await praticasFlexNoite(40);
+    for (let i = 0; i < 12; i++) {
+      await db.practiceLogs.add({ date: "2026-10-02", sequenceId: PROGRESSAO_PELVICA[0], completed: true, durationMin: 5 } as never);
+    }
+    await seedDatabase();
+    const f = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas;
+    const d = (await db.settings.get("fasesAceitasDesde"))?.value as FasesAceitasDesde;
+    expect(d.flexNoite).toBe(inicioDaFase("flexNoite", f.flexNoite));
+    expect(d.pelvica).toBe(inicioDaFase("pelvica", f.pelvica));
+    expect(contagemLiberada("flexNoite", 40, f, d)).toBe(40);
+    expect(contagemLiberada("pelvica", 12, f, d)).toBe(12);
+  });
+
+  it("backup: desde acompanha a fase que venceu", async () => {
+    await seedDatabase();
+    await db.settings.put({ key: "fasesAceitas", value: { flexManha: 1, flexNoite: 1, pelvica: 2, rebolado: 1, postura: 1 } });
+    await db.settings.put({ key: "fasesAceitasDesde", value: { pelvica: 12 } });
+    const p = await coletarBackup();
+    // no aparelho ela já aceitou a fase 3 com 14: vence o aparelho, e o desde dele
+    await db.settings.put({ key: "fasesAceitas", value: { flexManha: 1, flexNoite: 1, pelvica: 3, rebolado: 1, postura: 1 } });
+    await db.settings.put({ key: "fasesAceitasDesde", value: { pelvica: 14 } });
+    await restaurarBackup(p);
+    const d = (await db.settings.get("fasesAceitasDesde"))?.value as FasesAceitasDesde;
+    expect(((await db.settings.get("fasesAceitas"))?.value as FasesAceitas).pelvica).toBe(3);
+    expect(d.pelvica).toBe(14);
   });
 });

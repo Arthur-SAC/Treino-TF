@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { db } from "../lib/db";
 import { TodayCard } from "../components/TodayCard";
 import { StreakCard } from "../components/StreakCard";
-import { useSetting } from "../hooks/useSetting";
+import { useSetting, useSettingCarregada } from "../hooks/useSetting";
 import { NUCLEO_IDS } from "../lib/nucleo";
 import { pelvicDoDia, rotuloPelvicoDoDia } from "../lib/pelvic-progression";
 import { flexDoDia } from "../lib/flex-progression";
@@ -48,7 +48,7 @@ import { useAdesao } from "../hooks/useAdesao";
 import { SemanaCard } from "../components/SemanaCard";
 import { treinosNaSemana, variacaoDesdePartida } from "../lib/semana";
 import { subtituloCreatina, CREATINA_ITEM_ID } from "../lib/creatina";
-import { getSetting, setSetting } from "../lib/settings-helpers";
+import { DEFAULTS, getSetting, setSetting } from "../lib/settings-helpers";
 import { AvisoLembretes } from "../components/AvisoLembretes";
 import { AvisoApkNovo } from "../components/AvisoApkNovo";
 import { AvisoBackup } from "../components/AvisoBackup";
@@ -139,8 +139,12 @@ export function Today() {
   const pelvicFeitas = useLiveQuery(() => contarPraticasDaProgressao(), []);
   // A fase só sobe quando ela aceita (spec 2026-11-19, seção 4): as trilhas
   // recebem a contagem cortada no fim da fase aceita; a oferta recebe a crua.
-  const fasesAceitas = useSetting("fasesAceitas");
-  const pelvicHoje = pelvicDoDia(contagemLiberada("pelvica", pelvicFeitas ?? 0, fasesAceitas));
+  // `fasesAceitasDesde`: a fase aceita começa do início dela, contando do aceite.
+  const fasesAceitasCarregadas = useSettingCarregada("fasesAceitas");
+  const fasesAceitasDesdeCarregadas = useSettingCarregada("fasesAceitasDesde");
+  const fasesAceitas = fasesAceitasCarregadas ?? DEFAULTS.fasesAceitas;
+  const fasesAceitasDesde = fasesAceitasDesdeCarregadas ?? DEFAULTS.fasesAceitasDesde;
+  const pelvicHoje = pelvicDoDia(contagemLiberada("pelvica", pelvicFeitas ?? 0, fasesAceitas, fasesAceitasDesde));
   // Duração e lugar vêm da sequência do dia, não de texto fixo no item: a
   // rotina tem sequências de 3 a 7 min, e "dá pra fazer sentada" é falso na
   // identificação (deitada) e na integração com o quadril (em pé).
@@ -155,20 +159,20 @@ export function Today() {
   // praticar de manhã não pode empurrar a fase da noite.
   const praticasFlexManha = useLiveQuery(() => contarPraticasFlex("manha"), []);
   const praticasFlexNoite = useLiveQuery(() => contarPraticasFlex("noite"), []);
-  const flexManhaLiberada = contagemLiberada("flexManha", praticasFlexManha ?? 0, fasesAceitas);
+  const flexManhaLiberada = contagemLiberada("flexManha", praticasFlexManha ?? 0, fasesAceitas, fasesAceitasDesde);
   const flexManhaHoje = flexDoDia("manha", flexManhaLiberada);
-  const flexNoiteHoje = flexDoDia("noite", contagemLiberada("flexNoite", praticasFlexNoite ?? 0, fasesAceitas));
+  const flexNoiteHoje = flexDoDia("noite", contagemLiberada("flexNoite", praticasFlexNoite ?? 0, fasesAceitas, fasesAceitasDesde));
   const flexManhaRotulo = rotuloFlexDoDia("Alongamento manhã", flexManhaHoje);
   const flexNoiteRotulo = rotuloFlexDoDia("Alongamento noite", flexNoiteHoje);
   // Rebolado de sábado com a progressão de resistência (auditoria 2026-09-23:
   // a trilha existia e nenhuma tela a servia).
   const praticasRebolado = useLiveQuery(() => contarPraticasRebolado(), []);
-  const reboladoHoje = reboladoDoDia(contagemLiberada("rebolado", praticasRebolado ?? 0, fasesAceitas));
+  const reboladoHoje = reboladoDoDia(contagemLiberada("rebolado", praticasRebolado ?? 0, fasesAceitas, fasesAceitasDesde));
   // Postura (andar → 8 → gingado), com o gingado liberado pela contagem —
   // mesmo padrão dos alongamentos. Conta até ONTEM: a prática de hoje não
   // pode virar o item do dia depois de marcada.
   const praticasPostura = useLiveQuery(() => contarPraticasPostura(todayISO), [todayISO]);
-  const posturaHoje = posturaDoDia(diaDoAno(today), contagemLiberada("postura", praticasPostura ?? 0, fasesAceitas));
+  const posturaHoje = posturaDoDia(diaDoAno(today), contagemLiberada("postura", praticasPostura ?? 0, fasesAceitas, fasesAceitasDesde));
   const posturaRotulo = rotuloFlexDoDia("Postura", posturaHoje);
   // Práticas de hoje: concluir a sequência do dia marca o item sozinho.
   const praticasDeHoje = useLiveQuery(() => db.practiceLogs.where("date").equals(todayISO).toArray(), [todayISO]);
@@ -227,7 +231,8 @@ export function Today() {
 
   // Níveis de desbloqueio (spec 2026-11-09, seção 8): o trancado sai e o que
   // está no nível mínimo vem na versão mínima — antes de tudo o que lê a rotina.
-  const desbloqueios = useSetting("desbloqueios");
+  const desbloqueiosCarregados = useSettingCarregada("desbloqueios");
+  const desbloqueios = desbloqueiosCarregados ?? DEFAULTS.desbloqueios;
   const rotinaDoDia = buildDayRoutine(dayOfWeek, diaDoAno(today), horasDasPausas, modoCaminhada);
   // Minutos reais do bloco do app à noite, pra o teto de 30 min (noite.ts):
   // sequência do dia de cada trilha, voz pela tabela de desbloqueios, skincare
@@ -251,8 +256,11 @@ export function Today() {
   };
   // O bloco da noite é sequencial e cabe em 30 min: ajusta DEPOIS do filtro de
   // níveis (só o que está aberto entra na conta) e ANTES da linha do tempo.
-  const routine = ajustarNoite(filtrarRotina(rotinaDoDia, desbloqueios), minutosDaNoite(desbloqueios));
+  // Com os ajustes dela de /hoje/horarios: o item que ela moveu fica onde ela
+  // pôs, e o resto do bloco segue a partir dele.
   const routineTimes = useSetting("routineTimes");
+  const noiteDoDia = (ja: Desbloqueados) => ajustarNoite(filtrarRotina(rotinaDoDia, ja), minutosDaNoite(ja), routineTimes);
+  const routine = noiteDoDia(desbloqueios);
 
   // Alvo do sono = o horário do próprio item "Dormir", com o ajuste que ela
   // fez em /hoje/horarios. Era uma constante "22:30" aqui: se ela mudasse o
@@ -297,7 +305,9 @@ export function Today() {
       waistNowCm: latestM!.waistCm!,
     }).triggered;
   const focus = computeFocus({
-    cycleAdvice: advice ? { recommend: advice.recommend, reason: advice.reason } : null,
+    // O ciclo vem pelo card "Pronta pra próxima" (com o "Agora não" dela); o
+    // destaque repetindo o mesmo aviso ignorava a recusa.
+    cycleAdvice: null,
     waistGuardTriggered: guardTriggered,
     workoutToday: todayTemplate
       ? { done: (sessionsToday ?? 0) > 0, name: todayTemplate.name, to: `/treino/sessao/${todayTemplate.id}` }
@@ -459,9 +469,14 @@ export function Today() {
     : null;
   // "Pronta pra próxima" (spec 2026-11-19, seção 4): um aviso por vez, e só
   // com tudo o que ele lê já carregado (sem piscar um aviso errado).
-  const ofertasRecusadas = useSetting("ofertasRecusadas");
+  // As configurações também: `useSetting` devolve o padrão enquanto lê, e o
+  // padrão (nada aceito, nada recusado) piscava uma oferta já resolvida.
+  const ofertasRecusadasCarregadas = useSettingCarregada("ofertasRecusadas");
+  const ofertasRecusadas = ofertasRecusadasCarregadas ?? DEFAULTS.ofertasRecusadas;
   const carregadoPraOferta = !!datasDeTreino && pelvicFeitas !== undefined && praticasFlexManha !== undefined &&
-    praticasFlexNoite !== undefined && praticasRebolado !== undefined && praticasPostura !== undefined;
+    praticasFlexNoite !== undefined && praticasRebolado !== undefined && praticasPostura !== undefined &&
+    fasesAceitasCarregadas !== undefined && fasesAceitasDesdeCarregadas !== undefined &&
+    desbloqueiosCarregados !== undefined && ofertasRecusadasCarregadas !== undefined;
   // Disse "Agora não" hoje: nenhum outro aviso até amanhã (o próximo pode vir no dia seguinte).
   const recusouHoje = Object.values(ofertasRecusadas).includes(todayISO);
   const ofertaCrua: Oferta | null = carregadoPraOferta && !recusouHoje
@@ -476,11 +491,19 @@ export function Today() {
           rebolado: praticasRebolado!, postura: praticasPostura!,
         },
         fasesAceitas,
+        fasesAceitasDesde,
       })
     : null;
-  // Horário e minutos do desbloqueio no dia dela (modo, ajustes, fase da manhã).
+  // Horário e minutos do desbloqueio no dia dela (modo, ajustes, fase da manhã):
+  // o horário sai da noite como fica DEPOIS de aceitar (sequencial e cortada).
   const oferta: Oferta | null = ofertaCrua?.tipo === "desbloqueio"
-    ? { ...ofertaCrua, ...tempoDoDesbloqueio(DESBLOQUEIOS.find((d) => d.id === ofertaCrua.id)!, rotinaDoDia, routineTimes, flexManhaLiberada) }
+    ? {
+        ...ofertaCrua,
+        ...tempoDoDesbloqueio(
+          DESBLOQUEIOS.find((d) => d.id === ofertaCrua.id)!, rotinaDoDia, routineTimes, flexManhaLiberada,
+          noiteDoDia({ ...desbloqueios, [ofertaCrua.id]: todayISO }),
+        ),
+      }
     : ofertaCrua;
   // O que a parte nova faz com a noite: rodízio de antes × depois de aceitar.
   const rodizioDaOferta = ((): string | undefined => {
@@ -505,7 +528,15 @@ export function Today() {
       await setSetting("desbloqueios", { ...ja, [o.id]: todayISO });
     } else if (o.tipo === "fase") {
       const f = await getSetting("fasesAceitas");
-      await setSetting("fasesAceitas", { ...f, [o.trilha]: Math.max(f[o.trilha] ?? 1, o.fase) });
+      if ((f[o.trilha] ?? 1) >= o.fase) return;
+      // A fase nova começa do início dela: grava a contagem crua de agora.
+      const crua: Record<Trilha, number> = {
+        flexManha: praticasFlexManha ?? 0, flexNoite: praticasFlexNoite ?? 0, pelvica: pelvicFeitas ?? 0,
+        rebolado: praticasRebolado ?? 0, postura: praticasPostura ?? 0,
+      };
+      const desde = await getSetting("fasesAceitasDesde");
+      await setSetting("fasesAceitasDesde", { ...desde, [o.trilha]: crua[o.trilha] });
+      await setSetting("fasesAceitas", { ...f, [o.trilha]: o.fase });
     } else {
       // Mesmo que o "Ativar" da tela Ciclos, sem o confirm: o "Aceitar" já é ela confirmando.
       await setSetting("activeCycle", o.para);

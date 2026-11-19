@@ -8,7 +8,7 @@ import { marcosDeCinturaAtingidos, idDoMarcoCintura } from "../lib/conquistas";
 import { textoMarcoCintura } from "../lib/placas-texto";
 import { PlacaVitoria } from "../components/placas/PlacaVitoria";
 import { PlacaQueda } from "../components/placas/PlacaQueda";
-import { PlacaConquista } from "../components/placas/PlacaDesbloqueio";
+import { PlacaConquista } from "../components/placas/PlacaConquista";
 
 export type PlacaDados =
   | { tipo: "vitoria"; treino: string; de: number; para: number; parte: ProximaParte; fimDeSemana?: boolean }

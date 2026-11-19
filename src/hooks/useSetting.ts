@@ -14,3 +14,13 @@ export function useSetting<K extends keyof Settings>(key: K): Settings[K] {
   if (row === undefined) return DEFAULTS[key];
   return row.value as Settings[K];
 }
+
+/** Igual a `useSetting`, mas `undefined` enquanto a leitura não voltou (com a
+ *  chave ausente no banco, o padrão). Pra quem não pode decidir com o padrão
+ *  no lugar do valor salvo: a oferta do Hoje piscava uma oferta já aceita. */
+export function useSettingCarregada<K extends keyof Settings>(key: K): Settings[K] | undefined {
+  const row = useLiveQuery(async () => (await db.settings.get(key)) ?? null, [key]);
+  if (row === undefined) return undefined;
+  if (row === null) return DEFAULTS[key];
+  return row.value as Settings[K];
+}

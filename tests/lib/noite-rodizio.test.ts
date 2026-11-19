@@ -109,3 +109,43 @@ describe("ajustarNoite", () => {
     expect(ajustarNoite(seg, minutosDe)).toEqual(ajustarNoite(seg, minutosDe));
   });
 });
+
+// Revisão final 2026-11-19, item 6: os horários que ela ajustou em
+// /hoje/horarios entram no bloco sequencial. O ajuste dela vence pro item
+// dela; o resto segue em sequência a partir do skincare resolvido; o corte usa
+// o "com ela" resolvido.
+describe("ajustarNoite com os horários ajustados", () => {
+  const min = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+  const hora = (r: DayRoutine, id: string, ov: Record<string, string>) => {
+    const i = noite(r).find((x) => x.id === id);
+    return i ? ov[i.id] ?? i.defaultTime : undefined;
+  };
+  const seg = () => buildDayRoutine(1, 1, [], "caminhada"); // segunda: postura no rodízio
+
+  it("skincare ajustado pras 20:30: o alongamento e a postura vêm logo depois dele", () => {
+    const ov = { "skincare-noite": "20:30" };
+    const r = ajustarNoite(seg(), minutosDe, ov);
+    expect(hora(r, "alongamento-noite", ov)).toBe("20:33");
+    expect(hora(r, "postura", ov)).toBe("20:54");
+  });
+
+  it("alongamento ajustado: vale o dela, e a postura vem depois dele", () => {
+    const ov = { "alongamento-noite": "20:49" };
+    const r = ajustarNoite(seg(), minutosDe, ov);
+    expect(hora(r, "alongamento-noite", ov)).toBe("20:49");
+    expect(min(hora(r, "postura", ov)!)).toBe(min("20:49") + 21);
+  });
+
+  it("item do rodízio ajustado por ela fica no horário dela", () => {
+    const ov = { postura: "21:00" };
+    const r = ajustarNoite(seg(), minutosDe, ov);
+    expect(hora(r, "postura", ov)).toBe("21:00");
+  });
+
+  it("o corte usa o com ela ajustado", () => {
+    // sem ajuste a postura (21:09–21:14) cabe antes das 21:15
+    expect(noite(ajustarNoite(seg(), minutosDe, {})).map((i) => i.id)).toContain("postura");
+    const ov = { "com-ela": "21:10" };
+    expect(noite(ajustarNoite(seg(), minutosDe, ov)).map((i) => i.id)).not.toContain("postura");
+  });
+});

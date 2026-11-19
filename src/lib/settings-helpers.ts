@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
 import type { LadoFraco } from "./lado-fraco";
-import { FASES_ACEITAS_PADRAO, type FasesAceitas } from "./ofertas";
+import { FASES_ACEITAS_PADRAO, type FasesAceitas, type FasesAceitasDesde } from "./ofertas";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
 // objetivo. Redigitá-las aqui foi o que deixou os dois valores fora da malha
@@ -55,7 +55,9 @@ export interface Settings {
   aparelhosAusentes: string[];
   walkGoalMin: number;
   modoCaminhada: ModoCaminhada;
-  /** Hoje: extras recolhidos (dia ruim) — o núcleo nunca recolhe. */
+  /** Hoje: extras recolhidos (dia ruim) — o núcleo nunca recolhe. NÃO É MAIS
+   *  USADO desde a linha do tempo (2026-11-19); fica no tipo porque o valor já
+   *  está salvo no aparelho dela e volta em backup. */
   extrasRecolhidos: boolean;
   presencaReminderTime: string;
   lastPresencaReminderAt: string;
@@ -93,6 +95,9 @@ export interface Settings {
   ofertasRecusadas: Record<string, string>;
   /** Maior fase aceita por trilha (1-based). A migração da Task 6 põe a atual. */
   fasesAceitas: FasesAceitas;
+  /** Contagem crua de práticas no aceite da fase atual, por trilha (`ofertas.ts`):
+   *  a fase aceita começa do início dela. Ausente = início da fase. */
+  fasesAceitasDesde: FasesAceitasDesde;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -188,6 +193,7 @@ export const DEFAULTS: Settings = {
   conquistasVistas: [],
   ofertasRecusadas: {},
   fasesAceitas: { ...FASES_ACEITAS_PADRAO },
+  fasesAceitasDesde: {},
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

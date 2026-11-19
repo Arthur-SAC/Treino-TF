@@ -127,11 +127,6 @@ export function minutosAlongamentoManha(ja: Desbloqueados, praticasFlexManha: nu
     : duracao(SEQ_MANHA_CURTA);
 }
 
-/** O que abre agora: patamar alcançado e ainda não desbloqueado. */
-export function novosDesbloqueios(sequencia: number, ja: Desbloqueados): Desbloqueio[] {
-  return DESBLOQUEIOS.filter((d) => d.patamar <= sequencia && !aberto(ja, d.id));
-}
-
 /** O primeiro ainda trancado, e quantos treinos faltam pro patamar dele. */
 export function proximoDesbloqueio(sequencia: number, ja: Desbloqueados): { d: Desbloqueio; faltam: number } | null {
   const d = DESBLOQUEIOS.find((x) => !aberto(ja, x.id));
@@ -233,22 +228,26 @@ const ITEM_DO_DESBLOQUEIO: Record<DesbloqueioId, string | null> = {
   "voz-2": "voz",
 };
 
-/** Minutos e horário que a placa de desbloqueio mostra. Os da tabela valem só
+/** Minutos e horário que a oferta de desbloqueio mostra. Os da tabela valem só
  *  no modo caminhada e na fase 1 do alongamento; aqui vale o dia dela: o
- *  horário do item na rotina de hoje (montada com o modo dela, SEM o filtro de
- *  níveis) com os ajustes de /hoje/horarios, e os minutos da manhã completa
- *  pela fase atual da trilha. Item fora do dia (dança numa terça): o ajuste
- *  dela, senão o horário da tabela. */
+ *  horário do item na rotina de hoje com os ajustes de /hoje/horarios, e os
+ *  minutos da manhã completa pela fase atual da trilha.
+ *  `rotinaDepois` = o dia já filtrado e com a noite ajustada (`ajustarNoite`)
+ *  como fica se ela aceitar: é dela que sai o horário. Item que não está nela
+ *  (o rodízio deixou pra outra noite) cai na `rotina` de hoje SEM o filtro de
+ *  níveis; fora do dia (dança numa terça), o ajuste dela, senão a tabela. */
 export function tempoDoDesbloqueio(
   d: Desbloqueio,
   rotina: DayRoutine,
   horarios: RoutineTimeOverrides,
   praticasFlexManha: number,
+  rotinaDepois?: DayRoutine,
 ): { minutos: number; horario: string | null } {
   const minutos = d.id === "manha-completa" ? duracao(flexDoDia("manha", praticasFlexManha).sequenceId) : d.minutos;
   const itemId = ITEM_DO_DESBLOQUEIO[d.id];
   if (itemId === null) return { minutos, horario: d.horario };
-  const item = rotina.blocks.flatMap((b) => b.items).find((i) => i.id === itemId);
+  const acha = (r: DayRoutine | undefined) => r?.blocks.flatMap((b) => b.items).find((i) => i.id === itemId);
+  const item = acha(rotinaDepois) ?? acha(rotina);
   const horario = (item ? resolveRoutineTime(item, horarios) : horarios[itemId]) ?? d.horario;
   return { minutos, horario };
 }

@@ -19,6 +19,12 @@ export type FasesAceitas = Record<Trilha, number>;
 
 export const FASES_ACEITAS_PADRAO: FasesAceitas = { flexManha: 1, flexNoite: 1, pelvica: 1, rebolado: 1, postura: 1 };
 
+/** Trilha -> contagem CRUA de práticas no dia em que ela aceitou a fase atual.
+ *  É daqui que a fase aceita começa: sem isso, aceitar tarde (a contagem crua
+ *  subiu enquanto a fase estava cortada) pulava direto pro fim da fase.
+ *  Ausente = o início da fase aceita (a contagem liberada é a crua). */
+export type FasesAceitasDesde = Partial<Record<Trilha, number>>;
+
 export type Oferta =
   | { tipo: "ciclo"; id: string; para: CycleId; titulo: string; praQue: string }
   | { tipo: "desbloqueio"; id: DesbloqueioId; titulo: string; entra: string; praQue: string; minutos: number; horario: string | null; rodizio?: string }
@@ -32,6 +38,7 @@ export interface EntradaOfertas {
   recusadas: Record<string, string>;
   contagens: Record<Trilha, number>;
   fasesAceitas: FasesAceitas;
+  fasesAceitasDesde: FasesAceitasDesde;
 }
 
 // Cada ATE_* é a contagem de práticas EM QUE a fase seguinte começa (nos
@@ -73,12 +80,43 @@ const PRA_QUE_FASE: Record<Trilha, string> = {
 
 const ORDEM_TRILHAS: readonly Trilha[] = ["flexManha", "flexNoite", "pelvica", "rebolado", "postura"];
 
-/** Corta a contagem em `inícioDaPróximaFase - 1` enquanto a próxima fase não
- *  foi aceita. Fase aceita libera a contagem até o corte seguinte. */
-export function contagemLiberada(trilha: Trilha, praticas: number, aceitas: FasesAceitas): number {
-  const proximo = INICIOS[trilha][aceitas[trilha] - 1];
-  if (proximo === undefined) return praticas;
-  return Math.min(praticas, proximo - 1);
+/** A parte que serve cada trilha no Hoje: sem ela aberta, a fase nova não teria
+ *  onde aparecer (o assoalho fica na identificação até `assoalho-2`). O
+ *  alongamento da noite já é bloco aberto. */
+const DESBLOQUEIO_DA_TRILHA: Record<Trilha, DesbloqueioId | null> = {
+  flexManha: "manha-completa",
+  flexNoite: null,
+  pelvica: "assoalho-2",
+  rebolado: "danca",
+  postura: "postura",
+};
+
+/** A fase aceita (1-based), dentro das fases que a trilha tem. */
+function faseAceita(trilha: Trilha, aceitas: FasesAceitas): number {
+  return Math.max(1, Math.min(aceitas[trilha] ?? 1, INICIOS[trilha].length + 1));
+}
+
+/** Contagem em que a fase N começa (fase 1 = 0). */
+export function inicioDaFase(trilha: Trilha, fase: number): number {
+  return fase <= 1 ? 0 : INICIOS[trilha][Math.min(fase, INICIOS[trilha].length + 1) - 2];
+}
+
+/** A contagem dentro da fase aceita, sem o corte do fim: o início da fase mais
+ *  o que ela praticou desde o aceite. Nunca passa da crua. */
+function contagemEfetiva(trilha: Trilha, praticas: number, aceitas: FasesAceitas, desde: FasesAceitasDesde): number {
+  const inicio = inicioDaFase(trilha, faseAceita(trilha, aceitas));
+  const marco = desde[trilha] ?? inicio;
+  return Math.min(praticas, inicio + Math.max(0, praticas - marco));
+}
+
+/** A contagem que a trilha recebe: começa no início da fase aceita (contando
+ *  desde o aceite) e fica cortada em `inícioDaPróximaFase - 1` enquanto a
+ *  próxima fase não foi aceita. */
+export function contagemLiberada(trilha: Trilha, praticas: number, aceitas: FasesAceitas, desde: FasesAceitasDesde = {}): number {
+  const efetiva = contagemEfetiva(trilha, praticas, aceitas, desde);
+  const proximo = INICIOS[trilha][faseAceita(trilha, aceitas) - 1];
+  if (proximo === undefined) return efetiva;
+  return Math.min(efetiva, proximo - 1);
 }
 
 /** A fase (1-based) que a contagem crua já dá hoje, pelos mesmos cortes da oferta. */
@@ -132,9 +170,12 @@ export function ofertaDaVez(e: EntradaOfertas): Oferta | null {
   }
 
   for (const trilha of ORDEM_TRILHAS) {
-    const aceita = e.fasesAceitas[trilha];
+    const precisa = DESBLOQUEIO_DA_TRILHA[trilha];
+    if (precisa !== null && !abertos(precisa)) continue;
+    const aceita = faseAceita(trilha, e.fasesAceitas);
     const inicio = INICIOS[trilha][aceita - 1];
-    if (inicio === undefined || e.contagens[trilha] < inicio) continue;
+    if (inicio === undefined) continue;
+    if (contagemEfetiva(trilha, e.contagens[trilha], e.fasesAceitas, e.fasesAceitasDesde) < inicio) continue;
     const fase = aceita + 1;
     const id = `fase:${trilha}-${fase}`;
     if (esperando(id, e)) continue;
@@ -161,5 +202,23 @@ export function unirRecusadas(a: Readonly<Record<string, string>>, b: Readonly<R
 export function unirFasesAceitas(a: Readonly<FasesAceitas>, b: Readonly<FasesAceitas>): FasesAceitas {
   const r = { ...FASES_ACEITAS_PADRAO };
   for (const t of ORDEM_TRILHAS) r[t] = Math.max(a[t] ?? 1, b[t] ?? 1);
+  return r;
+}
+
+/** Backup: o `desde` acompanha o lado cuja fase venceu em `unirFasesAceitas`;
+ *  com a mesma fase dos dois lados, o maior (o aceite mais recente). Lado sem
+ *  `desde` vale o início da fase dele. */
+export function unirFasesAceitasDesde(
+  aFases: Readonly<FasesAceitas>, aDesde: Readonly<FasesAceitasDesde>,
+  bFases: Readonly<FasesAceitas>, bDesde: Readonly<FasesAceitasDesde>,
+): Record<Trilha, number> {
+  const r = {} as Record<Trilha, number>;
+  for (const t of ORDEM_TRILHAS) {
+    const fa = aFases[t] ?? 1;
+    const fb = bFases[t] ?? 1;
+    const da = aDesde[t] ?? inicioDaFase(t, fa);
+    const db = bDesde[t] ?? inicioDaFase(t, fb);
+    r[t] = fa > fb ? da : fb > fa ? db : Math.max(da, db);
+  }
   return r;
 }

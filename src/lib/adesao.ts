@@ -4,13 +4,16 @@
 
 import { db, type DailyLog, type PracticeLog, type RoutineCheck } from "./db";
 import type { Adesao } from "./ritmo";
-import { ITENS_CAMINHADA } from "./today-routine";
+import { ITENS_CAMINHADA, noiteLivre } from "./today-routine";
 import { SEQUENCIAS_FLEX } from "./flex-progression";
 import { noitesNoAlvo } from "./daily-log-helpers";
 import { ultimosDiasISO } from "./today-date";
 
 export interface AdesaoDetalhada extends Adesao {
+  /** Noites com bloco do app em que ela alongou (sexta e sábado não contam). */
   alongamentosNoite: number;
+  /** Noites da janela que têm bloco do app: o denominador do alongamento. */
+  noitesComBloco: number;
 }
 
 export interface DadosAdesao {
@@ -23,17 +26,26 @@ export interface DadosAdesao {
 const CAMINHADAS = new Set<string>(ITENS_CAMINHADA);
 const NOITE = new Set<string>(SEQUENCIAS_FLEX.noite);
 
+/** Dia da semana (0–6) de uma data ISO, sem fuso no meio. */
+function diaDaSemanaISO(iso: string): number {
+  const [a, m, d] = iso.slice(0, 10).split("-").map(Number);
+  return new Date(Date.UTC(a, m - 1, d)).getUTCDay();
+}
+
 /** Dias DISTINTOS de cada coisa: dois treinos no mesmo dia são um dia de
  *  treino, e o plano conta dias. */
 export function contarAdesao(janela: readonly string[], dados: DadosAdesao, alvoSono: string): AdesaoDetalhada {
   const dentro = new Set(janela);
   const dias = (datas: string[]) => new Set(datas.filter((d) => dentro.has(d))).size;
+  // Sexta e sábado à noite são dela: sem bloco do app, sem alongamento a cobrar.
+  const comBloco = new Set(janela.filter((d) => !noiteLivre(diaDaSemanaISO(d))));
   return {
     dias: janela.length,
     treinos: dias(dados.sessoes.map((s) => s.date)),
     diasCardio: dias(dados.checks.filter((c) => c.done && CAMINHADAS.has(c.itemId)).map((c) => c.date)),
     noitesNoAlvo: noitesNoAlvo(dados.logs.filter((l) => dentro.has(l.date)), alvoSono),
-    alongamentosNoite: dias(dados.praticas.filter((p) => p.completed && NOITE.has(p.sequenceId)).map((p) => p.date)),
+    alongamentosNoite: dias(dados.praticas.filter((p) => p.completed && NOITE.has(p.sequenceId) && comBloco.has(p.date)).map((p) => p.date)),
+    noitesComBloco: comBloco.size,
   };
 }
 

@@ -9,7 +9,7 @@ import { NaFrente } from "./NaFrente";
 
 /** O "como fazer" de uma sequência (alongamento, assoalho, postura, dança) na
  *  frente do Hoje (spec 2026-11-19, seção 5): passos com a execução e o
- *  cronômetro do MoveStep, o vídeo, e "Concluir" grava a prática com a mesma
+ *  cronômetro do MoveStep, o vídeo, e "Concluir" (no último passo) grava a prática com a mesma
  *  função da tela da sequência — o Hoje marca o item sozinho por ela. */
 export function SequenciaModal({ sequenceId, onClose, onConcluir }: {
   sequenceId: string;
@@ -75,14 +75,18 @@ export function SequenciaModal({ sequenceId, onClose, onConcluir }: {
                   />
                 ))}
               </div>
-              <button
-                type="button"
-                onClick={() => void concluir()}
-                disabled={gravando}
-                className="w-full rounded-md py-3 text-sm font-medium bg-wine text-nude-warm"
-              >
-                Concluir
-              </button>
+              {/* Só no último passo (como a tela da sequência): um toque errado
+                  no meio não grava prática. Sem passos, já está no fim. */}
+              {ativo >= sequence.moves.length - 1 && (
+                <button
+                  type="button"
+                  onClick={() => void concluir()}
+                  disabled={gravando}
+                  className="w-full rounded-md py-3 text-sm font-medium bg-wine text-nude-warm"
+                >
+                  Concluir
+                </button>
+              )}
             </>
           )}
         </div>

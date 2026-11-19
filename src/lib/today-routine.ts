@@ -7,7 +7,10 @@ import type { ModoCaminhada } from "./objetivo";
 export type RoutineBlock = "manha" | "trabalho" | "tarde" | "noite" | "semana";
 export type RoutineControl = "check" | "water" | "walk" | "breaks" | "link" | "recipe" | "skincare" | "dela";
 /** Item "dela" (spec 2026-11-19): tempo que é só dela — sem caixinha, nunca
- *  conta em adesão, revisão nem lembrete. Quem filtra usa `ehDela`. */
+ *  conta em adesão, revisão nem lembrete. Os consumidores não chamam esta
+ *  função: a adesão, a revisão, a sequência e os lembretes contam por id (listas
+ *  fechadas, como `ITENS_CAMINHADA`), e a tela decide pelo `control` ("dela"
+ *  não tem caixinha em RoutineRow). Fica como o nome da regra, pra teste. */
 export function ehDela(i: RoutineItem): boolean {
   return i.control === "dela";
 }

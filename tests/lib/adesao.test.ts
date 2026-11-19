@@ -23,6 +23,6 @@ describe("contar a adesão da janela", () => {
         { date: "2026-10-07", sequenceId: SEQUENCIAS_FLEX.manha[0], completed: true },
       ],
     }, "22:30");
-    expect(a).toEqual({ dias: 3, treinos: 2, diasCardio: 2, noitesNoAlvo: 1, alongamentosNoite: 1 });
+    expect(a).toEqual({ dias: 3, treinos: 2, diasCardio: 2, noitesNoAlvo: 1, alongamentosNoite: 1, noitesComBloco: 3 });
   });
 });
