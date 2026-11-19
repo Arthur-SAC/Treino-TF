@@ -32,6 +32,27 @@ const GUIA_INTIMIDADE: GuideSection[] = [
   },
 ];
 
+type Nivel = "iniciante" | "intermediario" | "avancado";
+
+// Três seções por nível da sequência; dentro de cada uma, os grupos de sempre
+// (mesma ordem, mesmos subtítulos). Grupo vazio não aparece.
+const NIVEIS: { nivel: Nivel; titulo: string }[] = [
+  { nivel: "iniciante", titulo: "Básico" },
+  { nivel: "intermediario", titulo: "Intermediário" },
+  { nivel: "avancado", titulo: "Avançado" },
+];
+
+const GRUPOS: { category: string; titulo: string }[] = [
+  { category: "mobilidade", titulo: "Mobilidade" },
+  { category: "apresentacao", titulo: "Apresentação · gestual e postura feminina no dia a dia" },
+  { category: "flexibilidade", titulo: "Flexibilidade · 4 semanas progressivas" },
+  { category: "pelvic", titulo: "Pelvic floor · sensibilidade + controle" },
+  { category: "danca", titulo: "Dança · 4 semanas progressivas" },
+  { category: "twerk", titulo: "Rebolado · progressão de 3 semanas" },
+  { category: "sensual", titulo: "Sensual · linguagem corporal + dança avançada" },
+  { category: "intimidade", titulo: "Intimidade · flexibilidade e sensualidade a dois" },
+];
+
 export function MovementHome() {
   const sequences = useLiveQuery(() => db.danceSequences.toArray(), []);
   const logs = useLiveQuery(() => db.practiceLogs.orderBy("date").reverse().toArray(), []);
@@ -43,14 +64,8 @@ export function MovementHome() {
     }
   }
 
-  const mobilidade = sequences?.filter((s) => s.category === "mobilidade") ?? [];
-  const apresentacao = sequences?.filter((s) => s.category === "apresentacao") ?? [];
-  const flexibilidade = sequences?.filter((s) => s.category === "flexibilidade") ?? [];
-  const pelvic = sequences?.filter((s) => s.category === "pelvic") ?? [];
-  const danca = sequences?.filter((s) => s.category === "danca") ?? [];
-  const twerk = sequences?.filter((s) => s.category === "twerk") ?? [];
-  const sensual = sequences?.filter((s) => s.category === "sensual") ?? [];
-  const intimidade = sequences?.filter((s) => s.category === "intimidade") ?? [];
+  // O guia da intimidade aparece uma vez só: na primeira seção que tem sequência de intimidade.
+  const nivelDoGuia = NIVEIS.find((n) => (sequences ?? []).some((s) => s.level === n.nivel && s.category === "intimidade"))?.nivel;
 
   return (
     <div className="p-4 pb-24">
@@ -60,94 +75,36 @@ export function MovementHome() {
         <h1 className="font-serif text-2xl text-nude flex-1">Movimento</h1>
       </div>
 
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Mobilidade</h2>
-      <div className="space-y-2 mb-4">
-        {mobilidade.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Apresentação · gestual e postura feminina no dia a dia</h2>
-      <div className="space-y-2 mb-4">
-        {apresentacao.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Flexibilidade · 4 semanas progressivas</h2>
-      <div className="space-y-2 mb-4">
-        {flexibilidade.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Pelvic floor · sensibilidade + controle</h2>
-      <div className="space-y-2 mb-4">
-        {pelvic.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Dança · 4 semanas progressivas</h2>
-      <div className="space-y-2 mb-4">
-        {danca.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Rebolado · progressão de 3 semanas</h2>
-      <div className="space-y-2 mb-4">
-        {twerk.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Sensual · linguagem corporal + dança avançada</h2>
-      <div className="space-y-2 mb-4">
-        {sensual.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
-
-      <h2 className="text-muted text-xs uppercase tracking-wider mb-2">Intimidade · flexibilidade e sensualidade a dois</h2>
-      <GuideAccordion sections={GUIA_INTIMIDADE} className="mb-3" />
-      <div className="space-y-2">
-        {intimidade.map((s) => (
-          <SequenceCard
-            key={s.id}
-            sequence={s}
-            lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
-          />
-        ))}
-      </div>
+      {NIVEIS.map(({ nivel, titulo }) => {
+        const doNivel = (sequences ?? []).filter((s) => s.level === nivel);
+        if (doNivel.length === 0) return null;
+        return (
+          <section key={nivel} aria-label={titulo} className="mb-6">
+            <h2 className="font-serif text-xl text-nude mb-3">{titulo}</h2>
+            {GRUPOS.map(({ category, titulo: subtitulo }) => {
+              const grupo = doNivel.filter((s) => s.category === category);
+              if (grupo.length === 0) return null;
+              return (
+                <div key={category}>
+                  <h3 className="text-muted text-xs uppercase tracking-wider mb-2">{subtitulo}</h3>
+                  {category === "intimidade" && nivel === nivelDoGuia && (
+                    <GuideAccordion sections={GUIA_INTIMIDADE} className="mb-3" />
+                  )}
+                  <div className="space-y-2 mb-4">
+                    {grupo.map((s) => (
+                      <SequenceCard
+                        key={s.id}
+                        sequence={s}
+                        lastPracticed={lastBySequence.has(s.id) ? formatDateBR(new Date(lastBySequence.get(s.id)!)) : undefined}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+        );
+      })}
     </div>
   );
 }

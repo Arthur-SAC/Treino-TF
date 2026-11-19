@@ -20,7 +20,7 @@ describe("telas-índice", () => {
     expect(screen.getByRole("link", { name: /Medidas/ })).toHaveAttribute("href", "/corpo/medidas");
   });
 
-  it("Guia lista os blocos e a Biblioteca", () => {
+  it("Consulta lista os blocos e a Biblioteca", () => {
     render(<MemoryRouter><GuiaHome /></MemoryRouter>);
     for (const t of ["Treino", "Alimentação", "Beleza", "Apoio"]) {
       expect(screen.getByRole("heading", { name: t })).toBeInTheDocument();

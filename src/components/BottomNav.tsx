@@ -18,7 +18,7 @@ import { abaDaRota, type Aba } from "../lib/abas";
 const items: { to: string; label: string; aba: Aba; Icon: typeof HomeIcon }[] = [
   { to: "/", label: "Hoje", aba: "hoje", Icon: HomeIcon },
   { to: "/progresso", label: "Progresso", aba: "progresso", Icon: RulerIcon },
-  { to: "/guia", label: "Guia", aba: "guia", Icon: DumbbellIcon },
+  { to: "/guia", label: "Consulta", aba: "guia", Icon: DumbbellIcon },
   { to: "/vitalidade", label: "Vitalidade", aba: "vitalidade", Icon: SparkIcon },
 ];
 

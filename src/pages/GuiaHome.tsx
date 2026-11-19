@@ -17,7 +17,6 @@ export const BLOCOS_GUIA: { titulo: string; itens: { label: string; to: string }
     titulo: "Alimentação",
     itens: [
       { label: "Cardápio", to: "/trilha/alimentacao" },
-      { label: "Refeições de hoje", to: "/refeicoes-hoje" },
       { label: "Lista de compras", to: "/trilha/alimentacao/lista-compras" },
       { label: "Marmita de domingo", to: "/trilha/alimentacao/domingo" },
     ],
@@ -45,7 +44,7 @@ export const BLOCOS_GUIA: { titulo: string; itens: { label: string; to: string }
 export function GuiaHome() {
   return (
     <div className="p-4 pb-24 space-y-5">
-      <h1 className="font-serif text-2xl text-nude">Guia</h1>
+      <h1 className="font-serif text-2xl text-nude">Consulta</h1>
       {BLOCOS_GUIA.map((b) => (
         <section key={b.titulo} className="space-y-2">
           <h2 className="text-nude-warm font-medium">{b.titulo}</h2>

@@ -69,6 +69,7 @@ describe("backup completo — ida e volta", () => {
     await db.settings.bulkPut([
       { key: "smartfitMigration", value: 1 },
       { key: "entradaMigration", value: 1 },
+      { key: "rotinaLinhaMigracao", value: 1 },
       { key: "desbloqueios", value: { "manha-completa": "2026-11-03", "assoalho-1": "2026-11-03" } },
       { key: "conquistasVistas", value: ["cintura-88"] },
     ]);

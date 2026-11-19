@@ -81,6 +81,11 @@ export function contagemLiberada(trilha: Trilha, praticas: number, aceitas: Fase
   return Math.min(praticas, proximo - 1);
 }
 
+/** A fase (1-based) que a contagem crua já dá hoje, pelos mesmos cortes da oferta. */
+export function faseDaContagem(trilha: Trilha, praticas: number): number {
+  return 1 + INICIOS[trilha].filter((inicio) => praticas >= inicio).length;
+}
+
 function dia(iso: string): number {
   return Date.parse(iso.slice(0, 10));
 }

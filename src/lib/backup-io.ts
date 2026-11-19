@@ -177,6 +177,11 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "smartfitMigration")) {
       await db.settings.delete("smartfitMigration");
     }
+    // Mesmo motivo pra migração da rotina em linha do tempo (fases aceitas e
+    // alongamento da noite): backup anterior a ela refaz a conta.
+    if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "rotinaLinhaMigracao")) {
+      await db.settings.delete("rotinaLinhaMigracao");
+    }
     // Mesmo motivo pros lembretes: um backup anterior à versão 2 traz o treino
     // das 18:15, e o `lembretesMigracao` = 2 do aparelho impediria a troca.
     if (!(p.settings as Array<{ key: string }> | undefined ?? []).some((s) => s.key === "lembretesMigracao")) {

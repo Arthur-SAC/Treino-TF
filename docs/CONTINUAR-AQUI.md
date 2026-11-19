@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-11-10
+**Última atualização:** 2026-11-19
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -31,6 +31,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | G · Visual e progressão | paleta A clara (texto 2 `#7d5f5d`), card que balança, caixinha com +1, barra que enche; ícone/splash/barra de status claros (`NATIVE_VERSION` 2: **ela reinstala o APK uma vez**); sequência de dias úteis; placas de vitória, queda e desbloqueio; níveis no Hoje e nos lembretes; Conquistas no Progresso; Seu tempo e Diário fora do Hoje | spec `docs/superpowers/specs/2026-11-09-visual-e-progressao-design.md` · plano `docs/superpowers/plans/2026-11-09-visual-e-progressao.md` · ✅ no ar (`af8505d`, 2026-11-10); APK compilou no CI |
 | H · Produtos de Aracaju | kit de custo-benefício pro clima (pesquisa web 2026-11-09/10): kit caro antigo sai (`PRODUCT_SEED_VERSION` 2, só o que ela não mexeu nem comprou), Bepantol/Kelo-Cote fora das costas, adapaleno ter/sex nas costas, protetor de novo às 15h30, aparador no lugar da lâmina (`ROUTINE_SEED_VERSION` 4); seção "Clima de Aracaju" no guia de cabelo (gel forte por último, antirresíduo mensal, boné, teste da água antes de filtro). Meta de água já era 3000 ml. Hipótese de acantose levantada uma vez com ela — decisão dela | ✅ no ar (`b9f28d8`, 2026-11-10) |
 | I · Cardápio pelo objetivo | 2.200 mantidas (decisão dela); proteína 211 → ~193 (objetivo pede 150-160), lanche pré-treino ~510 kcal com melancia, café com menos carboidrato; 2 opções por refeição (jantar 3) com `dias` — o Hoje e a receita abrem na opção do dia (`variantDoDia`), a lista de compras conta a semana montada; patinho seg/qua/sex (dias de perna), sardinha DE LATA ter/qui (sempre enlatada, decisão dela), acerola no almoço; atum e omelete viraram troca livre (atum ≤2-3x/sem); roteiro de domingo reescrito (79 min); `MEAL_PLAN_VERSION` 17 | ✅ no ar (2026-11-10) |
+| J · Rotina em linha do tempo | spec `docs/superpowers/specs/2026-11-19-rotina-linha-do-tempo-design.md`, plano `docs/superpowers/plans/2026-11-19-rotina-linha-do-tempo.md`. O Hoje vira uma linha do tempo única; a noite tem os blocos dela (jantar 20:15, com ela 21:15, leitura 22:15) e o bloco do app de 20:45 com teto de 30 min (sexta e sábado das 18h em diante são só dela); a fase de cada trilha só sobe quando ela aceita (`fasesAceitas`, `ofertasRecusadas`, "agora não" espera 7 dias); a Entrada avança pela carga; migração `ROTINA_LINHA_MIGRACAO` grava a fase atual de cada trilha e abre o alongamento da noite; aba "Guia" virou "Consulta" (rota `/guia`, sem "Refeições de hoje"); Movimento em Básico / Intermediário / Avançado | na branch `feat/rotina-linha-do-tempo`, não publicado |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 

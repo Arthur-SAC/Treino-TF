@@ -65,7 +65,7 @@ describe("rótulos visíveis não expõem a transição nem a intimidade", () =>
 
   it("as abas de baixo e as telas-índice Progresso e Guia", () => {
     const rotulos = [
-      "Hoje", "Progresso", "Guia", "Vitalidade",
+      "Hoje", "Progresso", "Consulta", "Vitalidade",
       ...ITENS_PROGRESSO.flatMap((i) => [i.label, i.sub]),
       ...BLOCOS_GUIA.flatMap((b) => [b.titulo, ...b.itens.map((i) => i.label)]),
     ];

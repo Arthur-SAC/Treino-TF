@@ -3,6 +3,8 @@ import { EXERCISES } from "../data/exercises-seed";
 import { ALL_TEMPLATES } from "../data/all-templates";
 import { MEDIDAS_PARTIDA } from "./objetivo";
 import { hojeISO } from "./today-date";
+import { faseDaContagem, FASES_ACEITAS_PADRAO, type FasesAceitas, type Trilha } from "./ofertas";
+import { contarPraticasDaProgressao, contarPraticasFlex, contarPraticasPostura, contarPraticasRebolado } from "./practice-log-helpers";
 
 // Exportadas (não apenas locais a seedDatabase) por uma razão concreta: seis
 // vezes este projeto perdeu correções porque o conteúdo mudou no seed mas a
@@ -53,6 +55,7 @@ export const TEMPLATE_SEED_VERSION = 18;
 /** Migração única da Smartfit (recomeço na Entrada). */
 export const SMARTFIT_MIGRATION = 1;
 export const SEQUENCIA_MIGRATION = 1;
+export const ROTINA_LINHA_MIGRACAO = 1;
 
 export async function seedDatabase(): Promise<void> {
   const seeded = await db.settings.get("seeded");
@@ -171,6 +174,32 @@ export async function seedDatabase(): Promise<void> {
       await db.settings.put({ key: "sequenciaDesde", value: hojeISO() });
     }
     await db.settings.put({ key: "sequenciaMigration", value: SEQUENCIA_MIGRATION });
+  }
+
+  // Rotina em linha do tempo (2026-11-19): a fase de cada trilha só sobe quando
+  // ela aceita. Sem esta migração, `fasesAceitas` = 1 empurraria de volta quem já
+  // avançou. Grava a fase que a contagem atual já dá (nunca abaixo do que já há)
+  // e abre o alongamento da noite, que agora é bloco dela (data existente fica).
+  const rotinaLinhaFeita = await db.settings.get("rotinaLinhaMigracao");
+  if (((rotinaLinhaFeita?.value as number) ?? 0) < ROTINA_LINHA_MIGRACAO) {
+    const contagens: Record<Trilha, number> = {
+      flexManha: await contarPraticasFlex("manha"),
+      flexNoite: await contarPraticasFlex("noite"),
+      pelvica: await contarPraticasDaProgressao(),
+      rebolado: await contarPraticasRebolado(),
+      postura: await contarPraticasPostura(hojeISO()),
+    };
+    const aceitasAntes = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
+    const fases: FasesAceitas = { ...FASES_ACEITAS_PADRAO };
+    for (const t of Object.keys(fases) as Trilha[]) {
+      fases[t] = Math.max(aceitasAntes?.[t] ?? 1, faseDaContagem(t, contagens[t]));
+    }
+    await db.settings.put({ key: "fasesAceitas", value: fases });
+    const abertos = ((await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined) ?? {};
+    if (!abertos["alongamento-noite"]) {
+      await db.settings.put({ key: "desbloqueios", value: { ...abertos, "alongamento-noite": hojeISO() } });
+    }
+    await db.settings.put({ key: "rotinaLinhaMigracao", value: ROTINA_LINHA_MIGRACAO });
   }
 
   // Lembretes que ainda estão no padrão antigo passam pros horários da rotina
