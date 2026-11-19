@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { buildDayRoutine, ehDela, type RoutineItem } from "../../src/lib/today-routine";
 import { planejar, type ConfigLembretes, type EstadoLembretes } from "../../src/lib/lembretes/planejar";
 import { contarAdesao } from "../../src/lib/adesao";
+import { revisarSemana } from "../../src/lib/revisao-semanal";
 import { EXPOE } from "../../src/lib/discricao";
 import { hojeISO } from "../../src/lib/today-date";
 
@@ -72,21 +73,46 @@ describe("itens dela nunca contam nem tocam", () => {
     ultimaMedida: "2026-09-24", vitaminaDFeitaEm: [], ultimoBackupEm: "2026-09-24",
   };
 
-  it("sexta: nenhum lembrete para itens dela, nem alongamento da noite que não existe", () => {
-    const l = planejar(new Date(2026, 8, 24, 5, 0), cfg, vazio).filter((x) => hojeISO(x.quando) === "2026-09-25");
-    const idsDela = new Set(noite(5).concat(noite(3)).filter(ehDela).map((i) => i.id));
-    expect(l.filter((x) => x.itemId && idsDela.has(x.itemId))).toEqual([]);
-    expect(l.some((x) => x.itemId === "alongamento-noite")).toBe(false);
+  const IDS_DO_APP = ["skincare-noite", "alongamento-noite", "postura", "voz", "assoalho-pelvico"];
+
+  it("planejar: sexta não agenda lembrete do app à noite; quarta agenda o alongamento", () => {
+    const l = planejar(new Date(2026, 8, 24, 5, 0), cfg, vazio);
+    const sexta = l.filter((x) => hojeISO(x.quando) === "2026-09-25");
+    const quarta = l.filter((x) => hojeISO(x.quando) === "2026-09-30");
+    const noites = (xs: typeof l) => xs.filter((x) => x.quando.getHours() >= 18);
+    expect(noites(sexta).filter((x) => x.titulo === "Alongamento" || (x.itemId && IDS_DO_APP.includes(x.itemId)))).toEqual([]);
+    expect(noites(quarta).some((x) => x.itemId === "alongamento-noite")).toBe(true);
   });
 
-  it("adesão não muda quando os itens dela estão marcados", () => {
-    const janela = ["2026-09-24", "2026-09-25"];
-    const base = { sessoes: [], logs: [], praticas: [] };
-    const sem = contarAdesao(janela, { ...base, checks: [] }, "22:30");
-    const dela = ["com-ela", "leitura", "noite-livre"].map((itemId) => ({ date: "2026-09-24", itemId, done: true }));
-    const com = contarAdesao(janela, { ...base, checks: dela as never }, "22:30");
+  // RF 4: base com itens reais marcados; marcar os itens dela não muda nada.
+  const janela = ["2026-09-24", "2026-09-25"];
+  const real = [
+    { date: "2026-09-24", itemId: "caminhada-trabalho", done: true },
+    { date: "2026-09-25", itemId: "caminhada-trabalho", done: true },
+    { date: "2026-09-24", itemId: "jantar", done: true },
+    { date: "2026-09-24", itemId: "dormir", done: true },
+  ];
+  const dela = ["com-ela", "leitura", "noite-livre"].flatMap((itemId) => janela.map((date) => ({ date, itemId, done: true })));
+  const dados = (checks: unknown[]) => ({
+    sessoes: [{ date: "2026-09-24" }],
+    checks: checks as never,
+    logs: [],
+    praticas: [{ date: "2026-09-24", sequenceId: "flexibilidade-intima", completed: true }] as never,
+  });
+
+  it("adesão: totais reais não zerados e iguais com os itens dela marcados", () => {
+    const sem = contarAdesao(janela, dados(real), "22:30");
+    const com = contarAdesao(janela, dados([...real, ...dela]), "22:30");
+    expect(sem).toMatchObject({ treinos: 1, diasCardio: 2, alongamentosNoite: 1 });
     expect(com).toEqual(sem);
   });
+
+  it("revisão semanal: as linhas e o ajuste não mudam com os itens dela marcados", () => {
+    const sem = revisarSemana(contarAdesao(janela, dados(real), "22:30"), "caminhada");
+    const com = revisarSemana(contarAdesao(janela, dados([...real, ...dela]), "22:30"), "caminhada");
+    expect(com).toEqual(sem);
+  });
+  // sequencia.ts só recebe as datas de treino (não lê routineChecks), então itens dela não entram nela.
 });
 
 describe("textos", () => {

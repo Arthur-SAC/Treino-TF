@@ -135,7 +135,8 @@ async function tick() {
   const [prH, prM] = presencaTime.split(":").map(Number);
   const presencaMin = prH * 60 + prM;
   // Pergunta pela postura (é a trilha que ele confere): trancada no Hoje, não toca.
-  if (!trancados.has("postura") && !Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
+  // Sexta e sábado à noite são dela: sem aviso de movimento (spec 2026-11-19).
+  if (!noiteLivre(now.getDay()) && !trancados.has("postura") && !Number.isNaN(presencaMin) && currentMin >= presencaMin && lastPresenca !== todayISO) {
     const presencaDone = await praticouPosturaHoje(todayISO);
     if (shouldRemindOncePerDay({ currentMin, targetMin: presencaMin, lastNotifiedDate: lastPresenca, todayISO, done: presencaDone })) {
       notify(NOTIFICACAO_NOITE.titulo, NOTIFICACAO_NOITE.corpo);

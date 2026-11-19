@@ -167,7 +167,7 @@ const AGUA: RoutineItem = { id: "agua", block: "trabalho", label: "Água", contr
 // PRIMEIRAS, que é onde ela está. Agendar isso no meio do trabalho é pedir o
 // impossível, e item impossível some da vida em uma semana.
 //
-// Fica logo ANTES do alongamento da noite de propósito: os dois pedem o mesmo
+// Fica logo DEPOIS do alongamento da noite (spec 2026-11-19) de propósito: os dois pedem o mesmo
 // chão e o mesmo momento de privacidade, então é uma ida ao chão em vez de
 // duas. O custo caro não é a duração, é começar.
 const ASSOALHO: RoutineItem = { id: "assoalho-pelvico", block: "noite", label: "Assoalho pélvico", subtitle: "A sequência do dia diz a duração", to: "/treino/movimento", linkKey: "pelvic", defaultTime: "21:05" };

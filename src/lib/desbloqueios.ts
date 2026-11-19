@@ -108,7 +108,7 @@ export const DESBLOQUEIOS: readonly Desbloqueio[] = [
     id: "voz-2", patamar: 25, titulo: "Voz completa",
     entra: "A voz passa do aquecimento pra sessão completa do dia.",
     praQue: "Com a articulação aquecida virando hábito, dá pra treinar tom e ressonância todo dia.",
-    minutos: 5, horario: "21:00",
+    minutos: 5, horario: "21:05",
   },
 ];
 
