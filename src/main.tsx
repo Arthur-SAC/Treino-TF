@@ -19,6 +19,7 @@ import { SequenceDetail } from "./pages/workout/SequenceDetail";
 import { PracticeHistory } from "./pages/workout/PracticeHistory";
 import { BodyHome } from "./pages/body/BodyHome";
 import { Measurements } from "./pages/body/Measurements";
+import { EstiloHome } from "./pages/EstiloHome";
 import { Photos } from "./pages/body/Photos";
 import { Comparison } from "./pages/body/Comparison";
 import { Onboarding } from "./pages/body/Onboarding";
@@ -99,6 +100,7 @@ const router = createBrowserRouter(
         { path: "treino/movimento", element: <MovementHome /> },
         { path: "treino/movimento/historico", element: <PracticeHistory /> },
         { path: "treino/movimento/:id", element: <SequenceDetail /> },
+        { path: "estilo", element: <EstiloHome /> },
         { path: "corpo", element: <BodyHome /> },
         { path: "corpo/silhueta", element: <Silhouette /> },
         { path: "corpo/medidas", element: <Measurements /> },

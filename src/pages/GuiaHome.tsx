@@ -28,7 +28,7 @@ export const BLOCOS_GUIA: { titulo: string; itens: { label: string; to: string }
       { label: "Depilação", to: "/beleza/depilacao" },
       { label: "Maquiagem", to: "/beleza/maquiagem" },
       { label: "Voz", to: "/beleza/voz" },
-      { label: "Estilo", to: "/beleza/estilo" },
+      { label: "Estilo", to: "/estilo" },
     ],
   },
   {

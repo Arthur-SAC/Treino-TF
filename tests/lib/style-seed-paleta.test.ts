@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { db } from "../../src/lib/db";
 import { seedStyle, STYLE_SEED_VERSION } from "../../src/lib/style-seed";
 import { StyleTabs } from "../../src/components/StyleTabs";

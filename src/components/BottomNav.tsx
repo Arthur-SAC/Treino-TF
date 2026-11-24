@@ -3,6 +3,7 @@ import { HomeIcon } from "../icons/HomeIcon";
 import { DumbbellIcon } from "../icons/DumbbellIcon";
 import { RulerIcon } from "../icons/RulerIcon";
 import { SparkIcon } from "../icons/SparkIcon";
+import { TagIcon } from "../icons/TagIcon";
 import { abaDaRota, type Aba } from "../lib/abas";
 
 // Quatro abas (eram seis) por decisão dela em 2026-10-02: ela gosta do Hoje e
@@ -20,6 +21,7 @@ const items: { to: string; label: string; aba: Aba; Icon: typeof HomeIcon }[] = 
   { to: "/progresso", label: "Progresso", aba: "progresso", Icon: RulerIcon },
   { to: "/guia", label: "Consulta", aba: "guia", Icon: DumbbellIcon },
   { to: "/vitalidade", label: "Vitalidade", aba: "vitalidade", Icon: SparkIcon },
+  { to: "/estilo", label: "Estilo", aba: "estilo", Icon: TagIcon },
 ];
 
 export function BottomNav() {

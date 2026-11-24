@@ -12,9 +12,10 @@ function renderEm(rota: string) {
 }
 
 describe("barra de baixo com 4 abas", () => {
-  it("tem exatamente 4 links e acende Progresso em /corpo/medidas", () => {
+  it("tem exatamente 5 links e acende Progresso em /corpo/medidas", () => {
     renderEm("/corpo/medidas");
-    expect(screen.getAllByRole("link")).toHaveLength(4);
+    expect(screen.getAllByRole("link")).toHaveLength(5);
+    expect(screen.getByRole("link", { name: "Estilo" })).toHaveAttribute("href", "/estilo");
     expect(screen.getByRole("link", { name: "Hoje" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "Progresso" })).toHaveAttribute("href", "/progresso");
     expect(screen.getByRole("link", { name: "Consulta" })).toHaveAttribute("href", "/guia");
