@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
 import { useSettingCarregada } from "../hooks/useSetting";
 import { hojeISO } from "../lib/today-date";
-import { ofertaDeDegrau, sugestaoDoMes, itensDoDegrau, medidaAtual, mesDe } from "../lib/estilo-degraus";
+import { ofertaDeDegrau, sugestaoDoMes, itensAteDegrau, medidaAtual, mesDe, type ComprasEstilo } from "../lib/estilo-degraus";
 import type { ItemEstilo } from "../data/estilo-degraus-seed";
 import { CompraDoMesCard } from "../components/estilo/CompraDoMesCard";
 import { OfertaDegrauCard } from "../components/estilo/OfertaDegrauCard";
@@ -30,13 +30,23 @@ export function EstiloHome() {
   const medidaDe = (i: ItemEstilo) => (i.medida === "quadril" ? quadril : i.medida === "cintura" ? cintura : null);
 
   // Os 6 meses do degrau contam do primeiro "Comprei" ou "Pular".
-  const iniciar = () => (desde === null ? db.settings.put({ key: "estiloDegrauDesde", value: hoje }) : undefined);
+  const iniciar = async () => {
+    if (((await db.settings.get("estiloDegrauDesde"))?.value ?? null) === null) {
+      await db.settings.put({ key: "estiloDegrauDesde", value: hoje });
+    }
+  };
 
+  // Lê o que já está gravado dentro da transação: dois toques rápidos não
+  // podem sobrescrever um ao outro com o estado velho da tela.
   async function registrar(item: ItemEstilo, valorPago?: number) {
     const m = medidaDe(item);
+    const atuais = ((await db.settings.get("estiloCompras"))?.value ?? {}) as ComprasEstilo;
     await db.settings.put({
       key: "estiloCompras",
-      value: { ...compras, [item.id]: { data: hoje, ...(m ? { medidaCm: m.cm } : {}), ...(valorPago !== undefined ? { valorPago } : {}) } },
+      value: {
+        ...atuais,
+        [item.id]: { data: hoje, ...(m ? { medidaCm: m.cm } : {}), ...(valorPago !== undefined && valorPago >= 0 ? { valorPago } : {}) },
+      },
     });
   }
 
@@ -64,10 +74,13 @@ export function EstiloHome() {
           await db.settings.put({ key: "estiloDegrauDesde", value: hoje });
         })
       : undefined;
-  async function agoraNao() {
-    if (!oferta) return;
-    await db.settings.put({ key: "estiloRecusas", value: { ...recusas, [oferta.id]: hoje } });
-  }
+  const agoraNao = () =>
+    oferta
+      ? db.transaction("rw", db.settings, async () => {
+          const atuais = ((await db.settings.get("estiloRecusas"))?.value ?? {}) as Record<string, string>;
+          await db.settings.put({ key: "estiloRecusas", value: { ...atuais, [oferta.id]: hoje } });
+        })
+      : undefined;
 
   return (
     <div className="p-4 pb-24 space-y-5">
@@ -77,6 +90,7 @@ export function EstiloHome() {
 
       <CompraDoMesCard
         estado={estado}
+        degrau={degrau}
         medida={estado.estado === "sugestao" ? medidaDe(estado.item) : null}
         onComprei={comprei}
         onPular={pular}
@@ -85,11 +99,14 @@ export function EstiloHome() {
       <section className="space-y-2" aria-labelledby="seu-degrau">
         <h2 id="seu-degrau" className="text-nude-warm font-medium">Seu degrau</h2>
         <ul className="space-y-2">
-          {itensDoDegrau(degrau).map((i) => (
+          {itensAteDegrau(degrau).filter((i) => i.degrau === degrau || !compras[i.id]).map((i) => (
             <li key={i.id} className="card flex items-center justify-between gap-2 text-sm">
               <div className="min-w-0">
                 <p className="text-nude-warm">{i.nome}</p>
-                <p className="text-muted text-xs tabular-nums">{faixaDePreco(i)}</p>
+                <p className="text-muted text-xs tabular-nums">
+                  {i.degrau < degrau && <>Ainda do degrau {i.degrau} · </>}
+                  {faixaDePreco(i)}
+                </p>
               </div>
               {compras[i.id] ? (
                 <span className="text-feito text-xs flex-none">Tenho</span>
@@ -103,7 +120,7 @@ export function EstiloHome() {
         </ul>
       </section>
 
-      <GuardaRoupa compras={compras} quadrilAtual={quadril?.cm ?? null} />
+      <GuardaRoupa compras={compras} quadrilAtual={quadril?.cm ?? null} cinturaAtual={cintura?.cm ?? null} />
 
       <section className="space-y-2">
         <Link to="/beleza/estilo" className="card block text-sm">

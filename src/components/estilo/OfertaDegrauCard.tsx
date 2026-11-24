@@ -2,7 +2,7 @@ import type { OfertaDegrau } from "../../lib/estilo-degraus";
 
 const TEXTO: Record<2 | 3, { titulo: string; corpo: string }> = {
   2: { titulo: "Pronta pro degrau 2", corpo: "Peças com um pouco mais de forma, no mesmo ritmo de uma por mês." },
-  3: { titulo: "Pronta pro degrau 3", corpo: "Peças que já chamam mais atenção, no mesmo ritmo de uma por mês." },
+  3: { titulo: "Pronta pro degrau 3", corpo: "Peças mais justas ao corpo, no mesmo ritmo de uma por mês." },
 };
 
 export function OfertaDegrauCard({ oferta, onAceitar, onAgoraNao }: {

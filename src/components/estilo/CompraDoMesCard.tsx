@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ItemEstilo } from "../../data/estilo-degraus-seed";
 import { tamanhoPorQuadril } from "../../lib/estilo-degraus";
-import { AVISO_TABELA, diaMes, faixaDePreco, textoLavagem } from "../../lib/estilo-texto";
+import { AVISO_TABELA, diaMes, faixaDePreco, temLavagem, textoLavagem } from "../../lib/estilo-texto";
 
 type Medida = { cm: number; data: string; velha: boolean } | null;
 
-export function CompraDoMesCard({ estado, medida, onComprei, onPular }: {
+export function CompraDoMesCard({ estado, medida, degrau = 1, onComprei, onPular }: {
   estado: { estado: "sugestao"; item: ItemEstilo } | { estado: "fechado"; acao: "comprei" | "pulei"; item: ItemEstilo | null } | { estado: "degrau-completo" };
   medida: Medida;
+  degrau?: 1 | 2 | 3;
   onComprei: (item: ItemEstilo, valorPago?: number) => void;
   onPular: () => void;
 }) {
@@ -17,8 +18,12 @@ export function CompraDoMesCard({ estado, medida, onComprei, onPular }: {
   if (estado.estado === "degrau-completo") {
     return (
       <section className="card space-y-1">
-        <h2 className="font-serif text-xl text-nude-warm">Este degrau está completo</h2>
-        <p className="text-muted text-sm">Todas as peças da lista estão com você. O próximo degrau aparece quando você quiser.</p>
+        <h2 className="font-serif text-xl text-nude-warm">{degrau === 3 ? "Você completou todos os degraus" : "Este degrau está completo"}</h2>
+        <p className="text-muted text-sm">
+          {degrau === 3
+            ? "Todas as peças da lista estão com você."
+            : "Todas as peças da lista estão com você. O próximo degrau aparece quando você quiser."}
+        </p>
       </section>
     );
   }
@@ -41,10 +46,14 @@ export function CompraDoMesCard({ estado, medida, onComprei, onPular }: {
       <h2 id="compra-mes" className="font-serif text-xl text-nude-warm">{item.nome}</h2>
       <p className="text-muted text-sm">{item.praQue}</p>
       <dl className="text-sm space-y-1">
-        <div><dt className="inline text-muted">Cores: </dt><dd className="inline">{item.cores.join(", ")}</dd></div>
+        {item.cores.length > 0 && (
+          <div><dt className="inline text-muted">Cores: </dt><dd className="inline">{item.cores.join(", ")}</dd></div>
+        )}
         <div><dt className="inline text-muted">Faixa: </dt><dd className="inline tabular-nums">{faixaDePreco(item)}</dd></div>
         <div><dt className="inline text-muted">Onde: </dt><dd className="inline">{item.onde}</dd></div>
-        <div><dt className="inline text-muted">Lavagem: </dt><dd className="inline">{textoLavagem(item)}</dd></div>
+        {temLavagem(item) && (
+          <div><dt className="inline text-muted">Lavagem: </dt><dd className="inline">{textoLavagem(item)}</dd></div>
+        )}
       </dl>
       {item.dica && <p className="text-muted text-xs">{item.dica}</p>}
       {item.medida !== null && <Tamanho item={item} medida={medida} />}
@@ -76,11 +85,12 @@ export function CompraDoMesCard({ estado, medida, onComprei, onPular }: {
 }
 
 function Tamanho({ item, medida }: { item: ItemEstilo; medida: Medida }) {
-  const rotulo = item.medida === "quadril" ? "quadril" : "cintura";
+  const quadril = item.medida === "quadril";
+  const rotulo = quadril ? "do quadril" : "da cintura";
   if (!medida) {
     return (
       <p className="text-sm">
-        Sem medida do {rotulo} ainda. <Link to="/corpo/medidas" className="underline text-verm-2">Medir o {rotulo}</Link> pra saber o tamanho.
+        Sem medida {rotulo} ainda. <Link to="/corpo/medidas" className="underline text-verm-2">Medir {quadril ? "o quadril" : "a cintura"}</Link> pra saber o tamanho.
       </p>
     );
   }

@@ -76,4 +76,20 @@ describe("backup: estado do Estilo em degraus", () => {
     expect((await db.settings.get("estiloDegrauDesde"))?.value).toBe("2026-11-20");
     expect(((await db.settings.get("estiloCompras"))?.value as object)).toHaveProperty("a");
   });
+
+  it("mês fechado: fica o de mes maior, e backup sem a chave mantém o daqui", async () => {
+    await db.settings.put({ key: "estiloMes", value: { mes: "2026-12", acao: "comprei", itemId: "x" } });
+    await restaurarBackup(await payload([{ key: "estiloMes", value: { mes: "2026-11", acao: "pulei" } }]));
+    expect((await db.settings.get("estiloMes"))?.value).toEqual({ mes: "2026-12", acao: "comprei", itemId: "x" });
+    await restaurarBackup(await payload([]));
+    expect((await db.settings.get("estiloMes"))?.value).toEqual({ mes: "2026-12", acao: "comprei", itemId: "x" });
+    await restaurarBackup(await payload([{ key: "estiloMes", value: { mes: "2027-01", acao: "pulei" } }]));
+    expect((await db.settings.get("estiloMes"))?.value).toEqual({ mes: "2027-01", acao: "pulei" });
+  });
+
+  it("degrau empatado: o desde é o mais antigo", async () => {
+    await db.settings.bulkPut([{ key: "estiloDegrau", value: 2 }, { key: "estiloDegrauDesde", value: "2026-11-20" }]);
+    await restaurarBackup(await payload([{ key: "estiloDegrau", value: 2 }, { key: "estiloDegrauDesde", value: "2026-11-05" }]));
+    expect((await db.settings.get("estiloDegrauDesde"))?.value).toBe("2026-11-05");
+  });
 });

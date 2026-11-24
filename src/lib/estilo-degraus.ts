@@ -24,6 +24,11 @@ export function itensDoDegrau(d: Degrau): ItemEstilo[] {
   return ITENS_ESTILO.filter((i) => i.degrau === d).sort((a, b) => a.ordem - b.ordem);
 }
 
+/** Itens dos degraus até `d`, em ordem de degrau e depois de `ordem`. */
+export function itensAteDegrau(d: Degrau): ItemEstilo[] {
+  return ITENS_ESTILO.filter((i) => i.degrau <= d).sort((a, b) => a.degrau - b.degrau || a.ordem - b.ordem);
+}
+
 export function sugestaoDoMes(e: {
   hoje: string;
   degrau: Degrau;
@@ -35,7 +40,8 @@ export function sugestaoDoMes(e: {
     const item = mf.itemId ? (ITENS_ESTILO.find((i) => i.id === mf.itemId) ?? null) : null;
     return { estado: "fechado", acao: mf.acao, item };
   }
-  const item = itensDoDegrau(e.degrau).find((i) => !e.compras[i.id]);
+  // O que sobrou de degraus de baixo continua valendo: primeiro o mais baixo.
+  const item = itensAteDegrau(e.degrau).find((i) => !e.compras[i.id]);
   return item ? { estado: "sugestao", item } : { estado: "degrau-completo" };
 }
 

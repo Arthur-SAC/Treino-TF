@@ -91,6 +91,88 @@ describe("compra do mês", () => {
   });
 });
 
+describe("detalhes da peça e textos", () => {
+  it("calcinhas: lavagem à mão, seca no quarto", async () => {
+    await setSetting("estiloCompras", { [item1.id]: { data: "2026-10-01" } });
+    abrir();
+    await screen.findByRole("heading", { name: item2.nome });
+    expect(screen.getAllByText(/à mão, seca no quarto/).length).toBeGreaterThan(0);
+  });
+
+  it("hidratante: sem Cores e sem Lavagem", async () => {
+    await setSetting("estiloCompras", { [item1.id]: { data: "2026-10-01" }, [item2.id]: { data: "2026-10-01" } });
+    abrir();
+    await screen.findByRole("heading", { name: item3.nome });
+    expect(screen.queryByText(/^Cores:/)).toBeNull();
+    expect(screen.queryByText(/^Lavagem:/)).toBeNull();
+  });
+
+  it("peça de cintura sem medida: concordância no feminino", async () => {
+    await setSetting("estiloDegrau", 2);
+    await setSetting("estiloCompras", Object.fromEntries(itensDoDegrau(1).map((i) => [i.id, { data: "2026-10-01" }])));
+    abrir();
+    await screen.findByRole("heading", { name: itensDoDegrau(2)[0].nome });
+    expect(screen.getByText(/Sem medida da cintura ainda/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /medir a cintura/i })).toBeInTheDocument();
+  });
+
+  it("degrau 3 completo: texto próprio, sem prometer próximo degrau", async () => {
+    await setSetting("estiloDegrau", 3);
+    await setSetting("estiloCompras", Object.fromEntries([1, 2, 3].flatMap((d) => itensDoDegrau(d as 1 | 2 | 3)).map((i) => [i.id, { data: "2026-10-01" }])));
+    abrir();
+    expect(await screen.findByText(/completou todos os degraus/i)).toBeInTheDocument();
+    expect(screen.queryByText(/próximo degrau/i)).toBeNull();
+  });
+
+  it("sobra do degrau 1 continua na lista e na sugestão depois de aceitar o degrau 2", async () => {
+    await setSetting("estiloDegrau", 2);
+    await setSetting("estiloCompras", Object.fromEntries([item1, item2, item3, item4].map((i) => [i.id, { data: "2026-10-01" }])));
+    abrir();
+    const [, , , , item5] = itensDoDegrau(1);
+    expect(await screen.findByRole("heading", { name: item5.nome })).toBeInTheDocument();
+    expect(screen.getAllByText(/Ainda do degrau 1/).length).toBe(3);
+    expect(screen.getAllByRole("button", { name: "Já tenho" }).length).toBe(3 + itensDoDegrau(2).length);
+  });
+
+  it("guarda-roupa agrupa por degrau", async () => {
+    await setSetting("estiloCompras", { [item1.id]: { data: "2026-10-01" }, [itensDoDegrau(2)[0].id]: { data: "2026-10-02" } });
+    abrir();
+    expect(await screen.findByRole("heading", { name: "Degrau 1" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Degrau 2" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Degrau 3" })).toBeNull();
+  });
+
+  it("confere peça de cintura pela cintura atual", async () => {
+    const malha = itensDoDegrau(2).find((i) => i.medida === "cintura")!;
+    await setSetting("estiloCompras", { [malha.id]: { data: "2026-10-01", medidaCm: 90 } });
+    await db.measurements.add({ date: "2026-11-20", waistCm: 84, hipCm: 90 });
+    abrir();
+    expect(await screen.findByText("Confira se ainda serve")).toBeInTheDocument();
+  });
+
+  it("degrau 3: oferta sem 'chamam mais atenção'", async () => {
+    await setSetting("estiloDegrau", 2);
+    await setSetting("estiloDegrauDesde", "2026-01-01");
+    abrir();
+    expect(await screen.findByText(/Peças mais justas ao corpo/)).toBeInTheDocument();
+    expect(screen.queryByText(/chamam mais atenção/)).toBeNull();
+  });
+});
+
+describe("gestos rápidos", () => {
+  it("dois Já tenho seguidos gravam os dois", async () => {
+    abrir();
+    await screen.findByRole("heading", { name: item1.nome });
+    const botoes = screen.getAllByRole("button", { name: "Já tenho" });
+    fireEvent.click(botoes[0]);
+    fireEvent.click(botoes[1]);
+    await waitFor(async () => {
+      const v = await getSetting("estiloCompras");
+      expect(Object.keys(v).sort()).toEqual([item1.id, item2.id].sort());
+    });
+  });
+});
+
 describe("lista do degrau", () => {
   it("mostra todos os itens e Já tenho marca sem fechar o mês", async () => {
     abrir();

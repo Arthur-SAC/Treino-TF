@@ -32,6 +32,18 @@ describe("sugestaoDoMes", () => {
     expect(sugestaoDoMes({ hoje: "2026-11-24", degrau: 1, compras: c(...todos1), mesFechado: null })).toEqual({ estado: "degrau-completo" }));
 });
 
+describe("sobras de degraus de baixo", () => {
+  it("degrau 2 aceito com 4/7 do degrau 1: sugere o primeiro item não comprado do degrau 1", () => {
+    const r = sugestaoDoMes({ hoje: "2026-11-24", degrau: 2, compras: c(...todos1.slice(0, 4)), mesFechado: null });
+    expect(r.estado === "sugestao" && r.item.id).toBe("body-splash");
+  });
+  it("degrau-completo só quando tudo até o degrau atual está comprado", () => {
+    expect(sugestaoDoMes({ hoje: "2026-11-24", degrau: 2, compras: c(...todos1), mesFechado: null }).estado).toBe("sugestao");
+    const tudo2 = [...todos1, "malha-cintura-marcada", "top-sem-bojo", "acessorios-mais"];
+    expect(sugestaoDoMes({ hoje: "2026-11-24", degrau: 2, compras: c(...tudo2), mesFechado: null })).toEqual({ estado: "degrau-completo" });
+  });
+});
+
 describe("ofertaDeDegrau", () => {
   const base = { hoje: "2026-12-01", degrau: 1 as const, degrauDesde: "2026-11-01", recusas: {} };
   it("3 compras: nada", () => expect(ofertaDeDegrau({ ...base, compras: c(...todos1.slice(0, 3)) })).toBeNull());

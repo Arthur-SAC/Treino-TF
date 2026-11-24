@@ -158,6 +158,7 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     const estiloRecusasAqui = (await db.settings.get("estiloRecusas"))?.value as Record<string, string> | undefined;
     const degrauAqui = (await db.settings.get("estiloDegrau"))?.value as number | undefined;
     const degrauDesdeAqui = (await db.settings.get("estiloDegrauDesde"))?.value as string | null | undefined;
+    const mesAqui = (await db.settings.get("estiloMes"))?.value as { mes: string } | null | undefined;
     await db.settings.bulkPut((p.settings ?? []) as never);
     const desbloqueiosBackup = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
     const vistasBackup = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
@@ -193,6 +194,13 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     if (estiloRecusasAqui || estiloRecusasBackup) {
       await db.settings.put({ key: "estiloRecusas", value: unirRecusadas(estiloRecusasAqui ?? {}, estiloRecusasBackup ?? {}) });
     }
+    // Mês fechado vale o de `mes` maior (empate: o daqui). Sem a chave no backup, fica o daqui.
+    if (mesAqui && chavesBackup.has("estiloMes")) {
+      const mesBk = (await db.settings.get("estiloMes"))?.value as { mes: string } | null | undefined;
+      if (!mesBk || mesAqui.mes >= mesBk.mes) await db.settings.put({ key: "estiloMes", value: mesAqui });
+    } else if (mesAqui && !chavesBackup.has("estiloMes")) {
+      await db.settings.put({ key: "estiloMes", value: mesAqui });
+    }
     const degrauBackup = chavesBackup.has("estiloDegrau") ? (await db.settings.get("estiloDegrau"))?.value as number | undefined : undefined;
     if (degrauAqui !== undefined || degrauBackup !== undefined) {
       const da = degrauAqui ?? 1;
@@ -200,7 +208,7 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
       const desdeBk = chavesBackup.has("estiloDegrauDesde") ? (await db.settings.get("estiloDegrauDesde"))?.value as string | null | undefined : undefined;
       const desdeA = degrauDesdeAqui ?? null;
       const desdeB = desdeBk ?? null;
-      const desde = da > dbk ? desdeA : dbk > da ? desdeB : [desdeA, desdeB].filter((x): x is string => !!x).sort().pop() ?? null;
+      const desde = da > dbk ? desdeA : dbk > da ? desdeB : [desdeA, desdeB].filter((x): x is string => !!x).sort()[0] ?? null;
       await db.settings.put({ key: "estiloDegrau", value: Math.max(da, dbk) });
       await db.settings.put({ key: "estiloDegrauDesde", value: desde });
     }

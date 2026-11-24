@@ -6,7 +6,8 @@ import { SparkIcon } from "../icons/SparkIcon";
 import { TagIcon } from "../icons/TagIcon";
 import { abaDaRota, type Aba } from "../lib/abas";
 
-// Quatro abas (eram seis) por decisão dela em 2026-10-02: ela gosta do Hoje e
+// Cinco abas (eram seis, viraram quatro por decisão dela em 2026-10-02;
+// a quinta, Estilo, veio em 2026-11-24 com o guarda-roupa em degraus): ela gosta do Hoje e
 // achava as outras abas confusas. Nenhuma rota mudou; Progresso e Guia são
 // índices que apontam pras telas de sempre. Como as rotas antigas não seguem
 // as abas novas (/trilha mistura Marcos e Alimentação), a aba acesa vem de
