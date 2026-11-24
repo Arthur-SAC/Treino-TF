@@ -1,27 +1,29 @@
 import type { StylePalette } from "../lib/db";
 
 export const INITIAL_PALETTE: Omit<StylePalette, "id"> = {
-  subtone: "warm",
-  contrast: "medium",
+  subtone: "neutral",
+  contrast: "high",
   favorableColors: [
-    "#5c1a2b", // vinho profundo
-    "#8b3a4a", // vinho rosado
-    "#a0522d", // siena / ferrugem
-    "#cd853f", // mostarda escura / peru
-    "#6b4423", // marrom chocolate
-    "#bc8f5e", // camel
-    "#d4a373", // nude/dourado
-    "#f4e4d6", // off-white quente
-    "#556b2f", // oliva escuro
-    "#9b6b43", // bronze
+    "#000000", // preto
+    "#f4ecdf", // off-white
+    "#d8c3a5", // bege areia
+    "#a0703c", // caramelo
+    "#4a2c1d", // marrom chocolate
+    "#a23b2a", // vermelho-tijolo
+    "#6d1f2b", // vinho
+    "#8e1b2c", // cereja escuro
+    "#5b6236", // oliva
+    "#c0663f", // terracota
+    "#1f5560", // petróleo
+    "#c9a227", // mostarda
   ],
   unfavorableColors: [
-    "#ffc0cb", // rosa-bebê
-    "#add8e6", // azul-bebê
-    "#e6e6fa", // lavanda gelada
-    "#98fb98", // verde-menta
-    "#ffffff", // branco puro
-    "#000000", // preto puro (use com moderação, com nude próximo do rosto)
+    "#f4b6c2", // rosa
+    "#ffd1dc", // rosa-bebê
+    "#fff3b0", // amarelo-claro
+    "#c6f7e2", // pastel menta
+    "#39ff14", // neon
+    "#ff4500", // vermelho alaranjado
   ],
   reanalyzed: false,
 };

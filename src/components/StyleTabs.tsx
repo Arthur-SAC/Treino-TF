@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 const ITEMS = [
   { to: "/beleza/estilo/publico", label: "Público" },
   { to: "/beleza/estilo/casa", label: "Casa" },
-  { to: "/beleza/estilo/intimo", label: "Íntimo" },
+  { to: "/beleza/estilo/intimo", label: "Só seu" },
   { to: "/beleza/estilo", label: "Paleta", end: true },
   { to: "/beleza/estilo/pecas", label: "Peças" },
   { to: "/beleza/estilo/combinacoes", label: "Combinações" },

@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { hojeISO } from "./today-date";
 import { seedDatabase } from "./seed";
+import { unirComprasEstilo, type ComprasEstilo } from "./estilo-degraus";
 import { FASES_ACEITAS_PADRAO, unirFasesAceitas, unirFasesAceitasDesde, unirRecusadas, type FasesAceitas, type FasesAceitasDesde } from "./ofertas";
 
 // O que entra no backup e como volta. Saiu de Settings.tsx (auditoria de
@@ -153,6 +154,10 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
     const recusadasAqui = (await db.settings.get("ofertasRecusadas"))?.value as Record<string, string> | undefined;
     const fasesAqui = (await db.settings.get("fasesAceitas"))?.value as FasesAceitas | undefined;
     const desdeAqui = (await db.settings.get("fasesAceitasDesde"))?.value as FasesAceitasDesde | undefined;
+    const comprasAqui = (await db.settings.get("estiloCompras"))?.value as ComprasEstilo | undefined;
+    const estiloRecusasAqui = (await db.settings.get("estiloRecusas"))?.value as Record<string, string> | undefined;
+    const degrauAqui = (await db.settings.get("estiloDegrau"))?.value as number | undefined;
+    const degrauDesdeAqui = (await db.settings.get("estiloDegrauDesde"))?.value as string | null | undefined;
     await db.settings.bulkPut((p.settings ?? []) as never);
     const desbloqueiosBackup = (await db.settings.get("desbloqueios"))?.value as Record<string, string> | undefined;
     const vistasBackup = (await db.settings.get("conquistasVistas"))?.value as string[] | undefined;
@@ -176,6 +181,28 @@ export async function restaurarBackup(p: BackupPayload): Promise<void> {
         key: "fasesAceitasDesde",
         value: unirFasesAceitasDesde(fasesAqui ?? FASES_ACEITAS_PADRAO, desdeAqui ?? {}, fasesBackup ?? FASES_ACEITAS_PADRAO, desdeBackup ?? {}),
       });
+    }
+    // Estilo em degraus: compra vale a mais antiga, recusa a mais recente,
+    // degrau o maior (save point) e o `desde` vai junto com o que venceu.
+    const chavesBackup = new Set(((p.settings ?? []) as Array<{ key: string }>).map((s) => s.key));
+    const comprasBackup = chavesBackup.has("estiloCompras") ? (await db.settings.get("estiloCompras"))?.value as ComprasEstilo | undefined : undefined;
+    const estiloRecusasBackup = chavesBackup.has("estiloRecusas") ? (await db.settings.get("estiloRecusas"))?.value as Record<string, string> | undefined : undefined;
+    if (comprasAqui || comprasBackup) {
+      await db.settings.put({ key: "estiloCompras", value: unirComprasEstilo(comprasAqui ?? {}, comprasBackup ?? {}) });
+    }
+    if (estiloRecusasAqui || estiloRecusasBackup) {
+      await db.settings.put({ key: "estiloRecusas", value: unirRecusadas(estiloRecusasAqui ?? {}, estiloRecusasBackup ?? {}) });
+    }
+    const degrauBackup = chavesBackup.has("estiloDegrau") ? (await db.settings.get("estiloDegrau"))?.value as number | undefined : undefined;
+    if (degrauAqui !== undefined || degrauBackup !== undefined) {
+      const da = degrauAqui ?? 1;
+      const dbk = degrauBackup ?? 1;
+      const desdeBk = chavesBackup.has("estiloDegrauDesde") ? (await db.settings.get("estiloDegrauDesde"))?.value as string | null | undefined : undefined;
+      const desdeA = degrauDesdeAqui ?? null;
+      const desdeB = desdeBk ?? null;
+      const desde = da > dbk ? desdeA : dbk > da ? desdeB : [desdeA, desdeB].filter((x): x is string => !!x).sort().pop() ?? null;
+      await db.settings.put({ key: "estiloDegrau", value: Math.max(da, dbk) });
+      await db.settings.put({ key: "estiloDegrauDesde", value: desde });
     }
     if (vistasAqui || vistasBackup) {
       await db.settings.put({ key: "conquistasVistas", value: [...new Set([...(vistasAqui ?? []), ...(vistasBackup ?? [])])] });

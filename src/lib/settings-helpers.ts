@@ -1,6 +1,8 @@
 import { db } from "./db";
 import { FASES, PROJECAO_RAZAO_OMBRO_QUADRIL_FASE2, type ModoCaminhada } from "./objetivo";
 import type { LadoFraco } from "./lado-fraco";
+import type { ComprasEstilo, MesEstilo } from "./estilo-degraus";
+import type { Degrau } from "../data/estilo-degraus-seed";
 import { FASES_ACEITAS_PADRAO, type FasesAceitas, type FasesAceitasDesde } from "./ofertas";
 
 // Ambas as metas abaixo derivam de objetivo.ts — a fonte única dos números do
@@ -98,6 +100,16 @@ export interface Settings {
   /** Contagem crua de práticas no aceite da fase atual, por trilha (`ofertas.ts`):
    *  a fase aceita começa do início dela. Ausente = início da fase. */
   fasesAceitasDesde: FasesAceitasDesde;
+  /** Estilo em degraus: peças que ela comprou (id do item -> compra). */
+  estiloCompras: ComprasEstilo;
+  /** O que ela decidiu neste mês (comprei/pulei). */
+  estiloMes: MesEstilo;
+  /** Degrau atual do guarda-roupa (save point: só sobe). */
+  estiloDegrau: Degrau;
+  /** ISO do dia em que entrou no degrau atual. */
+  estiloDegrauDesde: string | null;
+  /** Ofertas de degrau adiadas: id -> ISO da recusa. */
+  estiloRecusas: Record<string, string>;
 }
 
 // Exportado: é a ÚNICA cópia de padrões que deve existir no app. Um segundo
@@ -194,6 +206,11 @@ export const DEFAULTS: Settings = {
   ofertasRecusadas: {},
   fasesAceitas: { ...FASES_ACEITAS_PADRAO },
   fasesAceitasDesde: {},
+  estiloCompras: {},
+  estiloMes: null,
+  estiloDegrau: 1,
+  estiloDegrauDesde: null,
+  estiloRecusas: {},
 };
 
 export async function getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {

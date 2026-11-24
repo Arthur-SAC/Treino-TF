@@ -78,7 +78,7 @@ describe("a rede que prende a versão atual (fecha o ponto cego da regra 4)", ()
   // seed grande sem pino. Com ela exportada, os três grandes (exercícios,
   // templates, plano alimentar) e o estilo têm a mesma rede.
   it("STYLE_SEED_VERSION é a versão revisada nesta rodada", () => {
-    expect(STYLE_SEED_VERSION).toBe(4);
+    expect(STYLE_SEED_VERSION).toBe(5);
   });
 
   // Com esta, as CINCO versões de seed do app têm pino: exercícios, templates,

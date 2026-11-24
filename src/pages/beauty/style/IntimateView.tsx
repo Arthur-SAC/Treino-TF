@@ -18,7 +18,7 @@ export function IntimateView() {
     <div className="p-4 pb-24">
       <div className="mb-3 flex items-center gap-3">
         <Voltar para="/beleza" rotulo="Beleza" />
-        <h1 className="font-serif text-2xl text-nude flex-1">Estilo · Íntimo</h1>
+        <h1 className="font-serif text-2xl text-nude flex-1">Estilo · Só seu</h1>
       </div>
       <StyleTabs />
 

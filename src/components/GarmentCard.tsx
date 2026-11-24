@@ -6,13 +6,13 @@ const CATEGORY_LABEL: Record<Garment["category"], string> = {
   bottom: "Calça/Saia",
   dress: "Vestido",
   outerwear: "Casaco/Acessório",
-  intimate: "Íntimo",
+  intimate: "Só seu",
 };
 
 const MODE_LABEL: Record<Garment["mode"], string> = {
   publico: "Público",
   casa: "Casa",
-  intimo: "Íntimo",
+  intimo: "Só seu",
 };
 
 /** Etiqueta do efeito, só no modo Casa. Justa marca por contato, folgada marca

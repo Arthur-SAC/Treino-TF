@@ -13,7 +13,11 @@ import { OUTFITS } from "../data/outfits-seed";
 // de casa passam a declarar se marcam por contato ou por contraste, e o
 // guarda-roupa íntimo ganha as peças DE USAR — que não existiam: as doze peças
 // íntimas do app eram todas de olhar, e a recomendada para o atrito era renda.
-export const STYLE_SEED_VERSION = 4;
+//
+// v5: paleta dela (contraste alto, subtom neutro: preto, tijolo e vinho entram;
+// rosas e pastéis saem). As cores sempre trocam; subtom e contraste só se ela
+// ainda não reanalisou a paleta à mão.
+export const STYLE_SEED_VERSION = 5;
 
 /** Traduz o dado antigo. `intimate` é o desempate do "livre": era o único jeito
  *  de separar o que é da noiva do que é de andar pela casa. */
@@ -73,7 +77,7 @@ export async function seedStyle(): Promise<void> {
   // do arquivo.
   const sv = await db.settings.get("styleSeedVersion");
   if (((sv?.value as number) ?? 0) < STYLE_SEED_VERSION) {
-    await db.transaction("rw", [db.garments, db.outfits, db.settings], async () => {
+    await db.transaction("rw", [db.garments, db.outfits, db.stylePalette, db.settings], async () => {
       // Primeiro migra TUDO o que está no banco — inclusive as peças que ela
       // criou, que o seed não conhece e nunca reescreveria.
       await migrarModos();
@@ -97,6 +101,16 @@ export async function seedStyle(): Promise<void> {
         } else {
           await db.outfits.add(o as never);
         }
+      }
+      const [pal] = await db.stylePalette.toArray();
+      if (pal?.id === undefined) {
+        await db.stylePalette.add(INITIAL_PALETTE as never);
+      } else {
+        await db.stylePalette.update(pal.id, {
+          favorableColors: INITIAL_PALETTE.favorableColors,
+          unfavorableColors: INITIAL_PALETTE.unfavorableColors,
+          ...(pal.reanalyzed === true ? {} : { subtone: INITIAL_PALETTE.subtone, contrast: INITIAL_PALETTE.contrast }),
+        });
       }
       await db.settings.put({ key: "styleSeedVersion", value: STYLE_SEED_VERSION });
     });

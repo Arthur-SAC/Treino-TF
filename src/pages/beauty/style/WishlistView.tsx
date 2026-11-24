@@ -71,7 +71,7 @@ export function WishlistView() {
             <option value="bottom">Calça/Saia</option>
             <option value="dress">Vestido</option>
             <option value="outerwear">Casaco</option>
-            <option value="intimate">Íntimo</option>
+            <option value="intimate">Só seu</option>
             <option value="acessorio">Acessório</option>
             <option value="calcado">Calçado</option>
           </select>
