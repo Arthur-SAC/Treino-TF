@@ -50,6 +50,26 @@ describe("SessionRecorder — lado fraco", () => {
     expect(screen.queryByText(/Comece pelo lado/)).toBeNull();
   });
 
+  it("no coice pede 1 série a mais só do lado fraco; no búlgaro não", async () => {
+    await setSetting("ladoFraco", "esquerdo");
+    const { unmount } = render(<SessionRecorder exercise={{ ...ex, id: "coice-gluteo-polia" }} setsTarget={3} repsTarget="12 cada" restSec={0} onSave={() => {}} />);
+    expect(await screen.findByText(/1 série a mais só com o lado esquerdo/)).toBeInTheDocument();
+    unmount();
+    montar("12 cada");
+    expect(await screen.findByText(/Comece pelo lado esquerdo/)).toBeInTheDocument();
+    expect(screen.queryByText(/série a mais/)).toBeNull();
+  });
+
+  it("no hip thrust pede empurrar igual, só com lado definido", async () => {
+    const hip = { ...ex, id: "hip-thrust-maquina", equipment: ["maquina-hip-thrust"] } as Exercise;
+    const { unmount } = render(<SessionRecorder exercise={hip} setsTarget={3} repsTarget="10-12" restSec={0} onSave={() => {}} />);
+    await setSetting("ladoFraco", "esquerdo");
+    expect(await screen.findByText(/Sinta o lado esquerdo empurrar/)).toBeInTheDocument();
+    await setSetting("ladoFraco", "");
+    await waitFor(() => expect(screen.queryByText(/Sinta o lado/)).toBeNull());
+    unmount();
+  });
+
   it("a dica do lado fraco fala de repetições e tremor", async () => {
     montar("12 cada");
     expect(await screen.findByText(/menos repetições ou treme primeiro/)).toBeInTheDocument();

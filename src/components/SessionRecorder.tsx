@@ -8,7 +8,7 @@ import { InfoIcon } from "./InfoIcon";
 import { hojeISO } from "../lib/today-date";
 import { useSetting } from "../hooks/useSetting";
 import { setSetting } from "../lib/settings-helpers";
-import { ehUnilateral } from "../lib/lado-fraco";
+import { ehUnilateral, temSerieExtraDoLadoFraco, pedeEmpurrarIgual } from "../lib/lado-fraco";
 
 interface Props {
   exercise: Exercise;
@@ -272,6 +272,9 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
       {perguntaLado && (ladoFraco ? (
         <p className="text-xs text-nude/80 mb-2">
           Comece pelo lado {ladoFraco}. O lado forte faz as mesmas repetições — nem uma a mais.{" "}
+          {temSerieExtraDoLadoFraco(exercise.id, repsTarget) && (
+            <>No fim, faça 1 série a mais só com o lado {ladoFraco}, até os dois lados ficarem parecidos.{" "}</>
+          )}
           <button type="button" onClick={() => void setSetting("ladoFraco", "")} className="underline text-muted">trocar</button>
         </p>
       ) : (
@@ -283,6 +286,11 @@ export function SessionRecorder({ exercise, setsTarget, repsTarget, restSec, not
           </div>
         </div>
       ))}
+      {ladoFraco && pedeEmpurrarIgual(exercise.id, repsTarget) && (
+        <p className="text-xs text-nude/80 mb-2">
+          Pés iguais, quadril reto. Sinta o lado {ladoFraco} empurrar também; se o outro tomar conta ou o quadril girar, baixe a carga.
+        </p>
+      )}
       {exercise.successCue && (
         <p className="text-xs text-nude/80 mb-2">✦ {exercise.successCue}</p>
       )}
