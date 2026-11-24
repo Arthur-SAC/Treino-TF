@@ -1,6 +1,6 @@
 # Continuar aqui
 
-**Última atualização:** 2026-11-19
+**Última atualização:** 2026-11-24
 
 > **Leia primeiro `docs/OBJETIVO.md`** — o norte (Chun-Li macia), os tetos, as fases e o roteiro da fase 2. Este arquivo é o estado do trabalho; aquele é para onde ele vai.
 **Para retomar, basta dizer:** *"Lê `docs/CONTINUAR-AQUI.md` e continua a reforma."*
@@ -32,6 +32,7 @@ Spec: `docs/superpowers/specs/2026-09-23-chun-li-macia-design.md`.
 | H · Produtos de Aracaju | kit de custo-benefício pro clima (pesquisa web 2026-11-09/10): kit caro antigo sai (`PRODUCT_SEED_VERSION` 2, só o que ela não mexeu nem comprou), Bepantol/Kelo-Cote fora das costas, adapaleno ter/sex nas costas, protetor de novo às 15h30, aparador no lugar da lâmina (`ROUTINE_SEED_VERSION` 4); seção "Clima de Aracaju" no guia de cabelo (gel forte por último, antirresíduo mensal, boné, teste da água antes de filtro). Meta de água já era 3000 ml. Hipótese de acantose levantada uma vez com ela — decisão dela | ✅ no ar (`b9f28d8`, 2026-11-10) |
 | I · Cardápio pelo objetivo | 2.200 mantidas (decisão dela); proteína 211 → ~193 (objetivo pede 150-160), lanche pré-treino ~510 kcal com melancia, café com menos carboidrato; 2 opções por refeição (jantar 3) com `dias` — o Hoje e a receita abrem na opção do dia (`variantDoDia`), a lista de compras conta a semana montada; patinho seg/qua/sex (dias de perna), sardinha DE LATA ter/qui (sempre enlatada, decisão dela), acerola no almoço; atum e omelete viraram troca livre (atum ≤2-3x/sem); roteiro de domingo reescrito (79 min); `MEAL_PLAN_VERSION` 17 | ✅ no ar (2026-11-10) |
 | J · Rotina em linha do tempo | spec `docs/superpowers/specs/2026-11-19-rotina-linha-do-tempo-design.md`, plano `docs/superpowers/plans/2026-11-19-rotina-linha-do-tempo.md`. O Hoje vira uma linha do tempo única; a noite tem os blocos dela (jantar 20:15, com ela 21:15, leitura 22:15) e o bloco do app de 20:45 com teto de 30 min (sexta e sábado das 18h em diante são só dela); a fase de cada trilha só sobe quando ela aceita (`fasesAceitas`, `ofertasRecusadas`, "agora não" espera 7 dias); a Entrada avança pela carga; migração `ROTINA_LINHA_MIGRACAO` grava a fase atual de cada trilha e abre o alongamento da noite; aba "Guia" virou "Consulta" (rota `/guia`, sem "Refeições de hoje"); Movimento em Básico / Intermediário / Avançado | na branch `feat/rotina-linha-do-tempo`, não publicado |
+| K · Estilo em degraus | spec `docs/superpowers/specs/2026-11-23-estilo-em-degraus-design.md`. Aba Estilo com a compra do mês (verba de R$ 100; "comprei" ou "pulei" fecha o mês), itens em degraus 1 a 3 com oferta Aceitar / Agora não pra subir de degrau, paleta dela, "Íntimo" virou "Só seu", e a linha "Estilo do mês" em "Esta semana" no Hoje (só quando há sugestão aberta; sem nome do item, sem caixinha, sem notificação) | na branch `feat/estilo-em-degraus`, não publicado |
 
 A reforma das seis frentes (agosto) está completa e no ar; o histórico dela está no git log.
 

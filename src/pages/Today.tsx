@@ -65,6 +65,7 @@ import { SequenciaModal } from "../components/SequenciaModal";
 import type { SkincareRoutine } from "../lib/db";
 import { estadoSequencia } from "../lib/sequencia";
 import { linhaProximoDesbloqueio } from "../lib/placas-texto";
+import { sugestaoDoMes } from "../lib/estilo-degraus";
 
 /** Minutos da sequência no catálogo (0 se não existir). */
 function duracaoSeq(id: string): number {
@@ -141,6 +142,13 @@ export function Today() {
   // recebem a contagem cortada no fim da fase aceita; a oferta recebe a crua.
   // `fasesAceitasDesde`: a fase aceita começa do início dela, contando do aceite.
   const fasesAceitasCarregadas = useSettingCarregada("fasesAceitas");
+  // "Estilo do mês": só aparece com tudo carregado e sugestão aberta (sem piscar).
+  const estiloCompras = useSettingCarregada("estiloCompras");
+  const estiloMes = useSettingCarregada("estiloMes");
+  const estiloDegrau = useSettingCarregada("estiloDegrau");
+  const estiloDoMes =
+    estiloCompras !== undefined && estiloMes !== undefined && estiloDegrau !== undefined &&
+    sugestaoDoMes({ hoje: todayISO, degrau: estiloDegrau, compras: estiloCompras, mesFechado: estiloMes }).estado === "sugestao";
   const fasesAceitasDesdeCarregadas = useSettingCarregada("fasesAceitasDesde");
   const fasesAceitas = fasesAceitasCarregadas ?? DEFAULTS.fasesAceitas;
   const fasesAceitasDesde = fasesAceitasDesdeCarregadas ?? DEFAULTS.fasesAceitasDesde;
@@ -685,10 +693,20 @@ export function Today() {
         {horas.map(linha)}
       </ol>
 
-      {semana.length > 0 && (
+      {(semana.length > 0 || estiloDoMes) && (
         <section className="space-y-2" aria-labelledby="semana-titulo">
           <h2 id="semana-titulo" className="text-muted text-xs uppercase tracking-wider pt-3">Esta semana</h2>
-          <ul className="space-y-2">{semana.map(linha)}</ul>
+          <ul className="space-y-2">
+            {semana.map(linha)}
+            {estiloDoMes && (
+              <li>
+                <Link to="/estilo" aria-label="Estilo do mês" className="rounded-card border border-vital/30 bg-vital/10 p-4 flex items-start gap-3">
+                  <span className="flex-1 min-w-0 text-sm font-medium text-nude-warm">Estilo do mês</span>
+                  <span className="flex-none self-center text-xs text-nude">ver →</span>
+                </Link>
+              </li>
+            )}
+          </ul>
         </section>
       )}
 
